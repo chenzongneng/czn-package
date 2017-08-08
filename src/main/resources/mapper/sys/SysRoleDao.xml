@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.sys.dao.SysRoleDao">
+<mapper namespace="com.richstonedt.garnet.modules.sys.dao.SysRoleDao">
 
-	<select id="queryObject" resultType="io.renren.modules.sys.entity.SysRoleEntity">
+	<select id="queryObject" resultType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity">
 		select * from gar_sys_role where role_id = #{value}
 	</select>
-	
-	<select id="queryList" resultType="io.renren.modules.sys.entity.SysRoleEntity">
+
+	<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity">
 		select r.*, (select d.name from sys_dept d where d.dept_id = r.dept_id) deptName from gar_sys_role r
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
@@ -35,8 +41,9 @@
 			</if>
 		</where>
 	</select>
-	
-	<insert id="save" parameterType="io.renren.modules.sys.entity.SysRoleEntity" useGeneratedKeys="true" keyProperty="roleId">
+
+	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity" useGeneratedKeys="true"
+			keyProperty="roleId">
 		insert into gar_sys_role
 		(
 			role_id, 
@@ -54,8 +61,8 @@
 			#{createTime}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="io.renren.modules.sys.entity.SysRoleEntity">
+
+	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity">
 		update gar_sys_role 
 		<set> 
 			<if test="roleName != null">role_name = #{roleName}, </if>

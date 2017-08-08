@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.sys.dao.SysUserTokenDao">
+<mapper namespace="com.richstonedt.garnet.modules.sys.dao.SysUserTokenDao">
 
-	<select id="queryByUserId" resultType="io.renren.modules.sys.entity.SysUserTokenEntity">
+	<select id="queryByUserId" resultType="com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity">
 		select * from gar_sys_user_token where user_id = #{value}
 	</select>
 
-	<select id="queryByToken" resultType="io.renren.modules.sys.entity.SysUserTokenEntity">
+	<select id="queryByToken" resultType="com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity">
 		select * from gar_sys_user_token where token = #{value}
 	</select>
-	 
-	<insert id="save" parameterType="io.renren.modules.sys.entity.SysUserTokenEntity">
+
+	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity">
 		insert into gar_sys_user_token
 		(
 			user_id,
@@ -27,8 +33,8 @@
 			#{updateTime}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="io.renren.modules.sys.entity.SysUserTokenEntity">
+
+	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity">
 		update gar_sys_user_token
 		<set>
 			<if test="token != null">token = #{token}, </if>

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.sys.dao.SysMenuDao">
+<mapper namespace="com.richstonedt.garnet.modules.sys.dao.SysMenuDao">
 
-	<select id="queryObject" resultType="io.renren.modules.sys.entity.SysMenuEntity">
+	<select id="queryObject" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select * from gar_sys_menu where menu_id = #{value}
 	</select>
-	
-	<insert id="save" parameterType="io.renren.modules.sys.entity.SysMenuEntity">
+
+	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		insert into gar_sys_menu
 		(
 			menu_id, 
@@ -31,16 +37,16 @@
 			#{orderNum}
 		)
 	</insert>
-	
-	<select id="queryListParentId" resultType="io.renren.modules.sys.entity.SysMenuEntity">
+
+	<select id="queryListParentId" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select * from gar_sys_menu where parent_id = #{parentId} order by order_num asc 
 	</select>
-	
-	<select id="queryNotButtonList" resultType="io.renren.modules.sys.entity.SysMenuEntity">
+
+	<select id="queryNotButtonList" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select * from gar_sys_menu where type != 2 order by order_num asc 
 	</select>
-	
-	<select id="queryList" resultType="io.renren.modules.sys.entity.SysMenuEntity">
+
+	<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select m.*,(select p.name from gar_sys_menu p where p.menu_id = m.parent_id) as parentName 
 			from gar_sys_menu m
 		<choose>
@@ -56,8 +62,8 @@
 		</if>
 	</select>
 	
-	<!-- 查询用户的权限列表 --> 
-	<select id="queryUserList" resultType="io.renren.modules.sys.entity.SysMenuEntity">
+	<!-- 查询用户的权限列表 -->
+	<select id="queryUserList" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select distinct m.*,(select p.name from gar_sys_menu p where p.menu_id = m.parent_id) as parentName
 			from gar_sys_user_role ur 
 			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
@@ -68,8 +74,8 @@
 	<select id="queryTotal" resultType="int">
 		select count(*) from gar_sys_menu
 	</select>
-	 
-	<update id="update" parameterType="io.renren.modules.sys.entity.SysMenuEntity">
+
+	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		update gar_sys_menu 
 		<set> 
 			<if test="parentId != null">parent_id = #{parentId}, </if>

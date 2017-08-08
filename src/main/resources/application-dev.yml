@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:postgresql://192.168.6.97:5432/GARNET_DATA
+        url: jdbc:postgresql://192.168.6.97:5432/GARNET
         username: postgres
         password: postgres
         #连接池的配置信息

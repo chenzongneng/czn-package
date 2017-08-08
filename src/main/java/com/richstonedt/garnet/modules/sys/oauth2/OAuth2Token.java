@@ -1,0 +1,37 @@
+/*
+ * 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+ * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
+package com.richstonedt.garnet.modules.sys.oauth2;
+
+
+import org.apache.shiro.authc.AuthenticationToken;
+
+/**
+ * token
+ *
+ * @author chenshun
+ * @email sunlightcs@gmail.com
+ * @date 2017-05-20 13:22
+ */
+public class OAuth2Token implements AuthenticationToken {
+
+    private String token;
+
+    public OAuth2Token(String token) {
+        this.token = token;
+    }
+
+    @Override
+    public String getPrincipal() {
+        return token;
+    }
+
+    @Override
+    public Object getCredentials() {
+        return token;
+    }
+
+}

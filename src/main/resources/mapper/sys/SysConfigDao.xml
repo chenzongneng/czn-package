@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>  
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">    
-<mapper namespace="io.renren.modules.sys.dao.SysConfigDao">
-	<select id="queryObject" resultType="io.renren.modules.sys.entity.SysConfigEntity">
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.richstonedt.garnet.modules.sys.dao.SysConfigDao">
+    <select id="queryObject" resultType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">
 		select * from gar_sys_config where id = #{id}
 	</select>
-	
-	<select id="queryList" parameterType="map" resultType="io.renren.modules.sys.entity.SysConfigEntity">
+
+    <select id="queryList" parameterType="map" resultType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">
 		select * from gar_sys_config where status = 1 
 		<if test="key != null and key.trim() != ''">
 			and key like concat('%',#{key},'%') 
@@ -21,13 +27,13 @@
 			and key like concat('%',#{key},'%')
 		</if>
 	</select>
-	
-	<insert id="save" parameterType="io.renren.modules.sys.entity.SysConfigEntity">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">
 		insert into gar_sys_config(key, value, remark)
 			values(#{key},#{value},#{remark})
 	</insert>
-	
-	<update id="update" parameterType="io.renren.modules.sys.entity.SysConfigEntity">
+
+    <update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">
 		update gar_sys_config set key = #{key}, value = #{value}, remark = #{remark} 
 			 where id = #{id}
 	</update>

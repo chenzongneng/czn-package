@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.job.dao.ScheduleJobDao">
-	<select id="queryObject" resultType="io.renren.modules.job.entity.ScheduleJobEntity" >
+<mapper namespace="com.richstonedt.garnet.modules.job.dao.ScheduleJobDao">
+	<select id="queryObject" resultType="com.richstonedt.garnet.modules.job.entity.ScheduleJobEntity">
 		select * from gar_schedule_job where job_id = #{value}
-	</select> 
+	</select>
 
-	<select id="queryList" resultType="io.renren.modules.job.entity.ScheduleJobEntity" >
+	<select id="queryList" resultType="com.richstonedt.garnet.modules.job.entity.ScheduleJobEntity">
 		select * from gar_schedule_job
 		<where>
 			<if test="beanName != null and beanName.trim() != ''">
@@ -26,8 +32,9 @@
 			</if>
 		</where>
 	</select>
-	 
-	<insert id="save" parameterType="io.renren.modules.job.entity.ScheduleJobEntity" useGeneratedKeys="true" keyProperty="jobId">
+
+	<insert id="save" parameterType="com.richstonedt.garnet.modules.job.entity.ScheduleJobEntity"
+			useGeneratedKeys="true" keyProperty="jobId">
 		insert into gar_schedule_job
 		(
 			bean_name, 
@@ -49,8 +56,8 @@
 			#{createTime}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="io.renren.modules.job.entity.ScheduleJobEntity">
+
+	<update id="update" parameterType="com.richstonedt.garnet.modules.job.entity.ScheduleJobEntity">
 		update gar_schedule_job 
 		<set> 
 			<if test="beanName != null">bean_name = #{beanName}, </if>
