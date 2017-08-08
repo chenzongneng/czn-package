@@ -21,7 +21,7 @@ import org.springframework.web.filter.CorsFilter;
  *
  * @author sunjinpeng
  * @version $Revision$ 2016/12/4 17:15.
- * @since furniture-be 0.1.0
+ * @since garnet-core-be-fe 1.0.0
  */
 @Configuration
 public class CorsConfig {
@@ -30,7 +30,7 @@ public class CorsConfig {
      * Build config cors configuration.
      *
      * @return the cors configuration
-     * @since lte-detective-rs 1.0
+     * @since garnet-core-be-fe 1.0.0
      */
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -44,7 +44,7 @@ public class CorsConfig {
      * Cors filter cors filter.
      *
      * @return the cors filter
-     * @since furniture-be 0.1.0
+     * @since garnet-core-be-fe 1.0.0
      */
     @Bean
     public CorsFilter corsFilter() {
