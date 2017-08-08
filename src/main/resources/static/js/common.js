@@ -20,7 +20,7 @@ T.p = url;
 //请求前缀
 //var baseURL = "http://demo.open.renren.io/renren-fastplus/";
 //var baseURL = "/renren-fastplus/";
-var baseURL = "/";
+var baseURL = "http://localhost:8082/garnet/";
 
 //登录token
 var token = localStorage.getItem("token");
