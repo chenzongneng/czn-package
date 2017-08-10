@@ -13,18 +13,18 @@
 			keyProperty="userId">
 		insert into gar_tb_user
 		(
-			username,
-			mobile,
-			password,
-			create_time
+		username,
+		mobile,
+		password,
+		create_time
 		)
 		values
-			(
-				#{username},
-				#{mobile},
-				#{password},
-				#{createTime}
-			)
+		(
+		#{username},
+		#{mobile},
+		#{password},
+		#{createTime}
+		)
 	</insert>
 
 	<select id="queryObject" resultType="com.richstonedt.garnet.modules.api.entity.UserEntity">

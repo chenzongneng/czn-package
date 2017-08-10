@@ -28,7 +28,7 @@
 			</otherwise>
         </choose>
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit  #{limit} offset #{offset}
 		</if>
 	</select>
 
@@ -36,14 +36,14 @@
 			keyProperty="deptId">
 		insert into gar_sys_dept
 		(
-			parent_id, 
-			name, 
+			parent_id,
+			name,
 			order_num
 		)
 		values
 		(
-			#{parentId}, 
-			#{name}, 
+			#{parentId},
+			#{name},
 			#{orderNum}
 		)
 	</insert>
@@ -51,9 +51,15 @@
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysDeptEntity">
 		update gar_sys_dept 
 		<set>
-			<if test="parentId != null">parent_id = #{parentId}, </if>
-			<if test="name != null">name = #{name}, </if>
-			<if test="orderNum != null">order_num = #{orderNum}</if>
+			<if test="parentId != null">
+				parent_id = #{parentId},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum}
+			</if>
 		</set>
 		where dept_id = #{deptId}
 	</update>

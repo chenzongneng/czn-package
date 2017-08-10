@@ -14,7 +14,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity">
-		select r.*, (select d.name from sys_dept d where d.dept_id = r.dept_id) deptName from gar_sys_role r
+		select r.*, (select d.name from gar_sys_dept d where d.dept_id = r.dept_id) deptName from gar_sys_role r
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
 				and r.role_name like concat('%',#{roleName},'%')
@@ -29,7 +29,7 @@
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit  #{limit} offset #{offset}
 		</if>
 	</select>
 	
@@ -37,7 +37,7 @@
 		select count(*) from gar_sys_role 
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
-				and role_name like concat('%',#{roleName},'%') 
+				role_name like concat('%',#{roleName},'%')
 			</if>
 		</where>
 	</select>
@@ -46,16 +46,16 @@
 			keyProperty="roleId">
 		insert into gar_sys_role
 		(
-			role_id, 
-			role_name, 
+			role_id,
+			role_name,
 			remark,
 			dept_id,
 			create_time
 		)
 		values
 		(
-			#{roleId}, 
-			#{roleName}, 
+			#{roleId},
+			#{roleName},
 			#{remark},
 			#{deptId},
 			#{createTime}
@@ -65,9 +65,15 @@
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity">
 		update gar_sys_role 
 		<set> 
-			<if test="roleName != null">role_name = #{roleName}, </if>
-			<if test="remark != null">remark = #{remark},</if>
-			<if test="deptId != null">dept_id = #{deptId}, </if>
+			<if test="roleName != null and roleName != ''">
+				role_name = #{roleName},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="deptId != null">
+				dept_id = #{deptId}
+			</if>
 		</set>
 		where role_id = #{roleId}
 	</update>
@@ -88,7 +94,7 @@
 			#{roleId}
 		</foreach>
 		;
-		delete from sys_user_role where role_id in 
+		delete from gar_sys_user_role where role_id in
 		<foreach item="roleId" collection="array" open="(" separator="," close=")">
 			#{roleId}
 		</foreach>

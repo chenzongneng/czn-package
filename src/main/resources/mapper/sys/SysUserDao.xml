@@ -13,7 +13,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity">
-		select u.*, (select d.name from sys_dept d where d.dept_id = u.dept_id) deptName from gar_sys_user u
+		select u.*, (select d.name from gar_sys_dept d where d.dept_id = u.dept_id) deptName from gar_sys_user u
 		<where>
 			<if test="username != null and username.trim() != ''">
 				and u.username like concat('%',#{username},'%')
@@ -28,7 +28,7 @@
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit  #{limit} offset #{offset}
 		</if>
 	</select>
 	
@@ -36,7 +36,7 @@
 		select count(*) from gar_sys_user
 		<where>
 			<if test="username != null and username.trim() != ''">
-				and username like concat('%',#{username},'%') 
+				username like concat('%',#{username},'%')
 			</if>
 		</where>
 	</select>
@@ -44,15 +44,15 @@
 	<!-- 查询用户的所有权限 -->
 	<select id="queryAllPerms" resultType="string">
 		select m.perms from gar_sys_user_role ur 
-			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
-			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+			LEFT JOIN gar_sys_role_menu rm on ur.role_id = rm.role_id
+			LEFT JOIN gar_sys_menu m on rm.menu_id = m.menu_id
 		where ur.user_id = #{userId}
 	</select>
 	
 	<!-- 查询用户的所有菜单ID --> 
 	<select id="queryAllMenuId" resultType="long">
 		select distinct rm.menu_id from gar_sys_user_role ur 
-			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN gar_sys_role_menu rm on ur.role_id = rm.role_id
 		where ur.user_id = #{userId}
 	</select>
 
@@ -64,24 +64,24 @@
 			keyProperty="userId">
 		insert into gar_sys_user
 		(
-			user_id, 
-			username, 
+			user_id,
+			username,
 			password,
 			salt,
-			email, 
-			mobile, 
+			email,
+			mobile,
 			status,
 			dept_id,
 			create_time
 		)
 		values
 		(
-			#{userId}, 
-			#{username}, 
+			#{userId},
+			#{username},
 			#{password},
 			#{salt},
-			#{email}, 
-			#{mobile}, 
+			#{email},
+			#{mobile},
 			#{status},
 			#{deptId},
 			#{createTime}
@@ -91,12 +91,24 @@
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity">
 		update gar_sys_user 
 		<set> 
-			<if test="username != null">username = #{username}, </if>
-			<if test="password != null">password = #{password}, </if>
-			<if test="email != null">email = #{email}, </if>
-			<if test="mobile != null">mobile = #{mobile}, </if>
-			<if test="status != null">status = #{status}, </if>
-			<if test="deptId != null">dept_id = #{deptId}, </if>
+			<if test="username != null and username != ''">
+				username = #{username},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="deptId != null">
+				dept_id = #{deptId}
+			</if>
 		</set>
 		where user_id = #{userId}
 	</update>

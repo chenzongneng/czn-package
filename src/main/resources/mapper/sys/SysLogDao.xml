@@ -22,7 +22,7 @@
 		</where>
 		order by id desc 
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit #{limit} offset #{offset}
 		</if>
 	</select>
 	
@@ -39,20 +39,20 @@
 			keyProperty="id">
 		insert into gar_sys_log
 		(
-			username, 
-			operation, 
-			method, 
+			username,
+			operation,
+			method,
 			params,
 			time,
-			ip, 
+			ip,
 			create_date
 		)
 		values
 		(
-			#{username}, 
-			#{operation}, 
-			#{method}, 
-			#{params}, 
+			#{username},
+			#{operation},
+			#{method},
+			#{params},
 			#{time},
 			#{ip},
 			#{createDate}

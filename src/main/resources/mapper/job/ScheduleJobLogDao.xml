@@ -15,21 +15,21 @@
 	<select id="queryList" resultType="com.richstonedt.garnet.modules.job.entity.ScheduleJobLogEntity">
 		select * from gar_schedule_job_log 
 		<where>
-			<if test="jobId != null and jobId.trim() != ''">
-				and job_id = #{jobId}
+			<if test="jobId != null">
+				job_id = #{jobId}
 			</if>
 		</where>
 		order by log_id desc 
 		<if test="offset != null and limit != null ">
-		limit #{offset}, #{limit}
+		limit #{limit} offset #{offset}
 		</if>
 	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(1) from gar_schedule_job_log 
 		<where>
-			<if test="jobId != null and jobId.trim() != ''">
-				and job_id = #{jobId}
+			<if test="jobId != null">
+			   job_id = #{jobId}
 			</if>
 		</where>
 	</select>
@@ -37,24 +37,24 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.job.entity.ScheduleJobLogEntity">
 		insert into gar_schedule_job_log
 		(
-			job_id, 
-			bean_name, 
-			method_name, 
-			params, 
-			status, 
-			error, 
-			times, 
+			job_id,
+			bean_name,
+			method_name,
+			params,
+			status,
+			error,
+			times,
 			create_time
 		)
 		values
 		(
-			#{jobId}, 
-			#{beanName}, 
-			#{methodName}, 
-			#{params}, 
-			#{status}, 
-			#{error}, 
-			#{times}, 
+			#{jobId},
+			#{beanName},
+			#{methodName},
+			#{params},
+			#{status},
+			#{error},
+			#{times},
 			#{createTime}
 		)
 	</insert>

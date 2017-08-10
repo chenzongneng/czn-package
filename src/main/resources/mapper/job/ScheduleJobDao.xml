@@ -20,7 +20,7 @@
 			</if>
 		</where>
 		<if test="offset != null and limit != null ">
-		limit #{offset}, #{limit}
+		limit #{limit} offset #{offset};
 		</if>
 	</select>
 	
@@ -37,22 +37,22 @@
 			useGeneratedKeys="true" keyProperty="jobId">
 		insert into gar_schedule_job
 		(
-			bean_name, 
-			method_name, 
-			params, 
-			cron_expression, 
-			status, 
-			remark, 
+			bean_name,
+			method_name,
+			params,
+			cron_expression,
+			status,
+			remark,
 			create_time
 		)
 		values
 		(
-			#{beanName}, 
-			#{methodName}, 
-			#{params}, 
-			#{cronExpression}, 
-			#{status}, 
-			#{remark}, 
+			#{beanName},
+			#{methodName},
+			#{params},
+			#{cronExpression},
+			#{status},
+			#{remark},
 			#{createTime}
 		)
 	</insert>
@@ -60,12 +60,24 @@
 	<update id="update" parameterType="com.richstonedt.garnet.modules.job.entity.ScheduleJobEntity">
 		update gar_schedule_job 
 		<set> 
-			<if test="beanName != null">bean_name = #{beanName}, </if>
-			<if test="methodName != null">method_name = #{methodName}, </if>
-			<if test="params != null">params = #{params}, </if>
-			<if test="cronExpression != null">cron_expression = #{cronExpression}, </if>
-			<if test="status != null">status = #{status}, </if>
-			<if test="remark != null">remark = #{remark}, </if>
+			<if test="beanName != null and beanName != ''">
+				bean_name = #{beanName},
+			</if>
+			<if test="methodName != null and methodName != ''">
+				method_name = #{methodName},
+			</if>
+			<if test="params != null  and params != ''">
+				params = #{params},
+			</if>
+			<if test="cronExpression != null  and cronExpression != ''">
+				cron_expression = #{cronExpression},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="remark != null  and remark != ''">
+				remark = #{remark}
+			</if>
 		</set>
 		where job_id = #{jobId}
 	</update>

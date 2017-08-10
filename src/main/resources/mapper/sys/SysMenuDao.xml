@@ -16,24 +16,24 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		insert into gar_sys_menu
 		(
-			menu_id, 
-			parent_id, 
-			name, 
-			url, 
-			perms, 
-			type, 
-			icon, 
+			menu_id,
+			parent_id,
+			name,
+			url,
+			perms,
+			type,
+			icon,
 			order_num
 		)
 		values
 		(
-			#{menuId}, 
-			#{parentId}, 
-			#{name}, 
-			#{url}, 
-			#{perms}, 
-			#{type}, 
-			#{icon}, 
+			#{menuId},
+			#{parentId},
+			#{name},
+			#{url},
+			#{perms},
+			#{type},
+			#{icon},
 			#{orderNum}
 		)
 	</insert>
@@ -58,7 +58,7 @@
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit #{limit} offset #{offset}
 		</if>
 	</select>
 	
@@ -66,7 +66,7 @@
 	<select id="queryUserList" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select distinct m.*,(select p.name from gar_sys_menu p where p.menu_id = m.parent_id) as parentName
 			from gar_sys_user_role ur 
-			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN gar_sys_role_menu rm on ur.role_id = rm.role_id
 			LEFT JOIN gar_sys_menu m on rm.menu_id = m.menu_id 
 		where ur.user_id = #{userId} order by m.order_num asc
 	</select>
@@ -77,14 +77,28 @@
 
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		update gar_sys_menu 
-		<set> 
-			<if test="parentId != null">parent_id = #{parentId}, </if>
-			<if test="name != null">name = #{name}, </if>
-			<if test="url != null">url = #{url}, </if>
-			<if test="perms != null">perms = #{perms}, </if>
-			<if test="type != null">type = #{type}, </if>
-			<if test="icon != null">icon = #{icon}, </if>
-			<if test="orderNum != null">order_num = #{orderNum}</if>
+		<set>
+			<if test="parentId != null">
+				parent_id = #{parentId},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="url != null and url != ''">
+				url = #{url},
+			</if>
+			<if test="perms != null and perms != ''">
+				perms = #{perms},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="icon != null and icon != ''">
+				icon = #{icon},
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum}
+			</if>
 		</set>
 		where menu_id = #{menuId}
 	</update>

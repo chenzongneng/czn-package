@@ -16,7 +16,7 @@
     <select id="queryList" resultType="com.richstonedt.garnet.modules.oss.entity.SysOssEntity">
 		select * from gar_sys_oss order by id desc
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit #{limit} offset  #{offset}
 		</if>
 	</select>
 	
@@ -28,12 +28,12 @@
             keyProperty="id">
 		insert into gar_sys_oss
 		(
-			url, 
+			url,
 			create_date
 		)
 		values
 		(
-			#{url}, 
+			#{url},
 			#{createDate}
 		)
 	</insert>
@@ -41,8 +41,12 @@
     <update id="update" parameterType="com.richstonedt.garnet.modules.oss.entity.SysOssEntity">
 		update gar_sys_oss 
 		<set>
-			<if test="url != null">url = #{url}, </if>
-			<if test="createDate != null">create_date = #{createDate}</if>
+			<if test="url != null and url != ''">
+				url = #{url},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate}
+			</if>
 		</set>
 		where id = #{id}
 	</update>

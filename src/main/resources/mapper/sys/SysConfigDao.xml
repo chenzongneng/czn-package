@@ -17,7 +17,7 @@
 			and key like concat('%',#{key},'%') 
 		</if>
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit  #{limit} offset #{offset}
 		</if>
 	</select>
 	
@@ -34,13 +34,30 @@
 	</insert>
 
     <update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">
-		update gar_sys_config set key = #{key}, value = #{value}, remark = #{remark} 
+		update gar_sys_config
+		<set>
+			<if test="key != null and key != ''">
+				key = #{key},
+			</if>
+			<if test="value != null and value != ''">
+				value = #{value},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark}
+			</if>
+		</set>
 			 where id = #{id}
 	</update>
 	
 	<!-- 根据key，更新value -->
 	<update id="updateValueByKey" parameterType="map">
-		update gar_sys_config set value = #{value} where key = #{key}
+		update gar_sys_config
+		 <set>
+			 <if test="value != null and value != ''">
+				 value = #{value}
+			 </if>
+		 </set>
+		 where key = #{key}
 	</update>
 	
 	<!-- 根据key，查询value -->
