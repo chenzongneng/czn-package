@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class RRExceptionHandler {
-	private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 自定义异常

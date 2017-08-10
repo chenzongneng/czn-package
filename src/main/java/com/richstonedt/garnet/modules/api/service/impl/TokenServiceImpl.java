@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
 @Service("tokenService")
 public class TokenServiceImpl implements TokenService {
 

@@ -1,11 +1,11 @@
 spring:
     datasource:
-        url: jdbc:postgresql://192.168.6.97:5432/GARNET
+        url: jdbc:postgresql://192.168.6.97:5432/garnet
         username: postgres
         password: postgres
         driverClassName: org.postgresql.Driver
-        type: com.alibaba.druid.pool.DruidDataSource
         #连接池的配置信息
+        type: com.alibaba.druid.pool.DruidDataSource
         initialSize: 10
         minIdle: 10
         maxActive: 100
