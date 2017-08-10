@@ -16,10 +16,10 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		insert into gar_sys_menu
 		<set>
-			<if test="menuId != null and menuId != ''">
+			<if test="menuId != null">
 				menu_id = #{menuId},
 			</if>
-			<if test="parentId != null and parentId != ''">
+			<if test="parentId != null">
 				parent_id = #{parentId},
 			</if>
 			<if test="name != null and name != ''">
@@ -31,13 +31,13 @@
 			<if test="perms != null and perms != ''">
 				perms = #{perms},
 			</if>
-			<if test="type != null and type != ''">
+			<if test="type != null">
 				type = #{type},
 			</if>
 			<if test="icon != null and icon != ''">
 				icon = #{icon},
 			</if>
-			<if test="orderNum != null and orderNum != ''">
+			<if test="orderNum != null">
 				order_num = #{orderNum}
 			</if>
 		</set>
@@ -71,7 +71,7 @@
 	<select id="queryUserList" resultType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		select distinct m.*,(select p.name from gar_sys_menu p where p.menu_id = m.parent_id) as parentName
 			from gar_sys_user_role ur 
-			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN gar_sys_role_menu rm on ur.role_id = rm.role_id
 			LEFT JOIN gar_sys_menu m on rm.menu_id = m.menu_id 
 		where ur.user_id = #{userId} order by m.order_num asc
 	</select>
@@ -83,7 +83,7 @@
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		update gar_sys_menu 
 		<set>
-			<if test="parentId != null and parentId != ''">
+			<if test="parentId != null">
 				parent_id = #{parentId},
 			</if>
 			<if test="name != null and name != ''">
@@ -95,13 +95,13 @@
 			<if test="perms != null and perms != ''">
 				perms = #{perms},
 			</if>
-			<if test="type != null and type != ''">
+			<if test="type != null">
 				type = #{type},
 			</if>
 			<if test="icon != null and icon != ''">
 				icon = #{icon},
 			</if>
-			<if test="orderNum != null and orderNum != ''">
+			<if test="orderNum != null">
 				order_num = #{orderNum}
 			</if>
 		</set>

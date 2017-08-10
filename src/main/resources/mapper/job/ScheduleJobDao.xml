@@ -49,13 +49,13 @@
 			<if test="cronExpression != null and cronExpression != ''">
 				cron_expression = #{cronExpression},
 			</if>
-			<if test="status != null and status != ''">
+			<if test="status != null">
 				status = #{status},
 			</if>
 			<if test="remark != null and remark != ''">
 				remark = #{remark},
 			</if>
-			<if test="createTime != null and createTime != ''">
+			<if test="createTime != null">
 				create_time = #{createTime}
 			</if>
 		</set>
@@ -76,7 +76,7 @@
 			<if test="cronExpression != null  and cronExpression != ''">
 				cron_expression = #{cronExpression},
 			</if>
-			<if test="status != null  and status != ''">
+			<if test="status != null">
 				status = #{status},
 			</if>
 			<if test="remark != null  and remark != ''">

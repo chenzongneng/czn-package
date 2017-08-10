@@ -22,7 +22,7 @@
 				<if test="password != null and password != ''">
 					password = #{password},
 				</if>
-				<if test="createTime != null and createTime != ''">
+				<if test="createTime != null">
 					create_time = #{createTime}
 				</if>
 			</set>

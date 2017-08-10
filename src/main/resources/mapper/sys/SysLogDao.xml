@@ -51,13 +51,13 @@
 			<if test="params != null and params != ''">
 				params = #{params},
 			</if>
-			<if test="time != null and time != ''">
+			<if test="time != null">
 				time = #{time},
 			</if>
 			<if test="ip != null and ip != ''">
 				ip = #{ip},
 			</if>
-			<if test="createDate != null and createDate != ''">
+			<if test="createDate != null">
 				create_date = #{createDate}
 			</if>
 		</set>

@@ -15,7 +15,7 @@
 	<select id="queryList" resultType="com.richstonedt.garnet.modules.job.entity.ScheduleJobLogEntity">
 		select * from gar_schedule_job_log 
 		<where>
-			<if test="jobId != null and jobId.trim() != ''">
+			<if test="jobId != null">
 				job_id = #{jobId}
 			</if>
 		</where>
@@ -28,7 +28,7 @@
  	<select id="queryTotal" resultType="int">
 		select count(1) from gar_schedule_job_log 
 		<where>
-			<if test="jobId != null and jobId.trim() != ''">
+			<if test="jobId != null">
 			   job_id = #{jobId}
 			</if>
 		</where>
@@ -37,7 +37,7 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.job.entity.ScheduleJobLogEntity">
 		insert into gar_schedule_job_log
 		<set>
-			<if test="jobId != null and jobId != ''">
+			<if test="jobId != null">
 				job_id = #{jobId},
 			</if>
 			<if test="beanName != null and beanName != ''">
@@ -49,16 +49,16 @@
 			<if test="params != null and params != ''">
 				params = #{params},
 			</if>
-			<if test="status != null and status != ''">
+			<if test="status != null">
 				status = #{status},
 			</if>
 			<if test="error != null and error != ''">
 				error = #{error},
 			</if>
-			<if test="times != null and times != ''">
+			<if test="times != null">
 				times = #{times},
 			</if>
-			<if test="createTime != null and createTime != ''">
+			<if test="createTime != null">
 				create_time = #{createTime}
 			</if>
 		</set>

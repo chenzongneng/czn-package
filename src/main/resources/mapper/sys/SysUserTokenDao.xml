@@ -20,16 +20,16 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity">
 		insert into gar_sys_user_token
 		<set>
-			<if test="userId != null and userId != ''">
+			<if test="userId != null">
 				user_id = #{userId},
 			</if>
 			<if test="token != null and token != ''">
 				token = #{token},
 			</if>
-			<if test="expireTime != null and expireTime != ''">
+			<if test="expireTime != null">
 				expire_time = #{expireTime},
 			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time = #{updateTime}
 			</if>
 		</set>
@@ -41,10 +41,10 @@
 			<if test="token != null and token != ''">
 				token = #{token},
 			</if>
-			<if test="expireTime != null and expireTime != ''">
+			<if test="expireTime != null">
 				expire_time = #{expireTime},
 			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time = #{updateTime}
 			</if>
 		</set>

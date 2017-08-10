@@ -31,7 +31,7 @@
 			<if test="url != null and url != ''">
 				url = #{url},
 			</if>
-			<if test="createDate != null and createDate != ''">
+			<if test="createDate != null">
 				create_date = #{createDate}
 			</if>
 		</set>
@@ -43,7 +43,7 @@
 			<if test="url != null and url != ''">
 				url = #{url},
 			</if>
-			<if test="createDate != null and createDate != ''">
+			<if test="createDate != null">
 				create_date = #{createDate}
 			</if>
 		</set>

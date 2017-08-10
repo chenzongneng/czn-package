@@ -36,13 +36,13 @@
 			keyProperty="deptId">
 		insert into gar_sys_dept
 		<set>
-			<if test="parentId != null and parentId != ''">
+			<if test="parentId != null">
 				parent_id =  #{parentId},
 			</if>
 			<if test="name != null and name != ''">
 				name =  #{name},
 			</if>
-			<if test="orderNum != null and orderNum != ''">
+			<if test="orderNum != null">
 				order_num =  #{orderNum}
 			</if>
 		</set>
@@ -51,13 +51,13 @@
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysDeptEntity">
 		update gar_sys_dept 
 		<set>
-			<if test="parentId != null and parentId != ''">
+			<if test="parentId != null">
 				parent_id = #{parentId},
 			</if>
 			<if test="name != null and name != ''">
 				name = #{name},
 			</if>
-			<if test="orderNum != null  and orderNum != ''">
+			<if test="orderNum != null">
 				order_num = #{orderNum}
 			</if>
 		</set>
