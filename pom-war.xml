@@ -185,7 +185,29 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/${project.build.finalName}</path>
+                    <update>true</update>
+                    <server>${tomcat-server}</server>
+                    <url>${tomcat-url}</url>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <deploy.env>dev</deploy.env>
+                <tomcat-server>Tomcat97</tomcat-server>
+                <tomcat-url>http://192.168.6.97:8080/manager/text</tomcat-url>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
