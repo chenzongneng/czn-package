@@ -63,35 +63,29 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity" useGeneratedKeys="true"
 			keyProperty="userId">
 		insert into gar_sys_user
-		<set>
-			<if test="userId != null">
-				user_id = #{userId},
-			</if>
-			<if test="username != null and username != ''">
-				username = #{username},
-			</if>
-			<if test="password != null and password != ''">
-				password = #{password},
-			</if>
-			<if test="salt != null and salt != ''">
-				salt = #{salt},
-			</if>
-			<if test="email != null and email != ''">
-				email = #{email},
-			</if>
-			<if test="mobile != null and mobile != ''">
-				mobile = #{mobile},
-			</if>
-			<if test="status != null">
-				status = #{status},
-			</if>
-			<if test="deptId != null">
-				dept_id = #{deptId},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime}
-			</if>
-		</set>
+		(
+			user_id,
+			username,
+			password,
+			salt,
+			email,
+			mobile,
+			status,
+			dept_id,
+			create_time
+		)
+		values
+		(
+			#{userId},
+			#{username},
+			#{password},
+			#{salt},
+			#{email},
+			#{mobile},
+			#{status},
+			#{deptId},
+			#{createTime}
+		)
 	</insert>
 
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity">

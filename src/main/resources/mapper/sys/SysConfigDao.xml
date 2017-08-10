@@ -29,18 +29,8 @@
 	</select>
 
     <insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">
-			insert into gar_sys_config
-			<set>
-				<if test="key != null and key != ''">
-					key = #{key},
-				</if>
-				<if test="value != null and value != ''">
-					value = #{value},
-				</if>
-				<if test="remark != null and remark != ''">
-					remark = #{remark}
-				</if>
-			</set>
+		insert into gar_sys_config(key, value, remark)
+			values(#{key},#{value},#{remark})
 	</insert>
 
     <update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysConfigEntity">

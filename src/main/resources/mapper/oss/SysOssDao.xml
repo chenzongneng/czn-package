@@ -27,14 +27,15 @@
     <insert id="save" parameterType="com.richstonedt.garnet.modules.oss.entity.SysOssEntity" useGeneratedKeys="true"
             keyProperty="id">
 		insert into gar_sys_oss
-		<set>
-			<if test="url != null and url != ''">
-				url = #{url},
-			</if>
-			<if test="createDate != null">
-				create_date = #{createDate}
-			</if>
-		</set>
+		(
+			url,
+			create_date
+		)
+		values
+		(
+			#{url},
+			#{createDate}
+		)
 	</insert>
 
     <update id="update" parameterType="com.richstonedt.garnet.modules.oss.entity.SysOssEntity">

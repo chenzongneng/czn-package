@@ -38,29 +38,25 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysLogEntity" useGeneratedKeys="true"
 			keyProperty="id">
 		insert into gar_sys_log
-		<set>
-			<if test="username != null and username != ''">
-				username = #{username},
-			</if>
-			<if test="operation != null and operation != ''">
-				operation = #{operation},
-			</if>
-			<if test="method != null and method != ''">
-				method = #{method},
-			</if>
-			<if test="params != null and params != ''">
-				params = #{params},
-			</if>
-			<if test="time != null">
-				time = #{time},
-			</if>
-			<if test="ip != null and ip != ''">
-				ip = #{ip},
-			</if>
-			<if test="createDate != null">
-				create_date = #{createDate}
-			</if>
-		</set>
+		(
+			username,
+			operation,
+			method,
+			params,
+			time,
+			ip,
+			create_date
+		)
+		values
+		(
+			#{username},
+			#{operation},
+			#{method},
+			#{params},
+			#{time},
+			#{ip},
+			#{createDate}
+		)
 	</insert>
 	
 	<delete id="delete">

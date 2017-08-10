@@ -19,20 +19,19 @@
 	 
 	<insert id="save">
 		insert into gar_tb_token
-		<set>
-			<if test="userId != null and userId != ''">
-				user_id = #{userId},
-			</if>
-			<if test="token != null and token != ''">
-				token = #{token},
-			</if>
-			<if test="expireTime != null and expireTime != ''">
-				expire_time = #{expireTime},
-			</if>
-			<if test="updateTime != null and updateTime != ''">
-				update_time = #{updateTime}
-			</if>
-		</set>
+		(
+			user_id,
+			token,
+			expire_time,
+			update_time
+		)
+		values
+		(
+			#{userId},
+			#{token},
+			#{expireTime},
+			#{updateTime}
+		)
 	</insert>
 	 
 	<update id="update">

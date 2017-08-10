@@ -36,32 +36,27 @@
 
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.job.entity.ScheduleJobLogEntity">
 		insert into gar_schedule_job_log
-		<set>
-			<if test="jobId != null">
-				job_id = #{jobId},
-			</if>
-			<if test="beanName != null and beanName != ''">
-				bean_name = #{beanName},
-			</if>
-			<if test="methodName != null and methodName != ''">
-				method_name = #{methodName},
-			</if>
-			<if test="params != null and params != ''">
-				params = #{params},
-			</if>
-			<if test="status != null">
-				status = #{status},
-			</if>
-			<if test="error != null and error != ''">
-				error = #{error},
-			</if>
-			<if test="times != null">
-				times = #{times},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime}
-			</if>
-		</set>
+		(
+			job_id,
+			bean_name,
+			method_name,
+			params,
+			status,
+			error,
+			times,
+			create_time
+		)
+		values
+		(
+			#{jobId},
+			#{beanName},
+			#{methodName},
+			#{params},
+			#{status},
+			#{error},
+			#{times},
+			#{createTime}
+		)
 	</insert>
 	
 </mapper>
