@@ -12,7 +12,7 @@
 	<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysUserRoleEntity">
 		select * from gar_sys_user_role 
 		<where>
-			<if test="userId != null">
+			<if test="userId != null and userId != ''">
 				user_id = #{userId}
 			</if>
 		</where>

@@ -28,7 +28,7 @@
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+			limit  #{limit} offset #{offset}
 		</if>
 	</select>
 	
@@ -36,7 +36,7 @@
 		select count(*) from gar_sys_user
 		<where>
 			<if test="username != null and username.trim() != ''">
-				and username like concat('%',#{username},'%') 
+				username like concat('%',#{username},'%')
 			</if>
 		</where>
 	</select>
@@ -63,40 +63,58 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity" useGeneratedKeys="true"
 			keyProperty="userId">
 		insert into gar_sys_user
-		(
-			user_id, 
-			username, 
-			password,
-			salt,
-			email, 
-			mobile, 
-			status,
-			dept_id,
-			create_time
-		)
-		values
-		(
-			#{userId}, 
-			#{username}, 
-			#{password},
-			#{salt},
-			#{email}, 
-			#{mobile}, 
-			#{status},
-			#{deptId},
-			#{createTime}
-		)
+		<set>
+			<if test="userId != null and userId != ''">
+				user_id = #{userId},
+			</if>
+			<if test="username != null and username != ''">
+				username = #{username},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="salt != null and salt != ''">
+				salt = #{salt},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="deptId != null and deptId != ''">
+				dept_id = #{deptId},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time = #{createTime}
+			</if>
+		</set>
 	</insert>
 
 	<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity">
 		update gar_sys_user 
 		<set> 
-			<if test="username != null">username = #{username}, </if>
-			<if test="password != null">password = #{password}, </if>
-			<if test="email != null">email = #{email}, </if>
-			<if test="mobile != null">mobile = #{mobile}, </if>
-			<if test="status != null">status = #{status}, </if>
-			<if test="deptId != null">dept_id = #{deptId}, </if>
+			<if test="username != null and username != ''">
+				username = #{username},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="deptId != null and deptId != ''">
+				dept_id = #{deptId}
+			</if>
 		</set>
 		where user_id = #{userId}
 	</update>

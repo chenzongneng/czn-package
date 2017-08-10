@@ -11,20 +11,21 @@
 
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.api.entity.UserEntity" useGeneratedKeys="true"
 			keyProperty="userId">
-		insert into gar_tb_user
-		(
-			username,
-			mobile,
-			password,
-			create_time
-		)
-		values
-			(
-				#{username},
-				#{mobile},
-				#{password},
-				#{createTime}
-			)
+			insert into gar_tb_user
+			<set>
+				<if test="username != null and username != ''">
+					username = #{username},
+				</if>
+				<if test="mobile != null and mobile != ''">
+					mobile = #{mobile},
+				</if>
+				<if test="password != null and password != ''">
+					password = #{password},
+				</if>
+				<if test="createTime != null and createTime != ''">
+					create_time = #{createTime}
+				</if>
+			</set>
 	</insert>
 
 	<select id="queryObject" resultType="com.richstonedt.garnet.modules.api.entity.UserEntity">
