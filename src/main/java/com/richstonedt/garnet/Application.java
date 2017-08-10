@@ -6,20 +6,54 @@
 
 package com.richstonedt.garnet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+/**
+ * <b><code>Application</code></b>
+ * <p/>
+ * 程序入口
+ * <p/>
+ * <b>Creation Time:</b> 2017/8/8 11:01.
+ *
+ * @author chenzechao
+ * @version $Revision$ 2017/8/8 11:01.
+ * @since garnet 1.0.0
+ */
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
+    /**
+     * The constant LOG.
+     *
+     * @since garnet 1.0.0
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+
+    /**
+     * Configure spring application builder.
+     *
+     * @param application the application
+     * @return the spring application builder
+     * @since garnet 1.0.0
+     */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     * @since garnet 1.0.0
+     */
     public static void main(String[] args) {
+        LOG.info("Application Start!");
         SpringApplication.run(Application.class, args);
     }
 

@@ -13,8 +13,9 @@
     <groupId>garnet.core</groupId>
     <artifactId>garnet-core-be-fe</artifactId>
     <version>1.0.0</version>
+    <name>garnet</name>
     <packaging>war</packaging>
-    <description>war包对应的pom【mvn clean package -f pom-war.xml】</description>
+    <description>package to war: [mvn clean package -f pom-war.xml]</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -40,6 +41,7 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <aliyun.oss.version>2.5.0</aliyun.oss.version>
         <qcloud.cos.version>4.4</qcloud.cos.version>
+        <postgresql.version>9.4.1207.jre7</postgresql.version>
     </properties>
 
     <dependencies>
@@ -166,9 +168,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
+        <finalName>garnet</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -179,5 +187,29 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
