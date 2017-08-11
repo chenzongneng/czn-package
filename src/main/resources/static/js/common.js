@@ -25,7 +25,7 @@ var url = function (name) {
 T.p = url;
 
 // 请求前缀,写完整链接或从context开始的链接
-var baseURL = "http://192.168.6.97:8080/garnet/";
+var baseURL = "http://localhost:8082/garnet/";
 
 //登录token
 var token = localStorage.getItem("token");
