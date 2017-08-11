@@ -31,4 +31,7 @@
         <appender-ref ref="daily_file_log_appender"/>
     </root>
 
+    <logger name="com.richstonedt.garnet.modules" level="DEBUG">
+    </logger>
+
 </configuration>
