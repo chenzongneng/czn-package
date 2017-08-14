@@ -32,12 +32,11 @@ garnet
 ├─modules 功能模块
 │  ├─api API接口模块(APP调用)
 │  ├─job 定时任务模块
-│  ├─oss 文件服务模块
 │  └─sys 权限模块
 │ 
-├─RenrenApplication 项目启动类
+├─Application 项目启动类
 │  
-├──resources 
+├─resources
    ├─mapper SQL对应的XML文件
    ├─static 第三方库、插件等静态资源
    └─views  项目静态页面
