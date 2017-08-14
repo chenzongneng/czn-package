@@ -10,7 +10,7 @@ var menuItem = Vue.extend({
     props: {item: {}, index: 0},
     template: [
         '<li :class="{active: (item.type===0 && index === 0)}">',
-        '<a v-if="item.type === 0" href="javascript:;">',
+        '<a v-if="item.type === 0" href="javascript:void(0);">',
         '<i v-if="item.icon != null" :class="item.icon"></i>',
         '<span>{{item.name}}</span>',
         '<i class="fa fa-angle-left pull-right"></i>',
@@ -18,14 +18,14 @@ var menuItem = Vue.extend({
         '<ul v-if="item.type === 0" class="treeview-menu">',
         '<menu-item :item="item" :index="index" v-for="(item, index) in item.list"></menu-item>',
         '</ul>',
-        '<a v-if="item.type === 1" :href="\'#\'+item.url">' +
-        '<i v-if="item.icon != null" :class="item.icon"></i>' +
-        '<i v-else class="fa fa-circle-o"></i> {{item.name}}' +
+        '<a v-if="item.type === 1" :href="\'#\'+item.url">',
+        '<i v-if="item.icon != null" :class="item.icon"></i>',
+        '<i v-else class="fa fa-circle-o"></i>',
+        '<span>{{item.name}}</span>',
         '</a>',
         '</li>'
     ].join('')
 });
-
 //注册菜单组件
 Vue.component('menuItem', menuItem);
 
@@ -40,6 +40,7 @@ var vm = new Vue({
         navTitle: "欢迎页"
     },
     methods: {
+        /** 查询菜单列表 */
         getMenuList: function () {
             $.getJSON(baseURL + "sys/menu/nav", function (r) {
                 vm.menuList = r.menuList;
@@ -51,11 +52,13 @@ var vm = new Vue({
                 router.start();
             });
         },
+        /** 查询用户信息 */
         getUser: function () {
             $.getJSON(baseURL + "sys/user/info", function (r) {
                 vm.user = r.user;
             });
         },
+        /** 修改密码 */
         updatePassword: function () {
             layer.open({
                 type: 1,
@@ -86,19 +89,17 @@ var vm = new Vue({
                 }
             });
         },
+        /** 退出登录 */
         logout: function () {
-            //删除本地token
             localStorage.removeItem("token");
-            //跳转到登录页面
             location.href = baseURL + 'login.html';
-        },
+        }
     },
     created: function () {
         this.getMenuList();
         this.getUser();
     }
 });
-
 
 function routerList(router, menuList) {
     for (var key in menuList) {

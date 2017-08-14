@@ -25,6 +25,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -33,7 +34,7 @@
     <header class="main-header">
         <a href="javascript:void(0);" class="logo">
             <span class="logo-mini"><b>GRN</b></span>
-            <span class="logo-lg"><b>Garnet管理系统</b></span>
+            <span class="logo-lg"><b>Garnet安全模块</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -45,10 +46,10 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="javascript:void(0);" @click="updatePassword"><i class="fa fa-lock"></i> &nbsp;修改密码</a>
+                        <a href="javascript:void(0);" @click="updatePassword"><i class="fa fa-lock"></i>&nbsp;修改密码</a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);" @click="logout"><i class="fa fa-sign-out"></i> &nbsp;退出系统</a>
+                        <a href="javascript:void(0);" @click="logout"><i class="fa fa-sign-out"></i>&nbsp;退出系统</a>
                     </li>
                 </ul>
             </div>
@@ -59,7 +60,6 @@
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-            <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
                 <li class="header"></li>
@@ -67,7 +67,6 @@
                 <menu-item :item="item" :index="index" v-for="(item, index) in menuList"></menu-item>
             </ul>
         </section>
-        <!-- /.sidebar -->
     </aside>
 
     <!-- Content Page.-->
@@ -81,7 +80,6 @@
                 <li class="active">{{navTitle}}</li>
             </ol>
         </section>
-
         <!-- Main content -->
         <section class="content" style="background:#fff;">
             <iframe scrolling="yes" frameborder="0"
