@@ -1,3 +1,9 @@
+/*
+ * 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+ * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
 var setting = {
     data: {
         simpleData: {
@@ -7,27 +13,27 @@ var setting = {
             rootPId: -1
         },
         key: {
-            url:"nourl"
+            url: "nourl"
         }
     }
 };
 var ztree;
 
 var vm = new Vue({
-    el:'#rrapp',
-    data:{
+    el: '#garnetApp',
+    data: {
         showList: true,
         title: null,
-        dept:{
-            parentName:null,
-            parentId:0,
-            orderNum:0
+        dept: {
+            parentName: null,
+            parentId: 0,
+            orderNum: 0
         }
     },
     methods: {
-        getDept: function(){
+        getDept: function () {
             //加载部门树
-            $.get(baseURL + "sys/dept/select", function(r){
+            $.get(baseURL + "sys/dept/select", function (r) {
                 ztree = $.fn.zTree.init($("#deptTree"), setting, r.deptList);
                 var node = ztree.getNodeByParam("deptId", vm.dept.parentId);
                 ztree.selectNode(node);
@@ -35,19 +41,19 @@ var vm = new Vue({
                 vm.dept.parentName = node.name;
             })
         },
-        add: function(){
+        add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.dept = {parentName:null,parentId:0,orderNum:0};
+            vm.dept = {parentName: null, parentId: 0, orderNum: 0};
             vm.getDept();
         },
         update: function () {
             var deptId = getDeptId();
-            if(deptId == null){
-                return ;
+            if (deptId == null) {
+                return;
             }
 
-            $.get(baseURL + "sys/dept/info/"+deptId, function(r){
+            $.get(baseURL + "sys/dept/info/" + deptId, function (r) {
                 vm.showList = false;
                 vm.title = "修改";
                 vm.dept = r.dept;
@@ -57,21 +63,21 @@ var vm = new Vue({
         },
         del: function () {
             var deptId = getDeptId();
-            if(deptId == null){
-                return ;
+            if (deptId == null) {
+                return;
             }
 
-            confirm('确定要删除选中的记录？', function(){
+            confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
                     url: baseURL + "sys/dept/delete",
                     data: "deptId=" + deptId,
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
+                    success: function (r) {
+                        if (r.code === 0) {
+                            alert('操作成功', function () {
                                 vm.reload();
                             });
-                        }else{
+                        } else {
                             alert(r.msg);
                         }
                     }
@@ -85,18 +91,18 @@ var vm = new Vue({
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.dept),
-                success: function(r){
-                    if(r.code === 0){
-                        alert('操作成功', function(){
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function () {
                             vm.reload();
                         });
-                    }else{
+                    } else {
                         alert(r.msg);
                     }
                 }
             });
         },
-        deptTree: function(){
+        deptTree: function () {
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -144,7 +150,7 @@ Dept.initColumn = function () {
 };
 
 
-function getDeptId () {
+function getDeptId() {
     var selected = $('#deptTable').bootstrapTreeTable('getSelections');
     if (selected.length == 0) {
         alert("请选择一条记录");
@@ -156,7 +162,7 @@ function getDeptId () {
 
 
 $(function () {
-    $.get(baseURL + "sys/dept/info", function(r){
+    $.get(baseURL + "sys/dept/info", function (r) {
         var colunms = Dept.initColumn();
         var table = new TreeTable(Dept.id, baseURL + "sys/dept/list", colunms);
         table.setRootCodeValue(r.deptId);

@@ -1,3 +1,9 @@
+/*
+ * 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+ * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
 var setting = {
     data: {
         simpleData: {
@@ -7,28 +13,28 @@ var setting = {
             rootPId: -1
         },
         key: {
-            url:"nourl"
+            url: "nourl"
         }
     }
 };
 var ztree;
 
 var vm = new Vue({
-    el:'#rrapp',
-    data:{
+    el: '#garnetApp',
+    data: {
         showList: true,
         title: null,
-        menu:{
-            parentName:null,
-            parentId:0,
-            type:1,
-            orderNum:0
+        menu: {
+            parentName: null,
+            parentId: 0,
+            type: 1,
+            orderNum: 0
         }
     },
     methods: {
-        getMenu: function(){
+        getMenu: function () {
             //加载菜单树
-            $.get(baseURL + "sys/menu/select", function(r){
+            $.get(baseURL + "sys/menu/select", function (r) {
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r.menuList);
                 var node = ztree.getNodeByParam("menuId", vm.menu.parentId);
                 ztree.selectNode(node);
@@ -36,19 +42,19 @@ var vm = new Vue({
                 vm.menu.parentName = node.name;
             })
         },
-        add: function(){
+        add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.menu = {parentName:null,parentId:0,type:1,orderNum:0};
+            vm.menu = {parentName: null, parentId: 0, type: 1, orderNum: 0};
             vm.getMenu();
         },
         update: function () {
             var menuId = getMenuId();
-            if(menuId == null){
-                return ;
+            if (menuId == null) {
+                return;
             }
 
-            $.get(baseURL + "sys/menu/info/"+menuId, function(r){
+            $.get(baseURL + "sys/menu/info/" + menuId, function (r) {
                 vm.showList = false;
                 vm.title = "修改";
                 vm.menu = r.menu;
@@ -58,21 +64,21 @@ var vm = new Vue({
         },
         del: function () {
             var menuId = getMenuId();
-            if(menuId == null){
-                return ;
+            if (menuId == null) {
+                return;
             }
 
-            confirm('确定要删除选中的记录？', function(){
+            confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "POST",
                     url: baseURL + "sys/menu/delete",
                     data: "menuId=" + menuId,
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
+                    success: function (r) {
+                        if (r.code === 0) {
+                            alert('操作成功', function () {
                                 vm.reload();
                             });
-                        }else{
+                        } else {
                             alert(r.msg);
                         }
                     }
@@ -86,18 +92,18 @@ var vm = new Vue({
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.menu),
-                success: function(r){
-                    if(r.code === 0){
-                        alert('操作成功', function(){
+                success: function (r) {
+                    if (r.code === 0) {
+                        alert('操作成功', function () {
                             vm.reload();
                         });
-                    }else{
+                    } else {
                         alert(r.msg);
                     }
                 }
             });
         },
-        menuTree: function(){
+        menuTree: function () {
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -141,20 +147,36 @@ Menu.initColumn = function () {
         {title: '菜单ID', field: 'menuId', visible: false, align: 'center', valign: 'middle', width: '80px'},
         {title: '菜单名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
         {title: '上级菜单', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true, width: '80px', formatter: function(item, index){
-            return item.icon == null ? '' : '<i class="'+item.icon+' fa-lg"></i>';
-        }},
-        {title: '类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-            if(item.type === 0){
-                return '<span class="label label-primary">目录</span>';
+        {
+            title: '图标',
+            field: 'icon',
+            align: 'center',
+            valign: 'middle',
+            sortable: true,
+            width: '80px',
+            formatter: function (item, index) {
+                return item.icon == null ? '' : '<i class="' + item.icon + ' fa-lg"></i>';
             }
-            if(item.type === 1){
-                return '<span class="label label-success">菜单</span>';
+        },
+        {
+            title: '类型',
+            field: 'type',
+            align: 'center',
+            valign: 'middle',
+            sortable: true,
+            width: '100px',
+            formatter: function (item, index) {
+                if (item.type === 0) {
+                    return '<span class="label label-primary">目录</span>';
+                }
+                if (item.type === 1) {
+                    return '<span class="label label-success">菜单</span>';
+                }
+                if (item.type === 2) {
+                    return '<span class="label label-warning">按钮</span>';
+                }
             }
-            if(item.type === 2){
-                return '<span class="label label-warning">按钮</span>';
-            }
-        }},
+        },
         {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '菜单URL', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '160px'},
         {title: '授权标识', field: 'perms', align: 'center', valign: 'middle', sortable: true}]
@@ -162,7 +184,7 @@ Menu.initColumn = function () {
 };
 
 
-function getMenuId () {
+function getMenuId() {
     var selected = $('#menuTable').bootstrapTreeTable('getSelections');
     if (selected.length == 0) {
         alert("请选择一条记录");

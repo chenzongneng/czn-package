@@ -30,7 +30,7 @@ var menuItem = Vue.extend({
 Vue.component('menuItem', menuItem);
 
 var vm = new Vue({
-    el: '#rrapp',
+    el: '#garnetApp',
     data: {
         user: {},
         menuList: {},
