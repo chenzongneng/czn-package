@@ -11,7 +11,6 @@ import com.richstonedt.garnet.modules.sys.entity.SysRoleEntity;
 import com.richstonedt.garnet.modules.sys.service.SysRoleDeptService;
 import com.richstonedt.garnet.modules.sys.service.SysRoleMenuService;
 import com.richstonedt.garnet.modules.sys.service.SysRoleService;
-import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,14 +55,6 @@ public class SysRoleServiceImpl implements SysRoleService {
 	 */
 	@Autowired
 	private SysRoleDeptService sysRoleDeptService;
-
-	/**
-	 * The Sys user service.
-	 *
-	 * @since garnet-core-be-fe 1.0.0
-	 */
-	@Autowired
-	private SysUserService sysUserService;
 
 	/**
 	 * Query object sys role entity.

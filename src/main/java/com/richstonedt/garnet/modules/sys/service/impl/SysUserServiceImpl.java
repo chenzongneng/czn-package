@@ -8,7 +8,6 @@ package com.richstonedt.garnet.modules.sys.service.impl;
 
 import com.richstonedt.garnet.modules.sys.dao.SysUserDao;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
-import com.richstonedt.garnet.modules.sys.service.SysRoleService;
 import com.richstonedt.garnet.modules.sys.service.SysUserRoleService;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import org.apache.commons.lang.RandomStringUtils;
@@ -50,14 +49,6 @@ public class SysUserServiceImpl implements SysUserService {
 	 */
 	@Autowired
 	private SysUserRoleService sysUserRoleService;
-
-	/**
-	 * The Sys role service.
-	 *
-	 * @since garnet-core-be-fe 1.0.0
-	 */
-	@Autowired
-	private SysRoleService sysRoleService;
 
 	/**
 	 * 查询用户的所有权限

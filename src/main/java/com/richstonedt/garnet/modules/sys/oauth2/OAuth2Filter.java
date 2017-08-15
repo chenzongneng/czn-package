@@ -7,12 +7,14 @@
 package com.richstonedt.garnet.modules.sys.oauth2;
 
 import com.google.gson.Gson;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -29,6 +31,13 @@ import java.io.IOException;
  * @since garnet-core-be-fe 1.0.0
  */
 public class OAuth2Filter extends AuthenticatingFilter {
+
+    /**
+     * The constant LOG.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static Logger LOG = LoggerFactory.getLogger(OAuth2Filter.class);
 
     /**
      * The create  Token.
@@ -68,7 +77,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
         String token = getRequestToken((HttpServletRequest) request);
         if(StringUtils.isBlank(token)){
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-            String json = new Gson().toJson(R.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
+            String json = new Gson().toJson(Result.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
             httpResponse.getWriter().print(json);
 
             return false;
@@ -89,12 +98,12 @@ public class OAuth2Filter extends AuthenticatingFilter {
         try {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            R r = R.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
+            Result result = Result.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
 
-            String json = new Gson().toJson(r);
+            String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
         } catch (IOException e1) {
-
+            LOG.error(e1.getMessage());
         }
 
         return false;

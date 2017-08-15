@@ -39,7 +39,7 @@ public interface ShiroService {
     /**
      * 根据用户ID，查询用户
      *
-     * @param userId
+     * @param userId the User id
      * @since garnet-core-be-fe 1.0.0
      */
     SysUserEntity queryUser(Long userId);

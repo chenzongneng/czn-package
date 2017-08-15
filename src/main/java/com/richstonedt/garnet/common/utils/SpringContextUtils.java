@@ -27,7 +27,7 @@ public class SpringContextUtils implements ApplicationContextAware {
 	 *
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	public static ApplicationContext applicationContext;
+	private static ApplicationContext applicationContext;
 
 	/**
 	 * set  ApplicationContext.

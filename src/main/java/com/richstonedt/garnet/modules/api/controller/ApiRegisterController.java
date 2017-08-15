@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.modules.api.controller;
 
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.common.validator.Assert;
 import com.richstonedt.garnet.modules.api.annotation.AuthIgnore;
 import com.richstonedt.garnet.modules.api.service.UserService;
@@ -42,12 +42,12 @@ public class ApiRegisterController {
      */
     @AuthIgnore
     @PostMapping("register")
-    public R register(String mobile, String password){
+    public Result register(String mobile, String password){
         Assert.isBlank(mobile, "手机号不能为空");
         Assert.isBlank(password, "密码不能为空");
 
         userService.save(mobile, password);
 
-        return R.ok();
+        return Result.ok();
     }
 }

@@ -14,18 +14,18 @@
 	</select>
 
 	<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysRoleEntity">
-		select r.*, (select d.name from gar_sys_dept d where d.dept_id = r.dept_id) deptName from gar_sys_role r
+		select result.*, (select d.name from gar_sys_dept d where d.dept_id = result.dept_id) deptName from gar_sys_role result
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
-				and r.role_name like concat('%',#{roleName},'%')
+				and result.role_name like concat('%',#{roleName},'%')
 			</if>
 		</where>
 		<choose>
 			<when test="sidx != null and sidx.trim() != ''">
-				order by r.${sidx} ${order}
+				order by result.${sidx} ${order}
 			</when>
 			<otherwise>
-				order by r.role_id asc
+				order by result.role_id asc
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">

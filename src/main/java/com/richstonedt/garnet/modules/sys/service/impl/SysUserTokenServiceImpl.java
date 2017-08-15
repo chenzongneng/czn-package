@@ -6,7 +6,7 @@
 
 package com.richstonedt.garnet.modules.sys.service.impl;
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.dao.SysUserTokenDao;
 import com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity;
 import com.richstonedt.garnet.modules.sys.oauth2.TokenGenerator;
@@ -93,7 +93,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@Override
-	public R createToken(long userId) {
+	public Result createToken(long userId) {
 		//生成一个token
 		String token = TokenGenerator.generateValue();
 
@@ -121,9 +121,6 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 			//更新token
 			update(tokenEntity);
 		}
-
-		R r = R.ok().put("token", token).put("expire", EXPIRE);
-
-		return r;
+		return Result.ok().put("token", token).put("expire", EXPIRE);
 	}
 }

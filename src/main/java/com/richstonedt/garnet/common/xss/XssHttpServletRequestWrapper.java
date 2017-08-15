@@ -35,7 +35,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    HttpServletRequest orgRequest;
+    private HttpServletRequest orgRequest;
 
     /**
      * The constant htmlFilter. html过滤
@@ -189,7 +189,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
      * @return  Http Servlet Request
      * @since garnet-core-be-fe 1.0.0
      */
-    public HttpServletRequest getOrgRequest() {
+    private HttpServletRequest getOrgRequest() {
         return orgRequest;
     }
 

@@ -28,7 +28,7 @@ public class ScheduleUtils {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    public static TriggerKey getTriggerKey(Long jobId) {
+    private static TriggerKey getTriggerKey(Long jobId) {
         return TriggerKey.triggerKey(JOB_NAME + jobId);
     }
 
@@ -37,7 +37,7 @@ public class ScheduleUtils {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    public static JobKey getJobKey(Long jobId) {
+    private static JobKey getJobKey(Long jobId) {
         return JobKey.jobKey(JOB_NAME + jobId);
     }
 

@@ -12,8 +12,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.wall.WallConfig;
 import com.alibaba.druid.wall.WallFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -34,13 +32,6 @@ import java.util.List;
  */
 @Configuration
 public class DruidConfig {
-
-    /**
-     * The Logger.
-     *
-     * @since garnet-core-be-fe 1.0.0
-     */
-    private Logger logger = LoggerFactory.getLogger(DruidConfig.class);
 
     /**
      * The Db url.

@@ -28,7 +28,7 @@ public class ShiroUtils {
 	 * @return the session
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	public static Session getSession() {
+	private static Session getSession() {
 		return SecurityUtils.getSubject().getSession();
 	}
 
@@ -38,7 +38,7 @@ public class ShiroUtils {
 	 * @return the subject
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	public static Subject getSubject() {
+	private static Subject getSubject() {
 		return SecurityUtils.getSubject();
 	}
 
@@ -48,7 +48,7 @@ public class ShiroUtils {
 	 * @return the user entity
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	public static SysUserEntity getUserEntity() {
+	private static SysUserEntity getUserEntity() {
 		return (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
 	}
 
@@ -80,7 +80,7 @@ public class ShiroUtils {
 	 * @return the session attribute
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	public static Object getSessionAttribute(Object key) {
+	private static Object getSessionAttribute(Object key) {
 		return getSession().getAttribute(key);
 	}
 

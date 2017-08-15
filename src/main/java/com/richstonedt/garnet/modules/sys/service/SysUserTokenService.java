@@ -6,7 +6,7 @@
 
 package com.richstonedt.garnet.modules.sys.service;
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity;
 
 /**
@@ -59,6 +59,6 @@ public interface SysUserTokenService {
 	 * @param userId  用户ID
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	R createToken(long userId);
+	Result createToken(long userId);
 
 }

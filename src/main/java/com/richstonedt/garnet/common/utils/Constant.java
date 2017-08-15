@@ -22,8 +22,6 @@ public class Constant {
 	 * 菜单类型
 	 * 
 	 * @author chenshun
-	 * @email sunlightcs@gmail.com
-	 * @date 2016年11月15日 下午1:24:29
      * @since garnet-core-be-fe 1.0.0
 	 */
     public enum MenuType {
@@ -62,7 +60,7 @@ public class Constant {
          * @param value the value
          * @since garnet-core-be-fe 1.0.0
          */
-        private MenuType(int value) {
+        MenuType(int value) {
             this.value = value;
         }
 
@@ -81,8 +79,6 @@ public class Constant {
      * 定时任务状态
      * 
      * @author chenshun
-     * @email sunlightcs@gmail.com
-     * @date 2016年12月3日 上午12:07:22
      * @since garnet-core-be-fe 1.0.0
      */
     public enum ScheduleStatus {
@@ -114,7 +110,7 @@ public class Constant {
          * @param value the value
          * @since garnet-core-be-fe 1.0.0
          */
-        private ScheduleStatus(int value) {
+        ScheduleStatus(int value) {
             this.value = value;
         }
 

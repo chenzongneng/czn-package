@@ -97,7 +97,7 @@ public class ShiroServiceImpl implements ShiroService {
     /**
      * 根据用户ID，查询用户
      *
-     * @param userId
+     * @param userId the user id
      * @since garnet-core-be-fe 1.0.0
      */
     @Override

@@ -118,9 +118,7 @@ public class SysDeptServiceImpl implements SysDeptService {
 
 		//添加本部门
 		deptIdList.add(deptId);
-
-		String deptFilter = StringUtils.join(deptIdList, ",");
-		return deptFilter;
+		return StringUtils.join(deptIdList, ",");
 	}
 
 	/**
@@ -128,7 +126,7 @@ public class SysDeptServiceImpl implements SysDeptService {
 	 *
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	public void getDeptTreeList(List<Long> subIdList, List<Long> deptIdList){
+	private void getDeptTreeList(List<Long> subIdList, List<Long> deptIdList){
 		for(Long deptId : subIdList){
 			List<Long> list = queryDetpIdList(deptId);
 			if(list.size() > 0){

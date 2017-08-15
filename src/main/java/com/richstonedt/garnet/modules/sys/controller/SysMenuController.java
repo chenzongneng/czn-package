@@ -9,7 +9,7 @@ package com.richstonedt.garnet.modules.sys.controller;
 import com.richstonedt.garnet.common.annotation.SysLog;
 import com.richstonedt.garnet.common.exception.RRException;
 import com.richstonedt.garnet.common.utils.Constant;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.entity.SysMenuEntity;
 import com.richstonedt.garnet.modules.sys.service.ShiroService;
 import com.richstonedt.garnet.modules.sys.service.SysMenuService;
@@ -59,10 +59,10 @@ public class SysMenuController extends AbstractController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/nav")
-    public R nav() {
+    public Result nav() {
         List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
         Set<String> permissions = shiroService.getUserPermissions(getUserId());
-        return R.ok().put("menuList", menuList).put("permissions", permissions);
+        return Result.ok().put("menuList", menuList).put("permissions", permissions);
     }
 
     /**
@@ -73,9 +73,7 @@ public class SysMenuController extends AbstractController {
     @RequestMapping("/list")
     @RequiresPermissions("sys:menu:list")
     public List<SysMenuEntity> list() {
-        List<SysMenuEntity> menuList = sysMenuService.queryList(new HashMap<String, Object>());
-
-        return menuList;
+        return sysMenuService.queryList(new HashMap<String, Object>());
     }
 
     /**
@@ -85,7 +83,7 @@ public class SysMenuController extends AbstractController {
      */
     @RequestMapping("/select")
     @RequiresPermissions("sys:menu:select")
-    public R select() {
+    public Result select() {
         //查询列表数据
         List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList();
 
@@ -97,7 +95,7 @@ public class SysMenuController extends AbstractController {
         root.setOpen(true);
         menuList.add(root);
 
-        return R.ok().put("menuList", menuList);
+        return Result.ok().put("menuList", menuList);
     }
 
     /**
@@ -107,9 +105,9 @@ public class SysMenuController extends AbstractController {
      */
     @RequestMapping("/info/{menuId}")
     @RequiresPermissions("sys:menu:info")
-    public R info(@PathVariable("menuId") Long menuId) {
+    public Result info(@PathVariable("menuId") Long menuId) {
         SysMenuEntity menu = sysMenuService.queryObject(menuId);
-        return R.ok().put("menu", menu);
+        return Result.ok().put("menu", menu);
     }
 
     /**
@@ -120,13 +118,13 @@ public class SysMenuController extends AbstractController {
     @SysLog("保存菜单")
     @RequestMapping("/save")
     @RequiresPermissions("sys:menu:save")
-    public R save(@RequestBody SysMenuEntity menu) {
+    public Result save(@RequestBody SysMenuEntity menu) {
         //数据校验
         verifyForm(menu);
 
         sysMenuService.save(menu);
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -137,13 +135,13 @@ public class SysMenuController extends AbstractController {
     @SysLog("修改菜单")
     @RequestMapping("/update")
     @RequiresPermissions("sys:menu:update")
-    public R update(@RequestBody SysMenuEntity menu) {
+    public Result update(@RequestBody SysMenuEntity menu) {
         //数据校验
         verifyForm(menu);
 
         sysMenuService.update(menu);
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -154,20 +152,20 @@ public class SysMenuController extends AbstractController {
     @SysLog("删除菜单")
     @RequestMapping("/delete")
     @RequiresPermissions("sys:menu:delete")
-    public R delete(long menuId) {
+    public Result delete(long menuId) {
         if (menuId <= 31) {
-            return R.error("系统菜单，不能删除");
+            return Result.error("系统菜单，不能删除");
         }
 
         //判断是否有子菜单或按钮
         List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
         if (menuList.size() > 0) {
-            return R.error("请先删除子菜单或按钮");
+            return Result.error("请先删除子菜单或按钮");
         }
 
         sysMenuService.deleteBatch(new Long[]{menuId});
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
@@ -212,7 +210,6 @@ public class SysMenuController extends AbstractController {
             if (parentType != Constant.MenuType.MENU.getValue()) {
                 throw new RRException("上级菜单只能为菜单类型");
             }
-            return;
         }
     }
 }

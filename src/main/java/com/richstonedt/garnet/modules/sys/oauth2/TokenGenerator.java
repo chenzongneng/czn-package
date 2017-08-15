@@ -45,7 +45,7 @@ public class TokenGenerator {
      * @return the string
      * @since garnet-core-be-fe 1.0.0
      */
-    public static String toHexString(byte[] data) {
+    private static String toHexString(byte[] data) {
         if(data == null) {
             return null;
         }
@@ -64,7 +64,7 @@ public class TokenGenerator {
      * @return the string
      * @since garnet-core-be-fe 1.0.0
      */
-    public static String generateValue(String param) {
+    private static String generateValue(String param) {
         try {
             MessageDigest algorithm = MessageDigest.getInstance("MD5");
             algorithm.reset();

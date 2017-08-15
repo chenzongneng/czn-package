@@ -197,7 +197,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private List<SysMenuEntity> getMenuTreeList(List<SysMenuEntity> menuList, List<Long> menuIdList){
-		List<SysMenuEntity> subMenuList = new ArrayList<SysMenuEntity>();
+		List<SysMenuEntity> subMenuList = new ArrayList<>();
 		
 		for(SysMenuEntity entity : menuList){
 			if(entity.getType() == MenuType.CATALOG.getValue()){//目录

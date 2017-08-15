@@ -19,6 +19,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +39,7 @@ import java.util.Date;
 @Aspect
 @Component
 public class SysLogAspect {
+
 	/**
 	 * The Sys log service.
 	 *
@@ -44,6 +47,13 @@ public class SysLogAspect {
 	 */
 	@Autowired
 	private SysLogService sysLogService;
+
+	/**
+	 * The LOG.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	private static Logger LOG = LoggerFactory.getLogger(SysLogAspect.class);
 
 	/**
 	 * Log point cut.
@@ -106,7 +116,7 @@ public class SysLogAspect {
 			String params = new Gson().toJson(args[0]);
 			sysLog.setParams(params);
 		}catch (Exception e){
-
+			LOG.error(e.getMessage());
 		}
 
 		//获取request
