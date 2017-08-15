@@ -17,35 +17,82 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * The type Token service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service("tokenService")
 public class TokenServiceImpl implements TokenService {
 
+    /**
+     * The Token dao.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private TokenDao tokenDao;
 
-    //12小时后过期
+    /**
+     * The constant EXPIRE.  12小时后过期
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private final static int EXPIRE = 3600 * 12;
 
+    /**
+     * Query by user id token entity.
+     *
+     * @param userId the user id
+     * @return the token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public TokenEntity queryByUserId(Long userId) {
         return tokenDao.queryByUserId(userId);
     }
 
+    /**
+     * Query by token token entity.
+     *
+     * @param token the token
+     * @return the token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public TokenEntity queryByToken(String token) {
         return tokenDao.queryByToken(token);
     }
 
+    /**
+     * Save.
+     *
+     * @param token the token
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public void save(TokenEntity token) {
         tokenDao.save(token);
     }
 
+    /**
+     * Update.
+     *
+     * @param token the token
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public void update(TokenEntity token) {
         tokenDao.update(token);
     }
 
+    /**
+     * 生成token
+     *
+     * @param userId 用户ID
+     * @return 返回token相关信息
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public Map<String, Object> createToken(long userId) {
         //生成一个token

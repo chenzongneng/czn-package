@@ -15,24 +15,54 @@ import java.util.Date;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:06
+ * @since garnet-core-be-fe 1.0.0
  */
 public class UserEntity implements Serializable {
 
+    /**
+     * The constant serialVersionUID.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final long serialVersionUID = 1L;
 
-    //用户ID
+    /**
+     * The User id. 用户ID
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Long userId;
-    //用户名
+
+    /**
+     * The Username. 用户名
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String username;
-    //手机号
+
+    /**
+     * The Mobile.  手机号
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String mobile;
-    //密码
+
+    /**
+     * The Password.  密码
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     transient private String password;
-    //创建时间
+
+    /**
+     * The Create time. 创建时间
+     */
     private Date createTime;
 
     /**
      * 设置：用户ID
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -40,6 +70,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 获取：用户ID
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public Long getUserId() {
         return userId;
@@ -47,6 +79,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 设置：用户名
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setUsername(String username) {
         this.username = username;
@@ -54,6 +88,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 获取：用户名
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public String getUsername() {
         return username;
@@ -61,6 +97,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 设置：手机号
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -68,6 +106,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 获取：手机号
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public String getMobile() {
         return mobile;
@@ -75,6 +115,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 设置：密码
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setPassword(String password) {
         this.password = password;
@@ -82,6 +124,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 获取：密码
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public String getPassword() {
         return password;
@@ -89,6 +133,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 设置：创建时间
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
@@ -96,6 +142,8 @@ public class UserEntity implements Serializable {
 
     /**
      * 获取：创建时间
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public Date getCreateTime() {
         return createTime;

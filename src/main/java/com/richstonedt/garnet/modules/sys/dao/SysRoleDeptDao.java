@@ -17,12 +17,15 @@ import java.util.List;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017年6月21日 23:33:46
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface SysRoleDeptDao extends BaseDao<SysRoleDeptEntity> {
 	
 	/**
 	 * 根据角色ID，获取部门ID列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	List<Long> queryDeptIdList(Long roleId);
 }

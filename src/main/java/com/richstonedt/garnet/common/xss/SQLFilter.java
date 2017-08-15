@@ -14,12 +14,15 @@ import org.apache.commons.lang.StringUtils;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-04-01 16:16
+ * @since garnet-core-be-fe 1.0.0
  */
 public class SQLFilter {
 
     /**
      * SQL注入过滤
+     *
      * @param str  待验证的字符串
+     * @since garnet-core-be-fe 1.0.0
      */
     public static String sqlInject(String str){
         if(StringUtils.isBlank(str)){
@@ -39,7 +42,7 @@ public class SQLFilter {
 
         //判断是否包含非法字符
         for(String keyword : keywords){
-            if(str.indexOf(keyword) != -1){
+            if(str.contains(keyword)){
                 throw new RRException("包含非法字符");
             }
         }

@@ -22,7 +22,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  *
  * @author chenzechao
  * @version $Revision$ 2017/8/8 11:01.
- * @since garnet 1.0.0
+ * @since garnet-core-be-fe 1.0.0
  */
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
@@ -30,7 +30,7 @@ public class Application extends SpringBootServletInitializer {
     /**
      * The constant LOG.
      *
-     * @since garnet 1.0.0
+     * @since garnet-core-be-fe 1.0.0
      */
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
@@ -39,7 +39,7 @@ public class Application extends SpringBootServletInitializer {
      *
      * @param application the application
      * @return the spring application builder
-     * @since garnet 1.0.0
+     * @since garnet-core-be-fe 1.0.0
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -50,7 +50,7 @@ public class Application extends SpringBootServletInitializer {
      * The entry point of application.
      *
      * @param args the input arguments
-     * @since garnet 1.0.0
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void main(String[] args) {
         LOG.info("Application Start!");

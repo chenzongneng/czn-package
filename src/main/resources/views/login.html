@@ -94,13 +94,13 @@
                     url: baseURL + "sys/login",
                     data: data,
                     dataType: "json",
-                    success: function (r) {
-                        if (r.code == 0) {//登录成功
-                            localStorage.setItem("token", r.token);
+                    success: function (result) {
+                        if (result.code == 0) {//登录成功
+                            localStorage.setItem("token", result.token);
                             parent.location.href = 'index.html';
                         } else {
                             vm.error = true;
-                            vm.errorMsg = r.msg;
+                            vm.errorMsg = result.msg;
                         }
                     }
                 });

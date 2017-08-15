@@ -11,6 +11,7 @@ package com.richstonedt.garnet.common.validator.group;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-16 0:04
+ * @since garnet-core-be-fe 1.0.0
  */
 public interface AddGroup {
 }

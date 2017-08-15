@@ -19,6 +19,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,18 +34,45 @@ import java.util.Date;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017年3月8日 上午11:07:35
+ * @since garnet-core-be-fe 1.0.0
  */
 @Aspect
 @Component
 public class SysLogAspect {
+
+	/**
+	 * The Sys log service.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysLogService sysLogService;
 
+	/**
+	 * The LOG.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	private static Logger LOG = LoggerFactory.getLogger(SysLogAspect.class);
+
+	/**
+	 * Log point cut.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Pointcut("@annotation(com.richstonedt.garnet.common.annotation.SysLog)")
 	public void logPointCut() { 
 		
 	}
 
+	/**
+	 * Around object.
+	 *
+	 * @param point the point
+	 * @return the object
+	 * @throws Throwable the throwable
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Around("logPointCut()")
 	public Object around(ProceedingJoinPoint point) throws Throwable {
 		long beginTime = System.currentTimeMillis();
@@ -58,6 +87,13 @@ public class SysLogAspect {
 		return result;
 	}
 
+	/**
+	 * Save sys log.
+	 *
+	 * @param joinPoint the join point
+	 * @param time      the time
+	 *                  @since garnet-core-be-fe 1.0.0
+	 */
 	private void saveSysLog(ProceedingJoinPoint joinPoint, long time) {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
@@ -80,7 +116,7 @@ public class SysLogAspect {
 			String params = new Gson().toJson(args[0]);
 			sysLog.setParams(params);
 		}catch (Exception e){
-
+			LOG.error(e.getMessage());
 		}
 
 		//获取request

@@ -17,13 +17,16 @@ import java.util.List;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-06-20 15:23:47
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface SysDeptDao extends BaseDao<SysDeptEntity> {
 
     /**
      * 查询子部门ID列表
+     *
      * @param parentId  上级部门ID
+     * @since garnet-core-be-fe 1.0.0
      */
     List<Long> queryDetpIdList(Long parentId);
 }

@@ -6,7 +6,7 @@
 
 package com.richstonedt.garnet.common.exception;
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,39 +20,68 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年10月27日 下午10:16:19
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestControllerAdvice
 public class RRExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	/**
+	 * The Logger.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 自定义异常
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@ExceptionHandler(RRException.class)
-	public R handleRRException(RRException e){
-		R r = new R();
-		r.put("code", e.getCode());
-		r.put("msg", e.getMessage());
+	public Result handleRRException(RRException e){
+		Result result = new Result();
+		result.put("code", e.getCode());
+		result.put("msg", e.getMessage());
 
-		return r;
+		return result;
 	}
 
+	/**
+	 * Handle duplicate key exception r.
+	 *
+	 * @param e the e
+	 * @return the r
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@ExceptionHandler(DuplicateKeyException.class)
-	public R handleDuplicateKeyException(DuplicateKeyException e){
+	public Result handleDuplicateKeyException(DuplicateKeyException e){
 		logger.error(e.getMessage(), e);
-		return R.error("数据库中已存在该记录");
+		return Result.error("数据库中已存在该记录");
 	}
 
+	/**
+	 * Handle authorization exception r.
+	 *
+	 * @param e the e
+	 * @return the r
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@ExceptionHandler(AuthorizationException.class)
-	public R handleAuthorizationException(AuthorizationException e){
+	public Result handleAuthorizationException(AuthorizationException e){
 		logger.error(e.getMessage(), e);
-		return R.error("没有权限，请联系管理员授权");
+		return Result.error("没有权限，请联系管理员授权");
 	}
 
+	/**
+	 * Handle exception r.
+	 *
+	 * @param e the e
+	 * @return the r
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@ExceptionHandler(Exception.class)
-	public R handleException(Exception e){
+	public Result handleException(Exception e){
 		logger.error(e.getMessage(), e);
-		return R.error();
+		return Result.error();
 	}
 }

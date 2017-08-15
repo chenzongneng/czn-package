@@ -17,16 +17,35 @@ import java.util.UUID;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-05-20 14:41
+ * @since garnet-core-be-fe 1.0.0
  */
 public class TokenGenerator {
 
+    /**
+     * Generate value string.
+     *
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     public static String generateValue() {
         return generateValue(UUID.randomUUID().toString());
     }
 
+    /**
+     * The constant hexCode.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final char[] hexCode = "0123456789abcdef".toCharArray();
 
-    public static String toHexString(byte[] data) {
+    /**
+     * To hex string string.
+     *
+     * @param data the data
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static String toHexString(byte[] data) {
         if(data == null) {
             return null;
         }
@@ -38,7 +57,14 @@ public class TokenGenerator {
         return r.toString();
     }
 
-    public static String generateValue(String param) {
+    /**
+     * Generate value string.
+     *
+     * @param param the param
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static String generateValue(String param) {
         try {
             MessageDigest algorithm = MessageDigest.getInstance("MD5");
             algorithm.reset();

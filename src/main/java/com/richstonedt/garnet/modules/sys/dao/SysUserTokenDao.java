@@ -15,12 +15,27 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:07
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface SysUserTokenDao extends BaseDao<SysUserTokenEntity> {
-    
+
+    /**
+     * Query by user id sys user token entity.
+     *
+     * @param userId the user id
+     * @return the sys user token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     SysUserTokenEntity queryByUserId(Long userId);
 
+    /**
+     * Query by token sys user token entity.
+     *
+     * @param token the token
+     * @return the sys user token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     SysUserTokenEntity queryByToken(String token);
 	
 }

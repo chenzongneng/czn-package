@@ -20,15 +20,43 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * The type Shiro service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service
 public class ShiroServiceImpl implements ShiroService {
+
+    /**
+     * The Sys menu dao.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysMenuDao sysMenuDao;
+
+    /**
+     * The Sys user dao.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserDao sysUserDao;
+
+    /**
+     * The Sys user token dao.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserTokenDao sysUserTokenDao;
 
+    /**
+     * 获取用户权限列表
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public Set<String> getUserPermissions(long userId) {
         List<String> permsList;
@@ -54,11 +82,24 @@ public class ShiroServiceImpl implements ShiroService {
         return permsSet;
     }
 
+    /**
+     * Query by token sys user token entity.
+     *
+     * @param token the token
+     * @return the sys user token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public SysUserTokenEntity queryByToken(String token) {
         return sysUserTokenDao.queryByToken(token);
     }
 
+    /**
+     * 根据用户ID，查询用户
+     *
+     * @param userId the user id
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public SysUserEntity queryUser(Long userId) {
         return sysUserDao.queryObject(userId);

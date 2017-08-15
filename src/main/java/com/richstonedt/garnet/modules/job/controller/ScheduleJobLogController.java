@@ -8,7 +8,7 @@ package com.richstonedt.garnet.modules.job.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtils;
 import com.richstonedt.garnet.common.utils.Query;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.job.entity.ScheduleJobLogEntity;
 import com.richstonedt.garnet.modules.job.service.ScheduleJobLogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,20 +27,28 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年12月1日 下午10:39:52
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/scheduleLog")
 public class ScheduleJobLogController {
 
+    /**
+     * The Schedule job log service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private ScheduleJobLogService scheduleJobLogService;
 
     /**
      * 定时任务日志列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:schedule:log")
-    public R list(@RequestParam Map<String, Object> params) {
+    public Result list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
         List<ScheduleJobLogEntity> jobList = scheduleJobLogService.queryList(query);
@@ -48,16 +56,18 @@ public class ScheduleJobLogController {
 
         PageUtils pageUtil = new PageUtils(jobList, total, query.getLimit(), query.getPage());
 
-        return R.ok().put("page", pageUtil);
+        return Result.ok().put("page", pageUtil);
     }
 
     /**
      * 定时任务日志信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{logId}")
-    public R info(@PathVariable("logId") Long logId) {
+    public Result info(@PathVariable("logId") Long logId) {
         ScheduleJobLogEntity log = scheduleJobLogService.queryObject(logId);
 
-        return R.ok().put("log", log);
+        return Result.ok().put("log", log);
     }
 }

@@ -25,18 +25,39 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 22:02
+ * @since garnet-core-be-fe 1.0.0
  */
 @Component
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * The supports Parameter.
+     *
+     * @param parameter the Method Parameter
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType().isAssignableFrom(UserEntity.class) && parameter.hasParameterAnnotation(LoginUser.class);
     }
 
+    /**
+     * The resolve Argument.
+     *
+     * @param parameter the Method Parameter
+     * @param container the Model And View Container
+     * @param request the Native WebRequest
+     * @param factory the Web Data Binder Factory
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer container,
                                   NativeWebRequest request, WebDataBinderFactory factory) throws Exception {
@@ -45,10 +66,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         if (object == null) {
             return null;
         }
-
         //获取用户信息
-        UserEntity user = userService.queryObject((Long) object);
-
-        return user;
+        return userService.queryObject((Long) object);
     }
 }

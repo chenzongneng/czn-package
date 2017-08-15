@@ -10,7 +10,7 @@ import com.richstonedt.garnet.common.annotation.SysLog;
 import com.richstonedt.garnet.common.utils.Constant;
 import com.richstonedt.garnet.common.utils.PageUtils;
 import com.richstonedt.garnet.common.utils.Query;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.common.validator.ValidatorUtils;
 import com.richstonedt.garnet.modules.sys.entity.SysRoleEntity;
 import com.richstonedt.garnet.modules.sys.service.SysRoleDeptService;
@@ -30,24 +30,44 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月8日 下午2:18:33
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/role")
 public class SysRoleController extends AbstractController {
 
+    /**
+     * The Sys role service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysRoleService sysRoleService;
+
+    /**
+     * The Sys role menu service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
+
+    /**
+     * The Sys role dept service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysRoleDeptService sysRoleDeptService;
 
     /**
      * 角色列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:role:list")
-    public R list(@RequestParam Map<String, Object> params) {
+    public Result list(@RequestParam Map<String, Object> params) {
         //如果不是超级管理员，则只查询自己创建的角色列表
         if (getUserId() != Constant.SUPER_ADMIN) {
             params.put("createUserId", getUserId());
@@ -60,15 +80,17 @@ public class SysRoleController extends AbstractController {
 
         PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
 
-        return R.ok().put("page", pageUtil);
+        return Result.ok().put("page", pageUtil);
     }
 
     /**
      * 角色列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/select")
     @RequiresPermissions("sys:role:select")
-    public R select() {
+    public Result select() {
         Map<String, Object> map = new HashMap<>();
 
         //如果不是超级管理员，则只查询自己所拥有的角色列表
@@ -77,15 +99,17 @@ public class SysRoleController extends AbstractController {
         }
         List<SysRoleEntity> list = sysRoleService.queryList(map);
 
-        return R.ok().put("list", list);
+        return Result.ok().put("list", list);
     }
 
     /**
      * 角色信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{roleId}")
     @RequiresPermissions("sys:role:info")
-    public R info(@PathVariable("roleId") Long roleId) {
+    public Result info(@PathVariable("roleId") Long roleId) {
         SysRoleEntity role = sysRoleService.queryObject(roleId);
 
         //查询角色对应的菜单
@@ -96,46 +120,52 @@ public class SysRoleController extends AbstractController {
         List<Long> deptIdList = sysRoleDeptService.queryDeptIdList(roleId);
         role.setDeptIdList(deptIdList);
 
-        return R.ok().put("role", role);
+        return Result.ok().put("role", role);
     }
 
     /**
      * 保存角色
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("保存角色")
     @RequestMapping("/save")
     @RequiresPermissions("sys:role:save")
-    public R save(@RequestBody SysRoleEntity role) {
+    public Result save(@RequestBody SysRoleEntity role) {
         ValidatorUtils.validateEntity(role);
 
         sysRoleService.save(role);
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
      * 修改角色
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改角色")
     @RequestMapping("/update")
     @RequiresPermissions("sys:role:update")
-    public R update(@RequestBody SysRoleEntity role) {
+    public Result update(@RequestBody SysRoleEntity role) {
         ValidatorUtils.validateEntity(role);
 
         sysRoleService.update(role);
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
      * 删除角色
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("删除角色")
     @RequestMapping("/delete")
     @RequiresPermissions("sys:role:delete")
-    public R delete(@RequestBody Long[] roleIds) {
+    public Result delete(@RequestBody Long[] roleIds) {
         sysRoleService.deleteBatch(roleIds);
 
-        return R.ok();
+        return Result.ok();
     }
 }

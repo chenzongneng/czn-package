@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.modules.api.controller;
 
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.common.validator.Assert;
 import com.richstonedt.garnet.modules.api.annotation.AuthIgnore;
 import com.richstonedt.garnet.modules.api.service.UserService;
@@ -21,25 +21,33 @@ import org.springframework.web.bind.annotation.RestController;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-26 17:27
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/api")
 public class ApiRegisterController {
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private UserService userService;
 
     /**
      * 注册
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @AuthIgnore
     @PostMapping("register")
-    public R register(String mobile, String password){
+    public Result register(String mobile, String password){
         Assert.isBlank(mobile, "手机号不能为空");
         Assert.isBlank(password, "密码不能为空");
 
         userService.save(mobile, password);
 
-        return R.ok();
+        return Result.ok();
     }
 }

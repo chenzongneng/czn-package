@@ -19,10 +19,18 @@ import java.util.Properties;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-04-20 23:38
+ * @since garnet-core-be-fe 1.0.0
  */
 @Configuration
 public class ScheduleConfig {
 
+    /**
+     * Scheduler factory bean scheduler factory bean.
+     *
+     * @param dataSource the data source
+     * @return the scheduler factory bean
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();

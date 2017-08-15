@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年12月1日 下午10:30:02
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface ScheduleJobLogDao extends BaseDao<ScheduleJobLogEntity> {

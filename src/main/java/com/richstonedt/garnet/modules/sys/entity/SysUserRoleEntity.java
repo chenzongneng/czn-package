@@ -15,25 +15,42 @@ import java.io.Serializable;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:28:39
+ * @since garnet-core-be-fe 1.0.0
  */
 public class SysUserRoleEntity implements Serializable {
+
+	/**
+	 * The constant serialVersionUID.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	/**
+	 * The Id.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	private Long id;
 
 	/**
 	 * 用户ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Long userId;
 
 	/**
 	 * 角色ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Long roleId;
 
 	/**
 	 * 设置：
-	 * @param id 
+	 *
+	 * @param id  the id
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -41,7 +58,9 @@ public class SysUserRoleEntity implements Serializable {
 
 	/**
 	 * 获取：
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getId() {
 		return id;
@@ -49,7 +68,9 @@ public class SysUserRoleEntity implements Serializable {
 	
 	/**
 	 * 设置：用户ID
+	 *
 	 * @param userId 用户ID
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
@@ -57,7 +78,9 @@ public class SysUserRoleEntity implements Serializable {
 
 	/**
 	 * 获取：用户ID
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getUserId() {
 		return userId;
@@ -65,7 +88,9 @@ public class SysUserRoleEntity implements Serializable {
 	
 	/**
 	 * 设置：角色ID
+	 *
 	 * @param roleId 角色ID
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
@@ -73,7 +98,9 @@ public class SysUserRoleEntity implements Serializable {
 
 	/**
 	 * 获取：角色ID
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getRoleId() {
 		return roleId;

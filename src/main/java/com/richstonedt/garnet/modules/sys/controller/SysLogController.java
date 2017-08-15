@@ -8,7 +8,7 @@ package com.richstonedt.garnet.modules.sys.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtils;
 import com.richstonedt.garnet.common.utils.Query;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.entity.SysLogEntity;
 import com.richstonedt.garnet.modules.sys.service.SysLogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -28,28 +28,36 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-08 10:40:56
+ * @since garnet-core-be-fe 1.0.0
  */
 @Controller
 @RequestMapping("/sys/log")
 public class SysLogController {
 
+    /**
+     * The Sys log service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysLogService sysLogService;
 
     /**
      * 列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @ResponseBody
     @RequestMapping("/list")
     @RequiresPermissions("sys:log:list")
-    public R list(@RequestParam Map<String, Object> params) {
+    public Result list(@RequestParam Map<String, Object> params) {
         //查询列表数据
         Query query = new Query(params);
         List<SysLogEntity> sysLogList = sysLogService.queryList(query);
         int total = sysLogService.queryTotal(query);
 
         PageUtils pageUtil = new PageUtils(sysLogList, total, query.getLimit(), query.getPage());
-        return R.ok().put("page", pageUtil);
+        return Result.ok().put("page", pageUtil);
     }
 
 }

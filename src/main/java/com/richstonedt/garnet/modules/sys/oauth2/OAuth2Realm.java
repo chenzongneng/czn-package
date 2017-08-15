@@ -25,13 +25,24 @@ import java.util.Set;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-05-20 14:00
+ * @since garnet-core-be-fe 1.0.0
  */
 @Component
 public class OAuth2Realm extends AuthorizingRealm {
 
+    /**
+     * The Shiro service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private ShiroService shiroService;
 
+    /**
+     * supports
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof OAuth2Token;
@@ -39,6 +50,8 @@ public class OAuth2Realm extends AuthorizingRealm {
 
     /**
      * 授权(验证权限时调用)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -55,6 +68,8 @@ public class OAuth2Realm extends AuthorizingRealm {
 
     /**
      * 认证(登录时调用)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -73,8 +88,6 @@ public class OAuth2Realm extends AuthorizingRealm {
         if (user.getStatus() == 0) {
             throw new LockedAccountException("账号已被锁定,请联系管理员");
         }
-
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, accessToken, getName());
-        return info;
+        return  new SimpleAuthenticationInfo(user, accessToken, getName());
     }
 }

@@ -16,13 +16,23 @@ import java.util.List;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:42:30
+ * @since garnet-core-be-fe 1.0.0
  */
 public interface SysRoleMenuService {
-	
+
+	/**
+	 * Save or update.
+	 *
+	 * @param roleId     the role id
+	 * @param menuIdList the menu id list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void saveOrUpdate(Long roleId, List<Long> menuIdList);
 	
 	/**
 	 * 根据角色ID，获取菜单ID列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	List<Long> queryMenuIdList(Long roleId);
 	

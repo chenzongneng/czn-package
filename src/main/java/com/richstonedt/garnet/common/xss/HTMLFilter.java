@@ -14,30 +14,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * HTML filtering utility for protecting against XSS (Cross Site Scripting).
- *
+ * <p>
  * This code is licensed LGPLv3
- *
+ * <p>
  * This code is a Java port of the original work in PHP by Cal Hendersen.
  * http://code.iamcal.com/php/lib_filter/
- *
+ * <p>
  * The trickiest part of the translation was handling the differences in regex handling
  * between PHP and Java.  These resources were helpful in the process:
- *
+ * <p>
  * http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html
  * http://us2.php.net/manual/en/reference.pcre.pattern.modifiers.php
  * http://www.regular-expressions.info/modifiers.html
- *
+ * <p>
  * A note on naming conventions: instance variables are prefixed with a "v"; global
  * constants are in all caps.
- *
+ * <p>
  * Sample use:
  * String input = ...
  * String clean = new HTMLFilter().filter( input );
- *
+ * <p>
  * The class is not thread safe. Create a new instance if in doubt.
- *
+ * <p>
  * If you find bugs or have suggestions on improvement (especially regarding
  * performance), please contact us.  The latest version of this
  * source, and our contact details, can be found at http://xss-html-filter.sf.net
@@ -46,70 +45,284 @@ import java.util.regex.Pattern;
  * @author Cal Hendersen
  * @author Michael Semb Wever
  */
-public final class  HTMLFilter {
+public final class HTMLFilter {
 
-    /** regex flag union representing /si modifiers in php **/
+    /**
+     * regex flag union representing /si modifiers in php
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private static final int REGEX_FLAGS_SI = Pattern.CASE_INSENSITIVE | Pattern.DOTALL;
+
+    /**
+     * The constant P_COMMENTS.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_COMMENTS = Pattern.compile("<!--(.*?)-->", Pattern.DOTALL);
+
+    /**
+     * The constant P_COMMENT.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_COMMENT = Pattern.compile("^!--(.*)--$", REGEX_FLAGS_SI);
+
+    /**
+     * The constant P_TAGS.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_TAGS = Pattern.compile("<(.*?)>", Pattern.DOTALL);
+
+    /**
+     * The constant P_END_TAG.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_END_TAG = Pattern.compile("^/([a-z0-9]+)", REGEX_FLAGS_SI);
+
+    /**
+     * The constant P_START_TAG.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_START_TAG = Pattern.compile("^([a-z0-9]+)(.*?)(/?)$", REGEX_FLAGS_SI);
+
+    /**
+     * The constant P_QUOTED_ATTRIBUTES.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_QUOTED_ATTRIBUTES = Pattern.compile("([a-z0-9]+)=([\"'])(.*?)\\2", REGEX_FLAGS_SI);
+
+    /**
+     * The constant P_UNQUOTED_ATTRIBUTES.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_UNQUOTED_ATTRIBUTES = Pattern.compile("([a-z0-9]+)(=)([^\"\\s']+)", REGEX_FLAGS_SI);
+
+    /**
+     * The constant P_PROTOCOL.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_PROTOCOL = Pattern.compile("^([^:]+):", REGEX_FLAGS_SI);
+
+    /**
+     * The constant P_ENTITY.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_ENTITY = Pattern.compile("&#(\\d+);?");
+
+    /**
+     * The constant P_ENTITY_UNICODE.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_ENTITY_UNICODE = Pattern.compile("&#x([0-9a-f]+);?");
+    /**
+     * The constant P_ENCODE.
+     */
     private static final Pattern P_ENCODE = Pattern.compile("%([0-9a-f]{2});?");
+
+    /**
+     * The constant P_VALID_ENTITIES.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_VALID_ENTITIES = Pattern.compile("&([^&;]*)(?=(;|&|$))");
+
+    /**
+     * The constant P_VALID_QUOTES.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_VALID_QUOTES = Pattern.compile("(>|^)([^<]+?)(<|$)", Pattern.DOTALL);
+
+    /**
+     * The constant P_END_ARROW.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_END_ARROW = Pattern.compile("^>");
+
+    /**
+     * The constant P_BODY_TO_END.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_BODY_TO_END = Pattern.compile("<([^>]*?)(?=<|$)");
+
+    /**
+     * The constant P_XML_CONTENT.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_XML_CONTENT = Pattern.compile("(^|>)([^<]*?)(?=>)");
+
+    /**
+     * The constant P_STRAY_LEFT_ARROW.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_STRAY_LEFT_ARROW = Pattern.compile("<([^>]*?)(?=<|$)");
+
+    /**
+     * The constant P_STRAY_RIGHT_ARROW.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_STRAY_RIGHT_ARROW = Pattern.compile("(^|>)([^<]*?)(?=>)");
+
+    /**
+     * The constant P_AMP.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_AMP = Pattern.compile("&");
+
+    /**
+     * The constant P_QUOTE.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_QUOTE = Pattern.compile("<");
+
+    /**
+     * The constant P_LEFT_ARROW.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_LEFT_ARROW = Pattern.compile("<");
+
+    /**
+     * The constant P_RIGHT_ARROW.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_RIGHT_ARROW = Pattern.compile(">");
+
+    /**
+     * The constant P_BOTH_ARROWS.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final Pattern P_BOTH_ARROWS = Pattern.compile("<>");
 
-    // @xxx could grow large... maybe use sesat's ReferenceMap
-    private static final ConcurrentMap<String,Pattern> P_REMOVE_PAIR_BLANKS = new ConcurrentHashMap<String, Pattern>();
-    private static final ConcurrentMap<String,Pattern> P_REMOVE_SELF_BLANKS = new ConcurrentHashMap<String, Pattern>();
+    /**
+     * The constant P_REMOVE_PAIR_BLANKS.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static final ConcurrentMap<String, Pattern> P_REMOVE_PAIR_BLANKS = new ConcurrentHashMap<String, Pattern>();
 
-    /** set of allowed html elements, along with allowed attributes for each element **/
+    /**
+     * The constant P_REMOVE_SELF_BLANKS.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static final ConcurrentMap<String, Pattern> P_REMOVE_SELF_BLANKS = new ConcurrentHashMap<String, Pattern>();
+
+    /**
+     * set of allowed html elements, along with allowed attributes for each element
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final Map<String, List<String>> vAllowed;
-    /** counts of open tags for each (allowable) html element **/
+
+    /**
+     * counts of open tags for each (allowable) html element
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final Map<String, Integer> vTagCounts = new HashMap<String, Integer>();
 
-    /** html elements which must always be self-closing (e.g. "<img />") **/
+    /**
+     * html elements which must always be self-closing (e.g. "<img />")
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vSelfClosingTags;
-    /** html elements which must always have separate opening and closing tags (e.g. "<b></b>") **/
+
+    /**
+     * html elements which must always have separate opening and closing tags (e.g. "<b></b>")
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vNeedClosingTags;
-    /** set of disallowed html elements **/
+
+    /**
+     * set of disallowed html elements
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vDisallowed;
-    /** attributes which should be checked for valid protocols **/
+
+    /**
+     * attributes which should be checked for valid protocols
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vProtocolAtts;
-    /** allowed protocols **/
+
+    /**
+     * allowed protocols
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vAllowedProtocols;
-    /** tags which should be removed if they contain no content (e.g. "<b></b>" or "<b />") **/
+
+    /**
+     * tags which should be removed if they contain no content (e.g. "<b></b>" or "<b />")
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vRemoveBlanks;
-    /** entities allowed within html markup **/
+
+    /**
+     * entities allowed within html markup
+     *
+     * @since garnet-core-be-fe 1.0.0
+     **/
     private final String[] vAllowedEntities;
-    /** flag determining whether comments are allowed in input String. */
+
+    /**
+     * flag determining whether comments are allowed in input String.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private final boolean stripComment;
+
+    /**
+     * The Encode quotes.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private final boolean encodeQuotes;
+
+    /**
+     * The V debug.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private boolean vDebug = false;
+
     /**
      * flag determining whether to try to make tags when presented with "unbalanced"
      * angle brackets (e.g. "<b text </b>" becomes "<b> text </b>").  If set to false,
      * unbalanced angle brackets will be html escaped.
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     private final boolean alwaysMakeTags;
 
-    /** Default constructor.
+    /**
+     * Default constructor.
      *
+     * @since garnet-core-be-fe 1.0.0
      */
     public HTMLFilter() {
         vAllowed = new HashMap<>();
@@ -144,9 +357,11 @@ public final class  HTMLFilter {
         alwaysMakeTags = true;
     }
 
-    /** Set debug flag to true. Otherwise use default settings. See the default constructor.
+    /**
+     * Set debug flag to true. Otherwise use default settings. See the default constructor.
      *
      * @param debug turn debug on with a true argument
+     * @since garnet-core-be-fe 1.0.0
      */
     public HTMLFilter(final boolean debug) {
         this();
@@ -154,11 +369,13 @@ public final class  HTMLFilter {
 
     }
 
-    /** Map-parameter configurable constructor.
+    /**
+     * Map-parameter configurable constructor.
      *
      * @param conf map containing configuration. keys match field names.
+     * @since garnet-core-be-fe 1.0.0
      */
-    public HTMLFilter(final Map<String,Object> conf) {
+    public HTMLFilter(final Map<String, Object> conf) {
 
         assert conf.containsKey("vAllowed") : "configuration requires vAllowed";
         assert conf.containsKey("vSelfClosingTags") : "configuration requires vSelfClosingTags";
@@ -177,27 +394,50 @@ public final class  HTMLFilter {
         vProtocolAtts = (String[]) conf.get("vProtocolAtts");
         vRemoveBlanks = (String[]) conf.get("vRemoveBlanks");
         vAllowedEntities = (String[]) conf.get("vAllowedEntities");
-        stripComment =  conf.containsKey("stripComment") ? (Boolean) conf.get("stripComment") : true;
+        stripComment = conf.containsKey("stripComment") ? (Boolean) conf.get("stripComment") : true;
         encodeQuotes = conf.containsKey("encodeQuotes") ? (Boolean) conf.get("encodeQuotes") : true;
         alwaysMakeTags = conf.containsKey("alwaysMakeTags") ? (Boolean) conf.get("alwaysMakeTags") : true;
     }
 
+    /**
+     * Reset.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private void reset() {
         vTagCounts.clear();
     }
 
+    /**
+     * Debug.
+     *
+     * @param msg the msg
+     * @since garnet-core-be-fe 1.0.0
+     */
     private void debug(final String msg) {
         if (vDebug) {
             Logger.getAnonymousLogger().info(msg);
         }
     }
 
-    //---------------------------------------------------------------
-    // my versions of some PHP library functions
+    /**
+     * Chr string.  my versions of some PHP library functions
+     *
+     * @param decimal the decimal
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     public static String chr(final int decimal) {
         return String.valueOf((char) decimal);
     }
 
+    /**
+     * Html special chars string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     public static String htmlSpecialChars(final String s) {
         String result = s;
         result = regexReplace(P_AMP, "&amp;", result);
@@ -207,13 +447,13 @@ public final class  HTMLFilter {
         return result;
     }
 
-    //---------------------------------------------------------------
     /**
      * given a user submitted input String, filter out any invalid or restricted
      * html.
      *
      * @param input text (i.e. submitted by a user) than may contain html
      * @return "clean" version of input, with only valid, whitelisted html elements allowed
+     * @since garnet-core-be-fe 1.0.0
      */
     public String filter(final String input) {
         reset();
@@ -241,14 +481,33 @@ public final class  HTMLFilter {
         return s;
     }
 
-    public boolean isAlwaysMakeTags(){
+    /**
+     * Is always make tags boolean.
+     *
+     * @return the boolean
+     * @since garnet-core-be-fe 1.0.0
+     */
+    public boolean isAlwaysMakeTags() {
         return alwaysMakeTags;
     }
 
-    public boolean isStripComments(){
+    /**
+     * Is strip comments boolean.
+     *
+     * @return the boolean
+     * @since garnet-core-be-fe 1.0.0
+     */
+    public boolean isStripComments() {
         return stripComment;
     }
 
+    /**
+     * Escape comments string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String escapeComments(final String s) {
         final Matcher m = P_COMMENTS.matcher(s);
         final StringBuffer buf = new StringBuffer();
@@ -261,6 +520,13 @@ public final class  HTMLFilter {
         return buf.toString();
     }
 
+    /**
+     * Balance html string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String balanceHTML(String s) {
         if (alwaysMakeTags) {
             //
@@ -288,6 +554,13 @@ public final class  HTMLFilter {
         return s;
     }
 
+    /**
+     * Check tags string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String checkTags(String s) {
         Matcher m = P_TAGS.matcher(s);
 
@@ -312,14 +585,21 @@ public final class  HTMLFilter {
         return s;
     }
 
+    /**
+     * Process remove blanks string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String processRemoveBlanks(final String s) {
         String result = s;
         for (String tag : vRemoveBlanks) {
-            if(!P_REMOVE_PAIR_BLANKS.containsKey(tag)){
+            if (!P_REMOVE_PAIR_BLANKS.containsKey(tag)) {
                 P_REMOVE_PAIR_BLANKS.putIfAbsent(tag, Pattern.compile("<" + tag + "(\\s[^>]*)?></" + tag + ">"));
             }
             result = regexReplace(P_REMOVE_PAIR_BLANKS.get(tag), "", result);
-            if(!P_REMOVE_SELF_BLANKS.containsKey(tag)){
+            if (!P_REMOVE_SELF_BLANKS.containsKey(tag)) {
                 P_REMOVE_SELF_BLANKS.putIfAbsent(tag, Pattern.compile("<" + tag + "(\\s[^>]*)?/>"));
             }
             result = regexReplace(P_REMOVE_SELF_BLANKS.get(tag), "", result);
@@ -328,11 +608,27 @@ public final class  HTMLFilter {
         return result;
     }
 
+    /**
+     * Regex replace string.
+     *
+     * @param regex_pattern the regex pattern
+     * @param replacement   the replacement
+     * @param s             the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static String regexReplace(final Pattern regex_pattern, final String replacement, final String s) {
         Matcher m = regex_pattern.matcher(s);
         return m.replaceAll(replacement);
     }
 
+    /**
+     * Process tag string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String processTag(final String s) {
         // ending tags
         Matcher m = P_END_TAG.matcher(s);
@@ -415,12 +711,19 @@ public final class  HTMLFilter {
         // comments
         m = P_COMMENT.matcher(s);
         if (!stripComment && m.find()) {
-            return  "<" + m.group() + ">";
+            return "<" + m.group() + ">";
         }
 
         return "";
     }
 
+    /**
+     * Process param protocol string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String processParamProtocol(String s) {
         s = decodeEntities(s);
         final Matcher m = P_PROTOCOL.matcher(s);
@@ -438,6 +741,13 @@ public final class  HTMLFilter {
         return s;
     }
 
+    /**
+     * Decode entities string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String decodeEntities(String s) {
         StringBuffer buf = new StringBuffer();
 
@@ -474,6 +784,13 @@ public final class  HTMLFilter {
         return s;
     }
 
+    /**
+     * Validate entities string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String validateEntities(final String s) {
         StringBuffer buf = new StringBuffer();
 
@@ -489,8 +806,15 @@ public final class  HTMLFilter {
         return encodeQuotes(buf.toString());
     }
 
-    private String encodeQuotes(final String s){
-        if(encodeQuotes){
+    /**
+     * Encode quotes string.
+     *
+     * @param s the s
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private String encodeQuotes(final String s) {
+        if (encodeQuotes) {
             StringBuffer buf = new StringBuffer();
             Matcher m = P_VALID_QUOTES.matcher(s);
             while (m.find()) {
@@ -501,11 +825,19 @@ public final class  HTMLFilter {
             }
             m.appendTail(buf);
             return buf.toString();
-        }else{
+        } else {
             return s;
         }
     }
 
+    /**
+     * Check entity string.
+     *
+     * @param preamble the preamble
+     * @param term     the term
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String checkEntity(final String preamble, final String term) {
 
         return ";".equals(term) && isValidEntity(preamble)
@@ -513,10 +845,25 @@ public final class  HTMLFilter {
                 : "&amp;" + preamble;
     }
 
+    /**
+     * Is valid entity boolean.
+     *
+     * @param entity the entity
+     * @return the boolean
+     * @since garnet-core-be-fe 1.0.0
+     */
     private boolean isValidEntity(final String entity) {
         return inArray(entity, vAllowedEntities);
     }
 
+    /**
+     * In array boolean.
+     *
+     * @param s     the s
+     * @param array the array
+     * @return the boolean
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static boolean inArray(final String s, final String[] array) {
         for (String item : array) {
             if (item != null && item.equals(s)) {
@@ -526,10 +873,25 @@ public final class  HTMLFilter {
         return false;
     }
 
+    /**
+     * Allowed boolean.
+     *
+     * @param name the name
+     * @return the boolean
+     * @since garnet-core-be-fe 1.0.0
+     */
     private boolean allowed(final String name) {
         return (vAllowed.isEmpty() || vAllowed.containsKey(name)) && !inArray(name, vDisallowed);
     }
 
+    /**
+     * Allowed attribute boolean.
+     *
+     * @param name      the name
+     * @param paramName the param name
+     * @return the boolean
+     * @since garnet-core-be-fe 1.0.0
+     */
     private boolean allowedAttribute(final String name, final String paramName) {
         return allowed(name) && (vAllowed.isEmpty() || vAllowed.get(name).contains(paramName));
     }

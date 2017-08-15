@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.modules.api.controller;
 
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.api.annotation.AuthIgnore;
 import com.richstonedt.garnet.modules.api.annotation.LoginUser;
 import com.richstonedt.garnet.modules.api.entity.TokenEntity;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:47
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/api")
@@ -27,26 +28,38 @@ public class ApiTestController {
 
     /**
      * 获取用户信息
+     *
+     * @param user the UserEntity
+     * @return the Result
+     * @since garnet-core-be-fe 1.0.0
      */
     @GetMapping("userInfo")
-    public R userInfo(@LoginUser UserEntity user){
-        return R.ok().put("user", user);
+    public Result userInfo(@LoginUser UserEntity user){
+        return Result.ok().put("user", user);
     }
 
     /**
      * 忽略Token验证测试
+     *
+     * @return the Result
+     * @since garnet-core-be-fe 1.0.0
      */
     @AuthIgnore
     @GetMapping("notToken")
-    public R notToken(){
-        return R.ok().put("msg", "无需token也能访问。。。");
+    public Result notToken(){
+        return Result.ok().put("msg", "无需token也能访问。。。");
     }
 
     /**
      * 接收JSON数据
+     *
+     * @param user the UserEntity
+     * @param token the TokenEntity
+     * @return the Result
+     * @since garnet-core-be-fe 1.0.0
      */
     @PostMapping("jsonData")
-    public R jsonData(@LoginUser UserEntity user, @RequestBody TokenEntity token){
-        return R.ok().put("user", user).put("token", token);
+    public Result jsonData(@LoginUser UserEntity user, @RequestBody TokenEntity token){
+        return Result.ok().put("user", user).put("token", token);
     }
 }

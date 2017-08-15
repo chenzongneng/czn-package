@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.modules.sys.controller;
 
 import com.richstonedt.garnet.common.utils.Constant;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.entity.SysDeptEntity;
 import com.richstonedt.garnet.modules.sys.service.SysDeptService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -28,16 +28,24 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-06-20 15:23:47
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/dept")
 public class SysDeptController extends AbstractController {
 
+    /**
+     * The Sys dept service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysDeptService sysDeptService;
 
     /**
      * 列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:dept:list")
@@ -47,17 +55,17 @@ public class SysDeptController extends AbstractController {
         if (getUserId() != Constant.SUPER_ADMIN) {
             map.put("deptFilter", sysDeptService.getSubDeptIdList(getDeptId()));
         }
-        List<SysDeptEntity> deptList = sysDeptService.queryList(map);
-
-        return deptList;
+        return sysDeptService.queryList(map);
     }
 
     /**
      * 选择部门(添加、修改菜单)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/select")
     @RequiresPermissions("sys:dept:select")
-    public R select() {
+    public Result select() {
         Map<String, Object> map = new HashMap<>();
         //如果不是超级管理员，则只能查询本部门及子部门数据
         if (getUserId() != Constant.SUPER_ADMIN) {
@@ -75,72 +83,82 @@ public class SysDeptController extends AbstractController {
             deptList.add(root);
         }
 
-        return R.ok().put("deptList", deptList);
+        return Result.ok().put("deptList", deptList);
     }
 
     /**
      * 上级部门Id(管理员则为0)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info")
     @RequiresPermissions("sys:dept:list")
-    public R info() {
+    public Result info() {
         long deptId = 0;
         if (getUserId() != Constant.SUPER_ADMIN) {
             SysDeptEntity dept = sysDeptService.queryObject(getDeptId());
             deptId = dept.getParentId();
         }
 
-        return R.ok().put("deptId", deptId);
+        return Result.ok().put("deptId", deptId);
     }
 
     /**
      * 信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{deptId}")
     @RequiresPermissions("sys:dept:info")
-    public R info(@PathVariable("deptId") Long deptId) {
+    public Result info(@PathVariable("deptId") Long deptId) {
         SysDeptEntity dept = sysDeptService.queryObject(deptId);
 
-        return R.ok().put("dept", dept);
+        return Result.ok().put("dept", dept);
     }
 
     /**
      * 保存
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:dept:save")
-    public R save(@RequestBody SysDeptEntity dept) {
+    public Result save(@RequestBody SysDeptEntity dept) {
         sysDeptService.save(dept);
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
      * 修改
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/update")
     @RequiresPermissions("sys:dept:update")
-    public R update(@RequestBody SysDeptEntity dept) {
+    public Result update(@RequestBody SysDeptEntity dept) {
         sysDeptService.update(dept);
 
-        return R.ok();
+        return Result.ok();
     }
 
     /**
      * 删除
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/delete")
     @RequiresPermissions("sys:dept:delete")
-    public R delete(long deptId) {
+    public Result delete(long deptId) {
         //判断是否有子部门
         List<Long> deptList = sysDeptService.queryDetpIdList(deptId);
         if (deptList.size() > 0) {
-            return R.error("请先删除子部门");
+            return Result.error("请先删除子部门");
         }
 
         sysDeptService.delete(deptId);
 
-        return R.ok();
+        return Result.ok();
     }
 
 }

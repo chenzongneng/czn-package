@@ -8,7 +8,7 @@ package com.richstonedt.garnet.modules.sys.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.common.utils.ShiroUtils;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
@@ -34,17 +34,43 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月10日 下午1:15:31
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 public class SysLoginController {
 
+    /**
+     * The Producer.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private Producer producer;
+
+    /**
+     * The Sys user service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserService sysUserService;
+
+    /**
+     * The Sys user token service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserTokenService sysUserTokenService;
 
+    /**
+     * Captcha.
+     *
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     * @since garnet-core-be-fe 1.0.0
+     */
     @RequestMapping("captcha.jpg")
     public void captcha(HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
@@ -64,30 +90,27 @@ public class SysLoginController {
 
     /**
      * 登录
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
     public Map<String, Object> login(String username, String password, String captcha) throws IOException {
         String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
         if (!captcha.equalsIgnoreCase(kaptcha)) {
-            return R.error("验证码不正确");
+            return Result.error("验证码不正确");
         }
-
         //用户信息
         SysUserEntity user = sysUserService.queryByUserName(username);
-
         //账号不存在、密码错误
         if (user == null || !user.getPassword().equals(new Sha256Hash(password, user.getSalt()).toHex())) {
-            return R.error("账号或密码不正确");
+            return Result.error("账号或密码不正确");
         }
-
         //账号锁定
         if (user.getStatus() == 0) {
-            return R.error("账号已被锁定,请联系管理员");
+            return Result.error("账号已被锁定,请联系管理员");
         }
-
         //生成token，并保存到数据库
-        R r = sysUserTokenService.createToken(user.getUserId());
-        return r;
+        return  sysUserTokenService.createToken(user.getUserId());
     }
 
 }

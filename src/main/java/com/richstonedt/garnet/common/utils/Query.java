@@ -18,14 +18,37 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-14 23:15
+ * @since garnet-core-be-fe 1.0.0
  */
 public class Query extends LinkedHashMap<String, Object> {
-	private static final long serialVersionUID = 1L;
-	//当前页码
+
+    /**
+     * The constant serialVersionUID.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The Page. 当前页码
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private int page;
-    //每页条数
+
+    /**
+     * The Limit. 每页条数
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private int limit;
 
+    /**
+     * Instantiates a new Query.
+     *
+     * @param params the params
+     * @since garnet-core-be-fe 1.0.0
+     */
     public Query(Map<String, Object> params){
         this.putAll(params);
 
@@ -49,18 +72,42 @@ public class Query extends LinkedHashMap<String, Object> {
     }
 
 
+    /**
+     * Gets page.
+     *
+     * @return the page
+     * @since garnet-core-be-fe 1.0.0
+     */
     public int getPage() {
         return page;
     }
 
+    /**
+     * Sets page.
+     *
+     * @param page the page
+     * @since garnet-core-be-fe 1.0.0
+     */
     public void setPage(int page) {
         this.page = page;
     }
 
+    /**
+     * Gets limit.
+     *
+     * @return the limit
+     * @since garnet-core-be-fe 1.0.0
+     */
     public int getLimit() {
         return limit;
     }
 
+    /**
+     * Sets limit.
+     *
+     * @param limit the limit
+     * @since garnet-core-be-fe 1.0.0
+     */
     public void setLimit(int limit) {
         this.limit = limit;
     }

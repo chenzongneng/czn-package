@@ -16,12 +16,27 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:07
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface TokenDao extends BaseDao<TokenEntity> {
-    
+
+    /**
+     * Query by user id token entity.
+     *
+     * @param userId the user id
+     * @return the token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     TokenEntity queryByUserId(Long userId);
 
+    /**
+     * Query by token token entity.
+     *
+     * @param token the token
+     * @return the token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     TokenEntity queryByToken(String token);
 	
 }

@@ -23,17 +23,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Schedule job service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service("scheduleJobService")
 public class ScheduleJobServiceImpl implements ScheduleJobService {
 
+	/**
+	 * The Scheduler.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
     private Scheduler scheduler;
 
+	/**
+	 * The Scheduler job dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private ScheduleJobDao schedulerJobDao;
 	
 	/**
 	 * 项目启动时，初始化定时器
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@PostConstruct
 	public void init(){
@@ -48,22 +65,42 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
             }
 		}
 	}
-	
+
+	/**
+	 * 根据ID，查询定时任务
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public ScheduleJobEntity queryObject(Long jobId) {
 		return schedulerJobDao.queryObject(jobId);
 	}
 
+	/**
+	 * 查询定时任务列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<ScheduleJobEntity> queryList(Map<String, Object> map) {
 		return schedulerJobDao.queryList(map);
 	}
 
+	/**
+	 * 查询总数
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public int queryTotal(Map<String, Object> map) {
 		return schedulerJobDao.queryTotal(map);
 	}
 
+	/**
+	 * 保存定时任务
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void save(ScheduleJobEntity scheduleJob) {
@@ -73,7 +110,12 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
         
         ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
     }
-	
+
+	/**
+	 * 更新定时任务
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void update(ScheduleJobEntity scheduleJob) {
@@ -82,6 +124,11 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
         schedulerJobDao.update(scheduleJob);
     }
 
+	/**
+	 * 批量删除定时任务
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
     public void deleteBatch(Long[] jobIds) {
@@ -93,6 +140,11 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
     	schedulerJobDao.deleteBatch(jobIds);
 	}
 
+	/**
+	 * 批量更新定时任务状态
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
     public int updateBatch(Long[] jobIds, int status){
     	Map<String, Object> map = new HashMap<>();
@@ -100,7 +152,12 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
     	map.put("status", status);
     	return schedulerJobDao.updateBatch(map);
     }
-    
+
+	/**
+	 * 立即执行
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
     public void run(Long[] jobIds) {
@@ -109,6 +166,11 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
     	}
     }
 
+	/**
+	 * 暂停运行
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
     public void pause(Long[] jobIds) {
@@ -119,6 +181,11 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
     	updateBatch(jobIds, ScheduleStatus.PAUSE.getValue());
     }
 
+	/**
+	 * 恢复运行
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
     public void resume(Long[] jobIds) {

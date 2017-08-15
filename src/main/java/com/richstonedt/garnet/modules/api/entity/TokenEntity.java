@@ -16,21 +16,49 @@ import java.util.Date;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:07
+ * @since garnet-core-be-fe 1.0.0
  */
 public class TokenEntity implements Serializable {
+
+    /**
+     * The constant serialVersionUID.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static final long serialVersionUID = 1L;
 
-    //用户ID
+    /**
+     * The User id. 用户ID
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Long userId;
-    //token
+
+    /**
+     * The Token.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String token;
-    //过期时间
+
+    /**
+     * The Expire time. 过期时间
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Date expireTime;
-    //更新时间
+
+    /**
+     * The Update time. 更新时间
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Date updateTime;
 
     /**
      * 设置：用户ID
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -38,6 +66,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 获取：用户ID
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public Long getUserId() {
         return userId;
@@ -45,6 +75,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 设置：token
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setToken(String token) {
         this.token = token;
@@ -52,6 +84,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 获取：token
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public String getToken() {
         return token;
@@ -59,6 +93,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 设置：过期时间
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setExpireTime(Date expireTime) {
         this.expireTime = expireTime;
@@ -66,6 +102,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 获取：过期时间
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public Date getExpireTime() {
         return expireTime;
@@ -73,6 +111,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 设置：更新时间
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
@@ -80,6 +120,8 @@ public class TokenEntity implements Serializable {
 
     /**
      * 获取：更新时间
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public Date getUpdateTime() {
         return updateTime;

@@ -29,13 +29,29 @@ import java.util.concurrent.Future;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月30日 下午12:44:21
+ * @since garnet-core-be-fe 1.0.0
  */
 public class ScheduleJob extends QuartzJobBean {
 
+    /**
+     * The Logger.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * The Service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private ExecutorService service = Executors.newSingleThreadExecutor();
 
+    /**
+     * The execute Internal.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         String jsonJob = context.getMergedJobDataMap().getString(ScheduleJobEntity.JOB_PARAM_KEY);

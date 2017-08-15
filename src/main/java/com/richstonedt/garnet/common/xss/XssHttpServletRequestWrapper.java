@@ -22,21 +22,45 @@ import java.util.Map;
 
 /**
  * XSS过滤处理
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-04-01 11:29
+ * @since garnet-core-be-fe 1.0.0
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
-    //没被包装过的HttpServletRequest（特殊场景，需要自己过滤）
-    HttpServletRequest orgRequest;
-    //html过滤
+
+    /**
+     * The Org request. 没被包装过的HttpServletRequest（特殊场景，需要自己过滤）
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private HttpServletRequest orgRequest;
+
+    /**
+     * The constant htmlFilter. html过滤
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private final static HTMLFilter htmlFilter = new HTMLFilter();
 
+    /**
+     * Instantiates a new Xss http servlet request wrapper.
+     *
+     * @param request the request
+     * @since garnet-core-be-fe 1.0.0
+     */
     public XssHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         orgRequest = request;
     }
 
+    /**
+     * Servlet Input Stream
+     *
+     * @return the Servlet  Input  Stream
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public ServletInputStream getInputStream() throws IOException {
         //非json类型，直接返回
@@ -76,6 +100,13 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         };
     }
 
+    /**
+     * get Parameter
+     *
+     * @param name the name
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public String getParameter(String name) {
         String value = super.getParameter(xssEncode(name));
@@ -85,6 +116,13 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return value;
     }
 
+    /**
+     * get Parameter Values
+     *
+     * @param name the name
+     * @return the string[]
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public String[] getParameterValues(String name) {
         String[] parameters = super.getParameterValues(name);
@@ -98,6 +136,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return parameters;
     }
 
+    /**
+     * get Parameter Map
+     *
+     * @return the  Map<String,String[]>
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public Map<String,String[]> getParameterMap() {
         Map<String,String[]> map = new LinkedHashMap<>();
@@ -112,6 +156,13 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return map;
     }
 
+    /**
+     * getHeader
+     *
+     * @param name the name
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(xssEncode(name));
@@ -121,19 +172,33 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return value;
     }
 
+    /**
+     * Xss encode string.
+     *
+     * @param input the input
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String xssEncode(String input) {
         return htmlFilter.filter(input);
     }
 
     /**
      * 获取最原始的request
+     *
+     * @return  Http Servlet Request
+     * @since garnet-core-be-fe 1.0.0
      */
-    public HttpServletRequest getOrgRequest() {
+    private HttpServletRequest getOrgRequest() {
         return orgRequest;
     }
 
     /**
      * 获取最原始的request
+     *
+     * @param request the HttpServletRequest
+     * @return  Http Servlet Request
+     * @since garnet-core-be-fe 1.0.0
      */
     public static HttpServletRequest getOrgRequest(HttpServletRequest request) {
         if (request instanceof XssHttpServletRequestWrapper) {

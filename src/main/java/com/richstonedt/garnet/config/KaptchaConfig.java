@@ -20,16 +20,24 @@ import java.util.Properties;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-04-20 19:22
+ * @since garnet-core-be-fe 1.0.0
  */
 @Configuration
 public class KaptchaConfig {
 
+    /**
+     * Producer default kaptcha.
+     *
+     * @return the default kaptcha
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean
     public DefaultKaptcha producer() {
         Properties properties = new Properties();
         properties.put("kaptcha.border", "no");
         properties.put("kaptcha.textproducer.font.color", "black");
-        properties.put("kaptcha.textproducer.char.space", "4");
+        properties.put("kaptcha.textproducer.char.space", "5");
+        properties.put("kaptcha.textproducer.char.length", "4");
         Config config = new Config(properties);
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         defaultKaptcha.setConfig(config);

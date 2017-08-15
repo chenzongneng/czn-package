@@ -15,13 +15,23 @@ import java.util.List;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017年6月21日 23:42:30
+ * @since garnet-core-be-fe 1.0.0
  */
 public interface SysRoleDeptService {
-	
+
+	/**
+	 * Save or update.
+	 *
+	 * @param roleId     the role id
+	 * @param deptIdList the dept id list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void saveOrUpdate(Long roleId, List<Long> deptIdList);
 	
 	/**
 	 * 根据角色ID，获取部门ID列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	List<Long> queryDeptIdList(Long roleId);
 	

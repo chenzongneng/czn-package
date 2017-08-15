@@ -19,15 +19,41 @@ import java.lang.reflect.Method;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月30日 下午12:49:33
+ * @since garnet-core-be-fe 1.0.0
  */
 public class ScheduleRunnable implements Runnable {
 
+    /**
+     * The Target.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Object target;
 
+    /**
+     * The Method.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Method method;
 
+    /**
+     * The Params.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private String params;
 
+    /**
+     * Instantiates a new Schedule runnable.
+     *
+     * @param beanName   the bean name
+     * @param methodName the method name
+     * @param params     the params
+     * @throws NoSuchMethodException the no such method exception
+     * @throws SecurityException     the security exception
+     * @since garnet-core-be-fe 1.0.0
+     */
     public ScheduleRunnable(String beanName, String methodName, String params) throws NoSuchMethodException, SecurityException {
         this.target = SpringContextUtils.getBean(beanName);
         this.params = params;
@@ -39,6 +65,11 @@ public class ScheduleRunnable implements Runnable {
         }
     }
 
+    /**
+     * The run.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public void run() {
         try {

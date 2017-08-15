@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.modules.api.controller;
 
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.common.validator.Assert;
 import com.richstonedt.garnet.modules.api.annotation.AuthIgnore;
 import com.richstonedt.garnet.modules.api.service.TokenService;
@@ -25,23 +25,36 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:31
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/api")
 public class ApiLoginController {
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * The Token service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private TokenService tokenService;
 
     /**
      * 登录
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @AuthIgnore
     @PostMapping("login")
-    public R login(String mobile, String password){
+    public Result login(String mobile, String password){
         Assert.isBlank(mobile, "手机号不能为空");
         Assert.isBlank(password, "密码不能为空");
 
@@ -51,7 +64,7 @@ public class ApiLoginController {
         //生成token
         Map<String, Object> map = tokenService.createToken(userId);
 
-        return R.ok(map);
+        return Result.ok(map);
     }
 
 }

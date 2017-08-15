@@ -6,7 +6,7 @@
 
 package com.richstonedt.garnet.modules.sys.service.impl;
 
-import com.richstonedt.garnet.common.utils.R;
+import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.dao.SysUserTokenDao;
 import com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity;
 import com.richstonedt.garnet.modules.sys.oauth2.TokenGenerator;
@@ -17,35 +17,83 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 
+/**
+ * The type Sys user token service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service("sysUserTokenService")
 public class SysUserTokenServiceImpl implements SysUserTokenService {
+
+	/**
+	 * The Sys user token dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysUserTokenDao sysUserTokenDao;
-	//12小时后过期
+
+	/**
+	 * The constant EXPIRE. 12小时后过期
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	private final static int EXPIRE = 3600 * 12;
 
+	/**
+	 * Query by user id sys user token entity.
+	 *
+	 * @param userId the user id
+	 * @return the sys user token entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysUserTokenEntity queryByUserId(Long userId) {
 		return sysUserTokenDao.queryByUserId(userId);
 	}
 
+	/**
+	 * Query by token sys user token entity.
+	 *
+	 * @param token the token
+	 * @return the sys user token entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysUserTokenEntity queryByToken(String token) {
 		return sysUserTokenDao.queryByToken(token);
 	}
 
+	/**
+	 * Save.
+	 *
+	 * @param token the token
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void save(SysUserTokenEntity token){
 		sysUserTokenDao.save(token);
 	}
-	
+
+	/**
+	 * Update.
+	 *
+	 * @param token the token
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void update(SysUserTokenEntity token){
 		sysUserTokenDao.update(token);
 	}
 
+	/**
+	 * 生成token
+	 *
+	 * @param userId  用户ID
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
-	public R createToken(long userId) {
+	public Result createToken(long userId) {
 		//生成一个token
 		String token = TokenGenerator.generateValue();
 
@@ -73,9 +121,6 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 			//更新token
 			update(tokenEntity);
 		}
-
-		R r = R.ok().put("token", token).put("expire", EXPIRE);
-
-		return r;
+		return Result.ok().put("token", token).put("expire", EXPIRE);
 	}
 }
