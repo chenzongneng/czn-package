@@ -19,6 +19,7 @@
 				bean_name like concat('%', #{beanName}, '%') 
 			</if>
 		</where>
+		order by job_id
 		<if test="offset != null and limit != null ">
 		limit #{limit} offset #{offset};
 		</if>

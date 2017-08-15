@@ -24,7 +24,7 @@
 				order by u.${sidx} ${order}
 			</when>
 			<otherwise>
-				order by u.user_id desc
+				order by u.user_id asc
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">
