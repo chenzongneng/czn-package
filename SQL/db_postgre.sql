@@ -169,9 +169,9 @@ COMMENT ON COLUMN "public"."gar_sys_menu"."order_num" IS '排序';
 ALTER TABLE "public"."gar_sys_menu" ADD PRIMARY KEY ("menu_id");
 
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('1', '0', '系统管理', NULL, NULL, '0', 'fa fa-cog', '0');
-INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('2', '1', '管理员管理', 'modules/sys/user.html', NULL, '1', 'fa fa-user', '1');
-INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('3', '1', '角色管理', 'modules/sys/role.html', NULL, '1', 'fa fa-user-secret', '2');
-INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('4', '1', '菜单管理', 'modules/sys/menu.html', NULL, '1', 'fa fa-th-list', '3');
+INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('2', '1', '用户管理', 'modules/sys/user.html', NULL, '1', 'fa fa-user', '1');
+INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('3', '1', '角色管理', 'modules/sys/role.html', NULL, '1', 'fa fa-user-secret', '3');
+INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('4', '1', '菜单管理', 'modules/sys/menu.html', NULL, '1', 'fa fa-th-list', '4');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('15', '2', '查看', NULL, 'sys:user:list,sys:user:info', '2', NULL, '0');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('16', '2', '新增', NULL, 'sys:user:save,sys:role:select', '2', NULL, '0');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('17', '2', '修改', NULL, 'sys:user:update,sys:role:select', '2', NULL, '0');
@@ -186,7 +186,7 @@ INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "per
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('26', '4', '删除', NULL, 'sys:menu:delete', '2', NULL, '0');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('27', '1', '参数管理', 'modules/sys/config.html', 'sys:config:list,sys:config:info,sys:config:save,sys:config:update,sys:config:delete', '1', 'fa fa-sun-o', '6');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('29', '1', '系统日志', 'modules/sys/log.html', 'sys:log:list', '1', 'fa fa-file-text-o', '7');
-INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('31', '1', '部门管理', 'modules/sys/dept.html', NULL, '1', 'fa fa-file-code-o', '1');
+INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('31', '1', '租户管理', 'modules/sys/dept.html', NULL, '1', 'fa fa-file-code-o', '2');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('32', '31', '查看', NULL, 'sys:dept:list,sys:dept:info', '2', NULL, '0');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('33', '31', '新增', NULL, 'sys:dept:save,sys:dept:select', '2', NULL, '0');
 INSERT INTO "public"."gar_sys_menu" ("menu_id", "parent_id", "name", "url", "perms", "type", "icon", "order_num") VALUES ('34', '31', '修改', NULL, 'sys:dept:update,sys:dept:select', '2', NULL, '0');
