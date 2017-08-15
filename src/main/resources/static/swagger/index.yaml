@@ -1023,7 +1023,7 @@ paths:
 
 #定义数据模型
 definitions:
-  R:
+  Result:
       type: object
       properties:
         code:

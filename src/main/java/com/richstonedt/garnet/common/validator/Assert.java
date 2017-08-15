@@ -18,12 +18,26 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class Assert {
 
+    /**
+     * Is blank.
+     *
+     * @param str     the str
+     * @param message the message
+     * @since garnet-core-be-fe 1.0.0
+     */
     public static void isBlank(String str, String message) {
         if (StringUtils.isBlank(str)) {
             throw new RRException(message);
         }
     }
 
+    /**
+     * Is null.
+     *
+     * @param object  the object
+     * @param message the message
+     * @since garnet-core-be-fe 1.0.0
+     */
     public static void isNull(Object object, String message) {
         if (object == null) {
             throw new RRException(message);
