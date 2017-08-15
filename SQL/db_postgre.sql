@@ -95,23 +95,11 @@ CREATE TABLE "public"."gar_sys_dept" (
   "order_num" int4,
   "del_flag" int4 DEFAULT 0
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 COMMENT ON COLUMN "public"."gar_sys_dept"."parent_id" IS '上级部门ID，一级部门为0';
 COMMENT ON COLUMN "public"."gar_sys_dept"."name" IS '部门名称';
 COMMENT ON COLUMN "public"."gar_sys_dept"."order_num" IS '排序';
 COMMENT ON COLUMN "public"."gar_sys_dept"."del_flag" IS '是否删除  -1：已删除  0：正常';
-
--- ----------------------------
--- Records of gar_sys_dept
--- ----------------------------
-INSERT INTO "public"."gar_sys_dept" VALUES ('1', '0', '人人开源集团', '0', '0');
-INSERT INTO "public"."gar_sys_dept" VALUES ('2', '1', '长沙分公司', '1', '0');
-INSERT INTO "public"."gar_sys_dept" VALUES ('3', '1', '上海分公司', '2', '0');
-INSERT INTO "public"."gar_sys_dept" VALUES ('4', '3', '技术部', '0', '0');
-INSERT INTO "public"."gar_sys_dept" VALUES ('5', '3', '销售部', '1', '0');
-
 ALTER TABLE "public"."gar_sys_dept" ADD PRIMARY KEY ("dept_id");
 
 -- ----------------------------
