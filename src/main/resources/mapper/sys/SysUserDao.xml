@@ -64,7 +64,6 @@
 			keyProperty="userId">
 		insert into gar_sys_user
 		(
-			user_id,
 			username,
 			password,
 			salt,
@@ -76,7 +75,6 @@
 		)
 		values
 		(
-			#{userId},
 			#{username},
 			#{password},
 			#{salt},

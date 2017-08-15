@@ -268,7 +268,6 @@ public class DruidConfig {
         statFilter.setLogSlowSql(true);
         statFilter.setMergeSql(true);
         statFilter.setSlowSqlMillis(1000);
-
         return statFilter;
     }
 
@@ -281,12 +280,10 @@ public class DruidConfig {
     @Bean
     public WallFilter wallFilter(){
         WallFilter wallFilter = new WallFilter();
-
         //允许执行多条SQL
         WallConfig config = new WallConfig();
         config.setMultiStatementAllow(true);
         wallFilter.setConfig(config);
-
         return wallFilter;
     }
 

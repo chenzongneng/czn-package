@@ -46,7 +46,6 @@
 			keyProperty="roleId">
 		insert into gar_sys_role
 		(
-			role_id,
 			role_name,
 			remark,
 			dept_id,
@@ -54,7 +53,6 @@
 		)
 		values
 		(
-			#{roleId},
 			#{roleName},
 			#{remark},
 			#{deptId},

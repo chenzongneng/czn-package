@@ -42,7 +42,6 @@ public class RRExceptionHandler {
 		Result result = new Result();
 		result.put("code", e.getCode());
 		result.put("msg", e.getMessage());
-
 		return result;
 	}
 

@@ -16,7 +16,6 @@
 	<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysMenuEntity">
 		insert into gar_sys_menu
 		(
-			menu_id,
 			parent_id,
 			name,
 			url,
@@ -27,7 +26,6 @@
 		)
 		values
 		(
-			#{menuId},
 			#{parentId},
 			#{name},
 			#{url},
