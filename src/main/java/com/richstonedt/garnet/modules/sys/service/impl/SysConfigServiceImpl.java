@@ -19,47 +19,102 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Sys config service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service("sysConfigService")
 public class SysConfigServiceImpl implements SysConfigService {
+
+	/**
+	 * The Sys config dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysConfigDao sysConfigDao;
-	
+
+	/**
+	 * 保存配置信息
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void save(SysConfigEntity config) {
 		sysConfigDao.save(config);
 	}
 
+	/**
+	 * 更新配置信息
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void update(SysConfigEntity config) {
 		sysConfigDao.update(config);
 	}
 
+	/**
+	 * 根据key，更新value
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void updateValueByKey(String key, String value) {
 		sysConfigDao.updateValueByKey(key, value);
 	}
 
+	/**
+	 * 删除配置信息
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void deleteBatch(Long[] ids) {
 		sysConfigDao.deleteBatch(ids);
 	}
 
+	/**
+	 * 获取List列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysConfigEntity> queryList(Map<String, Object> map) {
 		return sysConfigDao.queryList(map);
 	}
 
+	/**
+	 * 获取总记录数
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public int queryTotal(Map<String, Object> map) {
 		return sysConfigDao.queryTotal(map);
 	}
 
+	/**
+	 * Query object sys config entity.
+	 *
+	 * @param id the id
+	 * @return the sys config entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysConfigEntity queryObject(Long id) {
 		return sysConfigDao.queryObject(id);
 	}
 
+	/**
+	 * 根据key，获取配置的value值
+	 *
+	 * @param key           key
+	 * @param defaultValue  缺省值
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public String getValue(String key, String defaultValue) {
 		String value = sysConfigDao.queryByKey(key);
@@ -68,7 +123,14 @@ public class SysConfigServiceImpl implements SysConfigService {
 		}
 		return value;
 	}
-	
+
+	/**
+	 * 根据key，获取value的Object对象
+	 *
+	 * @param key    key
+	 * @param clazz  Object对象
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public <T> T getConfigObject(String key, Class<T> clazz) {
 		String value = getValue(key, null);

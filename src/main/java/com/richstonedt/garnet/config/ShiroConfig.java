@@ -30,10 +30,17 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-04-20 18:33
+ * @since garnet-core-be-fe 1.0.0
  */
 @Configuration
 public class ShiroConfig {
 
+    /**
+     * Session manager session manager.
+     *
+     * @return the session manager
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean("sessionManager")
     public SessionManager sessionManager(){
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
@@ -43,6 +50,14 @@ public class ShiroConfig {
         return sessionManager;
     }
 
+    /**
+     * Security manager security manager.
+     *
+     * @param oAuth2Realm    the o auth 2 realm
+     * @param sessionManager the session manager
+     * @return the security manager
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean("securityManager")
     public SecurityManager securityManager(OAuth2Realm oAuth2Realm, SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -52,6 +67,13 @@ public class ShiroConfig {
         return securityManager;
     }
 
+    /**
+     * Shir filter shiro filter factory bean.
+     *
+     * @param securityManager the security manager
+     * @return the shiro filter factory bean
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
@@ -82,11 +104,23 @@ public class ShiroConfig {
         return shiroFilter;
     }
 
+    /**
+     * Lifecycle bean post processor lifecycle bean post processor.
+     *
+     * @return the lifecycle bean post processor
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean("lifecycleBeanPostProcessor")
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 
+    /**
+     * Default advisor auto proxy creator default advisor auto proxy creator.
+     *
+     * @return the default advisor auto proxy creator
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
@@ -94,6 +128,13 @@ public class ShiroConfig {
         return proxyCreator;
     }
 
+    /**
+     * Authorization attribute source advisor authorization attribute source advisor.
+     *
+     * @param securityManager the security manager
+     * @return the authorization attribute source advisor
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();

@@ -22,34 +22,51 @@ import java.util.List;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:28:55
+ * @since garnet-core-be-fe 1.0.0
  */
 public class SysUserEntity implements Serializable {
+
+	/**
+	 * The constant serialVersionUID.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 用户ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Long userId;
 
 	/**
 	 * 用户名
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@NotBlank(message="用户名不能为空", groups = {AddGroup.class, UpdateGroup.class})
 	private String username;
 
 	/**
 	 * 密码
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@NotBlank(message="密码不能为空", groups = AddGroup.class)
 	private String password;
 
 	/**
 	 * 盐
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private String salt;
 
 	/**
 	 * 邮箱
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@NotBlank(message="邮箱不能为空", groups = {AddGroup.class, UpdateGroup.class})
 	@Email(message="邮箱格式不正确", groups = {AddGroup.class, UpdateGroup.class})
@@ -57,43 +74,57 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 手机号
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private String mobile;
 
 	/**
 	 * 状态  0：禁用   1：正常
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Integer status;
 	
 	/**
 	 * 角色ID列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private List<Long> roleIdList;
 	
 	/**
 	 * 创建者ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Long createUserId;
 
 	/**
 	 * 创建时间
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Date createTime;
 
 	/**
 	 * 部门ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	@NotNull(message="部门不能为空", groups = {AddGroup.class, UpdateGroup.class})
 	private Long deptId;
 
 	/**
 	 * 部门名称
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private String deptName;
 
 	/**
 	 * 设置：
-	 * @param userId 
+	 * @param userId  the id
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
@@ -101,7 +132,9 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getUserId() {
 		return userId;
@@ -109,7 +142,9 @@ public class SysUserEntity implements Serializable {
 	
 	/**
 	 * 设置：用户名
+	 *
 	 * @param username 用户名
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setUsername(String username) {
 		this.username = username;
@@ -117,7 +152,9 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：用户名
+	 *
 	 * @return String
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public String getUsername() {
 		return username;
@@ -125,7 +162,9 @@ public class SysUserEntity implements Serializable {
 	
 	/**
 	 * 设置：密码
+	 *
 	 * @param password 密码
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -133,7 +172,9 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：密码
+	 *
 	 * @return String
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public String getPassword() {
 		return password;
@@ -141,7 +182,9 @@ public class SysUserEntity implements Serializable {
 	
 	/**
 	 * 设置：邮箱
+	 *
 	 * @param email 邮箱
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -149,7 +192,9 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：邮箱
+	 *
 	 * @return String
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public String getEmail() {
 		return email;
@@ -157,7 +202,9 @@ public class SysUserEntity implements Serializable {
 	
 	/**
 	 * 设置：手机号
+	 *
 	 * @param mobile 手机号
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
@@ -165,7 +212,9 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：手机号
+	 *
 	 * @return String
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public String getMobile() {
 		return mobile;
@@ -181,7 +230,9 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：状态  0：禁用   1：正常
+	 *
 	 * @return Integer
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Integer getStatus() {
 		return status;
@@ -189,7 +240,9 @@ public class SysUserEntity implements Serializable {
 	
 	/**
 	 * 设置：创建时间
+	 *
 	 * @param createTime 创建时间
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
@@ -197,48 +250,110 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 获取：创建时间
+	 *
 	 * @return Date
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Date getCreateTime() {
 		return createTime;
 	}
 
+	/**
+	 * Gets role id list.
+	 *
+	 * @return the role id list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public List<Long> getRoleIdList() {
 		return roleIdList;
 	}
 
+	/**
+	 * Sets role id list.
+	 *
+	 * @param roleIdList the role id list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public void setRoleIdList(List<Long> roleIdList) {
 		this.roleIdList = roleIdList;
 	}
 
+	/**
+	 * Gets create user id.
+	 *
+	 * @return the create user id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public Long getCreateUserId() {
 		return createUserId;
 	}
 
+	/**
+	 * Sets create user id.
+	 *
+	 * @param createUserId the create user id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public void setCreateUserId(Long createUserId) {
 		this.createUserId = createUserId;
 	}
 
+	/**
+	 * Gets salt.
+	 *
+	 * @return the salt
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public String getSalt() {
 		return salt;
 	}
 
+	/**
+	 * Sets salt.
+	 *
+	 * @param salt the salt
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
 
+	/**
+	 * Gets dept id.
+	 *
+	 * @return the dept id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public Long getDeptId() {
 		return deptId;
 	}
 
+	/**
+	 * Sets dept id.
+	 *
+	 * @param deptId the dept id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public void setDeptId(Long deptId) {
 		this.deptId = deptId;
 	}
 
+	/**
+	 * Gets dept name.
+	 *
+	 * @return the dept name
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public String getDeptName() {
 		return deptName;
 	}
 
+	/**
+	 * Sets dept name.
+	 *
+	 * @param deptName the dept name
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
 	}

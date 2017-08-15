@@ -24,12 +24,26 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:44:35
+ * @since garnet-core-be-fe 1.0.0
  */
 @Service("sysRoleMenuService")
 public class SysRoleMenuServiceImpl implements SysRoleMenuService {
+
+	/**
+	 * The Sys role menu dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysRoleMenuDao sysRoleMenuDao;
 
+	/**
+	 * Save or update.
+	 *
+	 * @param roleId     the role id
+	 * @param menuIdList the menu id list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void saveOrUpdate(Long roleId, List<Long> menuIdList) {
@@ -47,6 +61,11 @@ public class SysRoleMenuServiceImpl implements SysRoleMenuService {
 		sysRoleMenuDao.save(map);
 	}
 
+	/**
+	 * 根据角色ID，获取菜单ID列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<Long> queryMenuIdList(Long roleId) {
 		return sysRoleMenuDao.queryMenuIdList(roleId);

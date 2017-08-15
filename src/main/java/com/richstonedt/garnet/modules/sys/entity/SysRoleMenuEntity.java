@@ -15,25 +15,43 @@ import java.io.Serializable;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:28:13
+ * @since garnet-core-be-fe 1.0.0
  */
 public class SysRoleMenuEntity implements Serializable {
+
+	/**
+	 * The constant serialVersionUID.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	/**
+	 * The Id.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	private Long id;
 
 	/**
 	 * 角色ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Long roleId;
 
 	/**
 	 * 菜单ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private Long menuId;
 
 	/**
 	 * 设置：
-	 * @param id 
+	 *
+	 * @param id  the id
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -41,7 +59,9 @@ public class SysRoleMenuEntity implements Serializable {
 
 	/**
 	 * 获取：
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getId() {
 		return id;
@@ -49,7 +69,9 @@ public class SysRoleMenuEntity implements Serializable {
 	
 	/**
 	 * 设置：角色ID
+	 *
 	 * @param roleId 角色ID
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
@@ -57,7 +79,9 @@ public class SysRoleMenuEntity implements Serializable {
 
 	/**
 	 * 获取：角色ID
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getRoleId() {
 		return roleId;
@@ -65,7 +89,9 @@ public class SysRoleMenuEntity implements Serializable {
 	
 	/**
 	 * 设置：菜单ID
+	 *
 	 * @param menuId 菜单ID
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void setMenuId(Long menuId) {
 		this.menuId = menuId;
@@ -73,7 +99,9 @@ public class SysRoleMenuEntity implements Serializable {
 
 	/**
 	 * 获取：菜单ID
+	 *
 	 * @return Long
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public Long getMenuId() {
 		return menuId;

@@ -30,46 +30,103 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:46:09
+ * @since garnet-core-be-fe 1.0.0
  */
 @Service("sysUserService")
 public class SysUserServiceImpl implements SysUserService {
+
+	/**
+	 * The Sys user dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysUserDao sysUserDao;
+
+	/**
+	 * The Sys user role service.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysUserRoleService sysUserRoleService;
+
+	/**
+	 * The Sys role service.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysRoleService sysRoleService;
 
+	/**
+	 * 查询用户的所有权限
+	 *
+	 * @param userId  用户ID
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<String> queryAllPerms(Long userId) {
 		return sysUserDao.queryAllPerms(userId);
 	}
 
+	/**
+	 * 查询用户的所有菜单ID
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<Long> queryAllMenuId(Long userId) {
 		return sysUserDao.queryAllMenuId(userId);
 	}
 
+	/**
+	 * 根据用户名，查询系统用户
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysUserEntity queryByUserName(String username) {
 		return sysUserDao.queryByUserName(username);
 	}
-	
+
+	/**
+	 * 根据用户ID，查询用户
+	 *
+	 * @param userId the userid
+	 * @return  SysUserEntity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysUserEntity queryObject(Long userId) {
 		return sysUserDao.queryObject(userId);
 	}
 
+	/**
+	 * 查询用户列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysUserEntity> queryList(Map<String, Object> map){
 		return sysUserDao.queryList(map);
 	}
-	
+
+	/**
+	 * 查询总数
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public int queryTotal(Map<String, Object> map) {
 		return sysUserDao.queryTotal(map);
 	}
 
+	/**
+	 * 保存用户
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void save(SysUserEntity user) {
@@ -84,6 +141,11 @@ public class SysUserServiceImpl implements SysUserService {
 		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
 	}
 
+	/**
+	 * 修改用户
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void update(SysUserEntity user) {
@@ -98,12 +160,25 @@ public class SysUserServiceImpl implements SysUserService {
 		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
 	}
 
+	/**
+	 * 删除用户
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void deleteBatch(Long[] userId) {
 		sysUserDao.deleteBatch(userId);
 	}
 
+	/**
+	 * 修改密码
+	 *
+	 * @param userId       用户ID
+	 * @param password     原密码
+	 * @param newPassword  新密码
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public int updatePassword(Long userId, String password, String newPassword) {
 		Map<String, Object> map = new HashMap<>();

@@ -26,15 +26,26 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月28日 下午2:16:40
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/schedule")
 public class ScheduleJobController {
+
+    /**
+     * The Schedule job service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private ScheduleJobService scheduleJobService;
 
     /**
      * 定时任务列表
+     *
+     * @param params the  Map<String, Object>
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:schedule:list")
@@ -51,6 +62,10 @@ public class ScheduleJobController {
 
     /**
      * 定时任务信息
+     *
+     * @param jobId the Long
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{jobId}")
     @RequiresPermissions("sys:schedule:info")
@@ -62,6 +77,9 @@ public class ScheduleJobController {
 
     /**
      * 保存定时任务
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("保存定时任务")
     @RequestMapping("/save")
@@ -76,6 +94,9 @@ public class ScheduleJobController {
 
     /**
      * 修改定时任务
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改定时任务")
     @RequestMapping("/update")
@@ -90,6 +111,9 @@ public class ScheduleJobController {
 
     /**
      * 删除定时任务
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("删除定时任务")
     @RequestMapping("/delete")
@@ -102,6 +126,9 @@ public class ScheduleJobController {
 
     /**
      * 立即执行任务
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("立即执行任务")
     @RequestMapping("/run")
@@ -114,6 +141,9 @@ public class ScheduleJobController {
 
     /**
      * 暂停定时任务
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("暂停定时任务")
     @RequestMapping("/pause")
@@ -126,6 +156,9 @@ public class ScheduleJobController {
 
     /**
      * 恢复定时任务
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("恢复定时任务")
     @RequestMapping("/resume")

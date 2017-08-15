@@ -16,15 +16,42 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:07
+ * @since garnet-core-be-fe 1.0.0
  */
 public interface TokenService {
 
+    /**
+     * Query by user id token entity.
+     *
+     * @param userId the user id
+     * @return the token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     TokenEntity queryByUserId(Long userId);
 
+    /**
+     * Query by token token entity.
+     *
+     * @param token the token
+     * @return the token entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     TokenEntity queryByToken(String token);
 
+    /**
+     * Save.
+     *
+     * @param token the token
+     * @since garnet-core-be-fe 1.0.0
+     */
     void save(TokenEntity token);
 
+    /**
+     * Update.
+     *
+     * @param token the token
+     * @since garnet-core-be-fe 1.0.0
+     */
     void update(TokenEntity token);
 
     /**
@@ -32,6 +59,7 @@ public interface TokenService {
      *
      * @param userId 用户ID
      * @return 返回token相关信息
+     * @since garnet-core-be-fe 1.0.0
      */
     Map<String, Object> createToken(long userId);
 

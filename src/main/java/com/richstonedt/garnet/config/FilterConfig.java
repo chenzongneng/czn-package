@@ -20,10 +20,17 @@ import javax.servlet.DispatcherType;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-04-21 21:56
+ * @since garnet-core-be-fe 1.0.0
  */
 @Configuration
 public class FilterConfig {
 
+    /**
+     * Shiro filter registration filter registration bean.
+     *
+     * @return the filter registration bean
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean
     public FilterRegistrationBean shiroFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -36,6 +43,12 @@ public class FilterConfig {
         return registration;
     }
 
+    /**
+     * Xss filter registration filter registration bean.
+     *
+     * @return the filter registration bean
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Bean
     public FilterRegistrationBean xssFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();

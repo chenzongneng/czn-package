@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:47
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/api")
@@ -27,6 +28,10 @@ public class ApiTestController {
 
     /**
      * 获取用户信息
+     *
+     * @param user the UserEntity
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @GetMapping("userInfo")
     public R userInfo(@LoginUser UserEntity user){
@@ -35,6 +40,9 @@ public class ApiTestController {
 
     /**
      * 忽略Token验证测试
+     *
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @AuthIgnore
     @GetMapping("notToken")
@@ -44,6 +52,11 @@ public class ApiTestController {
 
     /**
      * 接收JSON数据
+     *
+     * @param user the UserEntity
+     * @param token the TokenEntity
+     * @return the R
+     * @since garnet-core-be-fe 1.0.0
      */
     @PostMapping("jsonData")
     public R jsonData(@LoginUser UserEntity user, @RequestBody TokenEntity token){

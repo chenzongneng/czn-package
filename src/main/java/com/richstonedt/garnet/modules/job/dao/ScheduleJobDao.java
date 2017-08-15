@@ -18,12 +18,15 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年12月1日 下午10:29:57
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface ScheduleJobDao extends BaseDao<ScheduleJobEntity> {
 
     /**
      * 批量更新状态
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     int updateBatch(Map<String, Object> map);
 

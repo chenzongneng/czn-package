@@ -18,15 +18,26 @@ import javax.servlet.http.HttpServletRequest;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017年3月8日 下午12:57:02
+ * @since garnet-core-be-fe 1.0.0
  */
 public class IPUtils {
-	private static Logger logger = LoggerFactory.getLogger(IPUtils.class);
+
+    /**
+     * The constant logger.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static Logger logger = LoggerFactory.getLogger(IPUtils.class);
 
 	/**
 	 * 获取IP地址
 	 * 
 	 * 使用Nginx等反向代理软件， 则不能通过request.getRemoteAddr()获取IP地址
 	 * 如果使用了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP地址，X-Forwarded-For中第一个非unknown的有效IP字符串，则为真实IP地址
+     *
+     * @param request the HttpServletRequest
+     * @return the String
+     * @since garnet-core-be-fe 1.0.0
 	 */
 	public static String getIpAddr(HttpServletRequest request) {
     	String ip = null;

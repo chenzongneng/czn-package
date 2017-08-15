@@ -17,18 +17,43 @@ import org.slf4j.LoggerFactory;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月9日 下午9:42:26
+ * @since garnet-core-be-fe 1.0.0
  */
 public abstract class AbstractController {
+
+    /**
+     * The Logger.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Gets user.
+     *
+     * @return the user
+     * @since garnet-core-be-fe 1.0.0
+     */
     protected SysUserEntity getUser() {
         return (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
     }
 
+    /**
+     * Gets user id.
+     *
+     * @return the user id
+     * @since garnet-core-be-fe 1.0.0
+     */
     protected Long getUserId() {
         return getUser().getUserId();
     }
 
+    /**
+     * Gets dept id.
+     *
+     * @return the dept id
+     * @since garnet-core-be-fe 1.0.0
+     */
     protected Long getDeptId() {
         return getUser().getDeptId();
     }

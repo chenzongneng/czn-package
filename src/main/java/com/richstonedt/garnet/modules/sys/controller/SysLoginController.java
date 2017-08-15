@@ -34,17 +34,43 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月10日 下午1:15:31
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 public class SysLoginController {
 
+    /**
+     * The Producer.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private Producer producer;
+
+    /**
+     * The Sys user service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserService sysUserService;
+
+    /**
+     * The Sys user token service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserTokenService sysUserTokenService;
 
+    /**
+     * Captcha.
+     *
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     * @since garnet-core-be-fe 1.0.0
+     */
     @RequestMapping("captcha.jpg")
     public void captcha(HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
@@ -64,6 +90,8 @@ public class SysLoginController {
 
     /**
      * 登录
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
     public Map<String, Object> login(String username, String password, String captcha) throws IOException {

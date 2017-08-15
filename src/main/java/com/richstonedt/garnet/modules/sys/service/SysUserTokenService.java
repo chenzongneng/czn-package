@@ -15,20 +15,49 @@ import com.richstonedt.garnet.modules.sys.entity.SysUserTokenEntity;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:07
+ * @since garnet-core-be-fe 1.0.0
  */
 public interface SysUserTokenService {
 
+	/**
+	 * Query by user id sys user token entity.
+	 *
+	 * @param userId the user id
+	 * @return the sys user token entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	SysUserTokenEntity queryByUserId(Long userId);
 
+	/**
+	 * Query by token sys user token entity.
+	 *
+	 * @param token the token
+	 * @return the sys user token entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	SysUserTokenEntity queryByToken(String token);
-	
+
+	/**
+	 * Save.
+	 *
+	 * @param token the token
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void save(SysUserTokenEntity token);
-	
+
+	/**
+	 * Update.
+	 *
+	 * @param token the token
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void update(SysUserTokenEntity token);
 
 	/**
 	 * 生成token
+	 *
 	 * @param userId  用户ID
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	R createToken(long userId);
 

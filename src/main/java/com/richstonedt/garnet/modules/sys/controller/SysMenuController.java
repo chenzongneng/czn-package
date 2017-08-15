@@ -31,19 +31,32 @@ import java.util.Set;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年10月27日 下午9:58:15
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/menu")
 public class SysMenuController extends AbstractController {
 
+    /**
+     * The Sys menu service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysMenuService sysMenuService;
 
+    /**
+     * The Shiro service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private ShiroService shiroService;
 
     /**
      * 导航菜单
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/nav")
     public R nav() {
@@ -54,6 +67,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 所有菜单列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:menu:list")
@@ -65,6 +80,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 选择菜单(添加、修改菜单)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/select")
     @RequiresPermissions("sys:menu:select")
@@ -85,6 +102,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 菜单信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{menuId}")
     @RequiresPermissions("sys:menu:info")
@@ -95,6 +114,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 保存
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("保存菜单")
     @RequestMapping("/save")
@@ -110,6 +131,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 修改
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改菜单")
     @RequestMapping("/update")
@@ -125,6 +148,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 删除
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("删除菜单")
     @RequestMapping("/delete")
@@ -147,6 +172,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 验证参数是否正确
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     private void verifyForm(SysMenuEntity menu) {
         if (StringUtils.isBlank(menu.getName())) {

@@ -14,12 +14,19 @@ import java.lang.annotation.*;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017年3月8日 上午10:19:56
+ * @since garnet-core-be-fe 1.0.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SysLog {
 
+    /**
+     * Value string.
+     *
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
     String value() default "";
 
 }

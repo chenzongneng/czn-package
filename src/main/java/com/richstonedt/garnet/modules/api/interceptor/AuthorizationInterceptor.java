@@ -25,15 +25,34 @@ import javax.servlet.http.HttpServletResponse;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:38
+ * @since garnet-core-be-fe 1.0.0
  */
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
+    /**
+     * The Token service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private TokenService tokenService;
 
+    /**
+     * The constant LOGIN_USER_KEY.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     public static final String LOGIN_USER_KEY = "LOGIN_USER_KEY";
 
+    /**
+     * The pre Handle.
+     *
+     * @param  request the HttpServletRequest
+     * @param  response the HttpServletResponse
+     * @param  handler the Object
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         AuthIgnore annotation;

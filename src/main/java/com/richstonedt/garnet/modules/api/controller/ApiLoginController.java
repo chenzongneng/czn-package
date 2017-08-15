@@ -25,19 +25,32 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:31
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/api")
 public class ApiLoginController {
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * The Token service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private TokenService tokenService;
 
     /**
      * 登录
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @AuthIgnore
     @PostMapping("login")

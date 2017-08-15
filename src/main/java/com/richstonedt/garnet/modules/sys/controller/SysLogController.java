@@ -28,16 +28,24 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-08 10:40:56
+ * @since garnet-core-be-fe 1.0.0
  */
 @Controller
 @RequestMapping("/sys/log")
 public class SysLogController {
 
+    /**
+     * The Sys log service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysLogService sysLogService;
 
     /**
      * 列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @ResponseBody
     @RequestMapping("/list")

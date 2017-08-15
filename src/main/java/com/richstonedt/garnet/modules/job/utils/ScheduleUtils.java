@@ -18,12 +18,15 @@ import org.quartz.*;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月30日 下午12:44:59
+ * @since garnet-core-be-fe 1.0.0
  */
 public class ScheduleUtils {
     private final static String JOB_NAME = "TASK_";
 
     /**
      * 获取触发器key
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static TriggerKey getTriggerKey(Long jobId) {
         return TriggerKey.triggerKey(JOB_NAME + jobId);
@@ -31,6 +34,8 @@ public class ScheduleUtils {
 
     /**
      * 获取jobKey
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static JobKey getJobKey(Long jobId) {
         return JobKey.jobKey(JOB_NAME + jobId);
@@ -38,6 +43,8 @@ public class ScheduleUtils {
 
     /**
      * 获取表达式触发器
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static CronTrigger getCronTrigger(Scheduler scheduler, Long jobId) {
         try {
@@ -49,6 +56,8 @@ public class ScheduleUtils {
 
     /**
      * 创建定时任务
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void createScheduleJob(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
         try {
@@ -78,6 +87,8 @@ public class ScheduleUtils {
 
     /**
      * 更新定时任务
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void updateScheduleJob(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
         try {
@@ -109,6 +120,8 @@ public class ScheduleUtils {
 
     /**
      * 立即执行任务
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void run(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
         try {
@@ -124,6 +137,8 @@ public class ScheduleUtils {
 
     /**
      * 暂停任务
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void pauseJob(Scheduler scheduler, Long jobId) {
         try {
@@ -135,6 +150,8 @@ public class ScheduleUtils {
 
     /**
      * 恢复任务
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void resumeJob(Scheduler scheduler, Long jobId) {
         try {
@@ -146,6 +163,8 @@ public class ScheduleUtils {
 
     /**
      * 删除定时任务
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     public static void deleteScheduleJob(Scheduler scheduler, Long jobId) {
         try {

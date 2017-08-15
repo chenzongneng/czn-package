@@ -16,10 +16,18 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-23 15:22:06
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface UserDao extends BaseDao<UserEntity> {
 
+    /**
+     * Query by mobile user entity.
+     *
+     * @param mobile the mobile
+     * @return the user entity
+     * @since garnet-core-be-fe 1.0.0
+     */
     UserEntity queryByMobile(String mobile);
 
 }

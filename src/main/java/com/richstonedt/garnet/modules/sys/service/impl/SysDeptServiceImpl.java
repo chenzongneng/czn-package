@@ -18,42 +18,95 @@ import java.util.List;
 import java.util.Map;
 
 
-
+/**
+ * The type Sys dept service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service("sysDeptService")
 public class SysDeptServiceImpl implements SysDeptService {
+
+	/**
+	 * The Sys dept dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysDeptDao sysDeptDao;
-	
+
+	/**
+	 * Query object sys dept entity.
+	 *
+	 * @param deptId the dept id
+	 * @return the sys dept entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysDeptEntity queryObject(Long deptId){
 		return sysDeptDao.queryObject(deptId);
 	}
-	
+
+	/**
+	 * Query list list.
+	 *
+	 * @param map the map
+	 * @return the list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysDeptEntity> queryList(Map<String, Object> map){
 		return sysDeptDao.queryList(map);
 	}
-	
+
+	/**
+	 * Save.
+	 *
+	 * @param sysDept the sys dept
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void save(SysDeptEntity sysDept){
 		sysDeptDao.save(sysDept);
 	}
-	
+
+	/**
+	 * Update.
+	 *
+	 * @param sysDept the sys dept
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void update(SysDeptEntity sysDept){
 		sysDeptDao.update(sysDept);
 	}
-	
+
+	/**
+	 * Delete.
+	 *
+	 * @param deptId the dept id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void delete(Long deptId){
 		sysDeptDao.delete(deptId);
 	}
 
+	/**
+	 * 查询子部门ID列表
+	 *
+	 * @param parentId  上级部门ID
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<Long> queryDetpIdList(Long parentId) {
 		return sysDeptDao.queryDetpIdList(parentId);
 	}
 
+	/**
+	 * 获取子部门ID(包含本部门ID)，用于数据过滤
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public String getSubDeptIdList(Long deptId){
 		//部门及子部门ID列表
@@ -72,6 +125,8 @@ public class SysDeptServiceImpl implements SysDeptService {
 
 	/**
 	 * 递归
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	public void getDeptTreeList(List<Long> subIdList, List<Long> deptIdList){
 		for(Long deptId : subIdList){

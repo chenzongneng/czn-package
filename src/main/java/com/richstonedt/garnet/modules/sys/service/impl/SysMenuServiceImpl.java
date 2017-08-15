@@ -21,13 +21,37 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * The type Sys menu service.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 @Service("sysMenuService")
 public class SysMenuServiceImpl implements SysMenuService {
+
+	/**
+	 * The Sys menu dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysMenuDao sysMenuDao;
+
+	/**
+	 * The Sys user service.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysUserService sysUserService;
-	
+
+	/**
+	 * 根据父菜单，查询子菜单
+	 *
+	 * @param parentId 父菜单ID
+	 * @param menuIdList  用户菜单ID
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId, List<Long> menuIdList) {
 		List<SysMenuEntity> menuList = queryListParentId(parentId);
@@ -44,16 +68,32 @@ public class SysMenuServiceImpl implements SysMenuService {
 		return userMenuList;
 	}
 
+	/**
+	 * 根据父菜单，查询子菜单
+	 *
+	 * @param parentId 父菜单ID
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId) {
 		return sysMenuDao.queryListParentId(parentId);
 	}
 
+	/**
+	 * 获取不包含按钮的菜单列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysMenuEntity> queryNotButtonList() {
 		return sysMenuDao.queryNotButtonList();
 	}
 
+	/**
+	 * 获取用户菜单列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysMenuEntity> getUserMenuList(Long userId) {
 		//系统管理员，拥有最高权限
@@ -65,38 +105,73 @@ public class SysMenuServiceImpl implements SysMenuService {
 		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
 		return getAllMenuList(menuIdList);
 	}
-	
+
+	/**
+	 * 查询菜单
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public SysMenuEntity queryObject(Long menuId) {
 		return sysMenuDao.queryObject(menuId);
 	}
 
+	/**
+	 * 查询菜单列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysMenuEntity> queryList(Map<String, Object> map) {
 		return sysMenuDao.queryList(map);
 	}
 
+	/**
+	 * 查询总数
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public int queryTotal(Map<String, Object> map) {
 		return sysMenuDao.queryTotal(map);
 	}
 
+	/**
+	 * 保存菜单
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void save(SysMenuEntity menu) {
 		sysMenuDao.save(menu);
 	}
 
+	/**
+	 * 修改
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void update(SysMenuEntity menu) {
 		sysMenuDao.update(menu);
 	}
 
+	/**
+	 * 删除
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	@Transactional
 	public void deleteBatch(Long[] menuIds) {
 		sysMenuDao.deleteBatch(menuIds);
 	}
-	
+
+	/**
+	 * 查询用户的权限列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<SysMenuEntity> queryUserList(Long userId) {
 		return sysMenuDao.queryUserList(userId);
@@ -104,6 +179,8 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	/**
 	 * 获取所有菜单列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private List<SysMenuEntity> getAllMenuList(List<Long> menuIdList){
 		//查询根菜单列表
@@ -116,6 +193,8 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	/**
 	 * 递归
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private List<SysMenuEntity> getMenuTreeList(List<SysMenuEntity> menuList, List<Long> menuIdList){
 		List<SysMenuEntity> subMenuList = new ArrayList<SysMenuEntity>();

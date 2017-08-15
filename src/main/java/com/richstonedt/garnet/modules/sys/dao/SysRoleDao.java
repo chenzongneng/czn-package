@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:33:33
+ * @since garnet-core-be-fe 1.0.0
  */
 @Mapper
 public interface SysRoleDao extends BaseDao<SysRoleEntity> {

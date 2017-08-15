@@ -23,12 +23,26 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:45:48
+ * @since garnet-core-be-fe 1.0.0
  */
 @Service("sysUserRoleService")
 public class SysUserRoleServiceImpl implements SysUserRoleService {
+
+	/**
+	 * The Sys user role dao.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Autowired
 	private SysUserRoleDao sysUserRoleDao;
 
+	/**
+	 * Save or update.
+	 *
+	 * @param userId     the user id
+	 * @param roleIdList the role id list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void saveOrUpdate(Long userId, List<Long> roleIdList) {
 		if(roleIdList.size() == 0){
@@ -45,11 +59,22 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
 		sysUserRoleDao.save(map);
 	}
 
+	/**
+	 * 根据用户ID，获取角色ID列表
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public List<Long> queryRoleIdList(Long userId) {
 		return sysUserRoleDao.queryRoleIdList(userId);
 	}
 
+	/**
+	 * Delete.
+	 *
+	 * @param userId the user id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	@Override
 	public void delete(Long userId) {
 		sysUserRoleDao.delete(userId);

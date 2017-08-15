@@ -33,18 +33,32 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年10月31日 上午10:40:10
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController extends AbstractController {
 
+    /**
+     * The Sys user service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserService sysUserService;
+
+    /**
+     * The Sys user role service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserRoleService sysUserRoleService;
 
     /**
      * 所有用户列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:user:list")
@@ -66,6 +80,8 @@ public class SysUserController extends AbstractController {
 
     /**
      * 获取登录的用户信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info")
     public R info() {
@@ -74,6 +90,8 @@ public class SysUserController extends AbstractController {
 
     /**
      * 修改登录用户密码
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改密码")
     @RequestMapping("/password")
@@ -96,6 +114,8 @@ public class SysUserController extends AbstractController {
 
     /**
      * 用户信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{userId}")
     @RequiresPermissions("sys:user:info")
@@ -111,6 +131,8 @@ public class SysUserController extends AbstractController {
 
     /**
      * 保存用户
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("保存用户")
     @RequestMapping("/save")
@@ -126,6 +148,8 @@ public class SysUserController extends AbstractController {
 
     /**
      * 修改用户
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改用户")
     @RequestMapping("/update")
@@ -141,6 +165,8 @@ public class SysUserController extends AbstractController {
 
     /**
      * 删除用户
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("删除用户")
     @RequestMapping("/delete")

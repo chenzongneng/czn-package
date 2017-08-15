@@ -30,20 +30,40 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月8日 下午2:18:33
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/role")
 public class SysRoleController extends AbstractController {
 
+    /**
+     * The Sys role service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysRoleService sysRoleService;
+
+    /**
+     * The Sys role menu service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
+
+    /**
+     * The Sys role dept service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysRoleDeptService sysRoleDeptService;
 
     /**
      * 角色列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:role:list")
@@ -65,6 +85,8 @@ public class SysRoleController extends AbstractController {
 
     /**
      * 角色列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/select")
     @RequiresPermissions("sys:role:select")
@@ -82,6 +104,8 @@ public class SysRoleController extends AbstractController {
 
     /**
      * 角色信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{roleId}")
     @RequiresPermissions("sys:role:info")
@@ -101,6 +125,8 @@ public class SysRoleController extends AbstractController {
 
     /**
      * 保存角色
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("保存角色")
     @RequestMapping("/save")
@@ -115,6 +141,8 @@ public class SysRoleController extends AbstractController {
 
     /**
      * 修改角色
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改角色")
     @RequestMapping("/update")
@@ -129,6 +157,8 @@ public class SysRoleController extends AbstractController {
 
     /**
      * 删除角色
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("删除角色")
     @RequestMapping("/delete")

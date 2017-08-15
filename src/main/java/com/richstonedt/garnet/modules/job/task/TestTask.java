@@ -22,15 +22,32 @@ import org.springframework.stereotype.Component;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月30日 下午1:34:24
+ * @since garnet-core-be-fe 1.0.0
  */
 @Component("testTask")
 public class TestTask {
 
+    /**
+     * The Logger.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * The Sys user service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * Test.
+     *
+     * @param params the params
+     * @since garnet-core-be-fe 1.0.0
+     */
     public void test(String params) {
         logger.info("我是带参数的test方法，正在被执行，参数为：" + params);
 
@@ -45,7 +62,11 @@ public class TestTask {
 
     }
 
-
+    /**
+     * Test.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     public void test() {
         logger.info("我是不带参数的test2方法，正在被执行");
     }

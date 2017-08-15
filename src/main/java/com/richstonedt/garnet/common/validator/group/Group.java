@@ -13,6 +13,7 @@ import javax.validation.GroupSequence;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-15 23:15
+ * @since garnet-core-be-fe 1.0.0
  */
 @GroupSequence({AddGroup.class, UpdateGroup.class})
 public interface Group {

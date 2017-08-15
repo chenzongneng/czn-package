@@ -17,27 +17,64 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-06-20 15:23:47
+ * @since garnet-core-be-fe 1.0.0
  */
 public interface SysDeptService {
-	
+
+	/**
+	 * Query object sys dept entity.
+	 *
+	 * @param deptId the dept id
+	 * @return the sys dept entity
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	SysDeptEntity queryObject(Long deptId);
-	
+
+	/**
+	 * Query list list.
+	 *
+	 * @param map the map
+	 * @return the list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	List<SysDeptEntity> queryList(Map<String, Object> map);
 
+	/**
+	 * Save.
+	 *
+	 * @param sysDept the sys dept
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void save(SysDeptEntity sysDept);
-	
+
+	/**
+	 * Update.
+	 *
+	 * @param sysDept the sys dept
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void update(SysDeptEntity sysDept);
-	
+
+	/**
+	 * Delete.
+	 *
+	 * @param deptId the dept id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	void delete(Long deptId);
 
 	/**
 	 * 查询子部门ID列表
+	 *
 	 * @param parentId  上级部门ID
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	List<Long> queryDetpIdList(Long parentId);
 
 	/**
 	 * 获取子部门ID(包含本部门ID)，用于数据过滤
+	 *
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	String getSubDeptIdList(Long deptId);
 

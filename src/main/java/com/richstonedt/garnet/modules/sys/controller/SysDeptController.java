@@ -28,16 +28,24 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-06-20 15:23:47
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/dept")
 public class SysDeptController extends AbstractController {
 
+    /**
+     * The Sys dept service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysDeptService sysDeptService;
 
     /**
      * 列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:dept:list")
@@ -54,6 +62,8 @@ public class SysDeptController extends AbstractController {
 
     /**
      * 选择部门(添加、修改菜单)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/select")
     @RequiresPermissions("sys:dept:select")
@@ -80,6 +90,8 @@ public class SysDeptController extends AbstractController {
 
     /**
      * 上级部门Id(管理员则为0)
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info")
     @RequiresPermissions("sys:dept:list")
@@ -95,6 +107,8 @@ public class SysDeptController extends AbstractController {
 
     /**
      * 信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{deptId}")
     @RequiresPermissions("sys:dept:info")
@@ -106,6 +120,8 @@ public class SysDeptController extends AbstractController {
 
     /**
      * 保存
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:dept:save")
@@ -117,6 +133,8 @@ public class SysDeptController extends AbstractController {
 
     /**
      * 修改
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/update")
     @RequiresPermissions("sys:dept:update")
@@ -128,6 +146,8 @@ public class SysDeptController extends AbstractController {
 
     /**
      * 删除
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/delete")
     @RequiresPermissions("sys:dept:delete")

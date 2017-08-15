@@ -26,16 +26,24 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年12月4日 下午6:55:53
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/config")
 public class SysConfigController extends AbstractController {
 
+    /**
+     * The Sys config service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private SysConfigService sysConfigService;
 
     /**
      * 所有配置列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:config:list")
@@ -53,6 +61,8 @@ public class SysConfigController extends AbstractController {
 
     /**
      * 配置信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{id}")
     @RequiresPermissions("sys:config:info")
@@ -64,6 +74,8 @@ public class SysConfigController extends AbstractController {
 
     /**
      * 保存配置
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("保存配置")
     @RequestMapping("/save")
@@ -78,6 +90,8 @@ public class SysConfigController extends AbstractController {
 
     /**
      * 修改配置
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("修改配置")
     @RequestMapping("/update")
@@ -92,6 +106,8 @@ public class SysConfigController extends AbstractController {
 
     /**
      * 删除配置
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @SysLog("删除配置")
     @RequestMapping("/delete")

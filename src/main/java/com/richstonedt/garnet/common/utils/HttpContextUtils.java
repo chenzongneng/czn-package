@@ -11,8 +11,19 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * The type Http context utils.
+ *
+ * @since garnet-core-be-fe 1.0.0
+ */
 public class HttpContextUtils {
 
+	/**
+	 * Gets http servlet request.
+	 *
+	 * @return the http servlet request
+	 * @since garnet-core-be-fe 1.0.0
+	 */
 	public static HttpServletRequest getHttpServletRequest() {
 		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 	}

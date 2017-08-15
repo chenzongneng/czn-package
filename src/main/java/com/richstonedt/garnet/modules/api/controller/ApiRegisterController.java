@@ -21,16 +21,24 @@ import org.springframework.web.bind.annotation.RestController;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-26 17:27
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/api")
 public class ApiRegisterController {
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private UserService userService;
 
     /**
      * 注册
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @AuthIgnore
     @PostMapping("register")

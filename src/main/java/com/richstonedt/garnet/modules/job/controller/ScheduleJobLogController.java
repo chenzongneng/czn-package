@@ -27,16 +27,24 @@ import java.util.Map;
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年12月1日 下午10:39:52
+ * @since garnet-core-be-fe 1.0.0
  */
 @RestController
 @RequestMapping("/sys/scheduleLog")
 public class ScheduleJobLogController {
 
+    /**
+     * The Schedule job log service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     @Autowired
     private ScheduleJobLogService scheduleJobLogService;
 
     /**
      * 定时任务日志列表
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:schedule:log")
@@ -53,6 +61,8 @@ public class ScheduleJobLogController {
 
     /**
      * 定时任务日志信息
+     *
+     * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping("/info/{logId}")
     public R info(@PathVariable("logId") Long logId) {
