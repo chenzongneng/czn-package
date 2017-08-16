@@ -322,55 +322,6 @@ ALTER TABLE "public"."gar_sys_user_token" ADD PRIMARY KEY ("user_id");
 INSERT INTO "public"."gar_sys_user_token" ("user_id", "token", "expire_time", "update_time") VALUES ('1', '0a289458132125088d6babde201ae59e', '2017-08-08 07:40:28.626', '2017-08-07 19:40:28.626');
 
 
-
--- ----------------------------
--- Table structure for gar_tb_token
--- ----------------------------
-DROP TABLE IF EXISTS "public"."gar_tb_token";
-CREATE TABLE "public"."gar_tb_token" (
-  "user_id" int8 NOT NULL,
-  "token" varchar(100) COLLATE "default",
-  "expire_time" timestamp(6),
-  "update_time" timestamp(6)
-)
-WITH (OIDS=FALSE)
-
-;
-COMMENT ON COLUMN "public"."gar_tb_token"."token" IS 'token';
-COMMENT ON COLUMN "public"."gar_tb_token"."expire_time" IS '过期时间';
-COMMENT ON COLUMN "public"."gar_tb_token"."update_time" IS '更新时间';
-
-ALTER TABLE "public"."gar_tb_token" ADD PRIMARY KEY ("user_id");
-
-ALTER TABLE "public"."gar_tb_token" ADD UNIQUE ("token");
-
-
--- ----------------------------
--- Table structure for gar_tb_user
--- ----------------------------
-DROP TABLE IF EXISTS "public"."gar_tb_user";
-CREATE TABLE "public"."gar_tb_user" (
-  "user_id" serial,
-  "username" varchar(50) COLLATE "default" NOT NULL,
-  "mobile" varchar(20) COLLATE "default" NOT NULL,
-  "password" varchar(64) COLLATE "default",
-  "create_time" timestamp(6) DEFAULT now()
-)
-WITH (OIDS=FALSE)
-
-;
-COMMENT ON COLUMN "public"."gar_tb_user"."username" IS '用户名';
-COMMENT ON COLUMN "public"."gar_tb_user"."mobile" IS '手机号';
-COMMENT ON COLUMN "public"."gar_tb_user"."password" IS '密码';
-COMMENT ON COLUMN "public"."gar_tb_user"."create_time" IS '创建时间';
-
-ALTER TABLE "public"."gar_tb_user" ADD PRIMARY KEY ("user_id");
-
-ALTER TABLE "public"."gar_tb_user" ADD UNIQUE ("username");
-
-INSERT INTO "public"."gar_tb_user" ("user_id", "username", "mobile", "password", "create_time") VALUES ('1', 'mark', '13612345678', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2017-03-23 22:37:41');
-
-
 -------    QUARTZ TABLES    -----------
 
 drop table if exists qrtz_fired_triggers;
