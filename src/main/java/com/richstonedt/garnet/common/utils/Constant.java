@@ -15,7 +15,8 @@ package com.richstonedt.garnet.common.utils;
  * @since garnet-core-be-fe 1.0.0
  */
 public class Constant {
-	/** 超级管理员ID */
+
+    /** 超级管理员ID */
 	public static final int SUPER_ADMIN = 1;
 
 	/**

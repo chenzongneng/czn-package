@@ -80,7 +80,6 @@ public class SysLogAspect {
 		Object result = point.proceed();
 		//执行时长(毫秒)
 		long time = System.currentTimeMillis() - beginTime;
-
 		//保存日志
 		saveSysLog(point, time);
 
