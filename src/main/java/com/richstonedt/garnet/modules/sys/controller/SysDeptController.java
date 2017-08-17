@@ -77,7 +77,7 @@ public class SysDeptController extends AbstractController {
         if (getUserId() == Constant.SUPER_ADMIN) {
             SysDeptEntity root = new SysDeptEntity();
             root.setDeptId(0L);
-            root.setName("一级部门");
+            root.setName("无");
             root.setParentId(-1L);
             root.setOpen(true);
             deptList.add(root);
@@ -99,7 +99,6 @@ public class SysDeptController extends AbstractController {
             SysDeptEntity dept = sysDeptService.queryObject(getDeptId());
             deptId = dept.getParentId();
         }
-
         return Result.ok().put("deptId", deptId);
     }
 
@@ -138,7 +137,6 @@ public class SysDeptController extends AbstractController {
     @RequiresPermissions("sys:dept:update")
     public Result update(@RequestBody SysDeptEntity dept) {
         sysDeptService.update(dept);
-
         return Result.ok();
     }
 

@@ -7,7 +7,7 @@
 
 <html>
 <head>
-    <title>部门管理</title>
+    <title>租户管理</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -37,11 +37,18 @@
 <div id="garnetApp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-            <a v-if="hasPermission('sys:dept:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a v-if="hasPermission('sys:dept:update')" class="btn btn-primary" @click="update"><i
-                    class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a v-if="hasPermission('sys:dept:delete')" class="btn btn-primary" @click="del"><i
-                    class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <a v-if="hasPermission('sys:dept:save')" class="btn btn-primary" @click="add">
+                <i class="fa fa-plus"></i>
+                <span>新增</span>
+            </a>
+            <a v-if="hasPermission('sys:dept:update')" class="btn btn-primary" @click="update">
+                <i class="fa fa-pencil-square-o"></i>
+                <span>修改</span>
+            </a>
+            <a v-if="hasPermission('sys:dept:delete')" class="btn btn-primary" @click="del">
+                <i class="fa fa-trash-o"></i>
+                <span>删除</span>
+            </a>
         </div>
         <table id="deptTable" data-mobile-responsive="true" data-click-to-select="true">
             <thead>
@@ -65,7 +72,7 @@
                 <div class="col-sm-2 control-label">上级部门</div>
                 <div class="col-sm-10">
                     <input class="form-control" style="cursor:pointer;" v-model="dept.parentName"
-                           @click="deptTree" readonly placeholder="一级部门"/>
+                           @click="deptTree" readonly placeholder="无"/>
                 </div>
             </div>
             <div class="form-group">

@@ -4,6 +4,7 @@
  * All rights reserved.
  */
 
+var ztree;
 var setting = {
     data: {
         simpleData: {
@@ -17,7 +18,6 @@ var setting = {
         }
     }
 };
-var ztree;
 
 var vm = new Vue({
     el: '#garnetApp',
@@ -52,12 +52,10 @@ var vm = new Vue({
             if (deptId == null) {
                 return;
             }
-
             $.get(baseURL + "sys/dept/info/" + deptId, function (r) {
                 vm.showList = false;
                 vm.title = "修改";
                 vm.dept = r.dept;
-
                 vm.getDept();
             });
         },
@@ -65,24 +63,24 @@ var vm = new Vue({
             var deptId = getDeptId();
             if (deptId == null) {
                 return;
-            }
-
-            confirm('确定要删除选中的记录？', function () {
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + "sys/dept/delete",
-                    data: "deptId=" + deptId,
-                    success: function (r) {
-                        if (r.code === 0) {
-                            alert('操作成功', function () {
-                                vm.reload();
-                            });
-                        } else {
-                            alert(r.msg);
+            } else {
+                confirm('确定要删除选中的记录？', function () {
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + "sys/dept/delete",
+                        data: "deptId=" + deptId,
+                        success: function (r) {
+                            if (r.code === 0) {
+                                alert('操作成功', function () {
+                                    vm.reload();
+                                });
+                            } else {
+                                alert(r.msg);
+                            }
                         }
-                    }
+                    });
                 });
-            });
+            }
         },
         saveOrUpdate: function (event) {
             var url = vm.dept.deptId == null ? "sys/dept/save" : "sys/dept/update";
@@ -118,7 +116,6 @@ var vm = new Vue({
                     //选择上级部门
                     vm.dept.parentId = node[0].deptId;
                     vm.dept.parentName = node[0].name;
-
                     layer.close(index);
                 }
             });
@@ -136,9 +133,7 @@ var Dept = {
     layerIndex: -1
 };
 
-/**
- * 初始化表格的列
- */
+/** 初始化表格的列 */
 Dept.initColumn = function () {
     var columns = [
         {field: 'selectItem', radio: true},
@@ -149,17 +144,16 @@ Dept.initColumn = function () {
     return columns;
 };
 
-
+/** 获取选中行的id */
 function getDeptId() {
     var selected = $('#deptTable').bootstrapTreeTable('getSelections');
     if (selected.length == 0) {
         alert("请选择一条记录");
-        return false;
+        return null;
     } else {
         return selected[0].id;
     }
 }
-
 
 $(function () {
     $.get(baseURL + "sys/dept/info", function (r) {
