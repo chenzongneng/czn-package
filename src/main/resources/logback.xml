@@ -27,6 +27,7 @@
 
     <!--for sql-->
     <logger name="com.richstonedt.garnet.modules" level="DEBUG"/>
+    <logger name="com.richstonedt.garnet.system" level="DEBUG"/>
 
     <!-- level and appender -->
     <root level="INFO">
