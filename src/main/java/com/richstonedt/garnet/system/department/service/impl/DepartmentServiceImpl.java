@@ -6,6 +6,14 @@
 
 package com.richstonedt.garnet.system.department.service.impl;
 
+import com.richstonedt.garnet.system.department.dao.DepartmentDao;
+import com.richstonedt.garnet.system.department.entity.Department;
+import com.richstonedt.garnet.system.department.service.DepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 /**
  * <b><code>DepartmentServiceImpl</code></b>
  * <p/>
@@ -16,6 +24,27 @@ package com.richstonedt.garnet.system.department.service.impl;
  * @author chenzechao
  * @since Garnet 1.0.0
  */
-public class DepartmentServiceImpl {
+@Service
+public class DepartmentServiceImpl implements DepartmentService {
 
+    /**
+     * The Department dao.
+     */
+    private final DepartmentDao departmentDao;
+
+    @Autowired
+    public DepartmentServiceImpl(DepartmentDao departmentDao) {
+        this.departmentDao = departmentDao;
+    }
+
+    /**
+     * Gets department list.
+     *
+     * @param departmentId the department id
+     * @return the department list
+     */
+    @Override
+    public List<Department> getDepartmentList(Long departmentId) {
+        return departmentDao.getDepartmentList(departmentId);
+    }
 }

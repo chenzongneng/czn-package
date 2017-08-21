@@ -6,6 +6,10 @@
 
 package com.richstonedt.garnet.system.department.service;
 
+import com.richstonedt.garnet.system.department.entity.Department;
+
+import java.util.List;
+
 /**
  * <b><code>DepartmentService</code></b>
  * <p/>
@@ -17,5 +21,14 @@ package com.richstonedt.garnet.system.department.service;
  * @since Garnet 1.0.0
  */
 public interface DepartmentService {
+
+    /**
+     * Gets department list.
+     *
+     * @param id the id
+     * @return the department list
+     * @since Garnet 1.0.0
+     */
+    List<Department> getDepartmentList(Long id);
 
 }

@@ -6,6 +6,12 @@
 
 package com.richstonedt.garnet.system.department.dao;
 
+import com.richstonedt.garnet.system.department.entity.Department;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
 /**
  * <b><code>DepartmentDao</code></b>
  * <p/>
@@ -16,5 +22,21 @@ package com.richstonedt.garnet.system.department.dao;
  * @author chenzechao
  * @since Garnet 1.0.0
  */
+@Mapper
 public interface DepartmentDao {
+
+    /**
+     * Gets department list.
+     *
+     * @param departmentId the department id
+     * @return the department list
+     */
+    List<Department> getDepartmentList(@Param("departmentId") Long departmentId);
+
+
+    Department getDepartmentById(Long id);
+
+
+    int delete(Long id);
+
 }
