@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  description: renren-fastplus是一个轻量级的Java快速开发平台
+  description: the API doc of Garnet
   version: 1.0.0
-  title: 人人快速开发平台(企业版)
+  title: SwaggerUI for Garnet
 
 schemes:
   - http
@@ -16,7 +16,7 @@ securityDefinitions:
 
 #定义接口数据
 paths:
-  /captcha.jpg:
+  /kaptcha:
     get:
       tags:
         - 用户登录

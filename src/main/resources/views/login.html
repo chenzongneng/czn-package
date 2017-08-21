@@ -76,7 +76,7 @@
             captcha: '',
             error: false,
             errorMsg: '',
-            src: 'captcha.jpg'
+            src: 'kaptcha'
         },
         beforeCreate: function () {
             if (self != top) {
@@ -85,7 +85,7 @@
         },
         methods: {
             refreshCode: function () {
-                this.src = "captcha.jpg?t=" + $.now();
+                this.src = "kaptcha?t=" + $.now();
             },
             login: function () {
                 var data = "username=" + vm.username + "&password=" + vm.password + "&captcha=" + vm.captcha;

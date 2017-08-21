@@ -13,18 +13,19 @@ import com.richstonedt.garnet.common.utils.ShiroUtils;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import com.richstonedt.garnet.modules.sys.service.SysUserTokenService;
-import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -64,17 +65,14 @@ public class SysLoginController {
     private SysUserTokenService sysUserTokenService;
 
     /**
-     * Captcha.
+     * Kaptcha.
      *
-     * @param response the response
-     * @throws ServletException the servlet exception
-     * @throws IOException      the io exception
+     * @return the kaptcha
+     * @throws IOException the io exception
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping("captcha.jpg")
-    public void captcha(HttpServletResponse response) throws ServletException, IOException {
-        response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/jpeg");
+    @RequestMapping(value = "/kaptcha", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<?> getKaptcha() throws IOException {
 
         //生成文字验证码
         String text = producer.createText();
@@ -83,9 +81,17 @@ public class SysLoginController {
         //保存到shiro session
         ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
 
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(image, "jpg", out);
-        IOUtils.closeQuietly(out);
+        // transform to byte
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", stream);
+        byte[] result = stream.toByteArray();
+
+        // modify header of response
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.IMAGE_JPEG);
+        header.setCacheControl("no-store, no-cache");
+
+        return new ResponseEntity<>(result, header, HttpStatus.OK);
     }
 
     /**
@@ -110,7 +116,7 @@ public class SysLoginController {
             return Result.error("账号已被锁定,请联系管理员");
         }
         //生成token，并保存到数据库
-        return  sysUserTokenService.createToken(user.getUserId());
+        return sysUserTokenService.createToken(user.getUserId());
     }
 
 }
