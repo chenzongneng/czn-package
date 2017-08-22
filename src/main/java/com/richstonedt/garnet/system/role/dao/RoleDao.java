@@ -46,6 +46,14 @@ public interface RoleDao {
      */
     List<SysRole> searchRoles(Integer roleId,String roleName);
 
+    /**
+     * Gets role by id.
+     *
+     * @param id the id
+     * @return the role by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    SysRole getRoleById(Integer id);
 
     /**
      * Insert role.

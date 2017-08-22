@@ -33,6 +33,13 @@
         ORDER BY role_id asc;
     </select>
 
+    <select id="getRoleById" resultType="com.richstonedt.garnet.system.role.entity.SysRole">
+        select * from gar_sys_role
+        <where>
+            role_id = #{param1};
+        </where>
+    </select>
+
     <insert id="insertRole" parameterType="com.richstonedt.garnet.system.role.entity.SysRole" useGeneratedKeys="true"
             keyProperty="roleId">
         insert into gar_sys_role
@@ -40,16 +47,14 @@
         parent_role_id,
         role_name,
         remark,
-        dept_id,
-        create_time
+        dept_id
         )
         values
         (
         #{parentRoleId},
         #{roleName},
         #{remark},
-        #{deptId},
-        #{createTime}
+        #{deptId}
         );
     </insert>
 

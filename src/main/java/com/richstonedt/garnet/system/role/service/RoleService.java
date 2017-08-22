@@ -43,4 +43,15 @@ public interface RoleService {
      * @since garnet-core-be-fe 1.0.0
      */
     List<SysRole> searchRole(int roleId,String roleName);
+
+    /**
+     * Save role.
+     *
+     * @param role     the roles
+     * @param roleId   the roleId  该角色的id
+     * @param roleType the role type
+     * @param tenant   the tenant
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void saveRole(SysRole role, Integer roleId,Integer roleType,Integer tenant);
 }

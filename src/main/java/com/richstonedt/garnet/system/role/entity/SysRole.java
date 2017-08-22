@@ -61,6 +61,13 @@ public class SysRole implements Serializable {
 	private String remark;
 
 	/**
+	 * 部门
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	private Long deptId;
+
+	/**
 	 * 创建时间
 	 *
 	 * @since garnet-core-be-fe 1.0.0
@@ -145,6 +152,26 @@ public class SysRole implements Serializable {
 	 */
 	public String getRemark() {
 		return remark;
+	}
+
+	/**
+	 * Return the DeptId
+	 *
+	 * @return property value of deptId
+	 * @since gempile-model 0.1.0
+	 */
+	public Long getDeptId() {
+		return deptId;
+	}
+
+	/**
+	 * Set the DeptId
+	 *
+	 * @param deptId value to be assigned to property deptId
+	 * @since gempile-model 0.1.0
+	 */
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
 	}
 
 	/**

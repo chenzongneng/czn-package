@@ -40,6 +40,13 @@ public class GarnetServiceErrorCodes {
     public static final String ILLEGAL_ARGUMENT = "ILLEGAL_ARGUMENT";
 
     /**
+     * The Constant CONFLICT.
+     *
+     * @since garnet 1.0.0
+     */
+    public static final String CONFLICT = "Conflict";
+
+    /**
      * OTHER
      *
      * @since garnet 1.0.0

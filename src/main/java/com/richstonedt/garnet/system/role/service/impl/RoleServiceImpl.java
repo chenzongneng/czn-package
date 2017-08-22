@@ -6,6 +6,8 @@
 
 package com.richstonedt.garnet.system.role.service.impl;
 
+import com.richstonedt.garnet.common.exception.GarnetServiceErrorCodes;
+import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.system.role.dao.RoleDao;
 import com.richstonedt.garnet.system.role.entity.SysRole;
 import com.richstonedt.garnet.system.role.service.RoleService;
@@ -26,7 +28,7 @@ import java.util.List;
  * @since garnet-core-be-fe 1.0.0
  */
 @Service
-public class RoleServiceImpl  implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     /**
      * The Role dao.
@@ -48,7 +50,7 @@ public class RoleServiceImpl  implements RoleService{
     @Override
     public List<SysRole> getRoleLists(int page, int limit, int roleId) {
         int offset = (page - 1) * limit;
-        return roleDao.getRoleLists(offset,limit,roleId);
+        return roleDao.getRoleLists(offset, limit, roleId);
     }
 
     /**
@@ -61,6 +63,50 @@ public class RoleServiceImpl  implements RoleService{
      */
     @Override
     public List<SysRole> searchRole(int roleId, String roleName) {
-        return roleDao.searchRoles(roleId,roleName);
+        return roleDao.searchRoles(roleId, roleName);
+    }
+
+    /**
+     * Save role.
+     *
+     * @param role     the role
+     * @param roleId   the roleId  该角色的id
+     * @param roleType the role type
+     * @param tenant   the tenant
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void saveRole(SysRole role, Integer roleId, Integer roleType, Integer tenant) {
+        SysRole tmpRole = roleDao.getRoleById(roleId);
+        if (roleType == null && tenant == null) {//roleType 和 tenant 都为空，则证明是 租户管理员,操作：添加该租户下的角色
+            if (tmpRole.getParentRoleId() != 1) {
+                throw new GarnetServiceException("角色不匹配", GarnetServiceErrorCodes.CONFLICT);
+            }
+            role.setParentRoleId(new Long(roleId));
+            roleDao.insertRole(role);
+        } else {
+            if (tmpRole.getParentRoleId() != 0) {
+                throw new GarnetServiceException("角色不匹配", GarnetServiceErrorCodes.CONFLICT);
+            }
+            if (roleType != null) {
+                switch (roleType) {
+                    case 0:// 添加一个管理员角色
+                        role.setParentRoleId(0L);
+                        roleDao.insertRole(role);
+                        break;
+                    case 1:// 添加一个 租户管理员角色
+                        role.setParentRoleId(1L);
+                        roleDao.insertRole(role);
+                        break;
+                    case 2: // 添加某个租户下的其他角色
+                        if (tenant == null) {
+                            throw new GarnetServiceException("Tenant can't be null!",GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
+                        }
+                        role.setParentRoleId(new Long(tenant));
+                        roleDao.insertRole(role);
+                        break;
+                }
+            }
+        }
     }
 }

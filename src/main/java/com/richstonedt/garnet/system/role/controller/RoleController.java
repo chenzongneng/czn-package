@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -64,7 +61,7 @@ public class RoleController {
      */
     @RequestMapping(value = "/roleList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoleLists(
-            // todo: get roleid in user
+            // todo: get roleId in user
             @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit, @RequestParam(value = "roleId") int roleId) {
         try {
             List<SysRole> results = roleService.getRoleLists(page, limit, roleId);
@@ -87,13 +84,39 @@ public class RoleController {
      */
     @RequestMapping(value = "/role", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> searchRole(
-            // todo: get roleid in user
+            // todo: get roleId in user
             @RequestParam(value = "roleId") int roleId, @RequestParam(value = "roleName") String roleName) {
-        try{
-            List<SysRole> results =  roleService.searchRole(roleId,roleName);
-            return new ResponseEntity<Object>(results,HttpStatus.OK);
-        }catch (Throwable t){
+        try {
+            List<SysRole> results = roleService.searchRole(roleId, roleName);
+            return new ResponseEntity<Object>(results, HttpStatus.OK);
+        } catch (Throwable t) {
             LOG.error("Failed to search roles in RoleController ! !!");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Sava role response entity.
+     *
+     * @param role     the role  接收一个role对象
+     * @param roleId   the roleId  该角色的id
+     * @param roleType the role type  0:管理员   1:租户管理员  2:其他角色
+     * @param tenant   the tenant    租户id，只有当type = 2 时，才有值
+     * @return the response entity
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/role",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> saveRole(
+            @RequestBody SysRole role,@RequestParam(value = "roleId") Integer roleId, @RequestParam(value = "roleType", required = false) Integer roleType,
+            @RequestParam(value = "tenant", required = false) Integer tenant) {
+        try{
+            if(role == null || roleId == null ){
+                return new ResponseEntity<Object>("Role or roleId can't be null!!!",HttpStatus.BAD_REQUEST);
+            }
+            roleService.saveRole(role,roleId,roleType,tenant);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        }catch (Throwable t){
+            LOG.error("Failed to save role in RoleController ! !!");
             return GarnetUtils.newResponseEntity(t);
         }
     }
