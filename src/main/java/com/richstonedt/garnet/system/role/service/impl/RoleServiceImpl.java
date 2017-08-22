@@ -48,6 +48,19 @@ public class RoleServiceImpl  implements RoleService{
     @Override
     public List<SysRole> getRoleLists(int page, int limit, int roleId) {
         int offset = (page - 1) * limit;
-        return roleDao.searchRoles(offset,limit,roleId);
+        return roleDao.getRoleLists(offset,limit,roleId);
+    }
+
+    /**
+     * Search role list.
+     *
+     * @param roleId   the role id
+     * @param roleName the role name
+     * @return the list
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public List<SysRole> searchRole(int roleId, String roleName) {
+        return roleDao.searchRoles(roleId,roleName);
     }
 }

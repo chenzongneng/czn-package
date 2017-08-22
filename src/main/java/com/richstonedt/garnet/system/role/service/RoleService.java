@@ -33,4 +33,14 @@ public interface RoleService {
      * @since garnet-core-be-fe 1.0.0
      */
     List<SysRole> getRoleLists(int page,int limit,int roleId);
+
+    /**
+     * Search role list.
+     *
+     * @param roleId   the role id
+     * @param roleName the role name
+     * @return the list
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<SysRole> searchRole(int roleId,String roleName);
 }

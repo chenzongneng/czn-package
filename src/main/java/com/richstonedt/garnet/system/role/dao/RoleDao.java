@@ -26,7 +26,7 @@ import java.util.List;
 public interface RoleDao {
 
     /**
-     * Search roles list.
+     * Get roles list.
      *
      * @param offset the offset
      * @param limit  the limit
@@ -34,7 +34,18 @@ public interface RoleDao {
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<SysRole> searchRoles(int offset, int limit, int roleId);
+    List<SysRole> getRoleLists(Integer offset, Integer limit, Integer roleId);
+
+    /**
+     * Search roles list.
+     *
+     * @param roleId   the role id
+     * @param roleName the role name
+     * @return the list
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<SysRole> searchRoles(Integer roleId,String roleName);
+
 
     /**
      * Insert role.

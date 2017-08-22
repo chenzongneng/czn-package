@@ -62,19 +62,40 @@ public class RoleController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/role", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> searchRoles (
+    @RequestMapping(value = "/roleList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getRoleLists(
             // todo: get roleid in user
-            @RequestParam(value = "page") int page,@RequestParam(value = "limit") int limit ,@RequestParam(value = "roleId") int roleId
-    ){
-        try{
-            List<SysRole> results = roleService.getRoleLists(page,limit,roleId);
-            int totalCount =results.size();
-            PageUtils pageUtils = new PageUtils(results,totalCount,limit,page);
-            return new ResponseEntity<>(pageUtils,HttpStatus.OK);
-        }catch (Throwable t){
+            @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit, @RequestParam(value = "roleId") int roleId) {
+        try {
+            List<SysRole> results = roleService.getRoleLists(page, limit, roleId);
+            int totalCount = results.size();
+            PageUtils pageUtils = new PageUtils(results, totalCount, limit, page);
+            return new ResponseEntity<>(pageUtils, HttpStatus.OK);
+        } catch (Throwable t) {
             LOG.error("Failed to get roles in RoleController ! !!");
             return GarnetUtils.newResponseEntity(t);
         }
     }
+
+    /**
+     * Search role response entity.
+     *
+     * @param roleId   the role id
+     * @param roleName the role name
+     * @return the response entity
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/role", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> searchRole(
+            // todo: get roleid in user
+            @RequestParam(value = "roleId") int roleId, @RequestParam(value = "roleName") String roleName) {
+        try{
+            List<SysRole> results =  roleService.searchRole(roleId,roleName);
+            return new ResponseEntity<Object>(results,HttpStatus.OK);
+        }catch (Throwable t){
+            LOG.error("Failed to search roles in RoleController ! !!");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
 }
