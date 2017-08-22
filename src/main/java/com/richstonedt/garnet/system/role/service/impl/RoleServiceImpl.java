@@ -109,4 +109,39 @@ public class RoleServiceImpl implements RoleService {
             }
         }
     }
+
+    /**
+     * Update role.
+     *
+     * @param role     the role
+     * @param roleType the role type
+     * @param tenant   the tenant
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void updateRole(SysRole role, Integer roleType, Integer tenant) {
+        if (roleType == null && tenant == null) {//roleType 和 tenant 都为空，则只更新角色信息
+            roleDao.updateRole(role);
+        } else {
+            if (roleType != null) {
+                switch (roleType) {
+                    case 0:// 更改为管理员角色
+                        role.setParentRoleId(0L);
+                        roleDao.updateRole(role);
+                        break;
+                    case 1:// 更改为租户管理员角色
+                        role.setParentRoleId(1L);
+                        roleDao.updateRole(role);
+                        break;
+                    case 2: // 更改为某个租户下的其他角色
+                        if (tenant == null) {
+                            throw new GarnetServiceException("Tenant can't be null!",GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
+                        }
+                        role.setParentRoleId(new Long(tenant));
+                        roleDao.updateRole(role);
+                        break;
+                }
+            }
+        }
+    }
 }

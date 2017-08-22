@@ -54,4 +54,14 @@ public interface RoleService {
      * @since garnet-core-be-fe 1.0.0
      */
     void saveRole(SysRole role, Integer roleId,Integer roleType,Integer tenant);
+
+    /**
+     * Update role.
+     *
+     * @param role     the role
+     * @param roleType the role type
+     * @param tenant   the tenant
+     *                 @since garnet-core-be-fe 1.0.0
+     */
+    void updateRole(SysRole role,Integer roleType,Integer tenant);
 }

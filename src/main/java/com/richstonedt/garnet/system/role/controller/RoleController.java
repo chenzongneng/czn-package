@@ -96,7 +96,7 @@ public class RoleController {
     }
 
     /**
-     * Sava role response entity.
+     * Save role response entity.
      *
      * @param role     the role  接收一个role对象
      * @param roleId   the roleId  该角色的id
@@ -105,18 +105,43 @@ public class RoleController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/role",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/role", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> saveRole(
-            @RequestBody SysRole role,@RequestParam(value = "roleId") Integer roleId, @RequestParam(value = "roleType", required = false) Integer roleType,
+            @RequestBody SysRole role, @RequestParam(value = "roleId") Integer roleId, @RequestParam(value = "roleType", required = false) Integer roleType,
             @RequestParam(value = "tenant", required = false) Integer tenant) {
-        try{
-            if(role == null || roleId == null ){
-                return new ResponseEntity<Object>("Role or roleId can't be null!!!",HttpStatus.BAD_REQUEST);
+        try {
+            if (role == null || roleId == null) {
+                return new ResponseEntity<Object>("Role or roleId can't be null!!!", HttpStatus.BAD_REQUEST);
             }
-            roleService.saveRole(role,roleId,roleType,tenant);
+            roleService.saveRole(role, roleId, roleType, tenant);
             return new ResponseEntity<Object>(HttpStatus.OK);
-        }catch (Throwable t){
+        } catch (Throwable t) {
             LOG.error("Failed to save role in RoleController ! !!");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Update role response entity.
+     *
+     * @param role     the role  接收一个role对象
+     * @param roleType the role type 0:管理员   1:租户管理员  2:其他角色
+     * @param tenant   the tenant  租户id，只有当type = 2 时，才有值
+     * @return the response entity
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/role",method = RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity updateRole(
+            @RequestBody SysRole role, @RequestParam(value = "roleType", required = false) Integer roleType,
+            @RequestParam(value = "tenant", required = false) Integer tenant) {
+        try {
+            if (role == null) {
+                return new ResponseEntity<Object>("Role can't be null!!!", HttpStatus.BAD_REQUEST);
+            }
+            roleService.updateRole(role,roleType,tenant);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to update role in RoleController ! !!");
             return GarnetUtils.newResponseEntity(t);
         }
     }

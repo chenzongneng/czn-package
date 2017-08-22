@@ -62,4 +62,12 @@ public interface RoleDao {
      * @since garnet-core-be-fe 1.0.0
      */
     void insertRole(SysRole role);
+
+    /**
+     * Update role.
+     *
+     * @param role the role
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void updateRole(SysRole role);
 }
