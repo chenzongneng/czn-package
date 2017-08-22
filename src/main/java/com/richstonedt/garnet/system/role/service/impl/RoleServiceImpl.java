@@ -144,4 +144,15 @@ public class RoleServiceImpl implements RoleService {
             }
         }
     }
+
+    /**
+     * Delete role.
+     *
+     * @param roleId the role id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void deleteRole(Integer roleId) {
+        roleDao.deleteRole(roleId);
+    }
 }

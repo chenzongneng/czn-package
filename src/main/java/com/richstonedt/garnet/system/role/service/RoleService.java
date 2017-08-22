@@ -61,7 +61,15 @@ public interface RoleService {
      * @param role     the role
      * @param roleType the role type
      * @param tenant   the tenant
-     *                 @since garnet-core-be-fe 1.0.0
+     * @since garnet-core-be-fe 1.0.0
      */
     void updateRole(SysRole role,Integer roleType,Integer tenant);
+
+    /**
+     * Delete role.
+     *
+     * @param roleId the role id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void deleteRole(Integer roleId);
 }

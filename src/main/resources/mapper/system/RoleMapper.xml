@@ -80,4 +80,11 @@
         </where>
     </update>
 
+    <delete id="deleteRole" >
+        delete from gar_sys_role
+        <where>
+            role_id = #{roleId};
+        </where>
+    </delete>
+
 </mapper>

@@ -146,4 +146,23 @@ public class RoleController {
         }
     }
 
+    /**
+     * Delete role response entity.
+     *
+     * @param roleId the role id
+     * @return the response entity
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/role",method = RequestMethod.DELETE,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> deleteRole(
+            @RequestParam(value = "roleId") Integer roleId){
+        try {
+            roleService.deleteRole(roleId);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to delete role in RoleController ! !!");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
 }
