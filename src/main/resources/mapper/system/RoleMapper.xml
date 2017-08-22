@@ -15,7 +15,6 @@
             <if test="param3 != 0">
                 role_id = #{param3} or parent_role_id = #{param3}
             </if>
-            and role_id not in (0,1,2)
         </where>
         ORDER BY role_id asc
         limit #{param2} offset #{param1}

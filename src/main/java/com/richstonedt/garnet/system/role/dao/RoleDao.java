@@ -25,7 +25,22 @@ import java.util.List;
 @Mapper
 public interface RoleDao {
 
+    /**
+     * Search roles list.
+     *
+     * @param offset the offset
+     * @param limit  the limit
+     * @param roleId the role id
+     * @return the list
+     * @since garnet-core-be-fe 1.0.0
+     */
     List<SysRole> searchRoles(int offset, int limit, int roleId);
 
+    /**
+     * Insert role.
+     *
+     * @param role the role
+     * @since garnet-core-be-fe 1.0.0
+     */
     void insertRole(SysRole role);
 }

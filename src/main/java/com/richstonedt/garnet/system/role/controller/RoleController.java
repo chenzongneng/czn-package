@@ -6,9 +6,12 @@
 
 package com.richstonedt.garnet.system.role.controller;
 
+import com.richstonedt.garnet.common.utils.GarnetUtils;
 import com.richstonedt.garnet.common.utils.PageUtils;
 import com.richstonedt.garnet.system.role.entity.SysRole;
 import com.richstonedt.garnet.system.role.service.RoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +47,13 @@ public class RoleController {
     private RoleService roleService;
 
     /**
+     * The constant LOG.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private static Logger LOG = LoggerFactory.getLogger(RoleController.class);
+
+    /**
      * Search roles response entity.
      *
      * @param page   the page
@@ -54,6 +64,7 @@ public class RoleController {
      */
     @RequestMapping(value = "/role", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> searchRoles (
+            // todo: get roleid in user
             @RequestParam(value = "page") int page,@RequestParam(value = "limit") int limit ,@RequestParam(value = "roleId") int roleId
     ){
         try{
@@ -61,8 +72,9 @@ public class RoleController {
             int totalCount =results.size();
             PageUtils pageUtils = new PageUtils(results,totalCount,limit,page);
             return new ResponseEntity<>(pageUtils,HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (Throwable t){
+            LOG.error("Failed to get roles in RoleController ! !!");
+            return GarnetUtils.newResponseEntity(t);
         }
     }
 }
