@@ -46,10 +46,10 @@ public class ScheduleConfig {
         prop.put("org.quartz.threadPool.threadPriority", "5");
         //JobStore配置
         prop.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
-        prop.put("org.quartz.jobStore.driverDelegateClass", " org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
+        prop.put("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
         //集群配置
         prop.put("org.quartz.jobStore.isClustered", "true");
-        prop.put("org.quartz.jobStore.clusterCheckinInterval", "15000");
+        prop.put("org.quartz.jobStore.clusterCheckinInterval", "3600000");//一小时扫描一次
         prop.put("org.quartz.jobStore.maxMisfiresToHandleAtATime", "1");
 
         prop.put("org.quartz.jobStore.misfireThreshold", "12000");
