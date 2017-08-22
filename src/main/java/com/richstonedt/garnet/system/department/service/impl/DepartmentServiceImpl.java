@@ -6,11 +6,17 @@
 
 package com.richstonedt.garnet.system.department.service.impl;
 
+import com.richstonedt.garnet.common.exception.GarnetServiceErrorCodes;
+import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.system.department.dao.DepartmentDao;
 import com.richstonedt.garnet.system.department.entity.Department;
 import com.richstonedt.garnet.system.department.service.DepartmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -28,7 +34,16 @@ import java.util.List;
 public class DepartmentServiceImpl implements DepartmentService {
 
     /**
+     * The constant LOG.
+     *
+     * @since Garnet 1.0.0
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DepartmentServiceImpl.class);
+
+    /**
      * The Department dao.
+     *
+     * @since Garnet 1.0.0
      */
     private final DepartmentDao departmentDao;
 
@@ -40,11 +55,56 @@ public class DepartmentServiceImpl implements DepartmentService {
     /**
      * Gets department list.
      *
-     * @param departmentId the department id
+     * @param tenantId    the tenant id
+     * @param containThis the contain this
      * @return the department list
+     * @since Garnet 1.0.0
      */
     @Override
-    public List<Department> getDepartmentList(Long departmentId) {
-        return departmentDao.getDepartmentList(departmentId);
+    public List<Department> getDepartmentList(Long tenantId, boolean containThis) {
+        List<Department> departments = departmentDao.getDepartmentList(tenantId, containThis);
+        if (!CollectionUtils.isEmpty(departments)) {
+            for (Department department : departments) {
+                if (!ObjectUtils.isEmpty(department.getParentId())) {
+                    Department parent = departmentDao.getDepartmentById(department.getParentId());
+                    department.setParentName(parent.getName());
+                }
+            }
+        }
+        return departments;
     }
+
+    /**
+     * Gets department by id.
+     *
+     * @param id the id
+     * @return the department by id
+     * @since Garnet 1.0.0
+     */
+    @Override
+    public Department getDepartmentById(Long id) {
+        Department department = departmentDao.getDepartmentById(id);
+        if (!ObjectUtils.isEmpty(department.getParentId())) {
+            Department parent = departmentDao.getDepartmentById(department.getParentId());
+            department.setParentName(parent.getName());
+        }
+        return department;
+    }
+
+    /**
+     * Delete department by id int.
+     *
+     * @param id the id
+     * @since Garnet 1.0.0
+     */
+    @Override
+    public void deleteDepartmentById(Long id) {
+        int row = departmentDao.delete(id);
+        if (row == 0) {
+            String error = "Failed to set delete_flag of department to true![id:" + id + "]";
+            LOG.error(error);
+            throw new GarnetServiceException(error, GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
+        }
+    }
+
 }

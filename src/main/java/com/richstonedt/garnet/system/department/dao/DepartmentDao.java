@@ -28,15 +28,29 @@ public interface DepartmentDao {
     /**
      * Gets department list.
      *
-     * @param departmentId the department id
+     * @param tenantId    the tenant id
+     * @param containThis the contain this
      * @return the department list
+     * @since Garnet 1.0.0
      */
-    List<Department> getDepartmentList(@Param("departmentId") Long departmentId);
+    List<Department> getDepartmentList(@Param("tenantId") Long tenantId, @Param("containThis") boolean containThis);
 
-
+    /**
+     * Gets department by id.
+     *
+     * @param id the id
+     * @return the department by id
+     * @since Garnet 1.0.0
+     */
     Department getDepartmentById(Long id);
 
-
+    /**
+     * Delete int.
+     *
+     * @param id the id
+     * @return the int
+     * @since Garnet 1.0.0
+     */
     int delete(Long id);
 
 }

@@ -52,6 +52,20 @@ public class Department implements Serializable {
     private Long parentId;
 
     /**
+     * The Parent name.
+     *
+     * @since Garnet 1.0.0
+     */
+    private String parentName;
+
+    /**
+     * The Tenant id.
+     *
+     * @since Garnet 1.0.0
+     */
+    private Long tenantId;
+
+    /**
      * The Order num.
      *
      * @since Garnet 1.0.0
@@ -163,6 +177,46 @@ public class Department implements Serializable {
      */
     public void setDeleteFlag(Boolean deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    /**
+     * Gets parent name.
+     *
+     * @return the parent name
+     * @since Garnet 1.0.0
+     */
+    public String getParentName() {
+        return parentName;
+    }
+
+    /**
+     * Sets parent name.
+     *
+     * @param parentName the parent name
+     * @since Garnet 1.0.0
+     */
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    /**
+     * Gets tenant id.
+     *
+     * @return the tenant id
+     * @since Garnet 1.0.0
+     */
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    /**
+     * Sets tenant id.
+     *
+     * @param tenantId the tenant id
+     * @since Garnet 1.0.0
+     */
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     /**

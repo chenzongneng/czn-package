@@ -25,10 +25,28 @@ public interface DepartmentService {
     /**
      * Gets department list.
      *
-     * @param id the id
+     * @param tenantId    the tenant id
+     * @param containThis the contain this
      * @return the department list
      * @since Garnet 1.0.0
      */
-    List<Department> getDepartmentList(Long id);
+    List<Department> getDepartmentList(Long tenantId, boolean containThis);
+
+    /**
+     * Gets department by id.
+     *
+     * @param id the id
+     * @return the department by id
+     * @since Garnet 1.0.0
+     */
+    Department getDepartmentById(Long id);
+
+    /**
+     * Delete department by id int.
+     *
+     * @param id the id
+     * @since Garnet 1.0.0
+     */
+    void deleteDepartmentById(Long id);
 
 }

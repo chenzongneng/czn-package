@@ -14,8 +14,11 @@
         FROM gar_departments
         <where>
             delete_flag = FALSE
-            <if test="departmentId != null">
-                AND parent_id = #{departmentId}
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="containThis == false">
+                AND parent_id != 0
             </if>
         </where>
     </select>
