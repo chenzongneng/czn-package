@@ -8,6 +8,7 @@ package com.richstonedt.garnet.system.tenant.dao;
 
 import com.richstonedt.garnet.system.tenant.entity.Tenant;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -41,4 +42,21 @@ public interface TenantDao {
      */
     int addTenant(Tenant tenant);
 
+    /**
+     * Update tenant int.
+     *
+     * @param tenant the tenant
+     * @return the int
+     * @since Garnet 1.0.0
+     */
+    int updateTenant(Tenant tenant);
+
+    /**
+     * Delete by id int.
+     *
+     * @param id the id
+     * @return the int
+     * @since Garnet 1.0.0
+     */
+    int deleteById(@Param(value = "id") Long id);
 }

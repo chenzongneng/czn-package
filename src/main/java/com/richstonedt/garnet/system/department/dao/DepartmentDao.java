@@ -42,7 +42,7 @@ public interface DepartmentDao {
      * @return the department by id
      * @since Garnet 1.0.0
      */
-    Department getDepartmentById(Long id);
+    Department getDepartmentById(@Param("id") Long id);
 
     /**
      * Delete int.
@@ -51,6 +51,23 @@ public interface DepartmentDao {
      * @return the int
      * @since Garnet 1.0.0
      */
-    int delete(Long id);
+    int deleteDepartmentById(@Param("id") Long id);
 
+    /**
+     * Update department int.
+     *
+     * @param department the department
+     * @return the int
+     * @since Garnet 1.0.0
+     */
+    int updateDepartment(Department department);
+
+    /**
+     * Add department long.
+     *
+     * @param department the department
+     * @return the long
+     * @since Garnet 1.0.0
+     */
+    int addDepartment(Department department);
 }

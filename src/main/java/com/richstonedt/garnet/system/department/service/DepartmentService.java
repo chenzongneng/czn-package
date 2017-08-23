@@ -49,4 +49,20 @@ public interface DepartmentService {
      */
     void deleteDepartmentById(Long id);
 
+    /**
+     * Update department.
+     *
+     * @param department the department
+     * @since Garnet 1.0.0
+     */
+    void updateDepartment(Department department);
+
+    /**
+     * Add department long.
+     *
+     * @param department the department
+     * @return the long
+     * @since Garnet 1.0.0
+     */
+    Long addDepartment(Department department);
 }

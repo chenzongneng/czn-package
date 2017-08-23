@@ -9,7 +9,7 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
+            idKey: "id",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -17,6 +17,22 @@ var setting = {
             url: "nourl"
         }
     }
+};
+
+var Dept = {
+    id: "departmentTable",
+    table: null,
+    layerIndex: -1
+};
+
+/** 初始化表格的列 */
+Dept.initColumn = function () {
+    return [
+        {field: 'selectItem', radio: true},
+        {title: '部门ID', field: 'id', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'}];
 };
 
 var vm = new Vue({
@@ -31,76 +47,101 @@ var vm = new Vue({
         }
     },
     methods: {
-        getDept: function () {
-            //加载部门树
-            $.get(baseURL + "sys/dept/select", function (r) {
-                ztree = $.fn.zTree.init($("#deptTree"), setting, r.deptList);
-                var node = ztree.getNodeByParam("deptId", vm.dept.parentId);
+        /** 加载部门树 */
+        getDepartmentTree: function () {
+            // TODO : set user id
+            var param = '?containThis=true&userId=1';
+            $.get(baseURL + "/v1.0/departments" + param, function (result) {
+                ztree = $.fn.zTree.init($("#departmentTree"), setting, result);
+                var node = ztree.getNodeByParam("id", vm.dept.parentId);
                 ztree.selectNode(node);
-
                 vm.dept.parentName = node.name;
             })
         },
-        add: function () {
+        /** 打开新增部门页面 */
+        toAddDepartment: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.dept = {parentName: null, parentId: 0, orderNum: 0};
-            vm.getDept();
+            vm.dept = {
+                parentName: null,
+                parentId: 0,
+                orderNum: 0
+            };
+            vm.getDepartmentTree();
         },
-        update: function () {
-            var deptId = getDeptId();
-            if (deptId == null) {
+        /** 打开修改部门页面 */
+        toUpdateDepartment: function () {
+            var thisDepartmentId = getDepartmentId();
+            if (thisDepartmentId == null) {
                 return;
             }
-            $.get(baseURL + "sys/dept/info/" + deptId, function (r) {
+            var url = baseURL + "/v1.0/department/" + thisDepartmentId;
+            $.get(url, function (result) {
                 vm.showList = false;
                 vm.title = "修改";
-                vm.dept = r.dept;
-                vm.getDept();
+                vm.dept = result;
+                vm.getDepartmentTree();
             });
         },
-        del: function () {
-            var deptId = getDeptId();
-            if (deptId == null) {
-                return;
-            } else {
-                confirm('确定要删除选中的记录？', function () {
+        /** 删除选中的部门 */
+        deleteDepartment: function () {
+            var thisDepartmentId = getDepartmentId();
+            if (thisDepartmentId != null) {
+                confirm('确定要删除选中的部门？', function () {
                     $.ajax({
-                        type: "POST",
-                        url: baseURL + "sys/dept/delete",
-                        data: "deptId=" + deptId,
-                        success: function (r) {
-                            if (r.code === 0) {
-                                alert('操作成功', function () {
-                                    vm.reload();
-                                });
-                            } else {
-                                alert(r.msg);
-                            }
+                        type: "DELETE",
+                        url: baseURL + "/v1.0/department/" + thisDepartmentId,
+                        dataType: '',
+                        success: function () {
+                            alert('操作成功', function () {
+                                vm.reloadDepartmentTree();
+                            });
+                        },
+                        error: function () {
+                            alert('删除失败，请重试！', function () {
+                                vm.reloadDepartmentTree();
+                            });
                         }
                     });
                 });
             }
         },
-        saveOrUpdate: function (event) {
-            var url = vm.dept.deptId == null ? "sys/dept/save" : "sys/dept/update";
+        /** 保存部门信息 */
+        addOrUpdateDepartment: function () {
+            var url, requestType;
+            if (vm.dept.id == null) {
+                url = baseURL + "/v1.0/department";
+                requestType = "POST";
+            } else {
+                url = baseURL + "/v1.0/department/" + vm.dept.id;
+                requestType = "PUT";
+            }
+            var department = {
+                id: vm.dept.id,
+                name: vm.dept.name,
+                orderNum: vm.dept.orderNum,
+                parentId: vm.dept.parentId
+            };
             $.ajax({
-                type: "POST",
-                url: baseURL + url,
+                url: url,
+                type: requestType,
+                dataType: '',
                 contentType: "application/json",
-                data: JSON.stringify(vm.dept),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function () {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
+                data: JSON.stringify(department),
+                success: function () {
+                    alert('操作成功', function () {
+                        vm.reloadDepartmentTree();
+                    });
+                },
+                error: function () {
+                    alert('操作失败，请重试！', function () {
+                        vm.reloadDepartmentTree();
+                    });
                 }
             });
         },
-        deptTree: function () {
+        /** 打开部门树页面 */
+        openDepartmentTree: function () {
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -114,39 +155,23 @@ var vm = new Vue({
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
                     //选择上级部门
-                    vm.dept.parentId = node[0].deptId;
+                    vm.dept.parentId = node[0].id;
                     vm.dept.parentName = node[0].name;
                     layer.close(index);
                 }
             });
         },
-        reload: function () {
+        /** 重新加载部门列表 */
+        reloadDepartmentTree: function () {
             vm.showList = true;
             Dept.table.refresh();
         }
     }
 });
 
-var Dept = {
-    id: "deptTable",
-    table: null,
-    layerIndex: -1
-};
-
-/** 初始化表格的列 */
-Dept.initColumn = function () {
-    var columns = [
-        {field: 'selectItem', radio: true},
-        {title: '部门ID', field: 'deptId', visible: false, align: 'center', valign: 'middle', width: '80px'},
-        {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
-        {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'}];
-    return columns;
-};
-
 /** 获取选中行的id */
-function getDeptId() {
-    var selected = $('#deptTable').bootstrapTreeTable('getSelections');
+function getDepartmentId() {
+    var selected = $('#departmentTable').bootstrapTreeTable('getSelections');
     if (selected.length == 0) {
         alert("请选择一条记录");
         return null;
@@ -155,17 +180,17 @@ function getDeptId() {
     }
 }
 
+/** 初始化加载列表 */
 $(function () {
-    $.get(baseURL + "sys/dept/info", function (r) {
-        var columns = Dept.initColumn();
-        var table = new TreeTable(Dept.id, baseURL + "sys/dept/list", columns);
-        table.setRootCodeValue(r.deptId);
-        table.setExpandColumn(2);
-        table.setIdField("deptId");
-        table.setCodeField("deptId");
-        table.setParentCodeField("parentId");
-        table.setExpandAll(false);
-        table.init();
-        Dept.table = table;
-    });
+    var columns = Dept.initColumn();
+    //TODO: set userId
+    var param = '?userId=1&containThis=false';
+    var table = new TreeTable(Dept.id, baseURL + "/v1.0/departments" + param, columns);
+    table.setExpandColumn(2);
+    table.setIdField("id");
+    table.setCodeField("id");
+    table.setParentCodeField("parentId");
+    table.setExpandAll(false);
+    table.init();
+    Dept.table = table;
 });

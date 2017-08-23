@@ -22,5 +22,16 @@
         INSERT INTO gar_tenants (name) VALUES (#{name})
     </insert>
 
+    <update id="updateTenant" parameterType="com.richstonedt.garnet.system.tenant.entity.Tenant">
+        UPDATE gar_tenants
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteById">
+        UPDATE gar_tenants
+        SET delete_flag = TRUE
+        WHERE id = #{id}
+    </update>
 
 </mapper>

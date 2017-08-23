@@ -102,6 +102,7 @@ public class DepartmentController {
      *
      * @param id the id
      * @return the response entity
+     * @since Garnet 1.0.0
      */
     @RequestMapping(value = "/department/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteDepartmentById(
@@ -114,4 +115,55 @@ public class DepartmentController {
             return GarnetUtils.newResponseEntity(t);
         }
     }
+
+    /**
+     * Add department response entity.
+     *
+     * @param department the department
+     * @return the response entity
+     * @since Garnet 1.0.0
+     */
+    @RequestMapping(value = "/department", method = RequestMethod.POST)
+    public ResponseEntity<?> addDepartment(
+            @RequestBody Department department) {
+        try {
+            departmentService.addDepartment(department);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Throwable t) {
+            LOG.error("Failed to add department, department[" + department.toString() + "]");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Update department response entity.
+     *
+     * @param id         the id
+     * @param department the department
+     * @return the response entity
+     * @since Garnet 1.0.0
+     */
+    @RequestMapping(value = "/department/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateDepartment(
+            @PathVariable(value = "id") Long id,
+            @RequestBody Department department) {
+        try {
+            if (department.getId() == null) {
+                String error = "Illegal argument: id in department is null!";
+                LOG.error(error);
+                throw new IllegalArgumentException(error);
+            }
+            if (!department.getId().equals(id)) {
+                String error = "Illegal argument: department is not match with parameter id!";
+                LOG.error(error);
+                throw new IllegalArgumentException(error);
+            }
+            departmentService.updateDepartment(department);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to update department, department[" + department.toString() + "]");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
 }

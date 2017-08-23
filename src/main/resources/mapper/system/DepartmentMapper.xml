@@ -16,9 +16,14 @@
             delete_flag = FALSE
             <if test="tenantId != null">
                 AND tenant_id = #{tenantId}
+                <if test="containThis == false">
+                    AND parent_id != 0
+                </if>
             </if>
-            <if test="containThis == false">
-                AND parent_id != 0
+            <if test="tenantId == null">
+                <if test="containThis == false">
+                    AND parent_id IS NOT NULL
+                </if>
             </if>
         </where>
     </select>
@@ -26,71 +31,30 @@
     <select id="getDepartmentById" resultType="com.richstonedt.garnet.system.department.entity.Department">
         SELECT *
         FROM gar_departments
-        WHERE id = #{value} AND delete_flag = FALSE
+        WHERE id = #{id} AND delete_flag = FALSE
     </select>
 
-    <update id="delete">
+    <update id="deleteDepartmentById">
         UPDATE gar_departments
         SET delete_flag = TRUE
-        WHERE id = #{value}
+        WHERE id = #{id}
     </update>
 
-    <!--<select id="queryList" resultType="com.richstonedt.garnet.modules.sys.entity.SysDeptEntity">-->
-    <!--select d.*,(select p.name from gar_sys_dept p where p.dept_id = d.parent_id) as parentName-->
-    <!--from gar_sys_dept d where d.del_flag = 0-->
-    <!--<if test="deptFilter != null">-->
-    <!--and d.dept_id in (${deptFilter})-->
-    <!--</if>-->
-    <!--<choose>-->
-    <!--<when test="sidx != null and sidx.trim() != ''">-->
-    <!--order by d.${sidx} ${order}-->
-    <!--</when>-->
-    <!--<otherwise>-->
-    <!--order by d.order_num asc-->
-    <!--</otherwise>-->
-    <!--</choose>-->
-    <!--<if test="offset != null and limit != null">-->
-    <!--limit #{limit} offset #{offset}-->
-    <!--</if>-->
-    <!--</select>-->
+    <update id="updateDepartment" parameterType="com.richstonedt.garnet.system.department.entity.Department">
+        UPDATE gar_departments
+        SET
+            name      = #{name},
+            parent_id = #{parentId},
+            tenant_id = #{tenantId},
+            order_num = #{orderNum}
+        WHERE id = #{id}
+    </update>
 
-    <!--<insert id="save" parameterType="com.richstonedt.garnet.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true"-->
-    <!--keyProperty="deptId">-->
-    <!--INSERT INTO gar_sys_dept-->
-    <!--(-->
-    <!--parent_id,-->
-    <!--name,-->
-    <!--order_num-->
-    <!--)-->
-    <!--VALUES-->
-    <!--(-->
-    <!--#{parentId},-->
-    <!--#{name},-->
-    <!--#{orderNum}-->
-    <!--)-->
-    <!--</insert>-->
-
-    <!--<update id="update" parameterType="com.richstonedt.garnet.modules.sys.entity.SysDeptEntity">-->
-    <!--update gar_sys_dept-->
-    <!--<set>-->
-    <!--<if test="parentId != null">-->
-    <!--parent_id = #{parentId},-->
-    <!--</if>-->
-    <!--<if test="name != null and name != ''">-->
-    <!--name = #{name},-->
-    <!--</if>-->
-    <!--<if test="orderNum != null">-->
-    <!--order_num = #{orderNum}-->
-    <!--</if>-->
-    <!--</set>-->
-    <!--where dept_id = #{deptId}-->
-    <!--</update>-->
-
-
-    <!--<select id="queryDetpIdList" resultType="long">-->
-    <!--SELECT dept_id-->
-    <!--FROM gar_sys_dept-->
-    <!--WHERE parent_id = #{value}-->
-    <!--</select>-->
+    <insert id="addDepartment" parameterType="com.richstonedt.garnet.system.department.entity.Department"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO gar_departments
+        (name, parent_id, tenant_id, order_num)
+        VALUES (#{name}, #{parentId}, #{tenantId}, #{orderNum})
+    </insert>
 
 </mapper>

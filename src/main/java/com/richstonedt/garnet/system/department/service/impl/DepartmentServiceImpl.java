@@ -11,6 +11,8 @@ import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.system.department.dao.DepartmentDao;
 import com.richstonedt.garnet.system.department.entity.Department;
 import com.richstonedt.garnet.system.department.service.DepartmentService;
+import com.richstonedt.garnet.system.tenant.dao.TenantDao;
+import com.richstonedt.garnet.system.tenant.entity.Tenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +49,17 @@ public class DepartmentServiceImpl implements DepartmentService {
      */
     private final DepartmentDao departmentDao;
 
+    /**
+     * The Tenant dao.
+     *
+     * @since Garnet 1.0.0
+     */
+    private final TenantDao tenantDao;
+
     @Autowired
-    public DepartmentServiceImpl(DepartmentDao departmentDao) {
+    public DepartmentServiceImpl(DepartmentDao departmentDao, TenantDao tenantDao) {
         this.departmentDao = departmentDao;
+        this.tenantDao = tenantDao;
     }
 
     /**
@@ -67,7 +77,9 @@ public class DepartmentServiceImpl implements DepartmentService {
             for (Department department : departments) {
                 if (!ObjectUtils.isEmpty(department.getParentId())) {
                     Department parent = departmentDao.getDepartmentById(department.getParentId());
-                    department.setParentName(parent.getName());
+                    if (parent != null) {
+                        department.setParentName(parent.getName());
+                    }
                 }
             }
         }
@@ -86,7 +98,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentDao.getDepartmentById(id);
         if (!ObjectUtils.isEmpty(department.getParentId())) {
             Department parent = departmentDao.getDepartmentById(department.getParentId());
-            department.setParentName(parent.getName());
+            if (parent != null) {
+                department.setParentName(parent.getName());
+            }
         }
         return department;
     }
@@ -99,12 +113,103 @@ public class DepartmentServiceImpl implements DepartmentService {
      */
     @Override
     public void deleteDepartmentById(Long id) {
-        int row = departmentDao.delete(id);
+        //TODO: delete all the children about this department.
+        //TODO: if it's the root department ,delete the tenant.
+        int row = departmentDao.deleteDepartmentById(id);
         if (row == 0) {
             String error = "Failed to set delete_flag of department to true![id:" + id + "]";
             LOG.error(error);
             throw new GarnetServiceException(error, GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
         }
+    }
+
+    /**
+     * Update department.
+     *
+     * @param department the department
+     * @since Garnet 1.0.0
+     */
+    @Override
+    public void updateDepartment(Department department) {
+        Long tenantId = null;
+        Department origin = departmentDao.getDepartmentById(department.getId());
+        if (department.getParentId() != null && origin.getParentId() != null) {
+            Department parent = departmentDao.getDepartmentById(department.getParentId());
+            if (department.getParentId().equals(origin.getParentId())) {
+                /*
+                  parent not changed:
+                    1. root     if the name of department changed, change the name of tenant
+                    2. others
+                 */
+                tenantId = origin.getTenantId();
+                if (parent.getTenantId() == null) {
+                    if (!department.getName().equals(origin.getName())) {
+                        Tenant tenant = new Tenant();
+                        tenant.setId(origin.getTenantId());
+                        tenant.setName(department.getName());
+                        int row = tenantDao.updateTenant(tenant);
+                        if (row == 0) {
+                            String error = "Failed to update tenant[id:" + tenant.getId() + ",name:" + tenant.getName() + "]!";
+                            LOG.error(error);
+                            throw new GarnetServiceException(error, GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
+                        }
+                    }
+                }
+            } else {
+                /*
+                 parent changed:
+                    1. not -> not  []               tenantId = parent.tenantId
+                    2. root -> not [remove tenant]  tenantId = parent.tenantId
+                    3. not -> root [add new tenant] tenantId = new tenantId
+                 */
+                Department originParent = departmentDao.getDepartmentById(origin.getParentId());
+                if (originParent.getTenantId() != null && parent.getTenantId() != null) {
+                    tenantId = parent.getTenantId();
+                } else if (originParent.getTenantId() == null && parent.getTenantId() != null) {
+                    tenantDao.deleteById(origin.getTenantId());
+                    tenantId = parent.getTenantId();
+                } else if (originParent.getTenantId() != null && parent.getTenantId() == null) {
+                    Tenant tenant = new Tenant();
+                    tenant.setName(department.getName());
+                    tenantDao.addTenant(tenant);
+                    tenantId = tenant.getId();
+                }
+            }
+        }
+
+        department.setTenantId(tenantId);
+        int row = departmentDao.updateDepartment(department);
+        if (row == 0) {
+            String error = "Failed to set delete_flag of department to true![id:" + department.getId() + "]";
+            LOG.error(error);
+            throw new GarnetServiceException(error, GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Add department long.
+     *
+     * @param department the department
+     * @return the long
+     * @since Garnet 1.0.0
+     */
+    @Override
+    public Long addDepartment(Department department) {
+        Long tenantId = null;
+        if (department.getParentId() != null) {
+            Department parent = departmentDao.getDepartmentById(department.getParentId());
+            if (parent.getTenantId() == null) {
+                Tenant tenant = new Tenant();
+                tenant.setName(department.getName());
+                tenantDao.addTenant(tenant);
+                tenantId = tenant.getId();
+            } else {
+                tenantId = parent.getTenantId();
+            }
+        }
+        department.setTenantId(tenantId);
+        departmentDao.addDepartment(department);
+        return department.getId();
     }
 
 }
