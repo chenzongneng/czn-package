@@ -34,17 +34,7 @@ public interface RoleDao {
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<SysRole> getRoleLists(Integer offset, Integer limit, Integer roleId);
-
-    /**
-     * Search roles list.
-     *
-     * @param roleId   the role id
-     * @param roleName the role name
-     * @return the list
-     * @since garnet-core-be-fe 1.0.0
-     */
-    List<SysRole> searchRoles(Integer roleId,String roleName);
+    List<SysRole> getRoleLists(Integer offset, Integer limit, Integer roleId,String roleName);
 
     /**
      * Gets role by id.

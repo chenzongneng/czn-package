@@ -97,6 +97,7 @@
                     success: function (result) {
                         if (result.code == 0) {//登录成功
                             localStorage.setItem("token", result.token);
+                            localStorage.setItem("roleId", result.roleId);
                             parent.location.href = 'index.html';
                         } else {
                             vm.error = true;

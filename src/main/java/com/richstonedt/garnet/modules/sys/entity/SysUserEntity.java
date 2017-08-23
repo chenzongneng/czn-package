@@ -8,6 +8,7 @@ package com.richstonedt.garnet.modules.sys.entity;
 
 import com.richstonedt.garnet.common.validator.group.AddGroup;
 import com.richstonedt.garnet.common.validator.group.UpdateGroup;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -121,6 +122,13 @@ public class SysUserEntity implements Serializable {
 	 * @since garnet-core-be-fe 1.0.0
 	 */
 	private String deptName;
+
+	/**
+	 * 角色id
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	private Long roleId;
 
 	/**
 	 * 设置：
@@ -356,5 +364,30 @@ public class SysUserEntity implements Serializable {
 	 */
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+
+	/**
+	 * Return the RoleId
+	 *
+	 * @return property value of roleId
+	 * @since  garnet-core-be-fe 1.0.0
+	 */
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	/**
+	 * Set the RoleId
+	 *
+	 * @param roleId value to be assigned to property roleId
+	 * @since  garnet-core-be-fe 1.0.0
+	 */
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

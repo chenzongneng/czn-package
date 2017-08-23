@@ -56,41 +56,22 @@ public class RoleController {
      * @param page   the page
      * @param limit  the limit
      * @param roleId the role id
+     * @param roleName the role name 如果不为空，则为前端查询接口
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/roleList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoleLists(
             // todo: get roleId in user
-            @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit, @RequestParam(value = "roleId") int roleId) {
+            @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit,
+            @RequestParam(value = "roleId") int roleId, @RequestParam(value = "roleName",required = false) String roleName) {
         try {
-            List<SysRole> results = roleService.getRoleLists(page, limit, roleId);
+            List<SysRole> results = roleService.getRoleLists(page, limit, roleId,roleName);
             int totalCount = results.size();
             PageUtils pageUtils = new PageUtils(results, totalCount, limit, page);
             return new ResponseEntity<>(pageUtils, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get roles in RoleController ! !!");
-            return GarnetUtils.newResponseEntity(t);
-        }
-    }
-
-    /**
-     * Search role response entity.
-     *
-     * @param roleId   the role id
-     * @param roleName the role name
-     * @return the response entity
-     * @since garnet-core-be-fe 1.0.0
-     */
-    @RequestMapping(value = "/role", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> searchRole(
-            // todo: get roleId in user
-            @RequestParam(value = "roleId") int roleId, @RequestParam(value = "roleName") String roleName) {
-        try {
-            List<SysRole> results = roleService.searchRole(roleId, roleName);
-            return new ResponseEntity<Object>(results, HttpStatus.OK);
-        } catch (Throwable t) {
-            LOG.error("Failed to search roles in RoleController ! !!");
             return GarnetUtils.newResponseEntity(t);
         }
     }
@@ -130,7 +111,7 @@ public class RoleController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/role",method = RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/role", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity updateRole(
             @RequestBody SysRole role, @RequestParam(value = "roleType", required = false) Integer roleType,
             @RequestParam(value = "tenant", required = false) Integer tenant) {
@@ -138,7 +119,7 @@ public class RoleController {
             if (role == null) {
                 return new ResponseEntity<Object>("Role can't be null!!!", HttpStatus.BAD_REQUEST);
             }
-            roleService.updateRole(role,roleType,tenant);
+            roleService.updateRole(role, roleType, tenant);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update role in RoleController ! !!");
@@ -153,9 +134,9 @@ public class RoleController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/role",method = RequestMethod.DELETE,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteRole(
-            @RequestParam(value = "roleId") Integer roleId){
+            @PathVariable(value = "roleId") Integer roleId) {
         try {
             roleService.deleteRole(roleId);
             return new ResponseEntity<Object>(HttpStatus.OK);

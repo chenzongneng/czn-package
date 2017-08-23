@@ -12,25 +12,17 @@
     <select id="getRoleLists" resultType="com.richstonedt.garnet.system.role.entity.SysRole">
         select * from gar_sys_role
         <where>
-            <if test="param3 != null and param3 != 0">
-                role_id = #{param3} or parent_role_id = #{param3}
+            <if test="param3 != 0">
+                (role_id = #{param3} or parent_role_id = #{param3})
+            </if>
+            <if test="param4 != null and param4 != ''">
+                and role_name LIKE CONCAT('%',#{param4},'%')
             </if>
         </where>
         ORDER BY role_id asc
         <if test="param1 != null and param2 != null">
             limit #{param2} offset #{param1};
         </if>
-    </select>
-
-    <select id="searchRoles" resultType="com.richstonedt.garnet.system.role.entity.SysRole">
-        SELECT * FROM gar_sys_role
-        <where>
-            <if test="param1 != 0 and param1 != null">
-                (role_id = #{param1} or parent_role_id = #{param1}) and
-            </if>
-            role_name LIKE CONCAT('%',#{param2},'%')
-        </where>
-        ORDER BY role_id asc;
     </select>
 
     <select id="getRoleById" resultType="com.richstonedt.garnet.system.role.entity.SysRole">

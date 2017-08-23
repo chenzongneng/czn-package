@@ -116,7 +116,9 @@ public class SysLoginController {
             return Result.error("账号已被锁定,请联系管理员");
         }
         //生成token，并保存到数据库
-        return sysUserTokenService.createToken(user.getUserId());
+        Result result = sysUserTokenService.createToken(user.getUserId());
+        result.put("roleId",user.getRoleId());
+        return result;
     }
 
 }

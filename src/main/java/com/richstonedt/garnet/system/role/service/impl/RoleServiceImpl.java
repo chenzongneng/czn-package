@@ -8,6 +8,7 @@ package com.richstonedt.garnet.system.role.service.impl;
 
 import com.richstonedt.garnet.common.exception.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.common.exception.GarnetServiceException;
+import com.richstonedt.garnet.system.department.service.DepartmentService;
 import com.richstonedt.garnet.system.role.dao.RoleDao;
 import com.richstonedt.garnet.system.role.entity.SysRole;
 import com.richstonedt.garnet.system.role.service.RoleService;
@@ -39,6 +40,14 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
     /**
+     *the dept Service
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private DepartmentService deptService;
+
+    /**
      * Gets role lists.
      *
      * @param page   the page
@@ -48,22 +57,21 @@ public class RoleServiceImpl implements RoleService {
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public List<SysRole> getRoleLists(int page, int limit, int roleId) {
+    public List<SysRole> getRoleLists(int page, int limit, int roleId,String roleName) {
         int offset = (page - 1) * limit;
-        return roleDao.getRoleLists(offset, limit, roleId);
-    }
-
-    /**
-     * Search role list.
-     *
-     * @param roleId   the role id
-     * @param roleName the role name
-     * @return the list
-     * @since garnet-core-be-fe 1.0.0
-     */
-    @Override
-    public List<SysRole> searchRole(int roleId, String roleName) {
-        return roleDao.searchRoles(roleId, roleName);
+        int roleParentId = roleDao.getRoleById(roleId).getParentRoleId().intValue();
+        int param3;
+        switch (roleParentId){
+            case 0:
+                param3 = 0;
+                break;
+            case 1:
+                param3 = roleId;
+                break;
+            default:
+                throw new GarnetServiceException("权限不足，无法查询！",GarnetServiceErrorCodes.ILLEGAL_ARGUMENT);
+        }
+        return convertListWithDeptName(roleDao.getRoleLists(offset, limit,param3,roleName));
     }
 
     /**
@@ -154,5 +162,18 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteRole(Integer roleId) {
         roleDao.deleteRole(roleId);
+    }
+
+    /**
+     * Convert list with dept name.
+     *
+     * @param lists the lists
+     */
+    private List<SysRole> convertListWithDeptName(List<SysRole> lists){
+        for (SysRole sysRole:lists) {
+            String deptName = deptService.getDepartmentById(sysRole.getDeptId()).getName();
+            sysRole.setDeptName(deptName);
+        }
+        return lists;
     }
 }

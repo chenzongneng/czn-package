@@ -4,9 +4,10 @@
  * All rights reserved.
  */
 
+var roleId = localStorage.getItem("roleId");
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/role/list',
+        url: baseURL + 'v1.0/roleList',
         datatype: "json",
         colModel: [
             {label: '角色ID', name: 'roleId', index: "role_id", width: 45, key: true},
@@ -25,16 +26,17 @@ $(function () {
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader: {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
+            root: "list",
+            page: "currPage",
+            total: "totalPage",
+            records: "totalCount"
         },
         prmNames: {
             page: "page",
             rows: "limit",
             order: "order"
         },
+        postData:{roleId:roleId},
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
@@ -147,18 +149,19 @@ var vm = new Vue({
 
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
-                    type: "POST",
-                    url: baseURL + "sys/role/delete",
+                    type: "DELETE",
+                    url: baseURL + "v1.0/role/" + roleIds,
                     contentType: "application/json",
-                    data: JSON.stringify(roleIds),
-                    success: function (r) {
-                        if (r.code == 0) {
-                            alert('操作成功', function () {
-                                vm.reload();
-                            });
-                        } else {
-                            alert(r.msg);
-                        }
+                    dataType:"",
+                    success: function () {
+                        alert('操作成功', function () {
+                            vm.reload();
+                        });
+                    },
+                    error: function () {
+                        alert('操作失败', function () {
+                            vm.reload();
+                        });
                     }
                 });
             });
@@ -275,6 +278,7 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
+                url: baseURL + 'v1.0/roleList',
                 postData: {'roleName': vm.q.roleName},
                 page: page
             }).trigger("reloadGrid");
