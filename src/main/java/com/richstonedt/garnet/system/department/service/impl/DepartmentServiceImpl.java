@@ -212,4 +212,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         return department.getId();
     }
 
+    /**
+     * Gets parent dept.
+     *
+     * @return the parent dept
+     * @since Garnet 1.0.0
+     */
+    @Override
+    public List<Department> getParentDept() {
+        return departmentDao.getParentDept();
+    }
+
 }

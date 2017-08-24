@@ -8,7 +8,7 @@ package com.richstonedt.garnet.system.role.controller;
 
 import com.richstonedt.garnet.common.utils.GarnetUtils;
 import com.richstonedt.garnet.common.utils.PageUtils;
-import com.richstonedt.garnet.system.role.entity.SysRole;
+import com.richstonedt.garnet.system.role.entity.Role;
 import com.richstonedt.garnet.system.role.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,22 +51,40 @@ public class RoleController {
     private static Logger LOG = LoggerFactory.getLogger(RoleController.class);
 
     /**
+     * Gets role by id.
+     *
+     * @param roleId the role id
+     * @return the role by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getRoleById(
+            @PathVariable(value = "roleId")Integer roleId){
+        try {
+            Role role = roleService.getRoleById(roleId);
+            return new ResponseEntity<Object>(role,HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get role in RoleController ! !!");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
      * Search roles response entity.
      *
      * @param page   the page
      * @param limit  the limit
-     * @param roleId the role id
+     * @param tenantId the tenant id 租户id
      * @param roleName the role name 如果不为空，则为前端查询接口
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/roleList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoleLists(
-            // todo: get roleId in user
             @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit,
-            @RequestParam(value = "roleId") int roleId, @RequestParam(value = "roleName",required = false) String roleName) {
+            @RequestParam(value = "tenantId")Integer tenantId , @RequestParam(value = "roleName",required = false) String roleName) {
         try {
-            List<SysRole> results = roleService.getRoleLists(page, limit, roleId,roleName);
+            List<Role> results = roleService.getRoleLists(page, limit, tenantId,roleName);
             int totalCount = results.size();
             PageUtils pageUtils = new PageUtils(results, totalCount, limit, page);
             return new ResponseEntity<>(pageUtils, HttpStatus.OK);
@@ -79,22 +97,18 @@ public class RoleController {
     /**
      * Save role response entity.
      *
-     * @param role     the role  接收一个role对象
-     * @param roleId   the roleId  该角色的id
-     * @param roleType the role type  0:管理员   1:租户管理员  2:其他角色
-     * @param tenant   the tenant    租户id，只有当type = 2 时，才有值
+     * @param role     the role
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/role", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> saveRole(
-            @RequestBody SysRole role, @RequestParam(value = "roleId") Integer roleId, @RequestParam(value = "roleType", required = false) Integer roleType,
-            @RequestParam(value = "tenant", required = false) Integer tenant) {
+            @RequestBody Role role) {
         try {
-            if (role == null || roleId == null) {
-                return new ResponseEntity<Object>("Role or roleId can't be null!!!", HttpStatus.BAD_REQUEST);
+            if (role == null) {
+                return new ResponseEntity<Object>("Role or tenantId can't be null!!!", HttpStatus.BAD_REQUEST);
             }
-            roleService.saveRole(role, roleId, roleType, tenant);
+            roleService.saveRole(role);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to save role in RoleController ! !!");
@@ -105,21 +119,19 @@ public class RoleController {
     /**
      * Update role response entity.
      *
-     * @param role     the role  接收一个role对象
-     * @param roleType the role type 0:管理员   1:租户管理员  2:其他角色
-     * @param tenant   the tenant  租户id，只有当type = 2 时，才有值
+     * @param role   the role
+     * @param deptId the dept id  部门id
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/role", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity updateRole(
-            @RequestBody SysRole role, @RequestParam(value = "roleType", required = false) Integer roleType,
-            @RequestParam(value = "tenant", required = false) Integer tenant) {
+            @RequestBody Role role, @RequestParam(value = "deptId", required = false) Integer deptId) {
         try {
             if (role == null) {
                 return new ResponseEntity<Object>("Role can't be null!!!", HttpStatus.BAD_REQUEST);
             }
-            roleService.updateRole(role, roleType, tenant);
+            roleService.updateRole(role,deptId);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update role in RoleController ! !!");

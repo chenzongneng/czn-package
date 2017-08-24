@@ -59,4 +59,13 @@ public interface TenantDao {
      * @since Garnet 1.0.0
      */
     int deleteById(@Param(value = "id") Long id);
+
+    /**
+     * Gets tenant by id.
+     *
+     * @param id the id
+     * @return the tenant by id
+     * @since Garnet 1.0.0
+     */
+    Tenant getTenantById(@Param(value = "id") Long id);
 }

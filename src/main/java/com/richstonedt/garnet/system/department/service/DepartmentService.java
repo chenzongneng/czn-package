@@ -65,4 +65,12 @@ public interface DepartmentService {
      * @since Garnet 1.0.0
      */
     Long addDepartment(Department department);
+
+    /**
+     * Gets parent dept.
+     *
+     * @return the parent dept
+     * @since Garnet 1.0.0
+     */
+    List<Department> getParentDept();
 }

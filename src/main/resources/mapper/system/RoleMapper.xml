@@ -9,73 +9,68 @@
 
 <mapper namespace="com.richstonedt.garnet.system.role.dao.RoleDao">
 
-    <select id="getRoleLists" resultType="com.richstonedt.garnet.system.role.entity.SysRole">
-        select * from gar_sys_role
+    <select id="getRoleLists" resultType="com.richstonedt.garnet.system.role.entity.Role">
+        select * from gar_roles
         <where>
-            <if test="param3 != 0">
-                (role_id = #{param3} or parent_role_id = #{param3})
+            <if test="tenantId != null">
+                tenant_id = #{tenantId}
             </if>
-            <if test="param4 != null and param4 != ''">
-                and role_name LIKE CONCAT('%',#{param4},'%')
+            <if test="name != null and name != ''">
+                and name LIKE CONCAT('%',#{name},'%')
             </if>
         </where>
-        ORDER BY role_id asc
-        <if test="param1 != null and param2 != null">
-            limit #{param2} offset #{param1};
+        ORDER BY id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
         </if>
     </select>
 
-    <select id="getRoleById" resultType="com.richstonedt.garnet.system.role.entity.SysRole">
-        select * from gar_sys_role
+    <select id="getRoleById" resultType="com.richstonedt.garnet.system.role.entity.Role">
+        select * from gar_roles
         <where>
-            role_id = #{param1};
+            id = #{id};
         </where>
     </select>
 
-    <insert id="insertRole" parameterType="com.richstonedt.garnet.system.role.entity.SysRole" useGeneratedKeys="true"
-            keyProperty="roleId">
-        insert into gar_sys_role
+    <insert id="insertRole" parameterType="com.richstonedt.garnet.system.role.entity.Role" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into gar_roles
         (
-        parent_role_id,
-        role_name,
-        remark,
-        dept_id
+        tenant_id,
+        name,
+        remark
         )
         values
         (
-        #{parentRoleId},
-        #{roleName},
-        #{remark},
-        #{deptId}
+        #{tenantId},
+        #{name},
+        #{remark}
         );
     </insert>
 
-    <update id="updateRole" parameterType="com.richstonedt.garnet.system.role.entity.SysRole" useGeneratedKeys="true"
-            keyProperty="roleId">
-        UPDATE gar_sys_role
+    <update id="updateRole" parameterType="com.richstonedt.garnet.system.role.entity.Role" useGeneratedKeys="true"
+            keyProperty="id">
+        UPDATE gar_roles
         <set>
-            <if test="parentRoleId != null">
-                parent_role_id = #{parentRoleId},
+            <if test="tenantId != null">
+                tenant_id = #{tenantId},
             </if>
-            <if test="roleName != null and roleName != ''">
-                role_name = #{roleName},
+            <if test="name != null and name != ''">
+                name = #{name},
             </if>
             <if test="remark != null and remark != ''">
                 remark = #{remark},
             </if>
-            <if test="deptId != null">
-                dept_id = #{deptId}
-            </if>
         </set>
         <where>
-            role_id = #{roleId};
+            id = #{id};
         </where>
     </update>
 
     <delete id="deleteRole" >
-        delete from gar_sys_role
+        delete from gar_roles
         <where>
-            role_id = #{roleId};
+            id = #{id};
         </where>
     </delete>
 

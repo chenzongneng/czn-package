@@ -5,13 +5,17 @@
  */
 
 var roleId = localStorage.getItem("roleId");
+if(roleId == 'null'){
+    roleId ='';
+}
+var addOrUpdate = 0; // 0 为新增 , 1 为 更新
 $(function () {
     $("#jqGrid").jqGrid({
         url: baseURL + 'v1.0/roleList',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'roleId', index: "role_id", width: 45, key: true},
-            {label: '角色名称', name: 'roleName', index: "role_name", width: 75},
+            {label: '角色ID', name: 'id', index: "id", width: 45, key: true},
+            {label: '角色名称', name: 'name', index: "name", width: 75},
             {label: '所属部门', name: 'deptName', width: 75},
             {label: '备注', name: 'remark', width: 100},
             {label: '创建时间', name: 'createTime', index: "create_time", width: 80}
@@ -36,7 +40,7 @@ $(function () {
             rows: "limit",
             order: "order"
         },
-        postData:{roleId:roleId},
+        postData:{tenantId:roleId},
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
@@ -110,8 +114,15 @@ var vm = new Vue({
         showList: true,
         title: null,
         role: {
-            deptId: null,
-            deptName: null
+            id:null,
+            tenantId:roleId,
+            name: null,
+            remark:null
+        },
+        isShowDept:false,
+        parentDepartments:{
+            selectedDepartment:"",
+            options: []
         }
     },
     methods: {
@@ -119,16 +130,24 @@ var vm = new Vue({
             vm.reload();
         },
         add: function () {
+            addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
-            vm.role = {deptName: null, deptId: null};
-            vm.getMenuTree(null);
+            vm.role = {
+                id:null,
+                tenantId:roleId,
+                name: null,
+                remark:null
+            };
+            /*vm.getMenuTree(null);
 
             vm.getDept();
 
-            vm.getDataTree();
+            vm.getDataTree();*/
+            vm.checkAdmin();
         },
         update: function () {
+            addOrUpdate = 1;
             var roleId = getSelectedRow();
             if (roleId == null) {
                 return;
@@ -136,17 +155,17 @@ var vm = new Vue({
 
             vm.showList = false;
             vm.title = "修改";
-            vm.getDataTree();
+            /*vm.getDataTree();
             vm.getMenuTree(roleId);
-
-            vm.getDept();
+            vm.getDept();*/
+            vm.checkAdmin();
+            vm.getRoleById();
         },
         del: function () {
             var roleIds = getSelectedRows();
             if (roleIds == null) {
                 return;
             }
-
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "DELETE",
@@ -188,7 +207,7 @@ var vm = new Vue({
             });
         },
         saveOrUpdate: function () {
-            //获取选择的菜单
+           /* //获取选择的菜单
             var nodes = menu_ztree.getCheckedNodes(true);
             var menuIdList = new Array();
             for (var i = 0; i < nodes.length; i++) {
@@ -202,22 +221,19 @@ var vm = new Vue({
             for (var i = 0; i < nodes.length; i++) {
                 deptIdList.push(nodes[i].deptId);
             }
-            vm.role.deptIdList = deptIdList;
-
-            var url = vm.role.roleId == null ? "sys/role/save" : "sys/role/update";
+            vm.role.deptIdList = deptIdList;*/
+            var url = "v1.0/role";
+            console.log(vm.role);
             $.ajax({
-                type: "POST",
+                type: addOrUpdate === 0 ? "POST":"PUT",
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.role),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function () {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
+                dataType: '',
+                success: function () {
+                    alert('操作成功', function () {
+                        vm.reload();
+                    });
                 }
             });
         },
@@ -279,9 +295,37 @@ var vm = new Vue({
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
                 url: baseURL + 'v1.0/roleList',
-                postData: {'roleName': vm.q.roleName},
+                postData: {roleName: vm.q.roleName},
                 page: page
             }).trigger("reloadGrid");
+        },
+        checkAdmin:function(){
+            if(roleId === ''){
+                vm.isShowDept = true;
+            }
+            if(vm.isShowDept){
+                vm.parentDepartments.options = [];
+                $.get(baseURL + "v1.0/parentDepartments", function (response) {
+                    $.each(response,function(index,item){
+                        vm.parentDepartments.options.push(item);
+                    });
+                });
+            }
+        },
+        selectTenantValue:function () {
+            vm.role.tenantId = vm.parentDepartments.selectedDepartment;
+        },
+        getRoleById:function(){
+            var roleIds = getSelectedRows();
+            if (roleIds == null) {
+                return;
+            }
+            vm.role.id = roleIds[0];
+            $.get(baseURL + "v1.0/role/"+roleIds, function (response) {
+                vm.parentDepartments.selectedDepartment = response.tenantId;
+                vm.role.name = response.name;
+                vm.role.remark = response.remark;
+            });
         }
     }
 });

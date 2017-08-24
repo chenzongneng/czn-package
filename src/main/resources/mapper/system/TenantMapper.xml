@@ -34,4 +34,11 @@
         WHERE id = #{id}
     </update>
 
+    <select id="getTenantById" resultType="com.richstonedt.garnet.system.tenant.entity.Tenant">
+        select * from gar_tenants
+            <where>
+                id = #{id}
+            </where>
+    </select>
+
 </mapper>

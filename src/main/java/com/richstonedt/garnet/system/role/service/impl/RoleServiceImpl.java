@@ -6,14 +6,15 @@
 
 package com.richstonedt.garnet.system.role.service.impl;
 
-import com.richstonedt.garnet.common.exception.GarnetServiceErrorCodes;
-import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.system.department.service.DepartmentService;
 import com.richstonedt.garnet.system.role.dao.RoleDao;
-import com.richstonedt.garnet.system.role.entity.SysRole;
+import com.richstonedt.garnet.system.role.entity.Role;
 import com.richstonedt.garnet.system.role.service.RoleService;
+import com.richstonedt.garnet.system.tenant.entity.Tenant;
+import com.richstonedt.garnet.system.tenant.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
     /**
-     *the dept Service
+     * the dept Service
      *
      * @since garnet-core-be-fe 1.0.0
      */
@@ -48,131 +49,97 @@ public class RoleServiceImpl implements RoleService {
     private DepartmentService deptService;
 
     /**
+     * the tenant Service
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private TenantService tenantService;
+
+    /**
      * Gets role lists.
      *
-     * @param page   the page
-     * @param limit  the limit
-     * @param roleId the role id
+     * @param page     the page
+     * @param limit    the limit
+     * @param tenantId the tenant id
      * @return the role lists
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public List<SysRole> getRoleLists(int page, int limit, int roleId,String roleName) {
+    public List<Role> getRoleLists(int page, int limit, Integer tenantId, String name) {
         int offset = (page - 1) * limit;
-        int roleParentId = roleDao.getRoleById(roleId).getParentRoleId().intValue();
-        int param3;
-        switch (roleParentId){
-            case 0:
-                param3 = 0;
-                break;
-            case 1:
-                param3 = roleId;
-                break;
-            default:
-                throw new GarnetServiceException("权限不足，无法查询！",GarnetServiceErrorCodes.ILLEGAL_ARGUMENT);
-        }
-        return convertListWithDeptName(roleDao.getRoleLists(offset, limit,param3,roleName));
+        return convertWithDeptName(roleDao.getRoleLists(offset, limit, tenantId, name));
     }
 
     /**
      * Save role.
      *
      * @param role     the role
-     * @param roleId   the roleId  该角色的id
-     * @param roleType the role type
-     * @param tenant   the tenant
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void saveRole(SysRole role, Integer roleId, Integer roleType, Integer tenant) {
-        SysRole tmpRole = roleDao.getRoleById(roleId);
-        if (roleType == null && tenant == null) {//roleType 和 tenant 都为空，则证明是 租户管理员,操作：添加该租户下的角色
-            if (tmpRole.getParentRoleId() != 1) {
-                throw new GarnetServiceException("角色不匹配", GarnetServiceErrorCodes.CONFLICT);
-            }
-            role.setParentRoleId(new Long(roleId));
-            roleDao.insertRole(role);
-        } else {
-            if (tmpRole.getParentRoleId() != 0) {
-                throw new GarnetServiceException("角色不匹配", GarnetServiceErrorCodes.CONFLICT);
-            }
-            if (roleType != null) {
-                switch (roleType) {
-                    case 0:// 添加一个管理员角色
-                        role.setParentRoleId(0L);
-                        roleDao.insertRole(role);
-                        break;
-                    case 1:// 添加一个 租户管理员角色
-                        role.setParentRoleId(1L);
-                        roleDao.insertRole(role);
-                        break;
-                    case 2: // 添加某个租户下的其他角色
-                        if (tenant == null) {
-                            throw new GarnetServiceException("Tenant can't be null!",GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
-                        }
-                        role.setParentRoleId(new Long(tenant));
-                        roleDao.insertRole(role);
-                        break;
-                }
-            }
-        }
+    public void saveRole(Role role) {
+        roleDao.insertRole(role);
     }
 
     /**
      * Update role.
      *
-     * @param role     the role
-     * @param roleType the role type
-     * @param tenant   the tenant
+     * @param role   the role
+     * @param deptId the dept id
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void updateRole(SysRole role, Integer roleType, Integer tenant) {
-        if (roleType == null && tenant == null) {//roleType 和 tenant 都为空，则只更新角色信息
-            roleDao.updateRole(role);
-        } else {
-            if (roleType != null) {
-                switch (roleType) {
-                    case 0:// 更改为管理员角色
-                        role.setParentRoleId(0L);
-                        roleDao.updateRole(role);
-                        break;
-                    case 1:// 更改为租户管理员角色
-                        role.setParentRoleId(1L);
-                        roleDao.updateRole(role);
-                        break;
-                    case 2: // 更改为某个租户下的其他角色
-                        if (tenant == null) {
-                            throw new GarnetServiceException("Tenant can't be null!",GarnetServiceErrorCodes.OBJECT_NOT_FOUND);
-                        }
-                        role.setParentRoleId(new Long(tenant));
-                        roleDao.updateRole(role);
-                        break;
-                }
-            }
+    public void updateRole(Role role, Integer deptId) {
+        if (deptId != null) {
+            Long temTenantId = deptService.getDepartmentById(deptId.longValue()).getTenantId();
+            role.setTenantId(temTenantId.intValue());
         }
+        roleDao.updateRole(role);
     }
 
     /**
      * Delete role.
      *
-     * @param roleId the role id
+     * @param id the id
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void deleteRole(Integer roleId) {
-        roleDao.deleteRole(roleId);
+    public void deleteRole(Integer id) {
+        roleDao.deleteRole(id);
     }
 
     /**
-     * Convert list with dept name.
+     * Gets role by id.
+     *
+     * @param id the id
+     * @return the role by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public Role getRoleById(Integer id) {
+        return roleDao.getRoleById(id);
+    }
+
+    /**
+     * Convert with dept name list.
      *
      * @param lists the lists
+     * @return the list
+     * @since garnet-core-be-fe 1.0.0
      */
-    private List<SysRole> convertListWithDeptName(List<SysRole> lists){
-        for (SysRole sysRole:lists) {
-            String deptName = deptService.getDepartmentById(sysRole.getDeptId()).getName();
-            sysRole.setDeptName(deptName);
+    private List<Role> convertWithDeptName(List<Role> lists) {
+        if (!CollectionUtils.isEmpty(lists)) {
+            for (Role role : lists) {
+                if (role.getTenantId() != null) {
+                    Tenant tenant = tenantService.getTenantById(role.getTenantId().longValue());
+                    if (tenant != null) {
+                        role.setDeptName(tenant.getName());
+                    }
+                } else {
+                    role.setDeptName("超级管理员");
+                }
+            }
         }
         return lists;
     }

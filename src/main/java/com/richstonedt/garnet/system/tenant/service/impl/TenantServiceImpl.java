@@ -49,4 +49,16 @@ public class TenantServiceImpl implements TenantService {
         return tenantDao.getTenantList();
     }
 
+    /**
+     * Gets tenant by id.
+     *
+     * @param id the id
+     * @return the tenant by id
+     * @since Garnet 1.0.0
+     */
+    @Override
+    public Tenant getTenantById(Long id) {
+        return tenantDao.getTenantById(id);
+    }
+
 }

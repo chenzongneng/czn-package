@@ -166,4 +166,21 @@ public class DepartmentController {
         }
     }
 
+    /**
+     * get Parent Department List
+     *
+     * @return the department list
+     * @since Garnet 1.0.0
+     */
+    @RequestMapping(value = "/parentDepartments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getParentDepartmentList() {
+        try {
+            List<Department> departments = departmentService.getParentDept();
+            return new ResponseEntity<>(departments, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get department list!");
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
 }

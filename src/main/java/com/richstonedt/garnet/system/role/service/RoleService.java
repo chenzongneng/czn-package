@@ -6,7 +6,7 @@
 
 package com.richstonedt.garnet.system.role.service;
 
-import com.richstonedt.garnet.system.role.entity.SysRole;
+import com.richstonedt.garnet.system.role.entity.Role;
 
 import java.util.List;
 
@@ -32,28 +32,24 @@ public interface RoleService {
      * @return the role lists
      * @since garnet-core-be-fe 1.0.0
      */
-    List<SysRole> getRoleLists(int page,int limit,int roleId,String roleName);
+    List<Role> getRoleLists(int page, int limit, Integer roleId, String roleName);
 
     /**
      * Save role.
      *
      * @param role     the roles
-     * @param roleId   the roleId  该角色的id
-     * @param roleType the role type
-     * @param tenant   the tenant
      * @since garnet-core-be-fe 1.0.0
      */
-    void saveRole(SysRole role, Integer roleId,Integer roleType,Integer tenant);
+    void saveRole(Role role);
 
     /**
      * Update role.
      *
      * @param role     the role
-     * @param roleType the role type
-     * @param tenant   the tenant
+     * @param deptId   the dept id
      * @since garnet-core-be-fe 1.0.0
      */
-    void updateRole(SysRole role,Integer roleType,Integer tenant);
+    void updateRole(Role role,Integer deptId);
 
     /**
      * Delete role.
@@ -62,4 +58,13 @@ public interface RoleService {
      * @since garnet-core-be-fe 1.0.0
      */
     void deleteRole(Integer roleId);
+
+    /**
+     * Gets role by id.
+     *
+     * @param roleId the role id
+     * @return the role by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    Role getRoleById(Integer roleId);
 }

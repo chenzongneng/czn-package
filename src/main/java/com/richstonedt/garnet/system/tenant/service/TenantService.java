@@ -30,4 +30,13 @@ public interface TenantService {
      */
     List<Tenant> getTenantList();
 
+    /**
+     * Gets tenant by id.
+     *
+     * @param id the id
+     * @return the tenant by id
+     * @since Garnet 1.0.0
+     */
+    Tenant getTenantById(Long id);
+
 }

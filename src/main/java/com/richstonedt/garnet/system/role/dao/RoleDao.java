@@ -6,8 +6,9 @@
 
 package com.richstonedt.garnet.system.role.dao;
 
-import com.richstonedt.garnet.system.role.entity.SysRole;
+import com.richstonedt.garnet.system.role.entity.Role;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,20 +31,20 @@ public interface RoleDao {
      *
      * @param offset the offset
      * @param limit  the limit
-     * @param roleId the role id
+     * @param tenantId the tenant Id
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<SysRole> getRoleLists(Integer offset, Integer limit, Integer roleId,String roleName);
+    List<Role> getRoleLists(@Param("offset") Integer offset, @Param("limit")Integer limit,@Param("tenantId")Integer tenantId,@Param("name") String name);
 
     /**
      * Gets role by id.
      *
-     * @param id the id
+     * @param id the role id
      * @return the role by id
      * @since garnet-core-be-fe 1.0.0
      */
-    SysRole getRoleById(Integer id);
+    Role getRoleById(@Param("id")Integer id);
 
     /**
      * Insert role.
@@ -51,7 +52,7 @@ public interface RoleDao {
      * @param role the role
      * @since garnet-core-be-fe 1.0.0
      */
-    void insertRole(SysRole role);
+    void insertRole(Role role);
 
     /**
      * Update role.
@@ -59,13 +60,13 @@ public interface RoleDao {
      * @param role the role
      * @since garnet-core-be-fe 1.0.0
      */
-    void updateRole(SysRole role);
+    void updateRole(Role role);
 
     /**
      * Delete role.
      *
-     * @param roleId the role id
+     * @param id the role id
      * @since garnet-core-be-fe 1.0.0
      */
-    void deleteRole(Integer roleId);
+    void deleteRole(@Param("id") Integer id);
 }

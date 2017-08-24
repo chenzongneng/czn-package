@@ -57,4 +57,11 @@
         VALUES (#{name}, #{parentId}, #{tenantId}, #{orderNum})
     </insert>
 
+    <select id="getParentDept" resultType="com.richstonedt.garnet.system.department.entity.Department">
+        select * from gar_departments
+        <where>
+            parent_id = 0;
+        </where>
+    </select>
+
 </mapper>

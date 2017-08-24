@@ -70,4 +70,12 @@ public interface DepartmentDao {
      * @since Garnet 1.0.0
      */
     int addDepartment(Department department);
+
+    /**
+     * Gets parent dept.
+     *
+     * @return the parent dept
+     * @since Garnet 1.0.0
+     */
+    List<Department> getParentDept();
 }
