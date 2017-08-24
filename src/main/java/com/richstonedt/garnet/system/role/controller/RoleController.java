@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -120,18 +121,17 @@ public class RoleController {
      * Update role response entity.
      *
      * @param role   the role
-     * @param deptId the dept id  部门id
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/role", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity updateRole(
-            @RequestBody Role role, @RequestParam(value = "deptId", required = false) Integer deptId) {
+            @RequestBody Role role) {
         try {
             if (role == null) {
                 return new ResponseEntity<Object>("Role can't be null!!!", HttpStatus.BAD_REQUEST);
             }
-            roleService.updateRole(role,deptId);
+            roleService.updateRole(role);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update role in RoleController ! !!");
@@ -142,15 +142,24 @@ public class RoleController {
     /**
      * Delete role response entity.
      *
-     * @param roleId the role id
+     * @param idList the id  List 删除多条记录，用‘，’隔开
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/role", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteRole(
-            @PathVariable(value = "roleId") Integer roleId) {
+            @RequestParam(value = "idList") String idList) {
         try {
-            roleService.deleteRole(roleId);
+            List<Integer> idLists = new ArrayList<>();
+            if(idList.contains(",")){
+                String[] idArray = idList.split(",");
+                for(String id:idArray){
+                    idLists.add(Integer.parseInt(id));
+                }
+            }else{
+                idLists.add(Integer.parseInt(idList));
+            }
+            roleService.deleteRole(idLists);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete role in RoleController ! !!");

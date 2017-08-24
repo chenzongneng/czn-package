@@ -8,7 +8,7 @@ var roleId = localStorage.getItem("roleId");
 if(roleId == 'null'){
     roleId ='';
 }
-var addOrUpdate = 0; // 0 为新增 , 1 为 更新
+var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 $(function () {
     $("#jqGrid").jqGrid({
         url: baseURL + 'v1.0/roleList',
@@ -119,7 +119,9 @@ var vm = new Vue({
             name: null,
             remark:null
         },
+        // 是否显示 选择部门 下拉列表
         isShowDept:false,
+        // 下拉列表数据
         parentDepartments:{
             selectedDepartment:"",
             options: []
@@ -147,12 +149,7 @@ var vm = new Vue({
             vm.checkAdmin();
         },
         update: function () {
-            addOrUpdate = 1;
-            var roleId = getSelectedRow();
-            if (roleId == null) {
-                return;
-            }
-
+            addOrUpdate = 1;// 更新 的点击事件
             vm.showList = false;
             vm.title = "修改";
             /*vm.getDataTree();
@@ -162,14 +159,15 @@ var vm = new Vue({
             vm.getRoleById();
         },
         del: function () {
-            var roleIds = getSelectedRows();
-            if (roleIds == null) {
+            var selectedRoleIds = getSelectedRows();
+            if (selectedRoleIds == null) {
                 return;
             }
+            console.log(selectedRoleIds);
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "DELETE",
-                    url: baseURL + "v1.0/role/" + roleIds,
+                    url: baseURL + "v1.0/role?idList=" + selectedRoleIds.toString(),
                     contentType: "application/json",
                     dataType:"",
                     success: function () {
@@ -223,7 +221,6 @@ var vm = new Vue({
             }
             vm.role.deptIdList = deptIdList;*/
             var url = "v1.0/role";
-            console.log(vm.role);
             $.ajax({
                 type: addOrUpdate === 0 ? "POST":"PUT",
                 url: baseURL + url,
@@ -290,6 +287,7 @@ var vm = new Vue({
                 }
             });
         },
+        /** 重新加载 */
         reload: function () {
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
@@ -299,6 +297,7 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
+        /** 是否是 超级管理员*/
         checkAdmin:function(){
             if(roleId === ''){
                 vm.isShowDept = true;
@@ -312,15 +311,17 @@ var vm = new Vue({
                 });
             }
         },
+        /** 下拉列表onchange 事件*/
         selectTenantValue:function () {
             vm.role.tenantId = vm.parentDepartments.selectedDepartment;
         },
+        /** 通过id 得到一个role对象 */
         getRoleById:function(){
-            var roleIds = getSelectedRows();
-            if (roleIds == null) {
+            var selectedRoleId = getSelectedRow();
+            if (selectedRoleId == null) {
                 return;
             }
-            vm.role.id = roleIds[0];
+            vm.role.id = selectedRoleId;
             $.get(baseURL + "v1.0/role/"+roleIds, function (response) {
                 vm.parentDepartments.selectedDepartment = response.tenantId;
                 vm.role.name = response.name;

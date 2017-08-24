@@ -67,11 +67,11 @@
         </where>
     </update>
 
-    <delete id="deleteRole" >
-        delete from gar_roles
-        <where>
-            id = #{id};
-        </where>
+    <delete id="deleteRole" parameterType="java.util.List">
+        delete from gar_roles WHERE id in 
+        <foreach collection="idLists" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </delete>
 
 </mapper>

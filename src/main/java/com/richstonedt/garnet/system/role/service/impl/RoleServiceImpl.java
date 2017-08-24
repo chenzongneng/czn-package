@@ -6,7 +6,6 @@
 
 package com.richstonedt.garnet.system.role.service.impl;
 
-import com.richstonedt.garnet.system.department.service.DepartmentService;
 import com.richstonedt.garnet.system.role.dao.RoleDao;
 import com.richstonedt.garnet.system.role.entity.Role;
 import com.richstonedt.garnet.system.role.service.RoleService;
@@ -39,14 +38,6 @@ public class RoleServiceImpl implements RoleService {
      */
     @Autowired
     private RoleDao roleDao;
-
-    /**
-     * the dept Service
-     *
-     * @since garnet-core-be-fe 1.0.0
-     */
-    @Autowired
-    private DepartmentService deptService;
 
     /**
      * the tenant Service
@@ -86,27 +77,22 @@ public class RoleServiceImpl implements RoleService {
      * Update role.
      *
      * @param role   the role
-     * @param deptId the dept id
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void updateRole(Role role, Integer deptId) {
-        if (deptId != null) {
-            Long temTenantId = deptService.getDepartmentById(deptId.longValue()).getTenantId();
-            role.setTenantId(temTenantId.intValue());
-        }
+    public void updateRole(Role role) {
         roleDao.updateRole(role);
     }
 
     /**
      * Delete role.
      *
-     * @param id the id
+     * @param idLists the ids
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void deleteRole(Integer id) {
-        roleDao.deleteRole(id);
+    public void deleteRole(List<Integer> idLists) {
+        roleDao.deleteRole(idLists);
     }
 
     /**

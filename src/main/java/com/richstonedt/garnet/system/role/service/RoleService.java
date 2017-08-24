@@ -46,18 +46,17 @@ public interface RoleService {
      * Update role.
      *
      * @param role     the role
-     * @param deptId   the dept id
      * @since garnet-core-be-fe 1.0.0
      */
-    void updateRole(Role role,Integer deptId);
+    void updateRole(Role role);
 
     /**
      * Delete role.
      *
-     * @param roleId the role id
+     * @param idLists the role ids
      * @since garnet-core-be-fe 1.0.0
      */
-    void deleteRole(Integer roleId);
+    void deleteRole(List<Integer> idLists);
 
     /**
      * Gets role by id.

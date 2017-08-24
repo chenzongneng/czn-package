@@ -65,8 +65,8 @@ public interface RoleDao {
     /**
      * Delete role.
      *
-     * @param id the role id
+     * @param idLists the role ids
      * @since garnet-core-be-fe 1.0.0
      */
-    void deleteRole(@Param("id") Integer id);
+    void deleteRole(@Param("idLists")List<Integer> idLists);
 }
