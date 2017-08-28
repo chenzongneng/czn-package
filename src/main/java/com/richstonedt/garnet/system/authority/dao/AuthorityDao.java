@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.system.authority.dao;
 
+import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.system.authority.entity.Authority;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -42,4 +43,29 @@ public interface AuthorityDao {
      * @since garnet-core-be-fe 1.0.0
      */
     List<Authority> getAuthoritiesByUserId(@Param(value = "userId") Integer userId);
+
+    /**
+     * Gets all users.
+     *
+     * @return the all users
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<SysUserEntity> getAllUsers();
+
+    /**
+     * Save authority.
+     *
+     * @param userId the user id
+     * @param roleId the role id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void saveAuthority(@Param(value = "userId") Integer userId,@Param(value = "roleId")Integer roleId);
+
+    /**
+     * Delete authority by user id.
+     *
+     * @param userId the user id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void deleteAuthorityByUserId(@Param(value = "userId") Integer userId);
 }

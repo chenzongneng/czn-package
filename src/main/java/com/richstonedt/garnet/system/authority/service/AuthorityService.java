@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.system.authority.service;
 
+import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.system.authority.entity.viewModel.UserRoles;
 
 import java.util.List;
@@ -30,4 +31,38 @@ public interface AuthorityService {
      * @since garnet-core-be-fe 1.0.0
      */
     List<UserRoles> getUserRolesList(String searchName);
+
+    /**
+     * Gets all users.
+     *
+     * @return the all users
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<SysUserEntity> getAllUsers();
+
+    /**
+     * Save authority.
+     *
+     * @param userId  the user id
+     * @param roleIds the role ids
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void saveAuthority(Integer userId,List<Integer> roleIds);
+
+    /**
+     * Update authority.
+     *
+     * @param userId  the user id
+     * @param roleIds the role ids
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void updateAuthority(Integer userId,List<Integer> roleIds);
+
+    /**
+     * Delete authority.
+     *
+     * @param roleIds the role ids
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void deleteAuthority(List<Integer> roleIds);
 }

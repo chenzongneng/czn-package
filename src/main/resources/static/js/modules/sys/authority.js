@@ -54,9 +54,7 @@ var vm = new Vue({
         userId:null,
         showList: true,
         selectedRoleIds:[],
-        // 是否显示 选择部门 下拉列表
-        isShowDept:false,
-        // 下拉列表数据
+        // 用户下拉列表数据
         userList:{
             selectedUser:"",
             options: []
@@ -107,12 +105,11 @@ var vm = new Vue({
             });
         },
         saveOrUpdate: function () {
-            var url = "v1.0/role";
+            var url = "v1.0/userRole?userId="+vm.userId+"&selectedRoleIds="+vm.selectedRoleIds;
             $.ajax({
                 type: addOrUpdate === 0 ? "POST":"PUT",
                 url: baseURL + url,
                 contentType: "application/json",
-                data: JSON.stringify(vm.role),
                 dataType: '',
                 success: function () {
                     alert('操作成功', function () {
@@ -149,7 +146,11 @@ var vm = new Vue({
             });
         },
         getAllUsers:function () {
-
+            $.get(baseURL + "v1.0/userList", function (response) {
+                $.each(response,function(index,item){
+                    vm.userList.options.push(item);
+                })
+            });
         }
     }
 });

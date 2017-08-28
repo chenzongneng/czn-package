@@ -85,6 +85,65 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     /**
+     * Gets all users.
+     *
+     * @return the all users
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public List<SysUserEntity> getAllUsers() {
+        return authorityDao.getAllUsers();
+    }
+
+    /**
+     * Save authority.
+     *
+     * @param userId  the user id
+     * @param roleIds the role ids
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void saveAuthority(Integer userId, List<Integer> roleIds) {
+        if(!CollectionUtils.isEmpty(roleIds)){
+            for(Integer roleId : roleIds){
+                authorityDao.saveAuthority(userId,roleId);
+            }
+        }
+    }
+
+    /**
+     * Update authority.
+     *
+     * @param userId  the user id
+     * @param roleIds the role ids
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void updateAuthority(Integer userId, List<Integer> roleIds) {
+        authorityDao.deleteAuthorityByUserId(userId);
+        if(!CollectionUtils.isEmpty(roleIds)){
+            for(Integer roleId : roleIds){
+                authorityDao.saveAuthority(userId,roleId);
+            }
+        }
+    }
+
+    /**
+     * Delete authority.
+     *
+     * @param roleIds the role ids
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void deleteAuthority(List<Integer> roleIds) {
+        if(!CollectionUtils.isEmpty(roleIds)){
+            for(Integer roleId : roleIds){
+                authorityDao.deleteAuthorityByUserId(roleId);
+            }
+        }
+    }
+
+    /**
      * Get user roles by user id user roles.
      *
      * @param userId the user id
