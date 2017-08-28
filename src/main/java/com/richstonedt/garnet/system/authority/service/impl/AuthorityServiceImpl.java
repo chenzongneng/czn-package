@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.system.authority.service.impl;
 
+import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import com.richstonedt.garnet.system.authority.dao.AuthorityDao;
 import com.richstonedt.garnet.system.authority.entity.Authority;
@@ -15,6 +16,7 @@ import com.richstonedt.garnet.system.role.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.List;
  * @since garnet-core-be-fe 1.0.0
  */
 @Service
-public class AuthorityServiceImpl implements AuthorityService{
+public class AuthorityServiceImpl implements AuthorityService {
 
     /**
      * The Authority dao.
@@ -64,26 +66,44 @@ public class AuthorityServiceImpl implements AuthorityService{
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public List<UserRoles> getUserRolesList() {
+    public List<UserRoles> getUserRolesList(String searchName) {
         List<UserRoles> finalResult = new ArrayList<>();
-        List<Integer>  userIds = authorityDao.getDistinctUserId();
-        if(!CollectionUtils.isEmpty(userIds)){
-            for(Integer userId : userIds){
-                UserRoles userRoles =  new UserRoles();
-                List<Authority> authorityList = authorityDao.getAuthoritiesByUserId(userId);
-                List<String> roles = new ArrayList<>();
-                if(!CollectionUtils.isEmpty(authorityList)) {
-                    for (Authority authority : authorityList) {
-                        roles.add(roleService.getRoleById(authority.getRoleId()).getName());
-                    }
+        if (StringUtils.isEmpty(searchName)) {
+            List<Integer> userIds = authorityDao.getDistinctUserId();
+            if (!CollectionUtils.isEmpty(userIds)) {
+                for (Integer userId : userIds) {
+                    finalResult.add(getUserRolesByUserId(userId));
                 }
-                String userName = userService.queryObject(userId.longValue()).getUsername();
-                userRoles.setUserId(userId);
-                userRoles.setUserName(userName);
-                userRoles.setRoles(roles);
-                finalResult.add(userRoles);
+            }
+        } else {
+            SysUserEntity user = userService.queryByUserName(searchName);
+            if (user != null) {
+                finalResult.add(getUserRolesByUserId(user.getUserId().intValue()));
             }
         }
         return finalResult;
+    }
+
+    /**
+     * Get user roles by user id user roles.
+     *
+     * @param userId the user id
+     * @return the user roles
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private UserRoles getUserRolesByUserId(Integer userId) {
+        UserRoles userRoles = new UserRoles();
+        List<Authority> authorityList = authorityDao.getAuthoritiesByUserId(userId);
+        List<String> roles = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(authorityList)) {
+            for (Authority authority : authorityList) {
+                roles.add(roleService.getRoleById(authority.getRoleId()).getName());
+            }
+        }
+        String userName = userService.queryObject(userId.longValue()).getUsername();
+        userRoles.setUserId(userId);
+        userRoles.setUserName(userName);
+        userRoles.setRoles(roles);
+        return userRoles;
     }
 }

@@ -29,5 +29,5 @@ public interface AuthorityService {
      * @return the user roles list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<UserRoles> getUserRolesList();
+    List<UserRoles> getUserRolesList(String searchName);
 }

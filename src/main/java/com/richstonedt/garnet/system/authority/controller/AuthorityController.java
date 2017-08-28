@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -49,9 +50,10 @@ public class AuthorityController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/userRoles",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getUserRoles(){
+    public ResponseEntity<?> getUserRoles(
+            @RequestParam(value = "searchName",required = false) String searchName){
         try{
-            List<UserRoles> results = authorityService.getUserRolesList();
+            List<UserRoles> results = authorityService.getUserRolesList(searchName);
             return new ResponseEntity<>(results, HttpStatus.OK);
         }catch (Throwable t){
             return GarnetUtils.newResponseEntity(t);
