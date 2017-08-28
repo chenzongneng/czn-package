@@ -65,4 +65,13 @@ public interface AuthorityService {
      * @since garnet-core-be-fe 1.0.0
      */
     void deleteAuthority(List<Integer> roleIds);
+
+    /**
+     * Gets role ids by user id.
+     *
+     * @param userId the user id
+     * @return the role ids by user id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<Integer> getRoleIdsByUserId(Integer userId);
 }

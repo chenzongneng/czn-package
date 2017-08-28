@@ -144,6 +144,25 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     /**
+     * Gets role ids by user id.
+     *
+     * @param userId the user id
+     * @return the role ids by user id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public List<Integer> getRoleIdsByUserId(Integer userId) {
+        List<Integer> results = new ArrayList<>();
+        List<Authority> authorityList = authorityDao.getAuthoritiesByUserId(userId);
+        if(!CollectionUtils.isEmpty(authorityList)){
+            for(Authority authority : authorityList){
+                results.add(authority.getRoleId());
+            }
+        }
+        return results;
+    }
+
+    /**
      * Get user roles by user id user roles.
      *
      * @param userId the user id

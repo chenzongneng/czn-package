@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +48,13 @@ public class AuthorityController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/userRoles",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/userRoles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUserRoles(
-            @RequestParam(value = "searchName",required = false) String searchName){
-        try{
+            @RequestParam(value = "searchName", required = false) String searchName) {
+        try {
             List<UserRoles> results = authorityService.getUserRolesList(searchName);
             return new ResponseEntity<>(results, HttpStatus.OK);
-        }catch (Throwable t){
+        } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }
     }
@@ -68,12 +65,12 @@ public class AuthorityController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/userList",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getUserList(){
-        try{
+    @RequestMapping(value = "/userList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getUserList() {
+        try {
             List<SysUserEntity> results = authorityService.getAllUsers();
             return new ResponseEntity<>(results, HttpStatus.OK);
-        }catch (Throwable t){
+        } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }
     }
@@ -86,14 +83,14 @@ public class AuthorityController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/userRole",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/userRole", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> saveAuthority(
-            @RequestParam(value = "userId") Integer userId,@RequestParam(value = "selectedRoleIds") String selectedRoleIds){
+            @RequestParam(value = "userId") Integer userId, @RequestParam(value = "selectedRoleIds") String selectedRoleIds) {
         try {
             List<Integer> roleIds = getRoleList(selectedRoleIds);
             authorityService.saveAuthority(userId, roleIds);
-            return new ResponseEntity<>( HttpStatus.OK);
-        }catch (Throwable t){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }
     }
@@ -106,14 +103,14 @@ public class AuthorityController {
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/userRole",method = RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/userRole", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateAuthority(
-            @RequestParam(value = "userId") Integer userId,@RequestParam(value = "selectedRoleIds") String selectedRoleIds){
+            @RequestParam(value = "userId") Integer userId, @RequestParam(value = "selectedRoleIds") String selectedRoleIds) {
         try {
             List<Integer> roleIds = getRoleList(selectedRoleIds);
             authorityService.updateAuthority(userId, roleIds);
-            return new ResponseEntity<>( HttpStatus.OK);
-        }catch (Throwable t){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }
     }
@@ -121,18 +118,36 @@ public class AuthorityController {
     /**
      * Save authority response entity.
      *
-     * @param userIds          the user ids
+     * @param userIds the user ids
      * @return the response entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/userRole",method = RequestMethod.DELETE,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/userRole", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteAuthority(
-            @RequestParam(value = "userIds") String userIds){
+            @RequestParam(value = "userIds") String userIds) {
         try {
             List<Integer> roleIds = getRoleList(userIds);
             authorityService.deleteAuthority(roleIds);
-            return new ResponseEntity<>( HttpStatus.OK);
-        }catch (Throwable t){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Gets role ids by user id.
+     *
+     * @param userId the user id
+     * @return the role ids by user id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/roleIds/{userId}")
+    public ResponseEntity<?> getRoleIdsByUserId(
+            @PathVariable(value = "userId") Integer userId) {
+        try {
+            List<Integer> roleIds = authorityService.getRoleIdsByUserId(userId);
+            return new ResponseEntity<>(roleIds, HttpStatus.OK);
+        } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }
     }
@@ -144,7 +159,7 @@ public class AuthorityController {
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    private List<Integer> getRoleList(String selectedRoleIds){
+    private List<Integer> getRoleList(String selectedRoleIds) {
         List<Integer> roleIds = new ArrayList<>();
         if (selectedRoleIds.contains(",")) {
             String[] tmpIds = selectedRoleIds.split(",");
