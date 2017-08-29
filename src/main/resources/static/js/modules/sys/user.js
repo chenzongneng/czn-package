@@ -113,7 +113,6 @@ var vm = new Vue({
             if (userId == null) {
                 return;
             }
-
             vm.showList = false;
             vm.title = "修改";
 

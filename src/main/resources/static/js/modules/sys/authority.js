@@ -75,13 +75,17 @@ var vm = new Vue({
             $("#userListSelect").removeAttr("disabled");  // 用户可选
         },
         update: function () {
+            var userId = getSelectedRow();
+            if (userId == null) {
+                return;
+            }
             vm.showList = false;
             addOrUpdate = 1;// 更新 的点击事件
             vm.title = "修改";
             vm.userList.options = [];
             vm.selectedRoleIds=[];
             vm.getAllUsers();
-            vm.getRoleIds();
+            vm.getRoleIds(userId);
             $("#userListSelect").attr("disabled","disabled"); // 控制用户不可选
         },
         del: function () {
@@ -138,12 +142,7 @@ var vm = new Vue({
             vm.userId = vm.userList.selectedUser;
         },
         /** 通过id 得到一个role对象 */
-        getRoleIds:function(){
-            var selectedRoleId = getSelectedRow();
-            console.log(selectedRoleId);
-            if (selectedRoleId == null) {
-                return;
-            }
+        getRoleIds:function(selectedRoleId){
             vm.userId = selectedRoleId;
             $.get(baseURL + "v1.0/roleIds/"+selectedRoleId, function (response) {
                 vm.userList.selectedUser = selectedRoleId;
