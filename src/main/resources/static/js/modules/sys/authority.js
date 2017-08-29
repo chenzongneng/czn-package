@@ -69,15 +69,20 @@ var vm = new Vue({
             addOrUpdate = 0;
             vm.title = "新增";
             vm.userId = null;
+            vm.userList.options = [];
             vm.selectedRoleIds = [];
             vm.getAllUsers();
+            $("#userListSelect").removeAttr("disabled");  // 用户可选
         },
         update: function () {
             vm.showList = false;
             addOrUpdate = 1;// 更新 的点击事件
             vm.title = "修改";
-            vm.checkAdmin();
-            vm.getRoleById();
+            vm.userList.options = [];
+            vm.selectedRoleIds=[];
+            vm.getAllUsers();
+            vm.getRoleIds();
+            $("#userListSelect").attr("disabled","disabled"); // 控制用户不可选
         },
         del: function () {
             var selectedRoleIds = getSelectedRows();
@@ -88,7 +93,7 @@ var vm = new Vue({
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
                     type: "DELETE",
-                    url: baseURL + "v1.0/role?idList=" + selectedRoleIds.toString(),
+                    url: baseURL + "v1.0/userRole?userIds=" + selectedRoleIds.toString(),
                     contentType: "application/json",
                     dataType:"",
                     success: function () {
@@ -133,16 +138,18 @@ var vm = new Vue({
             vm.userId = vm.userList.selectedUser;
         },
         /** 通过id 得到一个role对象 */
-        getRoleById:function(){
+        getRoleIds:function(){
             var selectedRoleId = getSelectedRow();
+            console.log(selectedRoleId);
             if (selectedRoleId == null) {
                 return;
             }
-            vm.role.id = selectedRoleId;
-            $.get(baseURL + "v1.0/role/"+roleIds, function (response) {
-                vm.parentDepartments.selectedDepartment = response.tenantId;
-                vm.role.name = response.name;
-                vm.role.remark = response.remark;
+            vm.userId = selectedRoleId;
+            $.get(baseURL + "v1.0/roleIds/"+selectedRoleId, function (response) {
+                vm.userList.selectedUser = selectedRoleId;
+                $.each(response,function (index,item) {
+                    vm.selectedRoleIds.push(item);
+                })
             });
         },
         getAllUsers:function () {
