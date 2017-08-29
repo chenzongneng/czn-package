@@ -145,21 +145,37 @@ var vm = new Vue({
             if (userIds == null) {
                 return;
             }
-            confirm('确定要删除选中的记录？', function () {
-                $.ajax({
-                    type: "DELETE",
-                    url: baseURL + "v1.0/user?userIds="+userIds.toString(),
-                    contentType: "application/json",
-                    dataType:"",
-                    success: function () {
-                        alert('操作成功', function () {
+            swal({
+                    title: "Are you sure ?",
+                    text: "确定要删除吗？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: "#DD6B55"
+                },
+                function () {
+                    $.ajax({
+                        type: "DELETE",
+                        url: baseURL + "v1.0/user?userIds="+userIds.toString(),
+                        contentType: "application/json",
+                        dataType:"",
+                        success: function () {
+                            swal("删除成功!", "", "success");
                             vm.reload();
-                        });
-                    }
+                        },
+                        error: function () {
+                            swal("删除失败!", "系统错误，请联系系统管理员！", "success");
+                        }
+
+                    });
                 });
-            });
         },
         saveOrUpdate: function () {
+            if(!vm.checkValue()){
+                return;
+            }
             var url = "v1.0/user" ;
             $.ajax({
                 type: addOrUpdate === 0 ? "POST" : "PUT",
@@ -229,6 +245,27 @@ var vm = new Vue({
         // 是否管理员的下拉列表
         selectAdmin:function () {
             vm.user.admin = vm.isAdmin.selectedValue;
+        },
+        checkValue:function () {
+            var emailReg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
+            var telReg = /^1[34578]\d{9}$/;
+            if(!vm.user.username){
+                swal("用户名不能为空!", "", "error");
+                return false;
+            }
+            if(!vm.user.password){
+                swal("密码不能为空!", "", "error");
+                return false;
+            }
+            if(vm.user.email && !emailReg.test(vm.user.email)){
+                swal("邮箱格式不正确!", "", "error");
+                return false;
+            }
+            if(vm.user.mobile && !telReg.test(vm.user.mobile)){
+                swal("电话号码格式不正确!", "", "error");
+                return false;
+            }
+           return true;
         }
     }
 });
