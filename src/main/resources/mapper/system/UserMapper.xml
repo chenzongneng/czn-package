@@ -82,14 +82,14 @@
         select * from gar_sys_user;
     </select>
 
-    <select id="getUserByName">
+    <select id="getUserByName" resultType="com.richstonedt.garnet.system.user.entity.User">
         SELECT * FROM gar_sys_user
         <where>
             username = #{username};
         </where>
     </select>
 
-    <select id="getUserByNameAndPassword">
+    <select id="getUserByNameAndPassword" resultType="com.richstonedt.garnet.system.user.entity.User">
         select * from gar_sys_user
         <where>
             username = #{username} and password = #{password};
