@@ -7,9 +7,10 @@
 package com.richstonedt.garnet.system.authority.controller;
 
 import com.richstonedt.garnet.common.utils.GarnetUtils;
-import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.system.authority.entity.viewModel.UserRoles;
 import com.richstonedt.garnet.system.authority.service.AuthorityService;
+import com.richstonedt.garnet.system.user.entity.User;
+import com.richstonedt.garnet.system.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +44,14 @@ public class AuthorityController {
     private AuthorityService authorityService;
 
     /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private UserService userService;
+
+    /**
      * Get user roles response entity.
      *
      * @return the response entity
@@ -68,7 +77,7 @@ public class AuthorityController {
     @RequestMapping(value = "/userList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUserList() {
         try {
-            List<SysUserEntity> results = authorityService.getAllUsers();
+            List<User> results = userService.getAllUsers();
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
@@ -159,7 +168,7 @@ public class AuthorityController {
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    private List<Integer> getRoleList(String selectedRoleIds) {
+    public List<Integer> getRoleList(String selectedRoleIds) {
         List<Integer> roleIds = new ArrayList<>();
         if (selectedRoleIds.contains(",")) {
             String[] tmpIds = selectedRoleIds.split(",");

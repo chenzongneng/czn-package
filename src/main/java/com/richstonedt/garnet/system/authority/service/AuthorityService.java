@@ -6,7 +6,6 @@
 
 package com.richstonedt.garnet.system.authority.service;
 
-import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.system.authority.entity.viewModel.UserRoles;
 
 import java.util.List;
@@ -31,14 +30,6 @@ public interface AuthorityService {
      * @since garnet-core-be-fe 1.0.0
      */
     List<UserRoles> getUserRolesList(String searchName);
-
-    /**
-     * Gets all users.
-     *
-     * @return the all users
-     * @since garnet-core-be-fe 1.0.0
-     */
-    List<SysUserEntity> getAllUsers();
 
     /**
      * Save authority.

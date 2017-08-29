@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.modules.sys.service.impl;
 
+import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.modules.sys.dao.SysUserDao;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserRoleService;
@@ -121,6 +122,10 @@ public class SysUserServiceImpl implements SysUserService {
 	@Override
 	@Transactional
 	public void save(SysUserEntity user) {
+		SysUserEntity userEntity = queryByUserName(user.getUsername());
+		if(userEntity != null){
+			throw new GarnetServiceException("该用户已存在！");
+		}
 		user.setCreateTime(new Date());
 		//sha256加密
 		String salt = RandomStringUtils.randomAlphanumeric(20);
@@ -129,7 +134,7 @@ public class SysUserServiceImpl implements SysUserService {
 		sysUserDao.save(user);
 		
 		//保存用户与角色关系
-		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
+		//sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
 	}
 
 	/**
@@ -148,7 +153,7 @@ public class SysUserServiceImpl implements SysUserService {
 		sysUserDao.update(user);
 		
 		//保存用户与角色关系
-		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
+		//sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
 	}
 
 	/**

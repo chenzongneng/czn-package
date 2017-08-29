@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.system.user.dao.UserDao">
+
+    <select id="getUserList" resultType="com.richstonedt.garnet.system.user.entity.User">
+        select * from gar_sys_user
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and username LIKE CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        ORDER BY id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
+    <select id="getUserById" resultType="com.richstonedt.garnet.system.user.entity.User">
+        select * from gar_sys_user
+        <where>
+            user_id = #{userId};
+        </where>
+    </select>
+
+    <insert id="saveUser" parameterType="com.richstonedt.garnet.system.user.entity.User">
+        insert into gar_sys_user
+        (
+            username,
+            password,
+            salt,
+            email,
+            mobile,
+            status,
+            create_time,
+            admin
+        )
+        values
+        (
+            #{username},
+            #{password},
+            #{salt},
+            #{email},
+            #{mobile},
+            #{status},
+            #{createTime},
+            #{admin}
+        );
+    </insert>
+
+    <update id="updateUser" parameterType="com.richstonedt.garnet.system.user.entity.User">
+        UPDATE gar_sys_user
+        <set>
+            username = #{username},
+            password = #{password},
+            salt = #{salt},
+            email = #{email},
+            mobile = #{mobile},
+            status = #{status},
+            create_time = #{createTime},
+            admin = #{admin}
+        </set>
+        <where>
+            user_id = #{userId};
+        </where>
+    </update>
+
+    <delete id="deleteUsers" parameterType="java.util.List">
+        delete from gar_sys_user WHERE user_id in
+        <foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getAllUsers" resultType="com.richstonedt.garnet.system.user.entity.User">
+        select * from gar_sys_user;
+    </select>
+
+    <select id="getUserByName">
+        SELECT * FROM gar_sys_user
+        <where>
+            username = #{username};
+        </where>
+    </select>
+
+    <select id="getUserByNameAndPassword">
+        select * from gar_sys_user
+        <where>
+            username = #{username} and password = #{password};
+        </where>
+    </select>
+
+    <update id="updatePassword">
+        UPDATE gar_sys_user
+        <set>
+            password = #{password}
+        </set>
+        <where>
+            user_id = #{userId};
+        </where>
+    </update>
+
+</mapper>

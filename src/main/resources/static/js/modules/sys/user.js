@@ -76,9 +76,9 @@ var vm = new Vue({
         roleList: {},
         user: {
             status: 1,
-            deptId: null,
-            deptName: null,
-            roleIdList: []
+            //deptId: null,
+            //deptName: null,
+            //roleIdList: []
         }
     },
     methods: {
@@ -89,12 +89,17 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.roleList = {};
-            vm.user = {deptName: null, deptId: null, status: 1, roleIdList: []};
+            vm.user = {
+                //deptName: null,
+                //deptId: null,
+                status: 1
+                //roleIdList: []
+            };
 
             //获取角色信息
-            this.getRoleList();
+            //this.getRoleList();
 
-            vm.getDept();
+            //vm.getDept();
         },
         getDept: function () {
             //加载部门树
@@ -150,14 +155,15 @@ var vm = new Vue({
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.user),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function () {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
+                dataType:"",
+                success: function () {
+                    alert('操作成功', function () {
+                        vm.reload();
+                    });
+                },
+                error:function () {
+                    alert('该用户已存在', function () {
+                    });
                 }
             });
         },

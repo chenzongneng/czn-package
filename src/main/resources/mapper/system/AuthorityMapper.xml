@@ -20,10 +20,6 @@
         </where>
     </select>
 
-    <select id="getAllUsers" resultType="com.richstonedt.garnet.modules.sys.entity.SysUserEntity">
-        select * from gar_sys_user;
-    </select>
-
     <insert id="saveAuthority">
         INSERT INTO gar_authority
         (user_id,role_id) VALUES (#{userId},#{roleId});

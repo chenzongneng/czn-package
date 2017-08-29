@@ -12,7 +12,6 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -113,7 +112,7 @@ public class SysUserEntity implements Serializable {
 	 *
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	@NotNull(message="部门不能为空", groups = {AddGroup.class, UpdateGroup.class})
+	//@NotNull(message="部门不能为空", groups = {AddGroup.class, UpdateGroup.class})
 	private Long deptId;
 
 	/**

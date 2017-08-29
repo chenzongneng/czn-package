@@ -85,17 +85,6 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     /**
-     * Gets all users.
-     *
-     * @return the all users
-     * @since garnet-core-be-fe 1.0.0
-     */
-    @Override
-    public List<SysUserEntity> getAllUsers() {
-        return authorityDao.getAllUsers();
-    }
-
-    /**
      * Save authority.
      *
      * @param userId  the user id
