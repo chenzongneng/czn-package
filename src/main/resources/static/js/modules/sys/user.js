@@ -3,10 +3,11 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
+var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/user/list',
+        url: baseURL + 'v1.0/users',
         datatype: "json",
         colModel: [
             {label: '用户ID', name: 'userId', index: "user_id", width: 45, key: true},
@@ -14,6 +15,11 @@ $(function () {
             //{label: '所属部门', name: 'deptName', width: 75},
             {label: '邮箱', name: 'email', width: 90},
             {label: '手机号', name: 'mobile', width: 80},
+            {
+                label: '是否管理员', name: 'admin', width: 80, formatter: function (value, options, row) {
+                return value === 1 ? "是":"否";
+            }
+            },
             {
                 label: '状态', name: 'status', width: 80, formatter: function (value, options, row) {
                 return value === 0 ?
@@ -33,10 +39,10 @@ $(function () {
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader: {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
+            root: "list",
+            page: "currPage",
+            total: "totalPage",
+            records: "totalCount"
         },
         prmNames: {
             page: "page",
@@ -68,17 +74,21 @@ var ztree;
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        q: {
-            username: null
-        },
+        searchName:null,
         showList: true,
         title: null,
         roleList: {},
         user: {
-            status: 1,
-            //deptId: null,
-            //deptName: null,
-            //roleIdList: []
+            username:null,
+            password:null,
+            email:null,
+            mobile:null,
+            status:null,
+            admin:null
+        },
+        isAdmin:{
+            selectedValue:"0",
+            options:[{text: "是",value: "1"},{text:"否",value: "0"}]
         }
     },
     methods: {
@@ -86,14 +96,18 @@ var vm = new Vue({
             vm.reload();
         },
         add: function () {
+            addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
-            vm.roleList = {};
-            vm.user = {
-                //deptName: null,
-                //deptId: null,
-                status: 1
-                //roleIdList: []
+            //vm.roleList = {};
+            vm.user =  {
+                userId:null,
+                username:null,
+                password:null,
+                email:null,
+                mobile:null,
+                status:1,
+                admin:null
             };
 
             //获取角色信息
@@ -114,6 +128,7 @@ var vm = new Vue({
             })
         },
         update: function () {
+            addOrUpdate = 1;
             var userId = getSelectedRow();
             if (userId == null) {
                 return;
@@ -123,7 +138,7 @@ var vm = new Vue({
 
             vm.getUser(userId);
             //获取角色信息
-            this.getRoleList();
+            //this.getRoleList();
         },
         del: function () {
             var userIds = getSelectedRows();
@@ -132,26 +147,22 @@ var vm = new Vue({
             }
             confirm('确定要删除选中的记录？', function () {
                 $.ajax({
-                    type: "POST",
-                    url: baseURL + "sys/user/delete",
+                    type: "DELETE",
+                    url: baseURL + "v1.0/user?userIds="+userIds.toString(),
                     contentType: "application/json",
-                    data: JSON.stringify(userIds),
-                    success: function (r) {
-                        if (r.code == 0) {
-                            alert('操作成功', function () {
-                                vm.reload();
-                            });
-                        } else {
-                            alert(r.msg);
-                        }
+                    dataType:"",
+                    success: function () {
+                        alert('操作成功', function () {
+                            vm.reload();
+                        });
                     }
                 });
             });
         },
         saveOrUpdate: function () {
-            var url = vm.user.userId == null ? "sys/user/save" : "sys/user/update";
+            var url = "v1.0/user" ;
             $.ajax({
-                type: "POST",
+                type: addOrUpdate === 0 ? "POST" : "PUT",
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.user),
@@ -161,18 +172,24 @@ var vm = new Vue({
                         vm.reload();
                     });
                 },
-                error:function () {
-                    alert('该用户已存在', function () {
+                error:function (response) {
+                    alert(response.responseJSON.errorMessage, function () {
                     });
                 }
             });
         },
         getUser: function (userId) {
-            $.get(baseURL + "sys/user/info/" + userId, function (r) {
-                vm.user = r.user;
-                vm.user.password = null;
-
-                vm.getDept();
+            $.get(baseURL + "v1.0/user/" + userId, function (response) {
+                if(response){
+                    vm.user.userId = response.userId;
+                    vm.user.username = response.username;
+                    vm.user.password = null;
+                    vm.user.email = response.email;
+                    vm.user.mobile = response.mobile;
+                    vm.isAdmin.selectedValue = response.admin;
+                    vm.user.status = response.status;
+                }
+                //vm.getDept();
             });
         },
         getRoleList: function () {
@@ -205,9 +222,13 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'username': vm.q.username},
+                postData: {'searchName': vm.searchName},
                 page: page
             }).trigger("reloadGrid");
+        },
+        // 是否管理员的下拉列表
+        selectAdmin:function () {
+            vm.user.admin = vm.isAdmin.selectedValue;
         }
     }
 });

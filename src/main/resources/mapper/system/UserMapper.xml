@@ -16,7 +16,7 @@
                 and username LIKE CONCAT('%',#{searchName},'%')
             </if>
         </where>
-        ORDER BY id asc
+        ORDER BY user_id asc
         <if test="offset != null and limit != null">
             limit #{limit} offset #{offset};
         </if>
@@ -38,7 +38,6 @@
             email,
             mobile,
             status,
-            create_time,
             admin
         )
         values
@@ -49,7 +48,6 @@
             #{email},
             #{mobile},
             #{status},
-            #{createTime},
             #{admin}
         );
     </insert>
