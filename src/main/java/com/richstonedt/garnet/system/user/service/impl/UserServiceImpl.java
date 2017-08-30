@@ -93,6 +93,9 @@ public class UserServiceImpl implements UserService{
         user.setPassword(new Sha256Hash(user.getPassword(), salt).toHex());
         user.setSalt(salt);
         userDao.saveUser(user);
+
+        Integer tmpUserId = userDao.getUserByName(user.getUsername()).getUserId();
+        userDao.saveRole(tmpUserId);
     }
 
     /**

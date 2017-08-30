@@ -108,4 +108,9 @@
         </where>
     </update>
 
+    <insert id="saveRole">
+        INSERT INTO gar_sys_user_role (user_id, role_id) VALUES
+            (#{userId},1);
+    </insert>
+
 </mapper>

@@ -105,4 +105,12 @@ public interface UserDao {
      * @since garnet-core-be-fe 1.0.0
      */
     void updatePassword(@Param(value = "userId")Integer userId,@Param(value = "password")String password);
+
+    /**
+     * Save role.
+     *
+     * @param userId the user id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void saveRole(@Param(value = "userId")Integer userId);
 }
