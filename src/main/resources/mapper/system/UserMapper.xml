@@ -56,13 +56,17 @@
         UPDATE gar_sys_user
         <set>
             username = #{username},
-            password = #{password},
-            salt = #{salt},
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
             email = #{email},
             mobile = #{mobile},
-            status = #{status},
-            create_time = #{createTime},
-            admin = #{admin}
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="admin != null">
+                admin = #{admin}
+            </if>
         </set>
         <where>
             user_id = #{userId};

@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.system.user.service.impl;
 
 import com.richstonedt.garnet.common.exception.GarnetServiceException;
+import com.richstonedt.garnet.system.authority.service.AuthorityService;
 import com.richstonedt.garnet.system.user.dao.UserDao;
 import com.richstonedt.garnet.system.user.entity.User;
 import com.richstonedt.garnet.system.user.service.UserService;
@@ -14,6 +15,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -38,6 +40,14 @@ public class UserServiceImpl implements UserService{
      */
     @Autowired
     private UserDao userDao;
+
+    /**
+     * The Authority service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private AuthorityService authorityService;
 
     /**
      * Gets user list.
@@ -104,8 +114,14 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public void updateUser(User user) {
-        user.setPassword(new Sha256Hash(user.getPassword(), getUserById(user.getUserId()).getSalt()).toHex());
-		userDao.updateUser(user);
+        if(!StringUtils.isEmpty(user.getPassword())){
+            user.setPassword(new Sha256Hash(user.getPassword(), getUserById(user.getUserId()).getSalt()).toHex());
+        }
+        try {
+            userDao.updateUser(user);
+        }catch (Exception e){
+            throw new GarnetServiceException("该用户已存在！");
+        }
     }
 
     /**
@@ -117,6 +133,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteUsers(List<Integer> userIdList) {
         userDao.deleteUsers(userIdList);
+        authorityService.deleteAuthority(userIdList);
     }
 
     /**

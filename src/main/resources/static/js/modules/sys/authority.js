@@ -69,6 +69,7 @@ var vm = new Vue({
             addOrUpdate = 0;
             vm.title = "新增";
             vm.userId = null;
+            vm.userList.selectedUser = "";
             vm.userList.options = [];
             vm.selectedRoleIds = [];
             vm.getAllUsers();
@@ -93,25 +94,31 @@ var vm = new Vue({
             if (selectedRoleIds == null) {
                 return;
             }
-            console.log(selectedRoleIds);
-            confirm('确定要删除选中的记录？', function () {
-                $.ajax({
-                    type: "DELETE",
-                    url: baseURL + "v1.0/userRole?userIds=" + selectedRoleIds.toString(),
-                    contentType: "application/json",
-                    dataType:"",
-                    success: function () {
-                        alert('操作成功', function () {
+            swal({
+                    title: "确定要删除选中的记录？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: "#DD6B55"
+                },
+                function () {
+                    $.ajax({
+                        type: "DELETE",
+                        url: baseURL + "v1.0/userRole?userIds=" + selectedRoleIds.toString(),
+                        contentType: "application/json",
+                        dataType:"",
+                        success: function () {
                             vm.reload();
-                        });
-                    },
-                    error: function () {
-                        alert('操作失败', function () {
-                            vm.reload();
-                        });
-                    }
+                            swal("删除成功!", "", "success");
+                        },
+                        error: function () {
+                            swal("删除失败!", "系统错误，请联系系统管理员！", "success");
+                        }
+
+                    });
                 });
-            });
         },
         saveOrUpdate: function () {
             var url = "v1.0/userRole?userId="+vm.userId+"&selectedRoleIds="+vm.selectedRoleIds;
@@ -121,9 +128,11 @@ var vm = new Vue({
                 contentType: "application/json",
                 dataType: '',
                 success: function () {
-                    alert('操作成功', function () {
                         vm.reload();
-                    });
+                    swal("操作成功!", "", "success");
+                },
+                error:function (response) {
+                    swal(response.responseJSON.errorMessage, "", "error");
                 }
             });
         },

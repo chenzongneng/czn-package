@@ -109,7 +109,7 @@ var vm = new Vue({
                 status:1,
                 admin:null
             };
-
+            vm.isAdmin.selectedValue = "0";
             //获取角色信息
             //this.getRoleList();
 
@@ -146,8 +146,7 @@ var vm = new Vue({
                 return;
             }
             swal({
-                    title: "Are you sure ?",
-                    text: "确定要删除吗？",
+                    title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
                     closeOnConfirm: false,
@@ -184,13 +183,11 @@ var vm = new Vue({
                 data: JSON.stringify(vm.user),
                 dataType:"",
                 success: function () {
-                    alert('操作成功', function () {
-                        vm.reload();
-                    });
+                    vm.reload();
+                    swal("操作成功!", "", "success");
                 },
                 error:function (response) {
-                    alert(response.responseJSON.errorMessage, function () {
-                    });
+                    swal(response.responseJSON.errorMessage, "", "error");
                 }
             });
         },
@@ -249,12 +246,19 @@ var vm = new Vue({
         checkValue:function () {
             var emailReg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
             var telReg = /^1[34578]\d{9}$/;
+            var chineseReg = /^[\u4e00-\u9fa5]{0,}$/;
             if(!vm.user.username){
                 swal("用户名不能为空!", "", "error");
                 return false;
+            }else if(chineseReg.test(vm.user.username)){
+                swal("用户名不能为中文!", "", "error");
+                return false;
             }
-            if(!vm.user.password){
+            if(!vm.user.password && addOrUpdate === 0){
                 swal("密码不能为空!", "", "error");
+                return false;
+            }else if(chineseReg.test(vm.user.password)){
+                swal("密码不能为中文!", "", "error");
                 return false;
             }
             if(vm.user.email && !emailReg.test(vm.user.email)){

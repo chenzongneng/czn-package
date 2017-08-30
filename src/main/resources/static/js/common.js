@@ -50,12 +50,14 @@ function getSelectedRow() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
     if (!rowKey) {
-        alert("请选择一条记录");
+        //alert("请选择一条记录");
+        swal("请选择一条记录!", "", "warning");
         return;
     }
     var selectedIDs = grid.getGridParam("selarrrow");
     if (selectedIDs.length > 1) {
-        alert("只能选择一条记录");
+        //alert("只能选择一条记录");
+        swal("只能选择一条记录!", "", "warning");
         return;
     }
     return selectedIDs[0];
@@ -66,7 +68,8 @@ function getSelectedRows() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
     if (!rowKey) {
-        alert("请选择一条记录");
+        //alert("请选择一条记录");
+        swal("请选择一条记录!", "", "warning");
         return;
     }
     return grid.getGridParam("selarrrow");
