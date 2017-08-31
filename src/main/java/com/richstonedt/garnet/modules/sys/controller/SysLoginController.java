@@ -6,19 +6,26 @@
 
 package com.richstonedt.garnet.modules.sys.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.common.utils.ShiroUtils;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import com.richstonedt.garnet.modules.sys.service.SysUserTokenService;
+import com.richstonedt.garnet.system.authority.service.AuthorityService;
+import com.richstonedt.garnet.system.user.entity.User;
+import com.richstonedt.garnet.system.user.service.UserService;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +34,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,6 +73,22 @@ public class SysLoginController {
      */
     @Autowired
     private SysUserTokenService sysUserTokenService;
+
+    /**
+     * The Authority service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private AuthorityService authorityService;
+
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private UserService userService;
 
     /**
      * Kaptcha.
@@ -117,8 +143,36 @@ public class SysLoginController {
         }
         //生成token，并保存到数据库
         Result result = sysUserTokenService.createToken(user.getUserId());
-        result.put("roleId",user.getRoleId());
-        return result;
+        String gempileToken = createToken(user.getUserId().intValue());
+        result.put("gempileToken",gempileToken);
+        return  result;
     }
 
+    /**
+     * Create token string.
+     *
+     * @param userId the user id
+     * @return the string
+     * @since garnet-core-be-fe 1.0.0
+     */
+    private String createToken(Integer userId){
+        User user = userService.getUserById(userId);
+        List<Integer> roleIdList = authorityService.getRoleIdsByUserId(userId);
+        String roleIds = "";
+        if(!CollectionUtils.isEmpty(roleIdList)){
+            roleIds = roleIdList.toString().replace("[", "").replace("]", "");
+        }
+        try {
+            Algorithm algorithm = Algorithm.HMAC256("secret");
+            return JWT.create()
+                    .withClaim("uid", user.getUserId())
+                    .withClaim("una", user.getUsername())
+                    .withClaim("uad", user.getAdmin())
+                    .withClaim("rol", roleIds)
+                    .withExpiresAt(new Date(new Date().getTime() + (long)60 * 60 * 1000))
+                    .sign(algorithm);
+        } catch (UnsupportedEncodingException e) {
+            throw new GarnetServiceException(e, "UTF-8 encoding not supported when generating token");
+        }
+    }
 }

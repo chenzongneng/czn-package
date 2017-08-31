@@ -91,8 +91,9 @@ var vm = new Vue({
         },
         /** 退出登录 */
         logout: function () {
-            localStorage.removeItem("token");
+            localStorage.removeItem("garnetToken");
             location.href = baseURL + 'login.html';
+            //window.close();
         }
     },
     created: function () {

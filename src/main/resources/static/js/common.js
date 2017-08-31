@@ -8,7 +8,7 @@
 var baseURL = "http://192.168.6.97:8080/garnet/";
 
 /** token */
-var token = localStorage.getItem("token");
+var token = localStorage.getItem("garnetToken");
 if (token == 'null') {
     parent.location.href = baseURL + 'login.html';
 }

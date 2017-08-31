@@ -96,8 +96,8 @@
                     dataType: "json",
                     success: function (result) {
                         if (result.code == 0) {//登录成功
-                            localStorage.setItem("token", result.token);
-                            localStorage.setItem("roleId", result.roleId);
+                            localStorage.setItem("garnetToken", result.garnetToken);
+                            localStorage.setItem("gempileToken", result.gempileToken);
                             parent.location.href = 'index.html';
                         } else {
                             vm.error = true;

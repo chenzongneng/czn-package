@@ -121,6 +121,6 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 			//更新token
 			update(tokenEntity);
 		}
-		return Result.ok().put("token", token).put("expire", EXPIRE);
+		return Result.ok().put("garnetToken", token).put("expire", EXPIRE);
 	}
 }

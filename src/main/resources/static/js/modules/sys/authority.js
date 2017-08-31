@@ -4,10 +4,6 @@
  * All rights reserved.
  */
 
-var roleId = localStorage.getItem("roleId");
-if(roleId == 'null'){
-    roleId ='';
-}
 var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 $(function () {
     $("#jqGrid").jqGrid({
@@ -38,7 +34,6 @@ $(function () {
             rows: "limit",
             order: "order"
         },
-        postData:{tenantId:roleId},
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
