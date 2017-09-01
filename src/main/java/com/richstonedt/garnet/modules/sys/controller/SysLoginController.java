@@ -12,7 +12,6 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.common.utils.Result;
-import com.richstonedt.garnet.common.utils.ShiroUtils;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import com.richstonedt.garnet.modules.sys.service.SysUserTokenService;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -98,14 +98,15 @@ public class SysLoginController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> getKaptcha() throws IOException {
+    public ResponseEntity<?> getKaptcha(HttpServletRequest request) throws IOException {
 
         //生成文字验证码
         String text = producer.createText();
         //生成图片验证码
         BufferedImage image = producer.createImage(text);
         //保存到shiro session
-        ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+        //ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
 
         // transform to byte
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -126,8 +127,10 @@ public class SysLoginController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
-    public Map<String, Object> login(String username, String password, String captcha) throws IOException {
-        String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+    public Map<String, Object> login(HttpServletRequest request,String username, String password, String captcha) throws IOException {
+        //String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+        String kaptcha = (String) request.getSession().getAttribute(
+                Constants.KAPTCHA_SESSION_KEY);
         if (!captcha.equalsIgnoreCase(kaptcha)) {
             return Result.error("验证码不正确");
         }
