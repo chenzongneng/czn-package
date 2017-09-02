@@ -8,7 +8,6 @@ package com.richstonedt.garnet.modules.sys.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.common.utils.Result;
@@ -19,6 +18,8 @@ import com.richstonedt.garnet.system.authority.service.AuthorityService;
 import com.richstonedt.garnet.system.user.entity.User;
 import com.richstonedt.garnet.system.user.service.UserService;
 import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,15 +28,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +92,11 @@ public class SysLoginController {
     @Autowired
     private UserService userService;
 
+    private  static  Map<String,String> kaptchaMap = new HashMap<>();
+
+
+    private Logger LOG = LoggerFactory.getLogger(SysLoginController.class);
+
     /**
      * Kaptcha.
      *
@@ -98,7 +105,7 @@ public class SysLoginController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> getKaptcha(HttpServletRequest request) throws IOException {
+    public ResponseEntity<?> getKaptcha(@RequestParam(value = "nowTime")String nowTime) throws IOException {
 
         //生成文字验证码
         String text = producer.createText();
@@ -106,7 +113,11 @@ public class SysLoginController {
         BufferedImage image = producer.createImage(text);
         //保存到shiro session
         //ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
-        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+        //request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+        kaptchaMap.put(nowTime,text);
+        LOG.info("set>>>>>>>"+nowTime);
+        LOG.info(kaptchaMap.toString());
+
 
         // transform to byte
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -126,14 +137,23 @@ public class SysLoginController {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
-    public Map<String, Object> login(HttpServletRequest request,String username, String password, String captcha) throws IOException {
+    @RequestMapping(value = "/sys/login", method = RequestMethod.GET)
+    public Map<String, Object> login(@RequestParam(value = "username") String username,@RequestParam(value = "password")  String password,
+                                     @RequestParam(value = "captcha") String captcha,@RequestParam(value = "nowTime") String nowTime) throws IOException {
         //String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-        String kaptcha = (String) request.getSession().getAttribute(
-                Constants.KAPTCHA_SESSION_KEY);
+       /* String kaptcha = (String) request.getSession().getAttribute(
+                Constants.KAPTCHA_SESSION_KEY);*/
+        LOG.info("get>>>>>>>"+nowTime);
+        String kaptcha = kaptchaMap.get(nowTime);
+        LOG.info(">>>>>>>>>> username = "+username);
+        LOG.info(">>>>>>>>>> password = "+password);
+        LOG.info(">>>>>>>>>> captcha = "+captcha);
+        LOG.info(">>>>>>>>>> kaptcha = "+kaptcha);
+        LOG.info(">>>>>>>>>> kaptcha = "+kaptcha);
         if (!captcha.equalsIgnoreCase(kaptcha)) {
             return Result.error("验证码不正确");
         }
+        kaptchaMap.remove("kaptcha");
         //用户信息
         SysUserEntity user = sysUserService.queryByUserName(username);
         //账号不存在、密码错误
