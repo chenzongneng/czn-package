@@ -137,36 +137,30 @@ public class SysLoginController {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/sys/login", method = RequestMethod.GET)
-    public Map<String, Object> login(@RequestParam(value = "username") String username,@RequestParam(value = "password")  String password,
-                                     @RequestParam(value = "captcha") String captcha,@RequestParam(value = "nowTime") String nowTime) throws IOException {
+    @RequestMapping(value = "/sys/login", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Map<String, Object> login(@RequestParam(value = "captcha") String captcha,@RequestParam(value = "nowTime") String nowTime,
+                                     @RequestParam(value = "username") String username,@RequestParam(value = "password") String password) throws IOException {
         //String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
        /* String kaptcha = (String) request.getSession().getAttribute(
                 Constants.KAPTCHA_SESSION_KEY);*/
-        LOG.info("get>>>>>>>"+nowTime);
         String kaptcha = kaptchaMap.get(nowTime);
-        LOG.info(">>>>>>>>>> username = "+username);
-        LOG.info(">>>>>>>>>> password = "+password);
-        LOG.info(">>>>>>>>>> captcha = "+captcha);
-        LOG.info(">>>>>>>>>> kaptcha = "+kaptcha);
-        LOG.info(">>>>>>>>>> kaptcha = "+kaptcha);
         if (!captcha.equalsIgnoreCase(kaptcha)) {
             return Result.error("验证码不正确");
         }
         kaptchaMap.remove("kaptcha");
         //用户信息
-        SysUserEntity user = sysUserService.queryByUserName(username);
+        SysUserEntity userEntity = sysUserService.queryByUserName(username);
         //账号不存在、密码错误
-        if (user == null || !user.getPassword().equals(new Sha256Hash(password, user.getSalt()).toHex())) {
+        if (userEntity == null || !userEntity.getPassword().equals(new Sha256Hash(password, userEntity.getSalt()).toHex())) {
             return Result.error("账号或密码不正确");
         }
         //账号锁定
-        if (user.getStatus() == 0) {
+        if (userEntity.getStatus() == 0) {
             return Result.error("账号已被锁定,请联系管理员");
         }
         //生成token，并保存到数据库
-        Result result = sysUserTokenService.createToken(user.getUserId());
-        String gempileToken = createToken(user.getUserId().intValue());
+        Result result = sysUserTokenService.createToken(userEntity.getUserId());
+        String gempileToken = createToken(userEntity.getUserId().intValue());
         result.put("gempileToken",gempileToken);
         return  result;
     }
