@@ -69,21 +69,23 @@ var vm = new Vue({
                 content: jQuery("#passwordLayer"),
                 btn: ['修改', '取消'],
                 btn1: function (index) {
-                    var data = "password=" + vm.password + "&newPassword=" + vm.newPassword;
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "sys/user/password",
-                        data: data,
-                        dataType: "json",
-                        success: function (r) {
-                            if (r.code == 0) {
-                                layer.close(index);
-                                layer.alert('修改成功', function () {
-                                    location.reload();
-                                });
-                            } else {
-                                layer.alert(r.msg);
-                            }
+                        url: baseURL + "v1.0/password",
+                        data: {
+                            userId : vm.user.userId,
+                            password : vm.password,
+                            newPassword : vm.newPassword
+                        },
+                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                        dataType: "",
+                        success: function () {
+                        layer.close(index);
+                        swal("修改密码成功!", "", "success");
+                        },
+                        error:function (response) {
+                            layer.close(index);
+                            swal("修改密码失败！",response.responseJSON.errorMessage, "error");
                         }
                     });
                 }

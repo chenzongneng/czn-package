@@ -87,7 +87,7 @@
         methods: {
             refreshCode: function () {
                 nowTime = $.now();
-                this.src = "kaptcha?t=" + nowTime;
+                this.src = "kaptcha?nowTime=" + nowTime;
             },
             login: function () {
                 var data = {
