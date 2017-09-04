@@ -68,6 +68,7 @@
 <script src="libs/app.js"></script>
 <script src="js/common.js"></script>
 <script type="text/javascript">
+    var nowTime = $.now();
     var vm = new Vue({
         el: '#garnetApp',
         data: {
@@ -76,7 +77,7 @@
             captcha: '',
             error: false,
             errorMsg: '',
-            src: 'kaptcha'
+            src: 'kaptcha?nowTime='+ nowTime
         },
         beforeCreate: function () {
             if (self != top) {
@@ -85,15 +86,22 @@
         },
         methods: {
             refreshCode: function () {
-                this.src = "kaptcha?t=" + $.now();
+                nowTime = $.now();
+                this.src = "kaptcha?t=" + nowTime;
             },
             login: function () {
-                var data = "username=" + vm.username + "&password=" + vm.password + "&captcha=" + vm.captcha;
+                var data = {
+                    username: vm.username,
+                    password: vm.password,
+                    captcha: vm.captcha,
+                    nowTime : nowTime
+                };
                 $.ajax({
                     type: "POST",
                     url: baseURL + "sys/login",
-                    data: data,
-                    dataType: "json",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType: "",
                     success: function (result) {
                         if (result.code == 0) {//登录成功
                             localStorage.setItem("garnetToken", result.garnetToken);
