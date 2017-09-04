@@ -186,7 +186,7 @@ public class SysLoginController {
                     .withClaim("una", user.getUsername())
                     .withClaim("uad", user.getAdmin())
                     .withClaim("rol", roleIds)
-                    .withExpiresAt(new Date(new Date().getTime() + (long)60 * 60 * 1000))
+                    .withExpiresAt(new Date(new Date().getTime() + (long)60 * 60 * 1000 * 3))
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
             throw new GarnetServiceException(e, "UTF-8 encoding not supported when generating token");
