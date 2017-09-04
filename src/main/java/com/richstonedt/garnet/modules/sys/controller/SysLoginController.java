@@ -12,6 +12,7 @@ import com.google.code.kaptcha.Producer;
 import com.richstonedt.garnet.common.exception.GarnetServiceException;
 import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.entity.SysUserEntity;
+import com.richstonedt.garnet.modules.sys.entity.UserLoginEntity;
 import com.richstonedt.garnet.modules.sys.service.SysUserService;
 import com.richstonedt.garnet.modules.sys.service.SysUserTokenService;
 import com.richstonedt.garnet.system.authority.service.AuthorityService;
@@ -26,10 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -92,7 +90,7 @@ public class SysLoginController {
     @Autowired
     private UserService userService;
 
-    private  static  Map<String,String> kaptchaMap = new HashMap<>();
+    private static Map<String, String> kaptchaMap = new HashMap<>();
 
 
     private Logger LOG = LoggerFactory.getLogger(SysLoginController.class);
@@ -105,7 +103,7 @@ public class SysLoginController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> getKaptcha(@RequestParam(value = "nowTime")String nowTime) throws IOException {
+    public ResponseEntity<?> getKaptcha(@RequestParam(value = "nowTime") String nowTime) throws IOException {
 
         //生成文字验证码
         String text = producer.createText();
@@ -114,8 +112,8 @@ public class SysLoginController {
         //保存到shiro session
         //ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
         //request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
-        kaptchaMap.put(nowTime,text);
-        LOG.info("set>>>>>>>"+nowTime);
+        kaptchaMap.put(nowTime, text);
+        LOG.info("set>>>>>>>" + nowTime);
         LOG.info(kaptchaMap.toString());
 
 
@@ -137,21 +135,24 @@ public class SysLoginController {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/sys/login", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, Object> login(@RequestParam(value = "captcha") String captcha,@RequestParam(value = "nowTime") String nowTime,
-                                     @RequestParam(value = "username") String username,@RequestParam(value = "password") String password) throws IOException {
+    @RequestMapping(value = "/sys/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Map<String, Object> login(@RequestBody UserLoginEntity user) throws IOException {
         //String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
        /* String kaptcha = (String) request.getSession().getAttribute(
                 Constants.KAPTCHA_SESSION_KEY);*/
-        String kaptcha = kaptchaMap.get(nowTime);
-        if (!captcha.equalsIgnoreCase(kaptcha)) {
+        String kaptcha = kaptchaMap.get(user.getNowTime());
+        if (!user.getCaptcha().equalsIgnoreCase(kaptcha)) {
             return Result.error("验证码不正确");
         }
         kaptchaMap.remove("kaptcha");
         //用户信息
-        SysUserEntity userEntity = sysUserService.queryByUserName(username);
-        //账号不存在、密码错误
-        if (userEntity == null || !userEntity.getPassword().equals(new Sha256Hash(password, userEntity.getSalt()).toHex())) {
+        SysUserEntity userEntity = sysUserService.queryByUserName(user.getUsername());
+        //账号不存在
+        if(userEntity == null){
+            return Result.error("账号不存在");
+        }
+        //账号用户名、密码错误
+        if (!userEntity.getPassword().equals(new Sha256Hash(user.getPassword(), userEntity.getSalt()).toHex())) {
             return Result.error("账号或密码不正确");
         }
         //账号锁定
@@ -161,8 +162,8 @@ public class SysLoginController {
         //生成token，并保存到数据库
         Result result = sysUserTokenService.createToken(userEntity.getUserId());
         String gempileToken = createToken(userEntity.getUserId().intValue());
-        result.put("gempileToken",gempileToken);
-        return  result;
+        result.put("gempileToken", gempileToken);
+        return result;
     }
 
     /**
@@ -172,11 +173,11 @@ public class SysLoginController {
      * @return the string
      * @since garnet-core-be-fe 1.0.0
      */
-    private String createToken(Integer userId){
+    private String createToken(Integer userId) {
         User user = userService.getUserById(userId);
         List<Integer> roleIdList = authorityService.getRoleIdsByUserId(userId);
         String roleIds = "";
-        if(!CollectionUtils.isEmpty(roleIdList)){
+        if (!CollectionUtils.isEmpty(roleIdList)) {
             roleIds = roleIdList.toString().replace("[", "").replace("]", "");
         }
         try {
@@ -186,7 +187,7 @@ public class SysLoginController {
                     .withClaim("una", user.getUsername())
                     .withClaim("uad", user.getAdmin())
                     .withClaim("rol", roleIds)
-                    .withExpiresAt(new Date(new Date().getTime() + (long)60 * 60 * 1000 * 3))
+                    .withExpiresAt(new Date(new Date().getTime() + (long) 60 * 60 * 1000 * 3))
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
             throw new GarnetServiceException(e, "UTF-8 encoding not supported when generating token");
