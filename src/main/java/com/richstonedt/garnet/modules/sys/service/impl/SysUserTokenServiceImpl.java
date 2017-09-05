@@ -34,11 +34,11 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 	private SysUserTokenDao sysUserTokenDao;
 
 	/**
-	 * The constant EXPIRE. 12小时后过期
+	 * The constant EXPIRE. 3小时后过期
 	 *
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	private final static int EXPIRE = 3600 * 12;
+	private final static int EXPIRE = 3600 * 3;
 
 	/**
 	 * Query by user id sys user token entity.

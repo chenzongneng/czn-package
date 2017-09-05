@@ -17,7 +17,7 @@ $(function () {
             {label: '手机号', name: 'mobile', width: 80},
             {
                 label: '是否管理员', name: 'admin', width: 80, formatter: function (value, options, row) {
-                return value === 1 ? "是":"否";
+                return value === 1 ? "是" : "否";
             }
             },
             {
@@ -74,21 +74,21 @@ var ztree;
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        searchName:null,
+        searchName: null,
         showList: true,
         title: null,
         roleList: {},
         user: {
-            username:null,
-            password:null,
-            email:null,
-            mobile:null,
-            status:null,
-            admin:null
+            username: null,
+            password: null,
+            email: null,
+            mobile: null,
+            status: null,
+            admin: null
         },
-        isAdmin:{
-            selectedValue:"0",
-            options:[{text: "是",value: "1"},{text:"否",value: "0"}]
+        isAdmin: {
+            selectedValue: "0",
+            options: [{text: "是", value: "1"}, {text: "否", value: "0"}]
         }
     },
     methods: {
@@ -100,14 +100,14 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             //vm.roleList = {};
-            vm.user =  {
-                userId:null,
-                username:null,
-                password:null,
-                email:null,
-                mobile:null,
-                status:1,
-                admin:null
+            vm.user = {
+                userId: null,
+                username: null,
+                password: null,
+                email: null,
+                mobile: null,
+                status: 1,
+                admin: null
             };
             vm.isAdmin.selectedValue = "0";
             //获取角色信息
@@ -157,9 +157,9 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "v1.0/user?userIds="+userIds.toString(),
+                        url: baseURL + "v1.0/user?userIds=" + userIds.toString(),
                         contentType: "application/json",
-                        dataType:"",
+                        dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
                             vm.reload();
@@ -172,28 +172,28 @@ var vm = new Vue({
                 });
         },
         saveOrUpdate: function () {
-            if(!vm.checkValue()){
+            if (!vm.checkValue()) {
                 return;
             }
-            var url = "v1.0/user" ;
+            var url = "v1.0/user";
             $.ajax({
                 type: addOrUpdate === 0 ? "POST" : "PUT",
                 url: baseURL + url,
                 contentType: "application/json",
                 data: JSON.stringify(vm.user),
-                dataType:"",
+                dataType: "",
                 success: function () {
                     vm.reload();
                     swal("操作成功!", "", "success");
                 },
-                error:function (response) {
+                error: function (response) {
                     swal(response.responseJSON.errorMessage, "", "error");
                 }
             });
         },
         getUser: function (userId) {
             $.get(baseURL + "v1.0/user/" + userId, function (response) {
-                if(response){
+                if (response) {
                     vm.user.userId = response.userId;
                     vm.user.username = response.username;
                     vm.user.password = null;
@@ -240,36 +240,69 @@ var vm = new Vue({
             }).trigger("reloadGrid");
         },
         // 是否管理员的下拉列表
-        selectAdmin:function () {
+        selectAdmin: function () {
             vm.user.admin = vm.isAdmin.selectedValue;
         },
-        checkValue:function () {
+        checkValue: function () {
             var emailReg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
             var telReg = /^1[34578]\d{9}$/;
-            var chineseReg = /^[\u4e00-\u9fa5]{0,}$/;
-            if(!vm.user.username){
-                swal("用户名不能为空!", "", "error");
-                return false;
-            }else if(chineseReg.test(vm.user.username)){
-                swal("用户名不能为中文!", "", "error");
+            if(!vm.checkInput(vm.user.username,'用户名')){
                 return false;
             }
-            if(!vm.user.password && addOrUpdate === 0){
-                swal("密码不能为空!", "", "error");
-                return false;
-            }else if(chineseReg.test(vm.user.password)){
-                swal("密码不能为中文!", "", "error");
+            if(!vm.checkInput(vm.user.password,'密码')){
                 return false;
             }
-            if(vm.user.email && !emailReg.test(vm.user.email)){
-                swal("邮箱格式不正确!", "", "error");
+            if (vm.user.email && !emailReg.test(vm.user.email)) {
+                swal("邮箱格式不正确!", "", "warning");
                 return false;
             }
-            if(vm.user.mobile && !telReg.test(vm.user.mobile)){
-                swal("电话号码格式不正确!", "", "error");
+            if (vm.user.mobile && !telReg.test(vm.user.mobile)) {
+                swal("电话号码格式不正确!", "", "warning");
                 return false;
             }
-           return true;
+            return true;
+        },
+        checkInput: function (value,name) {
+            var chineseReg = /^[\u4e00-\u9fa5]{0,}$/; // 中文正则
+            var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
+
+            if (!value) {
+                swal({
+                    title: name+'不能为空！',
+                    type: 'warning',
+                    confirmButtonText: '确定',
+                    allowOutsideClick: false
+                });
+                return false;
+            }
+            if (chineseReg.test(value)) {
+                swal({
+                    title: name+'不能为中文！',
+                    type: 'warning',
+                    confirmButtonText: '确定',
+                    allowOutsideClick: false
+                });
+                return false;
+            }
+            if (!specialReg.test(value)) {
+                swal({
+                    title: name+'只能使用英文、数字、下划线或者连字符！',
+                    type: 'warning',
+                    confirmButtonText: '确定',
+                    allowOutsideClick: false
+                });
+                return false;
+            }
+            if (value.length < 4 || value.length > 20) {
+                swal({
+                    title: name+'的长度只能在4-20！',
+                    type: 'warning',
+                    confirmButtonText: '确定',
+                    allowOutsideClick: false
+                });
+                return false;
+            }
+            return true;
         }
     }
 });
