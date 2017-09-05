@@ -155,6 +155,9 @@ public class SysLoginController {
         if (!userEntity.getPassword().equals(new Sha256Hash(user.getPassword(), userEntity.getSalt()).toHex())) {
             return Result.error("账号或密码不正确");
         }
+        if(userEntity.getAdmin() != 1){
+            return Result.error("没有权限登录该系统");
+        }
         //账号锁定
         if (userEntity.getStatus() == 0) {
             return Result.error("账号已被锁定,请联系管理员");

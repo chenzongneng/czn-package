@@ -130,6 +130,33 @@ public class SysUserEntity implements Serializable {
 	private Long roleId;
 
 	/**
+	 * The Admin.
+	 *
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	private Integer admin;
+
+	/**
+	 * Return the IsAdmin
+	 *
+	 * @return property value of isAdmin
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	public Integer getAdmin() {
+		return admin;
+	}
+
+	/**
+	 * Set the IsAdmin
+	 *
+	 * @param isAdmin value to be assigned to property isAdmin
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	public void setAdmin(Integer isAdmin) {
+		this.admin = isAdmin;
+	}
+
+	/**
 	 * 设置：
 	 * @param userId  the id
 	 */
