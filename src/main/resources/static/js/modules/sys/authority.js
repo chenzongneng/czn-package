@@ -10,9 +10,9 @@ $(function () {
         url: baseURL + 'v1.0/userRoles',
         datatype: "json",
         colModel: [
-            {label: '用户ID', name: 'userId', index: "user_id", width: 45, key: true},
-            {label: '用户名称', name: 'userName', index: "user_name", width: 75},
-            {label: '拥有权限', name: 'roles', width: 75},
+            {label: '用户ID', name: 'userId', index: "user_id", width: 20, key: true},
+            {label: '用户名称', name: 'userName', index: "user_name", width: 35},
+            {label: '拥有权限', name: 'roles', width: 100}
         ],
         viewrecords: true,
         height: 385,
@@ -53,13 +53,15 @@ var vm = new Vue({
         userList:{
             selectedUser:"",
             options: []
-        }
+        },
+        userNameOrList:""
     },
     methods: {
         query: function () {
             vm.reload();
         },
         add: function () {
+            vm.userNameOrList = "用户列表";
             vm.showList = false;
             addOrUpdate = 0;
             vm.title = "新增";
@@ -71,6 +73,7 @@ var vm = new Vue({
             $("#userListSelect").removeAttr("disabled");  // 用户可选
         },
         update: function () {
+            vm.userNameOrList = "用户名称";
             var userId = getSelectedRow();
             if (userId == null) {
                 return;
