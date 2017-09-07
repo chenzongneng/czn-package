@@ -136,7 +136,7 @@ public class SysLoginController {
      * @since garnet-core-be-fe 1.0.0
      */
     @RequestMapping(value = "/sys/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, Object> login(@RequestBody UserLoginEntity user) throws IOException {
+    public Map<String, Object> login(@RequestParam(value = "loginFrom") String loginFrom, @RequestBody UserLoginEntity user) throws IOException {
         //String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
        /* String kaptcha = (String) request.getSession().getAttribute(
                 Constants.KAPTCHA_SESSION_KEY);*/
@@ -148,15 +148,17 @@ public class SysLoginController {
         //用户信息
         SysUserEntity userEntity = sysUserService.queryByUserName(user.getUsername());
         //账号不存在
-        if(userEntity == null){
+        if (userEntity == null) {
             return Result.error("账号不存在");
         }
         //账号用户名、密码错误
         if (!userEntity.getPassword().equals(new Sha256Hash(user.getPassword(), userEntity.getSalt()).toHex())) {
             return Result.error("账号或密码不正确");
         }
-        if(userEntity.getAdmin() != 1){
-            return Result.error("没有权限登录该系统");
+        if ("garnet".equals(loginFrom)) {
+            if (userEntity.getAdmin() != 1) {
+                return Result.error("没有权限登录该系统");
+            }
         }
         //账号锁定
         if (userEntity.getStatus() == 0) {
