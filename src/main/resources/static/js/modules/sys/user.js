@@ -86,6 +86,7 @@ var vm = new Vue({
             status: null,
             admin: null
         },
+        currentUser: {},
         isAdmin: {
             selectedValue: "0",
             options: [{text: "是", value: "1"}, {text: "否", value: "0"}]
@@ -145,6 +146,11 @@ var vm = new Vue({
             if (userIds == null) {
                 return;
             }
+            console.log('userIds type  = ' + typeof userIds);
+            if (userIds.toString().indexOf(vm.currentUser.userId) >= 0) {
+                swal("您不能删除自己!", "", "error");
+                return;
+            }
             swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
@@ -175,6 +181,45 @@ var vm = new Vue({
             if (!vm.checkValue()) {
                 return;
             }
+            if (addOrUpdate === 0) {
+                vm.doUpInsert();
+            } else {
+                if ((vm.user.userId == vm.currentUser.userId && vm.currentUser.admin == 1 && vm.user.admin == 0) ||
+                    (vm.user.userId == vm.currentUser.userId && vm.currentUser.status == 1 && vm.user.status == 0)) {
+                    swal({
+                            title: "确定要更改吗？",
+                            text: "您已经更改了自己的权限，将会退出该系统",
+                            type: "warning",
+                            showCancelButton: true,
+                            closeOnConfirm: false,
+                            confirmButtonText: "确认",
+                            cancelButtonText: "取消",
+                            confirmButtonColor: "#DD6B55"
+                        },
+                        function () {
+                            var url = "v1.0/user";
+                            $.ajax({
+                                type: addOrUpdate === 0 ? "POST" : "PUT",
+                                url: baseURL + url,
+                                contentType: "application/json",
+                                data: JSON.stringify(vm.user),
+                                dataType: "",
+                                success: function () {
+                                    localStorage.removeItem("garnetToken");
+                                    location.href = baseURL + 'login.html';
+                                },
+                                error: function (response) {
+                                    swal(response.responseJSON.errorMessage, "", "error");
+                                }
+                            });
+                        });
+                }else{
+                    vm.doUpInsert();
+                }
+            }
+
+        },
+        doUpInsert: function () {
             var url = "v1.0/user";
             $.ajax({
                 type: addOrUpdate === 0 ? "POST" : "PUT",
@@ -208,6 +253,13 @@ var vm = new Vue({
         getRoleList: function () {
             $.get(baseURL + "sys/role/select", function (r) {
                 vm.roleList = r.list;
+            });
+        },
+        /** 查询用户信息 */
+        getCurrentUser: function () {
+            $.getJSON(baseURL + "sys/user/info", function (response) {
+                vm.currentUser = response.user;
+                console.log(vm.currentUser);
             });
         },
         deptTree: function () {
@@ -246,10 +298,10 @@ var vm = new Vue({
         checkValue: function () {
             var emailReg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
             var telReg = /^1[34578]\d{9}$/;
-            if(!vm.checkInput(vm.user.username,'用户名')){
+            if (!vm.checkInput(vm.user.username, '用户名', false)) {
                 return false;
             }
-            if(!vm.checkInput(vm.user.password,'密码')){
+            if (!vm.checkInput(vm.user.password, '密码', true)) {
                 return false;
             }
             if (vm.user.email && !emailReg.test(vm.user.email)) {
@@ -262,47 +314,52 @@ var vm = new Vue({
             }
             return true;
         },
-        checkInput: function (value,name) {
+        checkInput: function (value, name, isPassword) {
             var chineseReg = /^[\u4e00-\u9fa5]{0,}$/; // 中文正则
             var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
 
-            if (!value) {
-                swal({
-                    title: name+'不能为空！',
-                    type: 'warning',
-                    confirmButtonText: '确定',
-                    allowOutsideClick: false
-                });
-                return false;
-            }
-            if (chineseReg.test(value)) {
-                swal({
-                    title: name+'不能为中文！',
-                    type: 'warning',
-                    confirmButtonText: '确定',
-                    allowOutsideClick: false
-                });
-                return false;
-            }
-            if (!specialReg.test(value)) {
-                swal({
-                    title: name+'只能使用英文、数字、下划线或者连字符！',
-                    type: 'warning',
-                    confirmButtonText: '确定',
-                    allowOutsideClick: false
-                });
-                return false;
-            }
-            if (value.length < 4 || value.length > 20) {
-                swal({
-                    title: name+'的长度只能在4-20！',
-                    type: 'warning',
-                    confirmButtonText: '确定',
-                    allowOutsideClick: false
-                });
-                return false;
+            if (!(isPassword && addOrUpdate === 1)) {
+                if (!value) {
+                    swal({
+                        title: name + '不能为空！',
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
+                if (chineseReg.test(value)) {
+                    swal({
+                        title: name + '不能为中文！',
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
+                if (!specialReg.test(value)) {
+                    swal({
+                        title: name + '只能使用英文、数字、下划线或者连字符！',
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
+                if (value.length < 4 || value.length > 20) {
+                    swal({
+                        title: name + '的长度只能在4-20！',
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
             }
             return true;
         }
+    },
+    created: function () {
+        this.getCurrentUser();
     }
 });
