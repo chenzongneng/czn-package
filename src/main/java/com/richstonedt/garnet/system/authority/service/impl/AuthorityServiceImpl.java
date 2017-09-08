@@ -176,6 +176,7 @@ public class AuthorityServiceImpl implements AuthorityService {
                 for(User user : allUsers){
                     if(user.getUserId().equals(userId)){
                         allUsers.remove(user);
+                        break;
                     }
                 }
             }

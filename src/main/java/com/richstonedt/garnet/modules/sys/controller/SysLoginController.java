@@ -181,9 +181,15 @@ public class SysLoginController {
     private String createToken(Integer userId) {
         User user = userService.getUserById(userId);
         List<Integer> roleIdList = authorityService.getRoleIdsByUserId(userId);
+        StringBuilder sb = new StringBuilder();
+        if(!CollectionUtils.isEmpty(roleIdList)){
+            for(Integer id: roleIdList){
+                sb = sb.append(id+",");
+            }
+        }
         String roleIds = "";
-        if (!CollectionUtils.isEmpty(roleIdList)) {
-            roleIds = roleIdList.toString().replace("[", "").replace("]", "");
+        if(sb.length() >= 2){
+            roleIds = sb.substring(0,sb.length()-1);
         }
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
