@@ -144,6 +144,22 @@ public class AuthorityController {
     }
 
     /**
+     * Get No Role Users
+     *
+     * @return the Response Entity
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @RequestMapping(value = "/distinctUserList")
+    public ResponseEntity<?> getNoRoleUsers() {
+        try {
+            List<User> results = authorityService.getNoRoleUsers();
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Throwable t) {
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
      * Gets role ids by user id.
      *
      * @param userId the user id

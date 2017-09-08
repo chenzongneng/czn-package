@@ -146,8 +146,7 @@ var vm = new Vue({
             if (userIds == null) {
                 return;
             }
-            console.log('userIds type  = ' + typeof userIds);
-            if (userIds.toString().indexOf(vm.currentUser.userId) >= 0) {
+            if(userIds.includes(vm.currentUser.userId.toString())){
                 swal("您不能删除自己!", "", "error");
                 return;
             }

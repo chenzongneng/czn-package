@@ -13,6 +13,8 @@ import com.richstonedt.garnet.system.authority.entity.Authority;
 import com.richstonedt.garnet.system.authority.entity.viewModel.UserRoles;
 import com.richstonedt.garnet.system.authority.service.AuthorityService;
 import com.richstonedt.garnet.system.role.service.RoleService;
+import com.richstonedt.garnet.system.user.entity.User;
+import com.richstonedt.garnet.system.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -58,6 +60,14 @@ public class AuthorityServiceImpl implements AuthorityService {
      */
     @Autowired
     private SysUserService userService;
+
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Autowired
+    private UserService userService2;
 
     /**
      * Gets user roles list.
@@ -149,6 +159,28 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }
         return results;
+    }
+
+    /**
+     * Gets no role users.
+     *
+     * @return the no role users
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public List<User> getNoRoleUsers() {
+        List<User> allUsers = userService2.getAllUsers();
+        List<Integer> userIds = authorityDao.getDistinctUserId();
+        if(!CollectionUtils.isEmpty(userIds)){
+            for(Integer userId : userIds){
+                for(User user : allUsers){
+                    if(user.getUserId().equals(userId)){
+                        allUsers.remove(user);
+                    }
+                }
+            }
+        }
+        return allUsers;
     }
 
     /**

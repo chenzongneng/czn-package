@@ -69,7 +69,7 @@ var vm = new Vue({
             vm.userList.selectedUser = "";
             vm.userList.options = [];
             vm.selectedRoleIds = [];
-            vm.getAllUsers();
+            vm.getDistinctUserList();
             $("#userListSelect").removeAttr("disabled");  // 用户可选
         },
         update: function () {
@@ -160,6 +160,13 @@ var vm = new Vue({
         },
         getAllUsers:function () {
             $.get(baseURL + "v1.0/userList", function (response) {
+                $.each(response,function(index,item){
+                    vm.userList.options.push(item);
+                })
+            });
+        },
+        getDistinctUserList:function () {
+            $.get(baseURL + "v1.0/distinctUserList", function (response) {
                 $.each(response,function(index,item){
                     vm.userList.options.push(item);
                 })

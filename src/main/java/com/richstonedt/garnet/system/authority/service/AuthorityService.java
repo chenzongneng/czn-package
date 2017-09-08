@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.system.authority.service;
 
 import com.richstonedt.garnet.system.authority.entity.viewModel.UserRoles;
+import com.richstonedt.garnet.system.user.entity.User;
 
 import java.util.List;
 
@@ -65,4 +66,12 @@ public interface AuthorityService {
      * @since garnet-core-be-fe 1.0.0
      */
     List<Integer> getRoleIdsByUserId(Integer userId);
+
+    /**
+     * Gets no role users.
+     *
+     * @return the no role users
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<User> getNoRoleUsers();
 }
