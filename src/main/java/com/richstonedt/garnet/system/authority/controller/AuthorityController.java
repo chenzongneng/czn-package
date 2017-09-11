@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.system.authority.controller;
 
 import com.richstonedt.garnet.common.utils.GarnetUtils;
+import com.richstonedt.garnet.common.utils.PageUtils;
 import com.richstonedt.garnet.system.authority.entity.viewModel.UserRoles;
 import com.richstonedt.garnet.system.authority.service.AuthorityService;
 import com.richstonedt.garnet.system.user.entity.User;
@@ -59,10 +60,12 @@ public class AuthorityController {
      */
     @RequestMapping(value = "/userRoles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUserRoles(
+            @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit,
             @RequestParam(value = "searchName", required = false) String searchName) {
         try {
-            List<UserRoles> results = authorityService.getUserRolesList(searchName);
-            return new ResponseEntity<>(results, HttpStatus.OK);
+            List<UserRoles> results = authorityService.getUserRolesList(page, limit,searchName);
+            PageUtils pageUtils = new PageUtils(results, authorityService.getUserCount(), limit, page);
+            return new ResponseEntity<>(pageUtils, HttpStatus.OK);
         } catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }

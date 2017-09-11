@@ -113,4 +113,8 @@
             (#{userId},1);
     </insert>
 
+    <select id="getUserCount" resultType="int">
+        select count(*) from gar_sys_user;
+    </select>
+
 </mapper>

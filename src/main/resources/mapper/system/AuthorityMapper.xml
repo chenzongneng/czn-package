@@ -10,7 +10,10 @@
 <mapper namespace="com.richstonedt.garnet.system.authority.dao.AuthorityDao">
 
     <select id="getDistinctUserId" resultType="java.lang.Integer">
-        SELECT DISTINCT user_id FROM gar_authority ORDER BY user_id ASC ;
+        SELECT DISTINCT user_id FROM gar_authority ORDER BY user_id ASC
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>;
     </select>
 
     <select id="getAuthoritiesByUserId" parameterType="java.lang.Integer" resultType="com.richstonedt.garnet.system.authority.entity.Authority">
@@ -32,5 +35,8 @@
         </where>
     </delete>
 
+    <select id="getAuthorCount" resultType="int">
+        SELECT count(DISTINCT user_id) FROM gar_authority;
+    </select>
 
  </mapper>

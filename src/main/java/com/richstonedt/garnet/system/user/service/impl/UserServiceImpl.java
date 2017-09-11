@@ -156,4 +156,15 @@ public class UserServiceImpl implements UserService{
         }
         userDao.updatePassword(userId,new Sha256Hash(newPassword,user.getSalt()).toHex());
     }
+
+    /**
+     * Gets user count.
+     *
+     * @return the user count
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public int getUserCount() {
+        return userDao.getUserCount();
+    }
 }

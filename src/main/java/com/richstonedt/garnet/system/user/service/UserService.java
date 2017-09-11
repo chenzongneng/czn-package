@@ -84,4 +84,12 @@ public interface UserService {
      * @since garnet-core-be-fe 1.0.0
      */
     void changePassword(Integer userId,String password,String newPassword);
+
+    /**
+     * Gets user count.
+     *
+     * @return the user count
+     * @since garnet-core-be-fe 1.0.0
+     */
+    int getUserCount();
 }

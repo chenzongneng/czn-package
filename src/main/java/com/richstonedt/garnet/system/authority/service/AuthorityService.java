@@ -27,10 +27,13 @@ public interface AuthorityService {
     /**
      * Gets user roles list.
      *
+     * @param page       the page
+     * @param limit      the limit
+     * @param searchName the search name
      * @return the user roles list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<UserRoles> getUserRolesList(String searchName);
+    List<UserRoles> getUserRolesList(Integer page,Integer limit,String searchName);
 
     /**
      * Save authority.
@@ -74,4 +77,12 @@ public interface AuthorityService {
      * @since garnet-core-be-fe 1.0.0
      */
     List<User> getNoRoleUsers();
+
+    /**
+     * Gets user count.
+     *
+     * @return the user count
+     * @since garnet-core-be-fe 1.0.0
+     */
+    int getUserCount();
 }

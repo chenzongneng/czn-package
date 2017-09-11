@@ -33,7 +33,7 @@ public interface AuthorityDao {
      * @return the distinct user id
      * @since garnet-core-be-fe 1.0.0
      */
-    List<Integer> getDistinctUserId();
+    List<Integer> getDistinctUserId(@Param(value = "limit") Integer limit,@Param(value = "offset") Integer offset);
 
     /**
      * Gets authorities by user id.
@@ -68,4 +68,12 @@ public interface AuthorityDao {
      * @since garnet-core-be-fe 1.0.0
      */
     void deleteAuthorityByUserId(@Param(value = "userId") Integer userId);
+
+    /**
+     * Gets user count.
+     *
+     * @return the user count
+     * @since garnet-core-be-fe 1.0.0
+     */
+    int getAuthorCount();
 }

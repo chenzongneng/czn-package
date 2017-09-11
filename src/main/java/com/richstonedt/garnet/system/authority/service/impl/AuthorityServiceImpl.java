@@ -76,10 +76,11 @@ public class AuthorityServiceImpl implements AuthorityService {
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public List<UserRoles> getUserRolesList(String searchName) {
+    public List<UserRoles> getUserRolesList(Integer page,Integer limit,String searchName) {
+        int offset = (page - 1) * limit;
         List<UserRoles> finalResult = new ArrayList<>();
         if (StringUtils.isEmpty(searchName)) {
-            List<Integer> userIds = authorityDao.getDistinctUserId();
+            List<Integer> userIds = authorityDao.getDistinctUserId(limit,offset);
             if (!CollectionUtils.isEmpty(userIds)) {
                 for (Integer userId : userIds) {
                     finalResult.add(getUserRolesByUserId(userId));
@@ -170,7 +171,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     public List<User> getNoRoleUsers() {
         List<User> allUsers = userService2.getAllUsers();
-        List<Integer> userIds = authorityDao.getDistinctUserId();
+        List<Integer> userIds = authorityDao.getDistinctUserId(null,null);
         if(!CollectionUtils.isEmpty(userIds)){
             for(Integer userId : userIds){
                 for(User user : allUsers){
@@ -182,6 +183,17 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }
         return allUsers;
+    }
+
+    /**
+     * Gets user count.
+     *
+     * @return the user count
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public int getUserCount() {
+        return authorityDao.getAuthorCount();
     }
 
     /**

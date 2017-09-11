@@ -113,4 +113,12 @@ public interface UserDao {
      * @since garnet-core-be-fe 1.0.0
      */
     void saveRole(@Param(value = "userId")Integer userId);
+
+    /**
+     * Gets user count.
+     *
+     * @return the user count
+     * @since garnet-core-be-fe 1.0.0
+     */
+    int getUserCount();
 }

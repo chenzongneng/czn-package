@@ -54,7 +54,7 @@ public class UserController {
             @RequestParam(value = "searchName", required = false) String searchName) {
         try {
             List<User> results = userService.getUserList(page, limit, searchName);
-            int totalCount = results.size();
+            int totalCount = userService.getUserCount();
             PageUtils pageUtils = new PageUtils(results, totalCount, limit, page);
             return new ResponseEntity<>(pageUtils, HttpStatus.OK);
         } catch (Throwable t) {
