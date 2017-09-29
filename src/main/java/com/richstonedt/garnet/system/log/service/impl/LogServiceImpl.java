@@ -61,4 +61,16 @@ public class LogServiceImpl implements LogService {
     public int getLogsCount() {
         return logDao.getLogsCount();
     }
+
+    /**
+     * Gets log by id.
+     *
+     * @param id the id
+     * @return the log by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public LogEntity getLogById(Integer id) {
+        return logDao.getLogById(id);
+    }
 }

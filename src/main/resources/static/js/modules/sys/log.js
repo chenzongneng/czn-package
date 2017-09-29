@@ -6,17 +6,17 @@
 
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/log/list',
+        url: baseURL + 'v1.0/logs',
         datatype: "json",
         colModel: [
-            {label: 'id', name: 'id', width: 30, key: true},
-            {label: '用户名', name: 'username', width: 50},
-            {label: '用户操作', name: 'operation', width: 70},
-            {label: '请求方法', name: 'method', width: 150},
-            {label: '请求参数', name: 'params', width: 80},
-            {label: '执行时长(毫秒)', name: 'time', width: 80},
-            {label: 'IP地址', name: 'ip', width: 70},
-            {label: '创建时间', name: 'createDate', width: 90}
+            {label: 'ID', name: 'id', width: 20, key: true},
+            {label: '用户名', name: 'userName', width: 40},
+            {label: '用户操作', name: 'operation', width: 80},
+            {label: '请求方法', name: 'method', width: 35},
+            {label: '请求URL', name: 'url', width: 90},
+            {label: 'IP地址', name: 'ip', width: 50},
+            {label: '执行SQL', name: 'sql', width: 90},
+            {label: '请求时间', name: 'createdTime', width: 70}
         ],
         viewrecords: true,
         height: 385,
@@ -28,10 +28,10 @@ $(function () {
         multiselect: false,
         pager: "#jqGridPager",
         jsonReader: {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
+            root: "list",
+            page: "currPage",
+            total: "totalPage",
+            records: "totalCount"
         },
         prmNames: {
             page: "page",
@@ -48,20 +48,68 @@ $(function () {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        q: {
-            key: null
+        showList: true,
+        searchName: null,
+        title: null,
+        log:{
+            id: null,
+            userName: null,
+            operation: null,
+            method: null,
+            url: null,
+            ip: null,
+            sql: null,
+            createdTime: null
         }
     },
     methods: {
         query: function () {
             vm.reload();
         },
+        detail: function () {
+            var logId = getSelectedRow();
+            console.log(">>>>>>>"+logId);
+            if (logId == null) {
+                return;
+            }
+            vm.showList = false;
+            vm.title = "详情";
+
+            vm.getLogDetail(logId);
+        },
+        getLogDetail: function (id) {
+            $.get(baseURL + "v1.0/log/"+id, function (response) {
+                vm.log.id = response.id;
+                vm.log.userName = response.userName;
+                vm.log.operation =  response.operation;
+                vm.log.method = response.method;
+                vm.log.url =  response.url;
+                vm.log.ip =  response.ip;
+                vm.log.sql =  vm.formatSql(response.sql);
+                vm.log.createdTime =  response.createdTime;
+            });
+        },
+        formatSql: function (sql) {
+            var finalSql = "";
+            var sqlArray = sql.split(";");
+            for(var i = 0; i < sqlArray.length; i++){
+                if(i != sqlArray.length - 1){
+                    finalSql += sqlArray[i] + ";<br>";
+                }else{
+                    finalSql += sqlArray[i];
+                }
+            }
+            return finalSql;
+         },
         reload: function (event) {
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'key': vm.q.key},
+                postData: {searchName: vm.searchName},
                 page: page
             }).trigger("reloadGrid");
+        },
+        back: function () {
+            vm.showList = true;
         }
     }
 });

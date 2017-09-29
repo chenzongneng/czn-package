@@ -26,4 +26,11 @@
         SELECT count(1) FROM gar_log;
     </select>
 
+    <select id="getLogById" resultType="com.richstonedt.garnet.system.log.entity.LogEntity">
+        SELECT * FROM gar_log
+        <where>
+            id = #{id};
+        </where>
+    </select>
+
  </mapper>

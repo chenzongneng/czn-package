@@ -41,4 +41,13 @@ public interface LogService {
      * @since garnet-core-be-fe 1.0.0
      */
     int getLogsCount();
+
+    /**
+     * Gets log by id.
+     *
+     * @param id the id
+     * @return the log by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    LogEntity getLogById(Integer id);
 }

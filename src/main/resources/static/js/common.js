@@ -60,7 +60,7 @@ function getSelectedRow() {
         swal("只能选择一条记录!", "", "warning");
         return;
     }
-    return selectedIDs[0];
+    return rowKey;
 }
 
 // 选择多条记录

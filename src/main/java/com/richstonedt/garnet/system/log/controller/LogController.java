@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,6 +59,23 @@ public class LogController {
             PageUtils pageUtils = new PageUtils(results, logService.getLogsCount(), limit, page);
             return new ResponseEntity<>(pageUtils, HttpStatus.OK);
         } catch (Throwable t) {
+            return GarnetUtils.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Gets one log.
+     *
+     * @param id the id
+     * @return the one log
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/log/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getOneLog(@PathVariable(value = "id") Integer id){
+        try{
+            LogEntity log = logService.getLogById(id);
+            return new ResponseEntity<>(log, HttpStatus.OK);
+        }catch (Throwable t) {
             return GarnetUtils.newResponseEntity(t);
         }
     }

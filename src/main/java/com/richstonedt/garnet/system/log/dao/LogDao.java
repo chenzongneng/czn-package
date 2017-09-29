@@ -42,4 +42,13 @@ public interface LogDao {
      * @since garnet-core-be-fe 1.0.0
      */
     int getLogsCount();
+
+    /**
+     * Gets log by id.
+     *
+     * @param id the id
+     * @return the log by id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    LogEntity getLogById(@Param(value = "id") Integer id);
 }
