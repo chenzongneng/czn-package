@@ -51,6 +51,7 @@ var vm = new Vue({
         showList: true,
         searchName: null,
         title: null,
+        sql: [],
         log:{
             id: null,
             userName: null,
@@ -78,6 +79,7 @@ var vm = new Vue({
             vm.getLogDetail(logId);
         },
         getLogDetail: function (id) {
+            vm.sql = [];
             $.get(baseURL + "v1.0/log/"+id, function (response) {
                 vm.log.id = response.id;
                 vm.log.userName = response.userName;
@@ -85,21 +87,15 @@ var vm = new Vue({
                 vm.log.method = response.method;
                 vm.log.url =  response.url;
                 vm.log.ip =  response.ip;
-                vm.log.sql =  vm.formatSql(response.sql);
+                vm.formatSql(response.sql);
                 vm.log.createdTime =  response.createdTime;
             });
         },
         formatSql: function (sql) {
-            var finalSql = "";
             var sqlArray = sql.split(";");
             for(var i = 0; i < sqlArray.length; i++){
-                if(i != sqlArray.length - 1){
-                    finalSql += sqlArray[i] + ";<br>";
-                }else{
-                    finalSql += sqlArray[i];
-                }
+                vm.sql.push(sqlArray[i]);
             }
-            return finalSql;
          },
         reload: function (event) {
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');

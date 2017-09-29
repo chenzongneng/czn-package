@@ -47,50 +47,52 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">ID</div>
-                <div class="col-sm-10">
-                    <span>{{log.id}}</span>
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>ID:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
+                    {{log.id}}
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">用户名</div>
-                <div class="col-sm-10">
-                    <span>{{log.userName}}</span>
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>用户名:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
+                    {{log.userName}}
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">用户操作</div>
-                <div class="col-sm-10">
-                    <span>{{log.operation}}</span>
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>用户操作:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
+                    {{log.operation}}
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">请求方法</div>
-                <div class="col-sm-10">
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>请求方法:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
                     <span>{{log.method}}</span>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">请求URL</div>
-                <div class="col-sm-10">
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>请求URL:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
                     <span>{{log.url}}</span>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">IP地址</div>
-                <div class="col-sm-10">
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>IP地址:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
                     <span>{{log.ip}}</span>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">执行SQL</div>
-                <div class="col-sm-10">
-                    <span>{{log.sql}}</span>
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>执行SQL:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
+                    <span v-for="item in sql">
+                        {{item}};<br /><br />
+                    </span>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">请求时间</div>
-                <div class="col-sm-10">
+                <div class="col-sm-2 control-label" style="font-size: 15px"><b>请求时间:</b></div>
+                <div class="col-sm-10" style="margin-top: 7px">
                     <span>{{log.createdTime}}</span>
                 </div>
             </div>
