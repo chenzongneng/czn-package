@@ -119,7 +119,6 @@ var vm = new Vue({
                 });
         },
         saveOrUpdate: function () {
-            console.log(vm.selectedRoleIds);
             if(vm.selectedRoleIds.length == 0){
                 swal("请至少选择一个模块权限!", "", "warning");
                 return;

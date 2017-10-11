@@ -51,7 +51,7 @@ public class LogController {
      * @since garnet-core-be-fe 0.1.0
      */
     @RequestMapping(value = "/logs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getUserRoles(
+    public ResponseEntity<?> getAllLogs(
             @RequestParam(value = "page") int page, @RequestParam(value = "limit") int limit,
             @RequestParam(value = "searchName", required = false) String searchName) {
         try {

@@ -6,6 +6,8 @@
 
 package com.richstonedt.garnet.system.log.config;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.richstonedt.garnet.common.utils.Result;
 import com.richstonedt.garnet.modules.sys.entity.UserLoginEntity;
 import com.richstonedt.garnet.system.log.entity.LogEntity;
@@ -13,11 +15,13 @@ import com.richstonedt.garnet.system.log.entity.OperationEntity;
 import com.richstonedt.garnet.system.log.service.LogOperationService;
 import com.richstonedt.garnet.system.log.service.LogService;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -92,6 +96,36 @@ public class LogAopConfig {
     }
 
     /**
+     * Authority aspect.
+     *
+     * @since gempile-core-cs 1.0.0
+     */
+    @After("execution(* com.richstonedt.garnet.system.authority.controller.AuthorityController.*(..))")
+    public void authorityAspect() {
+        logService.saveLog(getLog());
+    }
+
+    /**
+     * User aspect.
+     *
+     * @since gempile-core-cs 1.0.0
+     */
+    @After("execution(* com.richstonedt.garnet.system.user.controller.UserController.*(..))")
+    public void userAspect() {
+        logService.saveLog(getLog());
+    }
+
+    /**
+     * Log aspect.
+     *
+     * @since gempile-core-cs 1.0.0
+     */
+    @After("execution(* com.richstonedt.garnet.system.log.controller.LogController.getAllLogs(..))")
+    public void logAspect() {
+        logService.saveLog(getLog());
+    }
+
+    /**
      * Get log.
      *
      * @since gempile-core-cs 0.1.0
@@ -102,7 +136,15 @@ public class LogAopConfig {
         ServletRequestAttributes sra = (ServletRequestAttributes) ra;
         HttpServletRequest request = sra.getRequest();
         //get log info
-        String userName = request.getParameter("userName");
+        String gempileToken = request.getHeader("gempileToken");
+        String userName = "";
+        if (!StringUtils.isEmpty(gempileToken)) {
+            try {
+                userName = JWT.decode(gempileToken).getClaim("una").asString();
+            } catch (JWTDecodeException e) {
+                userName = "";
+            }
+        }
         String method = request.getMethod();
         String url = request.getRequestURI();
         String operation = getOperation(method, url);
@@ -141,6 +183,12 @@ public class LogAopConfig {
         String operation;
         if (matchedOperations.size() == 1) {
             operation = matchedOperations.get(0).getOperation();
+        } else if (matchedOperations.size() == 2) {
+            String url1 = matchedOperations.get(0).getUrl();
+            String url2 = matchedOperations.get(1).getUrl();
+            String operation1 = matchedOperations.get(0).getOperation();
+            String operation2 = matchedOperations.get(1).getOperation();
+            operation = url1.contains(url2) ? operation1 : operation2;
         } else {
             operation = "没有匹配到具体操作";
         }
@@ -166,8 +214,8 @@ public class LogAopConfig {
                         resultList.add(formatOneSql(tmpList));
                         tmpList.clear();
                     } else {
-                        if ((value.get(i).contains("Preparing") || value.get(i).contains("Parameters"))
-                                && !value.get(i).contains("gar_operation") && !value.get(i).contains("gar_log")) {
+                        if ((value.get(i).contains("Preparing") || value.get(i).contains("Parameters") ||
+                                (value.get(i).contains("gar_log") && value.get(i).toUpperCase().contains("SELECT"))) && !value.get(i).contains("gar_operation")) {
                             tmpList.add(value.get(i));
                         }
                     }
