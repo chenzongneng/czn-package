@@ -42,6 +42,7 @@ public class LogSQLConfig<E> extends ConsoleAppender<E> {
      */
     @Override
     protected void append(E e) {
+        super.append(e);
         RequestAttributes ra = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes sra = (ServletRequestAttributes) ra;
         HttpServletRequest request = sra.getRequest();
@@ -53,6 +54,5 @@ public class LogSQLConfig<E> extends ConsoleAppender<E> {
         if (le.getLoggerName().contains(LOGGER_CLASS_NAME)) {
             SqlConfig.setSqlWithRequest(le,url+method);
         }
-        super.append(e);
     }
 }
