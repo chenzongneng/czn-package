@@ -73,4 +73,15 @@ public class LogServiceImpl implements LogService {
     public LogEntity getLogById(Integer id) {
         return logDao.getLogById(id);
     }
+
+    /**
+     * Save log.
+     *
+     * @param log the log
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void saveLog(LogEntity log) {
+        logDao.saveLog(log);
+    }
 }

@@ -23,6 +23,9 @@ spring:
     # 指定静态资源的路径
     resources:
         static-locations: classpath:/static/,classpath:/views/
+    aop:
+      auto: true
+      proxy-target-class: false
 #    redis:
 #        open: false  # 是否开启redis缓存  true开启   false关闭
 #        database: 0

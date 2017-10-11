@@ -51,4 +51,12 @@ public interface LogDao {
      * @since garnet-core-be-fe 1.0.0
      */
     LogEntity getLogById(@Param(value = "id") Integer id);
+
+    /**
+     * Save log.
+     *
+     * @param log the log
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void saveLog(LogEntity log);
 }

@@ -112,7 +112,7 @@ public class LogEntity implements Serializable {
      * Return the UserName
      *
      * @return property value of userName
-     * @since garnet-core-be-fe 0.1.0
+     * @since gempile-model 0.1.0
      */
     public String getUserName() {
         return userName;
@@ -122,7 +122,7 @@ public class LogEntity implements Serializable {
      * Set the UserName
      *
      * @param userName value to be assigned to property userName
-     * @since garnet-core-be-fe 0.1.0
+     * @since gempile-model 0.1.0
      */
     public void setUserName(String userName) {
         this.userName = userName;

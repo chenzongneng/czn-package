@@ -50,4 +50,12 @@ public interface LogService {
      * @since garnet-core-be-fe 1.0.0
      */
     LogEntity getLogById(Integer id);
+
+    /**
+     * Save log.
+     *
+     * @param log the log
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void saveLog(LogEntity log);
 }

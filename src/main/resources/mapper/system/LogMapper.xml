@@ -13,7 +13,7 @@
         SELECT * FROM gar_log
         <where>
             <if test="searchName != null and searchName != ''">
-                username like  CONCAT('%',#{searchName},'%')
+                username like CONCAT('%',#{searchName},'%')
             </if>
         </where>
         ORDER BY created_time desc
@@ -23,7 +23,8 @@
     </select>
 
     <select id="getLogsCount" resultType="int">
-        SELECT count(1) FROM gar_log;
+        SELECT count(1)
+        FROM gar_log;
     </select>
 
     <select id="getLogById" resultType="com.richstonedt.garnet.system.log.entity.LogEntity">
@@ -33,4 +34,25 @@
         </where>
     </select>
 
- </mapper>
+    <insert id="saveLog" parameterType="com.richstonedt.garnet.system.log.entity.LogEntity">
+        INSERT INTO gar_log
+        (
+            username,
+            operation,
+            method,
+            url,
+            ip,
+            sql
+        )
+        VALUES
+            (
+                #{userName},
+                #{operation},
+                #{method},
+                #{url},
+                #{ip},
+                #{sql}
+            );
+    </insert>
+
+</mapper>

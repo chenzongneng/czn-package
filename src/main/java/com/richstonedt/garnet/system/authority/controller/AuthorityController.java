@@ -152,7 +152,7 @@ public class AuthorityController {
      * @return the Response Entity
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/distinctUserList")
+    @RequestMapping(value = "/distinctUserList",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getNoRoleUsers() {
         try {
             List<User> results = authorityService.getNoRoleUsers();
@@ -169,7 +169,7 @@ public class AuthorityController {
      * @return the role ids by user id
      * @since garnet-core-be-fe 1.0.0
      */
-    @RequestMapping(value = "/roleIds/{userId}")
+    @RequestMapping(value = "/roleIds/{userId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoleIdsByUserId(
             @PathVariable(value = "userId") Integer userId) {
         try {

@@ -19,18 +19,18 @@
     </appender>-->
 
     <!-- Output to console -->
-    <appender name="console_log_appender" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="console_log_appender" class="com.richstonedt.garnet.system.log.config.LogSQLConfig">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %highlight(%msg) %n</pattern>
         </encoder>
     </appender>
 
     <!--for sql-->
-    <logger name="com.richstonedt.garnet.modules" level="DEBUG"/>
-    <logger name="com.richstonedt.garnet.system" level="DEBUG"/>
+    <!--<logger name="com.richstonedt.garnet.modules" level="DEBUG"/>
+    <logger name="com.richstonedt.garnet.system" level="DEBUG"/>-->
 
     <!-- level and appender -->
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="console_log_appender"/>
         <!--<appender-ref ref="daily_file_log_appender"/>-->
     </root>

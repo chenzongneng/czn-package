@@ -19,8 +19,6 @@ import com.richstonedt.garnet.system.authority.service.AuthorityService;
 import com.richstonedt.garnet.system.user.entity.User;
 import com.richstonedt.garnet.system.user.service.UserService;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -90,10 +88,12 @@ public class SysLoginController {
     @Autowired
     private UserService userService;
 
+    /**
+     * The constant kaptchaMap.
+     *
+     * @since garnet-core-be-fe 1.0.0
+     */
     private static Map<String, String> kaptchaMap = new HashMap<>();
-
-
-    private Logger LOG = LoggerFactory.getLogger(SysLoginController.class);
 
     /**
      * Kaptcha.
@@ -113,9 +113,6 @@ public class SysLoginController {
         //ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
         //request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
         kaptchaMap.put(nowTime, text);
-        LOG.info("set>>>>>>>" + nowTime);
-        LOG.info(kaptchaMap.toString());
-
 
         // transform to byte
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -184,7 +181,7 @@ public class SysLoginController {
         StringBuilder sb = new StringBuilder();
         if(!CollectionUtils.isEmpty(roleIdList)){
             for(Integer id: roleIdList){
-                sb = sb.append(id+",");
+                sb = sb.append(id).append(",");
             }
         }
         String roleIds = "";
