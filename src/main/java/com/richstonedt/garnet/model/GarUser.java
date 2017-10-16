@@ -1,0 +1,319 @@
+/*
+ * 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+ * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
+package com.richstonedt.garnet.model;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * <b><code>GarUser</code></b>
+ * <p>
+ * class_comment
+ * </p>
+ * <b>Create Time:</b> 2017/10/16 17:50
+ *
+ * @author Sun Jinpeng
+ * @version 0.1.0
+ * @since garnet-core-be-fe 0.1.0
+ */
+@ApiModel(value = "用户信息")
+public class GarUser implements Serializable {
+
+    /**
+     * The User id.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "用户ID")
+    private Integer userId;
+
+    /**
+     * The Tenant id.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "租户ID")
+    private Integer tenantId;
+
+    /**
+     * The App id.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "应用ID")
+    private Integer appId;
+
+    /**
+     * The Username.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "用户名")
+    private String username;
+
+    /**
+     * The Password.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "密码")
+    private String password;
+
+    /**
+     * The Salt.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "盐")
+    private String salt;
+
+    /**
+     * The Email.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "邮箱")
+    private String email;
+
+    /**
+     * The Mobile.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "手机号")
+    private String mobile;
+
+    /**
+     * The Status.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "状态  0：禁用   1：正常")
+    private Integer status;
+
+    /**
+     * The Create time.
+     * 
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
+
+    /**
+     * Return the UserId
+     *
+     * @return property value of userId
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+
+    /**
+     * Set the UserId
+     *
+     * @param userId value to be assigned to property userId
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * Return the TenantId
+     *
+     * @return property value of tenantId
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public Integer getTenantId() {
+        return tenantId;
+    }
+
+    /**
+     * Set the TenantId
+     *
+     * @param tenantId value to be assigned to property tenantId
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setTenantId(Integer tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    /**
+     * Return the AppId
+     *
+     * @return property value of appId
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public Integer getAppId() {
+        return appId;
+    }
+
+    /**
+     * Set the AppId
+     *
+     * @param appId value to be assigned to property appId
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setAppId(Integer appId) {
+        this.appId = appId;
+    }
+
+    /**
+     * Return the Username
+     *
+     * @return property value of username
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Set the Username
+     *
+     * @param username value to be assigned to property username
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Return the Password
+     *
+     * @return property value of password
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Set the Password
+     *
+     * @param password value to be assigned to property password
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * Return the Salt
+     *
+     * @return property value of salt
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getSalt() {
+        return salt;
+    }
+
+    /**
+     * Set the Salt
+     *
+     * @param salt value to be assigned to property salt
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    /**
+     * Return the Email
+     *
+     * @return property value of email
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Set the Email
+     *
+     * @param email value to be assigned to property email
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Return the Mobile
+     *
+     * @return property value of mobile
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getMobile() {
+        return mobile;
+    }
+
+    /**
+     * Set the Mobile
+     *
+     * @param mobile value to be assigned to property mobile
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    /**
+     * Return the Status
+     *
+     * @return property value of status
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * Set the Status
+     *
+     * @param status value to be assigned to property status
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * Return the CreateTime
+     *
+     * @return property value of createTime
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * Set the CreateTime
+     *
+     * @param createTime value to be assigned to property createTime
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    /**
+     * To String
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
+}
