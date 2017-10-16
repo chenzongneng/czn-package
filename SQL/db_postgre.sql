@@ -111,31 +111,28 @@ COMMENT ON COLUMN gar_role_dept.role_id IS '角色ID';
 COMMENT ON COLUMN gar_role_dept.dept_id IS '部门ID';
 
 
-DROP TABLE IF EXISTS "public"."gar_user_role";
-CREATE TABLE "public"."gar_user_role" (
-  user_id int4 NOT NULL,
-  role_id int4 NOT NULL
-)
-;
-COMMENT ON COLUMN gar_user_role.role_id IS '角色ID';
-COMMENT ON COLUMN gar_user_role.user_id IS '用户ID';
-
 DROP TABLE IF EXISTS "public"."gar_permission";
 CREATE TABLE "public"."gar_permission" (
   permission_id serial,
   tenant_id int4 NOT NULL,
   app_id int4 NOT NULL,
-  type varchar(50)
+  name VARCHAR(100) NOT NULL,
+  class varchar(255),
+  actions varchar(255),
+  resource varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."gar_permission"."tenant_id" IS '租户ID';
 COMMENT ON COLUMN "public"."gar_permission"."app_id" IS '应用ID';
-COMMENT ON COLUMN "public"."gar_permission"."type" IS '权限类型：menu,resource,operation';
+COMMENT ON COLUMN "public"."gar_permission"."name" IS '这个Permission具体的名称';
+COMMENT ON COLUMN "public"."gar_permission"."class" IS '这个Permission对应的java类';
+COMMENT ON COLUMN "public"."gar_permission"."actions" IS '用户可以在这个资源上的权限列表，譬如read（读，访问），edit（编辑）。当赋予到Privilege时只能选择其中一个';
+COMMENT ON COLUMN "public"."gar_permission"."resource" IS '通过属性来定义该Permission控制的资源';
 
 ALTER TABLE "public"."gar_permission" ADD PRIMARY KEY ("permission_id");
 
 
-DROP TABLE IF EXISTS "public"."gar_menu";
+/*DROP TABLE IF EXISTS "public"."gar_menu";
 CREATE TABLE "public"."gar_menu" (
   menu_id serial,
   parent_menu_id int4,
@@ -190,19 +187,21 @@ COMMENT ON COLUMN "public"."gar_operation"."app_id" IS '应用ID';
 COMMENT ON COLUMN "public"."gar_operation"."tenant_id" IS '租户ID';
 COMMENT ON COLUMN "public"."gar_operation"."name" IS '操作名称';
 
-ALTER TABLE "public"."gar_operation" ADD PRIMARY KEY ("operation_id");
+ALTER TABLE "public"."gar_operation" ADD PRIMARY KEY ("operation_id");*/
 
 
-DROP TABLE IF EXISTS "public"."gar_role_permission";
-CREATE TABLE "public"."gar_role_permission" (
+DROP TABLE IF EXISTS "public"."gar_privilege";
+CREATE TABLE "public"."gar_privilege" (
   role_id int4 NOT NULL  ,
-  permission_id int4 NOT NULL
+  permission_id int4 NOT NULL,
+  action VARCHAR(200)
 )
 ;
-COMMENT ON COLUMN gar_role_permission.permission_id IS '权限ID';
-COMMENT ON COLUMN gar_role_permission.role_id IS '角色ID';
+COMMENT ON COLUMN gar_privilege.permission_id IS '权限ID';
+COMMENT ON COLUMN gar_privilege.role_id IS '角色ID';
+COMMENT ON COLUMN gar_privilege.action IS '对应权限resource上的某个action';
 
-DROP TABLE IF EXISTS "public"."gar_permission_operation";
+/*DROP TABLE IF EXISTS "public"."gar_permission_operation";
 CREATE TABLE "public"."gar_permission_operation" (
   operation_id int4 NOT NULL  ,
   permission_id int4 NOT NULL
@@ -227,7 +226,7 @@ CREATE TABLE "public"."gar_permission_menu" (
 )
 ;
 COMMENT ON COLUMN gar_permission_menu.permission_id IS '权限ID';
-COMMENT ON COLUMN gar_permission_menu.menu_id IS '菜单ID';
+COMMENT ON COLUMN gar_permission_menu.menu_id IS '菜单ID';*/
 
 DROP TABLE IF EXISTS "public"."gar_application";
 CREATE TABLE "public"."gar_application" (
