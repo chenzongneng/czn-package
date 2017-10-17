@@ -25,7 +25,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  *
  * @author sunjinpeng
  * @version 0.1.0
- * @since cmcznm-be 0.1.0
+ * @since garnet-core-be-fe 0.1.0
  */
 @Configuration
 @EnableSwagger2

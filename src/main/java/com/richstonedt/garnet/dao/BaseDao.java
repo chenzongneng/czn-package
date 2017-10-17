@@ -6,6 +6,8 @@
 
 package com.richstonedt.garnet.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -25,33 +27,25 @@ public interface BaseDao<T> {
 	 * Save.
 	 *
 	 * @param t the t
-	 * @since garnet-core-be-fe 1.0.0
-	 */
+     * @since garnet-core-be-fe 0.1.0
+     */
 	void save(T t);
 
 	/**
 	 * Update int.
 	 *
-	 * @param t the t
-	 * @since garnet-core-be-fe 1.0.0
+     * @param t the T
+     * @since garnet-core-be-fe 1.0.0
 	 */
 	void update(T t);
 
 	/**
-	 * Delete int.
-	 *
-	 * @param id the id
-	 * @since garnet-core-be-fe 1.0.0
-	 */
-	void delete(Integer id);
-
-	/**
 	 * Delete batch int.
 	 *
-	 * @param id the id
-	 * @since garnet-core-be-fe 1.0.0
+     * @param ids the id
+     * @since garnet-core-be-fe 1.0.0
 	 */
-	void deleteBatch(List<Integer> id);
+    void deleteBatch(@Param(value = "ids") List<Integer> ids);
 
 	/**
 	 * Query object t.
@@ -60,7 +54,7 @@ public interface BaseDao<T> {
 	 * @return the t
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	T queryObject(Integer id);
+    T queryObject(@Param(value = "id") Integer id);
 
 	/**
 	 * Query total int.
@@ -69,4 +63,12 @@ public interface BaseDao<T> {
 	 * @since garnet-core-be-fe 1.0.0
 	 */
 	int queryTotal();
+
+    /**
+     * Query all list.
+     *
+     * @return the list
+     * @since garnet-core-be-fe 1.0.0
+     */
+    List<T> queryObjects(@Param(value = "searchName") String searchName, @Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
 }
