@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarApplication;
-import com.richstonedt.garnet.service.application.GarApplicationService;
+import com.richstonedt.garnet.service.GarApplicationService;
 import com.richstonedt.garnet.utils.GarnetRsUtils;
 import com.richstonedt.garnet.utils.PageUtils;
 import io.swagger.annotations.*;
@@ -99,20 +99,20 @@ public class GarApplicationController {
     /**
      * Search application response entity.
      *
-     * @param id the id
+     * @param appId the id
      * @return the response entity
      * @since garnet-core-be-fe 0.1.0
      */
-    @RequestMapping(value = "/application/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/application/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询应用", notes = "Get application by id ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarApplication.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> searchApplication(@ApiParam(value = "id", required = true) @PathVariable(value = "id") Integer id) {
+    public ResponseEntity<?> searchApplication(@ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Integer appId) {
         try {
-            return new ResponseEntity<>(applicationService.queryObject(id), HttpStatus.OK);
+            return new ResponseEntity<>(applicationService.queryObject(appId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get application :" + id);
+            LOG.error("Failed to get application :" + appId);
             return GarnetRsUtils.newResponseEntity(t);
         }
     }
@@ -157,12 +157,12 @@ public class GarApplicationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> updateApplications(@ApiParam(value = "application对象") @RequestBody GarApplication application) {
+    public ResponseEntity<?> updateApplication(@ApiParam(value = "application对象") @RequestBody GarApplication application) {
         try {
             applicationService.update(application);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get applications .");
+            LOG.error("Failed to update applications .");
             return GarnetRsUtils.newResponseEntity(t);
         }
     }

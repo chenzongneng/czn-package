@@ -8,6 +8,8 @@ package com.richstonedt.garnet.utils;
 
 import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.config.GarnetServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -29,6 +31,13 @@ import java.util.Map;
  * @since garnet-core-be-fe 0.1.0
  */
 public class GarnetRsUtils {
+
+    /**
+     * The constant LOG.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private static Logger LOG = LoggerFactory.getLogger(GarnetRsUtils.class);
 
     /**
      * New response entity response entity.
@@ -74,7 +83,9 @@ public class GarnetRsUtils {
                 idList.add(Integer.parseInt(ids));
             }
         } catch (NumberFormatException e) {
-            throw new GarnetServiceException("The parameter is error,Please input number! ids = " + ids);
+            String errorMessage = "The parameter is error,Please input number! ids = " + ids;
+            LOG.error(errorMessage);
+            throw new GarnetServiceException(errorMessage);
         }
         return idList;
     }

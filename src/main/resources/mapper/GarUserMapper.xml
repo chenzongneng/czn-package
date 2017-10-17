@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarUserDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarUser">
+        INSERT INTO gar_application
+        (
+            name,
+            company,
+            remark
+        )
+        VALUES
+            (
+                #{name},
+                #{company},
+                #{remark}
+            );
+    </insert>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_application WHERE app_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarApplication">
+        select * from gar_application
+        <where>
+            app_id = #{id};
+        </where>
+    </select>
+
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarApplication">
+        select * from gar_application
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        ORDER BY app_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM gar_application;
+    </select>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarApplication">
+        UPDATE gar_application
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="company != null and company != ''">
+                company = #{company},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark}
+            </if>
+        </set>
+        <where>
+            app_id = #{appId};
+        </where>
+    </update>
+</mapper>

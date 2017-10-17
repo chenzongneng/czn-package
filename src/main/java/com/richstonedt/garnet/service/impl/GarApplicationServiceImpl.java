@@ -4,11 +4,11 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet.service.application.impl;
+package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.model.GarApplication;
-import com.richstonedt.garnet.service.application.GarApplicationService;
+import com.richstonedt.garnet.service.GarApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

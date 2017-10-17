@@ -4,13 +4,12 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet.service.application;
+package com.richstonedt.garnet.service;
 
-import com.richstonedt.garnet.model.GarApplication;
-import com.richstonedt.garnet.service.BaseService;
+import com.richstonedt.garnet.model.GarTenant;
 
 /**
- * <b><code>GarApplicationService</code></b>
+ * <b><code>GarTenantService</code></b>
  * <p>
  * class_comment
  * </p>
@@ -20,5 +19,5 @@ import com.richstonedt.garnet.service.BaseService;
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
-public interface GarApplicationService extends BaseService<GarApplication> {
+public interface GarTenantService extends BaseService<GarTenant> {
 }
