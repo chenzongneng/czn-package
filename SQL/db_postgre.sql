@@ -8,7 +8,6 @@ CREATE TABLE "public"."gar_user" (
   app_id int4 NOT NULL,
   "username" varchar(50) COLLATE "default" NOT NULL,
   "password" varchar(200) COLLATE "default",
-  "salt" varchar(20) COLLATE "default",
   "email" varchar(100) COLLATE "default",
   "mobile" varchar(100) COLLATE "default",
   "status" int4,
@@ -17,7 +16,6 @@ CREATE TABLE "public"."gar_user" (
 ;
 COMMENT ON COLUMN "public"."gar_user"."username" IS '用户名';
 COMMENT ON COLUMN "public"."gar_user"."password" IS '密码';
-COMMENT ON COLUMN "public"."gar_user"."salt" IS '盐';
 COMMENT ON COLUMN "public"."gar_user"."email" IS '邮箱';
 COMMENT ON COLUMN "public"."gar_user"."mobile" IS '手机号';
 COMMENT ON COLUMN "public"."gar_user"."status" IS '状态  0：禁用   1：正常';

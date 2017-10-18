@@ -68,14 +68,6 @@ public class GarUser implements Serializable {
     private String password;
 
     /**
-     * The Salt.
-     * 
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @ApiModelProperty(value = "盐")
-    private String salt;
-
-    /**
      * The Email.
      * 
      * @since garnet-core-be-fe 0.1.0
@@ -205,26 +197,6 @@ public class GarUser implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    /**
-     * Return the Salt
-     *
-     * @return property value of salt
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public String getSalt() {
-        return salt;
-    }
-
-    /**
-     * Set the Salt
-     *
-     * @param salt value to be assigned to property salt
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     /**

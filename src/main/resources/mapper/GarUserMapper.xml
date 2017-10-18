@@ -16,7 +16,6 @@
             app_id,
             username,
             password,
-            salt,
             email,
             mobile,
             status,
@@ -28,7 +27,6 @@
                 #{appId},
                 #{userName},
                 #{password},
-                #{salt},
                 #{email},
                 #{mobile},
                 #{status},
@@ -94,9 +92,6 @@
             </if>
             <if test="password != null and password != ''">
                 password = #{password},
-            </if>
-            <if test="salt != null and salt != ''">
-                salt = #{salt},
             </if>
             <if test="email != null and email != ''">
                 email = #{email},
