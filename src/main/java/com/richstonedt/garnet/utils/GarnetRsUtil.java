@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <b><code>GarnetRsUtils</code></b>
+ * <b><code>GarnetRsUtil</code></b>
  * <p>
  * class_comment
  * </p>
@@ -28,7 +28,7 @@ import java.util.Map;
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
-public class GarnetRsUtils {
+public class GarnetRsUtil {
 
     /**
      * New response entity response entity.

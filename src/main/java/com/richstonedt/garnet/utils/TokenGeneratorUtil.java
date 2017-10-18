@@ -33,7 +33,7 @@ import java.util.UUID;
  * @since garnet-core-be-fe 0.1.0
  */
 @Component
-public class TokenGenerator {
+public class TokenGeneratorUtil {
 
     /**
      * The User service.
@@ -88,7 +88,7 @@ public class TokenGenerator {
      */
     public String createGarnetToken(Integer userId) {
         //生成一个token
-        String token = TokenGenerator.generateValue(UUID.randomUUID().toString());
+        String token = TokenGeneratorUtil.generateValue(UUID.randomUUID().toString());
         Date now = new Date();
         //过期时间
         Date expireTime = new Date(now.getTime() + 60 * 60 * 1000 * 3);

@@ -11,8 +11,8 @@ import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.view.model.GarLoginResult;
 import com.richstonedt.garnet.model.view.model.GarUserLogin;
 import com.richstonedt.garnet.service.GarUserService;
-import com.richstonedt.garnet.utils.GarnetRsUtils;
-import com.richstonedt.garnet.utils.TokenGenerator;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.utils.TokenGeneratorUtil;
 import io.swagger.annotations.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
@@ -76,7 +76,7 @@ public class GarLoginController {
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private TokenGenerator tokenGenerator;
+    private TokenGeneratorUtil tokenGenerator;
 
     /**
      * The constant kaptchaMap.
@@ -126,7 +126,7 @@ public class GarLoginController {
         } catch (Throwable t) {
             LOG.error("Failed to get Kaptcha ");
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -179,7 +179,7 @@ public class GarLoginController {
         } catch (Throwable t) {
             LOG.error("Failed to login");
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * <b><code>PageUtils</code></b>
+ * <b><code>PageUtil</code></b>
  * <p> 分页工具类
  * class_comment
  * </p>
@@ -20,7 +20,7 @@ import java.util.List;
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
-public class PageUtils implements Serializable {
+public class PageUtil implements Serializable {
 
     /**
      * The constant serialVersionUID.
@@ -73,7 +73,7 @@ public class PageUtils implements Serializable {
      * @param currPage   当前页数
      * @since garnet-core-be-fe 1.0.0
      */
-    public PageUtils(List<?> list, int totalCount, int pageSize, int currPage) {
+    public PageUtil(List<?> list, int totalCount, int pageSize, int currPage) {
         this.list = list;
         this.totalCount = totalCount;
         this.pageSize = pageSize;

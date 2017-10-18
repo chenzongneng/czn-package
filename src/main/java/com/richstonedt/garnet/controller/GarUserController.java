@@ -8,7 +8,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.service.GarUserService;
-import com.richstonedt.garnet.utils.GarnetRsUtils;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -74,7 +74,7 @@ public class GarUserController {
         } catch (Throwable t) {
             LOG.error("Failed to create user :" + user);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 }

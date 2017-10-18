@@ -8,8 +8,8 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.service.GarApplicationService;
-import com.richstonedt.garnet.utils.GarnetRsUtils;
-import com.richstonedt.garnet.utils.PageUtils;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.utils.PageUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class GarApplicationController {
         } catch (Throwable t) {
             LOG.error("Failed to create application :" + application);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -89,12 +89,12 @@ public class GarApplicationController {
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> deleteApplications(@ApiParam(value = "appIds,用‘,’隔开", required = true) @RequestParam(value = "appIds") String appIds) {
         try {
-            applicationService.deleteBatch(GarnetRsUtils.parseStringToList(appIds));
+            applicationService.deleteBatch(GarnetRsUtil.parseStringToList(appIds));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete applications :" + appIds);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -116,7 +116,7 @@ public class GarApplicationController {
         } catch (Throwable t) {
             LOG.error("Failed to get application :" + appId);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -140,12 +140,12 @@ public class GarApplicationController {
         try {
             List<GarApplication> list = applicationService.queryObjects(searchName, page, limit);
             int totalCount = applicationService.queryTotal();
-            PageUtils result = new PageUtils(list, totalCount, limit, page);
+            PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get applications .");
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -168,7 +168,7 @@ public class GarApplicationController {
         } catch (Throwable t) {
             LOG.error("Failed to update applications .");
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 }

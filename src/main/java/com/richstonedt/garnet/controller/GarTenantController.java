@@ -8,8 +8,8 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarTenant;
 import com.richstonedt.garnet.service.GarTenantService;
-import com.richstonedt.garnet.utils.GarnetRsUtils;
-import com.richstonedt.garnet.utils.PageUtils;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.utils.PageUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class GarTenantController {
         } catch (Throwable t) {
             LOG.error("Failed to create tenant :" + tenant);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -89,12 +89,12 @@ public class GarTenantController {
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> deleteTenants(@ApiParam(value = "tenantIds,用‘,’隔开", required = true) @RequestParam(value = "tenantIds") String tenantIds) {
         try {
-            tenantService.deleteBatch(GarnetRsUtils.parseStringToList(tenantIds));
+            tenantService.deleteBatch(GarnetRsUtil.parseStringToList(tenantIds));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete tenants :" + tenantIds);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -116,7 +116,7 @@ public class GarTenantController {
         } catch (Throwable t) {
             LOG.error("Failed to get tenant :" + tenantId);
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -140,12 +140,12 @@ public class GarTenantController {
         try {
             List<GarTenant> list = tenantService.queryObjects(searchName, page, limit);
             int totalCount = tenantService.queryTotal();
-            PageUtils result = new PageUtils(list, totalCount, limit, page);
+            PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get tenants.");
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
@@ -168,7 +168,7 @@ public class GarTenantController {
         } catch (Throwable t) {
             LOG.error("Failed to update tenant .");
             LOG.error(t.getMessage());
-            return GarnetRsUtils.newResponseEntity(t);
+            return GarnetRsUtil.newResponseEntity(t);
         }
     }
 }
