@@ -56,6 +56,13 @@
         </where>
     </select>
 
+    <select id="getUserByName" resultType="com.richstonedt.garnet.model.GarUser">
+        select * from gar_user
+        <where>
+            username = #{userName};
+        </where>
+    </select>
+
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarUser">
         select * from gar_user
         <where>
@@ -70,8 +77,7 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*)
-        FROM gar_user;
+        SELECT count(*) FROM gar_user;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarUser">
@@ -99,7 +105,7 @@
                 mobile = #{mobile},
             </if>
             <if test="status != null">
-                status = #{status},
+                status = #{status}
             </if>
         </set>
         <where>

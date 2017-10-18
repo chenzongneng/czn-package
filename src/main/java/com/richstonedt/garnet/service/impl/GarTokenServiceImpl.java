@@ -6,59 +6,56 @@
 
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.dao.GarUserDao;
-import com.richstonedt.garnet.model.GarUser;
-import com.richstonedt.garnet.service.GarUserService;
-import org.mindrot.jbcrypt.BCrypt;
+import com.richstonedt.garnet.dao.GarTokenDao;
+import com.richstonedt.garnet.model.GarToken;
+import com.richstonedt.garnet.service.GarTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * <b><code>GarUserServiceImpl</code></b>
+ * <b><code>GarTokenServiceImpl</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b> 2017/10/18 11:27
+ * <b>Create Time:</b> 2017/10/18 14:39
  *
  * @author Sun Jinpeng
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
 @Service
-public class GarUserServiceImpl implements GarUserService {
+public class GarTokenServiceImpl implements GarTokenService {
 
     /**
-     * The User dao.
+     * The Token dao.
      *
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarUserDao userDao;
+    private GarTokenDao tokenDao;
 
     /**
      * Save.
      *
-     * @param garUser the t
+     * @param garToken the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void save(GarUser garUser) {
-        String password = BCrypt.hashpw(garUser.getPassword(), BCrypt.gensalt(12));
-        garUser.setPassword(password);
-        userDao.save(garUser);
+    public void save(GarToken garToken) {
+        tokenDao.save(garToken);
     }
 
     /**
      * Update.
      *
-     * @param garUser the t
+     * @param garToken the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void update(GarUser garUser) {
-        userDao.update(garUser);
+    public void update(GarToken garToken) {
+        tokenDao.update(garToken);
     }
 
     /**
@@ -69,7 +66,7 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public void deleteById(Integer id) {
-        userDao.deleteById(id);
+
     }
 
     /**
@@ -80,7 +77,7 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public void deleteBatch(List<Integer> ids) {
-        userDao.deleteBatch(ids);
+
     }
 
     /**
@@ -91,8 +88,8 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarUser queryObject(Integer id) {
-        return userDao.queryObject(id);
+    public GarToken queryObject(Integer id) {
+        return tokenDao.queryObject(id);
     }
 
     /**
@@ -105,9 +102,8 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarUser> queryObjects(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        return userDao.queryObjects(searchName, limit, offset);
+    public List<GarToken> queryObjects(String searchName, Integer page, Integer limit) {
+        return null;
     }
 
     /**
@@ -118,18 +114,18 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public int queryTotal() {
-        return userDao.queryTotal();
+        return 0;
     }
 
     /**
-     * Gat user by name gar user.
+     * Query by token gar token.
      *
-     * @param userName the user name
-     * @return the gar user
+     * @param token the token
+     * @return the gar token
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarUser getUserByName(String userName) {
-        return userDao.getUserByName(userName);
+    public GarToken queryByToken(String token) {
+        return tokenDao.queryByToken(token);
     }
 }

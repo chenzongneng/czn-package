@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarTokenDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarToken">
+        INSERT INTO gar_token
+        (
+            token,
+            expire_time,
+            update_time
+        )
+        VALUES
+            (
+                #{token},
+                #{expireTime},
+                #{updateTime}
+            )
+    </insert>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarToken">
+        select * from gar_token
+        <where>
+            user_id = #{id};
+        </where>
+    </select>
+
+    <select id="queryByToken" resultType="com.richstonedt.garnet.model.GarToken">
+        select * from gar_token
+        <where>
+            token = #{token}
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarToken">
+        update gar_token
+        <set>
+            <if test="token != null and token != ''">
+                token = #{token},
+            </if>
+            <if test="expireTime != null">
+                expire_time = #{expireTime},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+</mapper>

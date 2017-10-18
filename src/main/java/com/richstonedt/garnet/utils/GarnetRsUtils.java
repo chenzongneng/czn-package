@@ -8,8 +8,6 @@ package com.richstonedt.garnet.utils;
 
 import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.config.GarnetServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -33,13 +31,6 @@ import java.util.Map;
 public class GarnetRsUtils {
 
     /**
-     * The constant LOG.
-     *
-     * @since garnet-core-be-fe 0.1.0
-     */
-    private static Logger LOG = LoggerFactory.getLogger(GarnetRsUtils.class);
-
-    /**
      * New response entity response entity.
      *
      * @param t the t
@@ -48,7 +39,7 @@ public class GarnetRsUtils {
      */
     public static ResponseEntity<Map<String, Object>> newResponseEntity(
             Throwable t) {
-        Map<String, Object> errorMap = new HashMap<>();
+        Map<String, Object> errorMap = new HashMap<>(8);
         if (t instanceof GarnetServiceException) {
             GarnetServiceException e = (GarnetServiceException) t;
             if (!StringUtils.isEmpty(e.getErrorCode())) {
@@ -60,8 +51,7 @@ public class GarnetRsUtils {
             errorMap.put("errorCode", GarnetServiceErrorCodes.OTHER);
         }
         errorMap.put("errorMessage", t.getMessage());
-        return new ResponseEntity<>(errorMap,
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -74,7 +64,8 @@ public class GarnetRsUtils {
     public static List<Integer> parseStringToList(String ids) {
         List<Integer> idList = new ArrayList<>();
         try {
-            if (ids.contains(",")) {
+            String comma = ",";
+            if (ids.contains(comma)) {
                 String[] tmpIds = ids.split(",");
                 for (String id : tmpIds) {
                     idList.add(Integer.parseInt(id));
@@ -84,7 +75,6 @@ public class GarnetRsUtils {
             }
         } catch (NumberFormatException e) {
             String errorMessage = "The parameter is error,Please input number! ids = " + ids;
-            LOG.error(errorMessage);
             throw new GarnetServiceException(errorMessage);
         }
         return idList;

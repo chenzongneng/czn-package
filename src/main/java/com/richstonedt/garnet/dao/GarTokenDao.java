@@ -6,12 +6,12 @@
 
 package com.richstonedt.garnet.dao;
 
-import com.richstonedt.garnet.model.GarUser;
+import com.richstonedt.garnet.model.GarToken;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * <b><code>GarUserDao</code></b>
+ * <b><code>GarApplicationDao</code></b>
  * <p>
  * class_comment
  * </p>
@@ -22,14 +22,14 @@ import org.apache.ibatis.annotations.Param;
  * @since garnet-core-be-fe 0.1.0
  */
 @Mapper
-public interface GarUserDao extends BaseDao<GarUser> {
+public interface GarTokenDao extends BaseDao<GarToken> {
 
     /**
-     * Gat user by name gar user.
+     * Query by token gar token.
      *
-     * @param userName the user name
-     * @return the gar user
+     * @param token the token
+     * @return the gar token
      * @since garnet-core-be-fe 0.1.0
      */
-    GarUser getUserByName(@Param(value = "userName") String userName);
+    GarToken queryByToken(@Param(value = "token") String token);
 }

@@ -70,6 +70,7 @@ public class GarApplicationController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create application :" + application);
+            LOG.error(t.getMessage());
             return GarnetRsUtils.newResponseEntity(t);
         }
     }
@@ -92,6 +93,7 @@ public class GarApplicationController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete applications :" + appIds);
+            LOG.error(t.getMessage());
             return GarnetRsUtils.newResponseEntity(t);
         }
     }
@@ -113,6 +115,7 @@ public class GarApplicationController {
             return new ResponseEntity<>(applicationService.queryObject(appId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get application :" + appId);
+            LOG.error(t.getMessage());
             return GarnetRsUtils.newResponseEntity(t);
         }
     }
@@ -141,6 +144,7 @@ public class GarApplicationController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get applications .");
+            LOG.error(t.getMessage());
             return GarnetRsUtils.newResponseEntity(t);
         }
     }
@@ -163,6 +167,7 @@ public class GarApplicationController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update applications .");
+            LOG.error(t.getMessage());
             return GarnetRsUtils.newResponseEntity(t);
         }
     }
