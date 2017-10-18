@@ -22,6 +22,12 @@
             );
     </insert>
 
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM gar_tenant
+        WHERE
+            tenant_id = #{id};
+    </delete>
+
     <delete id="deleteBatch" parameterType="java.util.List">
         delete from gar_tenant WHERE tenant_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">

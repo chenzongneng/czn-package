@@ -10,42 +10,60 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarUserDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarUser">
-        INSERT INTO gar_application
+        INSERT INTO gar_user
         (
-            name,
-            company,
-            remark
+            tenant_id,
+            app_id,
+            username,
+            password,
+            salt,
+            email,
+            mobile,
+            status,
+            create_time
         )
         VALUES
             (
-                #{name},
-                #{company},
-                #{remark}
+                #{tenantId},
+                #{appId},
+                #{userName},
+                #{password},
+                #{salt},
+                #{email},
+                #{mobile},
+                #{status},
+                #{createTime}
             );
     </insert>
 
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM gar_user
+        WHERE
+            user_id = #{id};
+    </delete>
+
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_application WHERE app_id in
+        delete from gar_user WHERE user_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
-    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarApplication">
-        select * from gar_application
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarUser">
+        select * from gar_user
         <where>
-            app_id = #{id};
+            user_id = #{id};
         </where>
     </select>
 
-    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarApplication">
-        select * from gar_application
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarUser">
+        select * from gar_user
         <where>
             <if test="searchName != null and searchName != ''">
-                and name LIKE CONCAT('%',#{searchName},'%')
+                and username LIKE CONCAT('%',#{searchName},'%')
             </if>
         </where>
-        ORDER BY app_id asc
+        ORDER BY user_id asc
         <if test="offset != null and limit != null">
             limit #{limit} offset #{offset};
         </if>
@@ -53,24 +71,39 @@
 
     <select id="queryTotal" resultType="int">
         SELECT count(*)
-        FROM gar_application;
+        FROM gar_user;
     </select>
 
-    <update id="update" parameterType="com.richstonedt.garnet.model.GarApplication">
-        UPDATE gar_application
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarUser">
+        UPDATE gar_user
         <set>
-            <if test="name != null and name != ''">
-                name = #{name},
+            <if test="tenantId != null">
+                tenant_id = #{tenantId},
             </if>
-            <if test="company != null and company != ''">
-                company = #{company},
+            <if test="appId != null">
+                app_id = #{appId},
             </if>
-            <if test="remark != null and remark != ''">
-                remark = #{remark}
+            <if test="userName != null and userName != ''">
+                username = #{userName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="salt != null and salt != ''">
+                salt = #{salt},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile = #{mobile},
+            </if>
+            <if test="status != null">
+                status = #{status},
             </if>
         </set>
         <where>
-            app_id = #{appId};
+            user_id = #{userId};
         </where>
     </update>
 </mapper>

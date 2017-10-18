@@ -6,56 +6,56 @@
 
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.dao.GarApplicationDao;
-import com.richstonedt.garnet.model.GarApplication;
-import com.richstonedt.garnet.service.GarApplicationService;
+import com.richstonedt.garnet.dao.GarUserDao;
+import com.richstonedt.garnet.model.GarUser;
+import com.richstonedt.garnet.service.GarUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * <b><code>GarApplicationServiceImpl</code></b>
+ * <b><code>GarUserServiceImpl</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b> 2017/10/17 10:29
+ * <b>Create Time:</b> 2017/10/18 11:27
  *
  * @author Sun Jinpeng
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
 @Service
-public class GarApplicationServiceImpl implements GarApplicationService {
+public class GarUserServiceImpl implements GarUserService {
 
     /**
-     * The Application dao.
+     * The User dao.
      *
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarApplicationDao applicationDao;
+    private GarUserDao userDao;
 
     /**
      * Save.
      *
-     * @param garApplication the t
+     * @param garUser the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void save(GarApplication garApplication) {
-        applicationDao.save(garApplication);
+    public void save(GarUser garUser) {
+        userDao.save(garUser);
     }
 
     /**
      * Update.
      *
-     * @param garApplication the t
+     * @param garUser the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void update(GarApplication garApplication) {
-        applicationDao.update(garApplication);
+    public void update(GarUser garUser) {
+        userDao.update(garUser);
     }
 
     /**
@@ -66,7 +66,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void deleteById(Integer id) {
-        applicationDao.deleteById(id);
+        userDao.deleteById(id);
     }
 
     /**
@@ -77,7 +77,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void deleteBatch(List<Integer> ids) {
-        applicationDao.deleteBatch(ids);
+        userDao.deleteBatch(ids);
     }
 
     /**
@@ -88,8 +88,23 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarApplication queryObject(Integer id) {
-        return applicationDao.queryObject(id);
+    public GarUser queryObject(Integer id) {
+        return userDao.queryObject(id);
+    }
+
+    /**
+     * Query objects list.
+     *
+     * @param searchName the search name
+     * @param page       the offset
+     * @param limit      the limit
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public List<GarUser> queryObjects(String searchName, Integer page, Integer limit) {
+        Integer offset = (page - 1) * limit;
+        return userDao.queryObjects(searchName, limit, offset);
     }
 
     /**
@@ -100,21 +115,6 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public int queryTotal() {
-        return applicationDao.queryTotal();
-    }
-
-    /**
-     * Query objects list.
-     *
-     * @param searchName the search name
-     * @param limit      the limit
-     * @param page       the offset
-     * @return the list
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @Override
-    public List<GarApplication> queryObjects(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        return applicationDao.queryObjects(searchName, limit, offset);
+        return userDao.queryTotal();
     }
 }

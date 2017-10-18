@@ -57,7 +57,7 @@ public class GarUser implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户名")
-    private String username;
+    private String userName;
 
     /**
      * The Password.
@@ -168,23 +168,23 @@ public class GarUser implements Serializable {
     }
 
     /**
-     * Return the Username
+     * Return the UserName
      *
-     * @return property value of username
+     * @return property value of userName
      * @since garnet-core-be-fe 0.1.0
      */
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
     /**
-     * Set the Username
+     * Set the UserName
      *
-     * @param username value to be assigned to property username
+     * @param userName value to be assigned to property userName
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /**

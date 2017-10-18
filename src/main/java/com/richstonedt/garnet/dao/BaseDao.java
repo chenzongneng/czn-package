@@ -39,6 +39,14 @@ public interface BaseDao<T> {
 	 */
 	void update(T t);
 
+    /**
+     * Delete by id.
+     *
+     * @param id the id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void deleteById(@Param(value = "id") Integer id);
+
 	/**
 	 * Delete batch int.
 	 *
@@ -65,8 +73,11 @@ public interface BaseDao<T> {
 	int queryTotal();
 
     /**
-     * Query all list.
+     * Query objects list.
      *
+     * @param searchName the search name
+     * @param limit      the limit
+     * @param offset     the offset
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */

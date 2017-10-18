@@ -37,6 +37,14 @@ public interface BaseService<T> {
     void update(T t);
 
     /**
+     * Delete by id.
+     *
+     * @param id the id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    void deleteById(Integer id);
+
+    /**
      * Delete batch.
      *
      * @param ids the ids

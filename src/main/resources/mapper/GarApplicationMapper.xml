@@ -24,6 +24,12 @@
             );
     </insert>
 
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM gar_application
+        WHERE
+            app_id = #{id};
+    </delete>
+
     <delete id="deleteBatch" parameterType="java.util.List">
         delete from gar_application WHERE app_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">

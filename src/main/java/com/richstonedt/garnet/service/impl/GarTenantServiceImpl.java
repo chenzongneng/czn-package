@@ -59,6 +59,17 @@ public class GarTenantServiceImpl implements GarTenantService {
     }
 
     /**
+     * Delete by id.
+     *
+     * @param id the id
+     * @since garnet-core-be-fe 1.0.0
+     */
+    @Override
+    public void deleteById(Integer id) {
+        tenantDao.deleteById(id);
+    }
+
+    /**
      * Delete batch.
      *
      * @param ids the ids
