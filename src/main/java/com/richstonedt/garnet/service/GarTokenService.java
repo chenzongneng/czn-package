@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.model.GarToken;
+import com.richstonedt.garnet.model.GarUser;
 
 /**
  * <b><code>GarApplicationService</code></b>
@@ -29,4 +30,13 @@ public interface GarTokenService extends BaseService<GarToken> {
      * @since garnet-core-be-fe 0.1.0
      */
     GarToken queryByToken(String token);
+
+    /**
+     * Gets user info by token.
+     *
+     * @param token the token
+     * @return the user info by token
+     * @since garnet-core-be-fe 0.1.0
+     */
+    GarUser getUserInfoByToken(String token);
 }

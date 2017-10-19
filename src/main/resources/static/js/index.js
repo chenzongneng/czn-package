@@ -54,8 +54,12 @@ var vm = new Vue({
         },
         /** 查询用户信息 */
         getUser: function () {
-            $.getJSON(baseURL + "sys/user/info", function (r) {
-                vm.user = r.user;
+            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (r) {
+                if (!r) {
+                    parent.location.href = 'index.html';
+                } else {
+                    vm.user = r;
+                }
             });
         },
         /** 修改密码 */

@@ -8,7 +8,9 @@ package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarTokenDao;
 import com.richstonedt.garnet.model.GarToken;
+import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.service.GarTokenService;
+import com.richstonedt.garnet.service.GarUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,14 @@ public class GarTokenServiceImpl implements GarTokenService {
      */
     @Autowired
     private GarTokenDao tokenDao;
+
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarUserService userService;
 
     /**
      * Save.
@@ -127,5 +137,18 @@ public class GarTokenServiceImpl implements GarTokenService {
     @Override
     public GarToken queryByToken(String token) {
         return tokenDao.queryByToken(token);
+    }
+
+    /**
+     * Gets user info by token.
+     *
+     * @param token the token
+     * @return the user info by token
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public GarUser getUserInfoByToken(String token) {
+        GarToken garToken = queryByToken(token);
+        return userService.queryObject(garToken.getUserId());
     }
 }

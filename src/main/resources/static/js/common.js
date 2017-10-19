@@ -8,10 +8,10 @@
 var baseURL = "http://localhost:8080/garnet/v1.0/";
 
 /** token */
-/*var token = localStorage.getItem("garnetToken");
-if (token == 'null') {
+var garnetToken = localStorage.getItem("garnetToken");
+if (garnetToken == 'null') {
     parent.location.href = baseURL + 'login.html';
-}*/
+}
 
 /** 权限判断 */
 /*function hasPermission(permission) {

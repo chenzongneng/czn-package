@@ -6,12 +6,9 @@
 
 package com.richstonedt.garnet.controller;
 
-import com.richstonedt.garnet.service.GarSysMenuService;
+import com.richstonedt.garnet.service.GarTokenService;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <b><code>GarSysMenuController</code></b>
+ * <b><code>GarTokenController</code></b>
  * <p>
  * class_comment
  * </p>
@@ -35,34 +33,41 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/v1.0")
-@Api(tags = "[Garnet]系统菜单查询接口")
-public class GarSysMenuController {
+@Api(tags = "[Garnet]Token相关接口")
+public class GarTokenController {
 
     /**
      * The constant LOG.
      *
      * @since garnet-core-be-fe 0.1.0
      */
-    private static Logger LOG = LoggerFactory.getLogger(GarSysMenuController.class);
+    private static Logger LOG = LoggerFactory.getLogger(GarTokenController.class);
 
     /**
-     * The User service.
+     * The Token service.
      *
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarSysMenuService sysMenuService;
+    private GarTokenService tokenService;
 
-    @RequestMapping(value = "/sysMenu", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]查询系统菜单", notes = "Search system menu")
+    /**
+     * Gets user info by token.
+     *
+     * @param token the token
+     * @return the user info by token
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/token/userInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]通过Token查询用户信息", notes = "Get user info by token")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> searchSysMenu() {
+    public ResponseEntity<?> getUserInfoByToken(@ApiParam(value = "token,garnetToken") @RequestParam(value = "token") String token) {
         try {
-            return new ResponseEntity<>(sysMenuService.getUserMenuList(), HttpStatus.OK);
+            return new ResponseEntity<>(tokenService.getUserInfoByToken(token), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to search system menu");
+            LOG.error("Get user info by token" + token);
             LOG.error(t.getMessage());
             return GarnetRsUtil.newResponseEntity(t);
         }
