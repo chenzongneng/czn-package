@@ -5,21 +5,21 @@
  */
 
 /** 请求前缀,写完整链接或从context开始的链接 */
-var baseURL = "http://192.168.6.97:8080/garnet/";
+var baseURL = "http://localhost:8080/garnet/v1.0/";
 
 /** token */
-var token = localStorage.getItem("garnetToken");
+/*var token = localStorage.getItem("garnetToken");
 if (token == 'null') {
     parent.location.href = baseURL + 'login.html';
-}
+}*/
 
 /** 权限判断 */
-function hasPermission(permission) {
+/*function hasPermission(permission) {
     return window.parent.permissions.indexOf(permission) > -1;
-}
+}*/
 
 /** jquery全局配置 */
-$.ajaxSetup({
+/*$.ajaxSetup({
     dataType: "json",
     cache: false,
     headers: {
@@ -32,19 +32,19 @@ $.ajaxSetup({
             parent.location.href = baseURL + 'login.html';
         }
     }
-});
+});*/
 
 /** jqGrid 配置 */
 $.jgrid.defaults.width = 1000;
 $.jgrid.defaults.responsive = true;
 $.jgrid.defaults.styleUI = 'Bootstrap';
-$.extend($.jgrid.defaults, {
+/*$.extend($.jgrid.defaults, {
     ajaxGridOptions: {
         headers: {
             "token": token
         }
     }
-});
+});*/
 
 // 选择一条记录
 function getSelectedRow() {

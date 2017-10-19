@@ -77,39 +77,34 @@
             captcha: '',
             error: false,
             errorMsg: '',
-            src: 'kaptcha?nowTime='+ nowTime
-        },
-        beforeCreate: function () {
-            if (self != top) {
-                top.location.href = self.location.href;
-            }
+            src: baseURL + 'kaptcha?nowTime=' + nowTime
         },
         methods: {
             refreshCode: function () {
                 nowTime = $.now();
-                this.src = "kaptcha?nowTime=" + nowTime;
+                this.src = baseURL + "kaptcha?nowTime=" + nowTime;
             },
             login: function () {
                 var data = {
-                    username: vm.username,
+                    userName: vm.username,
                     password: vm.password,
                     captcha: vm.captcha,
                     nowTime : nowTime
                 };
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "sys/login?loginFrom=garnet",
+                    url: baseURL + "login?loginFrom=garnet",
                     data: JSON.stringify(data),
                     contentType: "application/json",
                     dataType: "",
                     success: function (result) {
-                        if (result.code == 0) {//登录成功
+                        if (result.loginStatus == "success") {
                             localStorage.setItem("garnetToken", result.garnetToken);
-                            localStorage.setItem("gempileToken", result.gempileToken);
+                            localStorage.setItem("userToken", result.userToken);
                             parent.location.href = 'index.html';
                         } else {
                             vm.error = true;
-                            vm.errorMsg = result.msg;
+                            vm.errorMsg = result.message;
                         }
                     }
                 });

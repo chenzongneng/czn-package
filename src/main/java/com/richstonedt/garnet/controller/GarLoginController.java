@@ -148,24 +148,24 @@ public class GarLoginController {
             if (!userLogin.getCaptcha().equalsIgnoreCase(kaptcha)) {
                 loginResult.setLoginStatus("failure");
                 loginResult.setMessage("验证码不正确");
-                return new ResponseEntity<>(loginResult, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
             kaptchaMap.remove("kaptcha");
             GarUser user = userService.getUserByName(userLogin.getUserName());
             if (user == null) {
                 loginResult.setLoginStatus("failure");
                 loginResult.setMessage("账号不存在");
-                return new ResponseEntity<>(loginResult, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
             if (!BCrypt.checkpw(userLogin.getPassword(), user.getPassword())) {
                 loginResult.setLoginStatus("failure");
                 loginResult.setMessage("账号或密码不正确");
-                return new ResponseEntity<>(loginResult, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
             if (user.getStatus() == 0) {
                 loginResult.setLoginStatus("failure");
                 loginResult.setMessage("账号已被锁定,请联系管理员");
-                return new ResponseEntity<>(loginResult, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
             if (LOGIN_FORM.equals(loginFrom.toLowerCase())) {
                 //todo 鉴权判断，只有租户管理员和超级管理员才可登录

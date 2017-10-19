@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarSysMenuDao">
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarSysMenu">
+        SELECT *
+        FROM gar_sys_menu
+        WHERE menu_id = #{id}
+    </select>
+
+    <select id="queryListParentId" resultType="com.richstonedt.garnet.model.GarSysMenu">
+        SELECT *
+        FROM gar_sys_menu
+        WHERE parent_id = #{parentId}
+        ORDER BY order_num ASC
+    </select>
+
+    <select id="queryList" resultType="com.richstonedt.garnet.model.GarSysMenu">
+        SELECT
+            m.*,
+            (SELECT p.name
+             FROM gar_sys_menu p
+             WHERE p.menu_id = m.parent_id) AS parentName
+        FROM gar_sys_menu m
+        ORDER BY m.order_num ASC
+    </select>
+</mapper>
