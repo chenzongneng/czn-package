@@ -42,10 +42,8 @@ var vm = new Vue({
     methods: {
         /** 查询菜单列表 */
         getMenuList: function () {
-            $.getJSON(baseURL + "sys/menu/nav", function (r) {
-                vm.menuList = r.menuList;
-                window.permissions = r.permissions;
-
+            $.getJSON(baseURL + "sysMenu", function (r) {
+                vm.menuList = r;
                 //路由
                 var router = new Router();
                 routerList(router, vm.menuList);
