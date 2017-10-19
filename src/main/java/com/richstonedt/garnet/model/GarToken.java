@@ -33,7 +33,7 @@ public class GarToken implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户ID")
-    private Integer userId;
+    private Long userId;
 
     /**
      * The Token.
@@ -65,7 +65,7 @@ public class GarToken implements Serializable {
      * @return property value of userId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -75,7 +75,7 @@ public class GarToken implements Serializable {
      * @param userId value to be assigned to property userId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

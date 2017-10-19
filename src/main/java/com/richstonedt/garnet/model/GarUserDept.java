@@ -32,7 +32,7 @@ public class GarUserDept  implements Serializable{
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户ID")
-    private Integer userId;
+    private Long userId;
 
     /**
      * The Dept id.
@@ -40,7 +40,7 @@ public class GarUserDept  implements Serializable{
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "部门ID")
-    private Integer deptId;
+    private Long deptId;
 
     /**
      * Return the UserId
@@ -48,7 +48,7 @@ public class GarUserDept  implements Serializable{
      * @return property value of userId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -58,7 +58,7 @@ public class GarUserDept  implements Serializable{
      * @param userId value to be assigned to property userId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -68,7 +68,7 @@ public class GarUserDept  implements Serializable{
      * @return property value of deptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getDeptId() {
+    public Long getDeptId() {
         return deptId;
     }
 
@@ -78,7 +78,7 @@ public class GarUserDept  implements Serializable{
      * @param deptId value to be assigned to property deptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setDeptId(Integer deptId) {
+    public void setDeptId(Long deptId) {
         this.deptId = deptId;
     }
 

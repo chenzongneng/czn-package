@@ -32,13 +32,13 @@ public class GarDept implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "部门ID")
-    private Integer deptId;
+    private Long deptId;
 
     /**
      * The Parent dept id.
      */
     @ApiModelProperty(value = "父部门ID")
-    private Integer parentDeptId;
+    private Long parentDeptId;
 
     /**
      * The Tenant id.
@@ -48,7 +48,7 @@ public class GarDept implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "租户ID")
-    private Integer tenantId;
+    private Long tenantId;
 
     /**
      * The App id.
@@ -56,7 +56,7 @@ public class GarDept implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用ID")
-    private Integer appId;
+    private Long appId;
 
     /**
      * The Name.
@@ -80,7 +80,7 @@ public class GarDept implements Serializable {
      * @return property value of deptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getDeptId() {
+    public Long getDeptId() {
         return deptId;
     }
 
@@ -90,7 +90,7 @@ public class GarDept implements Serializable {
      * @param deptId value to be assigned to property deptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setDeptId(Integer deptId) {
+    public void setDeptId(Long deptId) {
         this.deptId = deptId;
     }
 
@@ -100,7 +100,7 @@ public class GarDept implements Serializable {
      * @return property value of parentDeptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getParentDeptId() {
+    public Long getParentDeptId() {
         return parentDeptId;
     }
 
@@ -110,7 +110,7 @@ public class GarDept implements Serializable {
      * @param parentDeptId value to be assigned to property parentDeptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setParentDeptId(Integer parentDeptId) {
+    public void setParentDeptId(Long parentDeptId) {
         this.parentDeptId = parentDeptId;
     }
 
@@ -120,7 +120,7 @@ public class GarDept implements Serializable {
      * @return property value of tenantId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
@@ -130,7 +130,7 @@ public class GarDept implements Serializable {
      * @param tenantId value to be assigned to property tenantId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setTenantId(Integer tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -140,7 +140,7 @@ public class GarDept implements Serializable {
      * @return property value of appId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getAppId() {
+    public Long getAppId() {
         return appId;
     }
 
@@ -150,7 +150,7 @@ public class GarDept implements Serializable {
      * @param appId value to be assigned to property appId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setAppId(Integer appId) {
+    public void setAppId(Long appId) {
         this.appId = appId;
     }
 

@@ -32,7 +32,7 @@ public class GarApplication implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用ID")
-    private Integer appId;
+    private Long appId;
 
     /**
      * The Name.
@@ -64,7 +64,7 @@ public class GarApplication implements Serializable {
      * @return property value of appId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getAppId() {
+    public Long getAppId() {
         return appId;
     }
 
@@ -74,7 +74,7 @@ public class GarApplication implements Serializable {
      * @param appId value to be assigned to property appId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setAppId(Integer appId) {
+    public void setAppId(Long appId) {
         this.appId = appId;
     }
 

@@ -33,7 +33,7 @@ public class GarLog implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "LogID")
-    private Integer id;
+    private Long id;
 
     /**
      * The User name.
@@ -99,7 +99,7 @@ public class GarLog implements Serializable {
      * @return property value of id
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -109,7 +109,7 @@ public class GarLog implements Serializable {
      * @param id value to be assigned to property id
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

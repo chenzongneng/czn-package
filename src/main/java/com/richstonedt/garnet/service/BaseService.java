@@ -42,7 +42,7 @@ public interface BaseService<T> {
      * @param id the id
      * @since garnet-core-be-fe 1.0.0
      */
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
     /**
      * Delete batch.
@@ -50,7 +50,7 @@ public interface BaseService<T> {
      * @param ids the ids
      * @since garnet-core-be-fe 0.1.0
      */
-    void deleteBatch(List<Integer> ids);
+    void deleteBatch(List<Long> ids);
 
     /**
      * Query object t.
@@ -59,7 +59,7 @@ public interface BaseService<T> {
      * @return the t
      * @since garnet-core-be-fe 0.1.0
      */
-    T queryObject(Integer id);
+    T queryObject(Long id);
 
     /**
      * Query objects list.

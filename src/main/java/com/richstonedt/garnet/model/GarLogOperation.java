@@ -32,7 +32,7 @@ public class GarLogOperation implements Serializable {
      * @since garnet-core-be-fe 1.0.0
      */
     @ApiModelProperty(value = "操作ID")
-    private Integer id;
+    private Long id;
 
     /**
      * The Url.
@@ -64,7 +64,7 @@ public class GarLogOperation implements Serializable {
      * @return property value of id
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -74,7 +74,7 @@ public class GarLogOperation implements Serializable {
      * @param id value to be assigned to property id
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -12,32 +12,33 @@
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarUser">
         INSERT INTO gar_user
         (
+        user_id,
             tenant_id,
             app_id,
             username,
             password,
             email,
             mobile,
-            status,
-            create_time
+        status
         )
         VALUES
             (
+        #{userId},
                 #{tenantId},
                 #{appId},
                 #{userName},
                 #{password},
                 #{email},
                 #{mobile},
-                #{status},
-                #{createTime}
+        #{status}
             );
     </insert>
 
-    <delete id="deleteById" parameterType="java.lang.Integer">
+    <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM gar_user
-        WHERE
+        <where>
             user_id = #{id};
+        </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">

@@ -65,12 +65,12 @@ public class TokenGeneratorUtil {
      * @return the string
      * @since garnet-core-be-fe 0.1.0
      */
-    public String createUserToken(Integer userId) {
+    public String createUserToken(Long userId) {
         GarUser user = userService.queryObject(userId);
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
             return JWT.create()
-                    .withClaim("uid", user.getUserId())
+                    .withClaim("uid", user.getUserId().toString())
                     .withClaim("una", user.getUserName())
                     .withExpiresAt(new Date(System.currentTimeMillis() + (long) 60 * 60 * 1000 * 3))
                     .sign(algorithm);
@@ -86,7 +86,7 @@ public class TokenGeneratorUtil {
      * @return the string
      * @since garnet-core-be-fe 0.1.0
      */
-    public String createGarnetToken(Integer userId) {
+    public String createGarnetToken(Long userId) {
         //生成一个token
         String token = TokenGeneratorUtil.generateValue(UUID.randomUUID().toString());
         Date now = new Date();

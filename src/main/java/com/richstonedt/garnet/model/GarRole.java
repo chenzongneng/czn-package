@@ -33,7 +33,7 @@ public class GarRole implements Serializable{
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "角色ID")
-    private Integer roleId;
+    private Long roleId;
 
     /**
      * The Tenant id.
@@ -41,7 +41,7 @@ public class GarRole implements Serializable{
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "租户ID")
-    private Integer tenantId;
+    private Long tenantId;
 
     /**
      * The App id.
@@ -49,7 +49,7 @@ public class GarRole implements Serializable{
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用ID")
-    private Integer appId;
+    private Long appId;
 
     /**
      * The Name.
@@ -81,7 +81,7 @@ public class GarRole implements Serializable{
      * @return property value of roleId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
@@ -91,7 +91,7 @@ public class GarRole implements Serializable{
      * @param roleId value to be assigned to property roleId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 
@@ -101,7 +101,7 @@ public class GarRole implements Serializable{
      * @return property value of tenantId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
@@ -111,7 +111,7 @@ public class GarRole implements Serializable{
      * @param tenantId value to be assigned to property tenantId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setTenantId(Integer tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -121,7 +121,7 @@ public class GarRole implements Serializable{
      * @return property value of appId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getAppId() {
+    public Long getAppId() {
         return appId;
     }
 
@@ -131,7 +131,7 @@ public class GarRole implements Serializable{
      * @param appId value to be assigned to property appId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setAppId(Integer appId) {
+    public void setAppId(Long appId) {
         this.appId = appId;
     }
 

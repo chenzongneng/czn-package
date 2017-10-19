@@ -110,7 +110,7 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarTenant.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> searchTenant(@ApiParam(value = "tenantId", required = true) @PathVariable(value = "tenantId") Integer tenantId) {
+    public ResponseEntity<?> searchTenant(@ApiParam(value = "tenantId", required = true) @PathVariable(value = "tenantId") Long tenantId) {
         try {
             return new ResponseEntity<>(tenantService.queryObject(tenantId), HttpStatus.OK);
         } catch (Throwable t) {

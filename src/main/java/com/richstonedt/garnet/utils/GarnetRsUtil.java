@@ -61,17 +61,17 @@ public class GarnetRsUtil {
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    public static List<Integer> parseStringToList(String ids) {
-        List<Integer> idList = new ArrayList<>();
+    public static List<Long> parseStringToList(String ids) {
+        List<Long> idList = new ArrayList<>();
         try {
             String comma = ",";
             if (ids.contains(comma)) {
                 String[] tmpIds = ids.split(",");
                 for (String id : tmpIds) {
-                    idList.add(Integer.parseInt(id));
+                    idList.add(Long.valueOf(id));
                 }
             } else {
-                idList.add(Integer.parseInt(ids));
+                idList.add(Long.valueOf(ids));
             }
         } catch (NumberFormatException e) {
             String errorMessage = "The parameter is error,Please input number! ids = " + ids;

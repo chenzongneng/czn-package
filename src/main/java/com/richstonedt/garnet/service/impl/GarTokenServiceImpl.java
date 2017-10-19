@@ -65,7 +65,7 @@ public class GarTokenServiceImpl implements GarTokenService {
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
 
     }
 
@@ -76,7 +76,7 @@ public class GarTokenServiceImpl implements GarTokenService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void deleteBatch(List<Integer> ids) {
+    public void deleteBatch(List<Long> ids) {
 
     }
 
@@ -88,7 +88,7 @@ public class GarTokenServiceImpl implements GarTokenService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarToken queryObject(Integer id) {
+    public GarToken queryObject(Long id) {
         return tokenDao.queryObject(id);
     }
 

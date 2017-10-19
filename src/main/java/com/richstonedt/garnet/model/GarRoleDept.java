@@ -32,7 +32,7 @@ public class GarRoleDept implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "角色ID")
-    private Integer roleId;
+    private Long roleId;
     
     /**
      * The Dept id.
@@ -40,7 +40,7 @@ public class GarRoleDept implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "部门ID")
-    private Integer deptId;
+    private Long deptId;
 
     /**
      * Return the RoleId
@@ -48,7 +48,7 @@ public class GarRoleDept implements Serializable {
      * @return property value of roleId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
@@ -58,7 +58,7 @@ public class GarRoleDept implements Serializable {
      * @param roleId value to be assigned to property roleId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 
@@ -68,7 +68,7 @@ public class GarRoleDept implements Serializable {
      * @return property value of deptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getDeptId() {
+    public Long getDeptId() {
         return deptId;
     }
 
@@ -78,7 +78,7 @@ public class GarRoleDept implements Serializable {
      * @param deptId value to be assigned to property deptId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setDeptId(Integer deptId) {
+    public void setDeptId(Long deptId) {
         this.deptId = deptId;
     }
 

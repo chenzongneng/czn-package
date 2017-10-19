@@ -3,14 +3,14 @@
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."gar_user";
 CREATE TABLE "public"."gar_user" (
-  "user_id" serial NOT NULL,
-  tenant_id int4 NOT NULL,
-  app_id int4 NOT NULL,
-  "username" varchar(50) COLLATE "default" NOT NULL,
-  "password" varchar(200) COLLATE "default",
-  "email" varchar(100) COLLATE "default",
-  "mobile" varchar(100) COLLATE "default",
-  "status" int4,
+  "user_id"     INT8                          NOT NULL,
+  tenant_id     INT8                          NOT NULL,
+  app_id        INT8                          NOT NULL,
+  "username"    varchar(50) COLLATE "default" NOT NULL,
+  "password"    varchar(200) COLLATE "default",
+  "email"       varchar(100) COLLATE "default",
+  "mobile"      varchar(100) COLLATE "default",
+  "status"      int4,
   "create_time" timestamp(6) DEFAULT now()
 )
 ;
@@ -42,11 +42,11 @@ ALTER TABLE "public"."gar_user" ADD PRIMARY KEY ("user_id");
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."gar_role";
 CREATE TABLE "public"."gar_role" (
-  "role_id" serial,
-  tenant_id int4 NOT NULL,
-  app_id int4 NOT NULL,
-  "name" varchar(100) COLLATE "default",
-  "remark" varchar(100) COLLATE "default",
+  "role_id"     INT8,
+  tenant_id     INT8 NOT NULL,
+  app_id        INT8 NOT NULL,
+  "name"        varchar(100) COLLATE "default",
+  "remark"      varchar(100) COLLATE "default",
   "create_time" timestamp(6) DEFAULT now()
 )
 ;
@@ -67,12 +67,12 @@ ALTER TABLE "public"."gar_role" ADD PRIMARY KEY ("role_id");
 
 DROP TABLE IF EXISTS "public"."gar_dept";
 CREATE TABLE "public"."gar_dept" (
-  "dept_id" serial,
+  "dept_id"        INT8,
   "parent_dept_id" int8,
-  tenant_id int4 NOT NULL,
-  app_id int4 NOT NULL,
-  "name" varchar(50) COLLATE "default",
-  "order_num" int4
+  tenant_id        INT8 NOT NULL,
+  app_id           INT8 NOT NULL,
+  "name"           varchar(50) COLLATE "default",
+  "order_num"      int4
 )
 ;
 COMMENT ON COLUMN "public"."gar_dept"."parent_dept_id" IS '上级部门ID，一级部门为0';
@@ -92,8 +92,8 @@ ALTER TABLE "public"."gar_dept" ADD PRIMARY KEY ("dept_id");
 
 DROP TABLE IF EXISTS "public"."gar_user_dept";
 CREATE TABLE "public"."gar_user_dept" (
-  user_id int4 NOT NULL,
-  dept_id int4 NOT NULL
+  user_id INT8 NOT NULL,
+  dept_id INT8 NOT NULL
 )
 ;
 COMMENT ON COLUMN gar_user_dept.user_id IS '用户ID';
@@ -101,8 +101,8 @@ COMMENT ON COLUMN gar_user_dept.dept_id IS '部门ID';
 
 DROP TABLE IF EXISTS "public"."gar_role_dept";
 CREATE TABLE "public"."gar_role_dept" (
-  role_id int4 NOT NULL,
-  dept_id int4 NOT NULL
+  role_id INT8 NOT NULL,
+  dept_id INT8 NOT NULL
 )
 ;
 COMMENT ON COLUMN gar_role_dept.role_id IS '角色ID';
@@ -111,13 +111,13 @@ COMMENT ON COLUMN gar_role_dept.dept_id IS '部门ID';
 
 DROP TABLE IF EXISTS "public"."gar_permission";
 CREATE TABLE "public"."gar_permission" (
-  permission_id serial,
-  tenant_id int4 NOT NULL,
-  app_id int4 NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  class varchar(255),
-  actions varchar(255),
-  resource varchar(255)
+  permission_id INT8,
+  tenant_id     INT8         NOT NULL,
+  app_id        INT8         NOT NULL,
+  name          VARCHAR(100) NOT NULL,
+  class         varchar(255),
+  actions       varchar(255),
+  resource      varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."gar_permission"."tenant_id" IS '租户ID';
@@ -132,7 +132,7 @@ ALTER TABLE "public"."gar_permission" ADD PRIMARY KEY ("permission_id");
 
 /*DROP TABLE IF EXISTS "public"."gar_menu";
 CREATE TABLE "public"."gar_menu" (
-  menu_id serial,
+  menu_id int8,
   parent_menu_id int4,
   tenant_id int4 NOT NULL,
   app_id int4 NOT NULL,
@@ -152,7 +152,7 @@ ALTER TABLE "public"."gar_menu" ADD PRIMARY KEY ("menu_id");
 
 DROP TABLE IF EXISTS "public"."gar_resource";
 CREATE TABLE "public"."gar_resource" (
-  resource_id serial,
+  resource_id int8,
   parent_resource_id int4,
   tenant_id int4 NOT NULL,
   app_id int4 NOT NULL,
@@ -173,7 +173,7 @@ ALTER TABLE "public"."gar_resource" ADD PRIMARY KEY ("resource_id");
 
 DROP TABLE IF EXISTS "public"."gar_operation";
 CREATE TABLE "public"."gar_operation" (
-  operation_id serial,
+  operation_id int8,
   parent_operation_id int4,
   tenant_id int4 NOT NULL,
   app_id int4 NOT NULL,
@@ -190,9 +190,9 @@ ALTER TABLE "public"."gar_operation" ADD PRIMARY KEY ("operation_id");*/
 
 DROP TABLE IF EXISTS "public"."gar_privilege";
 CREATE TABLE "public"."gar_privilege" (
-  role_id int4 NOT NULL  ,
-  permission_id int4 NOT NULL,
-  action VARCHAR(200)
+  role_id       INT8 NOT NULL,
+  permission_id INT8 NOT NULL,
+  action        VARCHAR(200)
 )
 ;
 COMMENT ON COLUMN gar_privilege.permission_id IS '权限ID';
@@ -228,10 +228,10 @@ COMMENT ON COLUMN gar_permission_menu.menu_id IS '菜单ID';*/
 
 DROP TABLE IF EXISTS "public"."gar_application";
 CREATE TABLE "public"."gar_application" (
-  app_id serial,
-  name varchar(100),
+  app_id  INT8,
+  name    varchar(100),
   company varchar(100),
-  remark varchar(100)
+  remark  varchar(100)
 )
 ;
 
@@ -244,9 +244,9 @@ ALTER TABLE "public"."gar_application" ADD PRIMARY KEY ("app_id");
 
 DROP TABLE IF EXISTS "public"."gar_tenant";
 CREATE TABLE "public"."gar_tenant" (
-  tenant_id serial,
-  name varchar(100),
-  remark varchar(100)
+  tenant_id INT8,
+  name      varchar(100),
+  remark    varchar(100)
 )
 ;
 
@@ -261,9 +261,9 @@ ALTER TABLE "public"."gar_tenant" ADD PRIMARY KEY ("tenant_id");
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."gar_log_operation";
 CREATE TABLE "public"."gar_log_operation" (
-  "id" serial,
-  "url" varchar(200) COLLATE "default",
-  "method" varchar(50) COLLATE "default",
+  "id"        INT8,
+  "url"       varchar(200) COLLATE "default",
+  "method"    varchar(50) COLLATE "default",
   "operation" varchar(100) COLLATE "default"
 )
 WITH (OIDS=FALSE)
@@ -284,13 +284,13 @@ ALTER TABLE "public"."gar_log_operation" ADD PRIMARY KEY ("id");
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."gar_log";
 CREATE TABLE "public"."gar_log" (
-  "id" serial,
-  "username" varchar(50) COLLATE "default",
-  "operation" varchar(50) COLLATE "default",
-  "method" varchar(50) COLLATE "default",
-  "url" varchar(255) COLLATE "default",
-  "ip" varchar(255) COLLATE "default",
-  "sql" text COLLATE "default",
+  "id"           INT8,
+  "username"     varchar(50) COLLATE "default",
+  "operation"    varchar(50) COLLATE "default",
+  "method"       varchar(50) COLLATE "default",
+  "url"          varchar(255) COLLATE "default",
+  "ip"           varchar(255) COLLATE "default",
+  "sql"          text COLLATE "default",
   "created_time" timestamp(6) DEFAULT now()
 )
 WITH (OIDS=FALSE)
@@ -312,3 +312,32 @@ COMMENT ON COLUMN "public"."gar_log"."created_time" IS '创建时间';
 -- Primary Key structure for table gar_log
 -- ----------------------------
 ALTER TABLE "public"."gar_log" ADD PRIMARY KEY ("id");
+
+DROP TABLE IF EXISTS "public"."gar_token";
+CREATE TABLE "public"."gar_token" (
+  "user_id"     INT8,
+  "token"       VARCHAR(200) COLLATE "default" NOT NULL,
+  "expire_time" TIMESTAMP(6),
+  "update_time" TIMESTAMP(6) DEFAULT now()
+)
+WITH (OIDS = FALSE
+);
+COMMENT ON COLUMN "public"."gar_token"."token" IS 'token';
+COMMENT ON COLUMN "public"."gar_token"."expire_time" IS '过期时间';
+COMMENT ON COLUMN "public"."gar_token"."update_time" IS '更新时间';
+
+-- ----------------------------
+-- Alter Sequences Owned By
+-- ----------------------------
+
+-- ----------------------------
+-- Uniques structure for table gar_token
+-- ----------------------------
+ALTER TABLE "public"."gar_token"
+  ADD UNIQUE ("token");
+
+-- ----------------------------
+-- Primary Key structure for table gar_token
+-- ----------------------------
+ALTER TABLE "public"."gar_token"
+  ADD PRIMARY KEY ("user_id");

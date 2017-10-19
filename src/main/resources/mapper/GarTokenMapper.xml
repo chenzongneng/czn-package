@@ -12,12 +12,14 @@
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarToken">
         INSERT INTO gar_token
         (
+        user_id,
             token,
             expire_time,
             update_time
         )
         VALUES
             (
+        #{userId},
                 #{token},
                 #{expireTime},
                 #{updateTime}
@@ -46,6 +48,9 @@
             </if>
             <if test="expireTime != null">
                 expire_time = #{expireTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
             </if>
         </set>
         where user_id = #{userId}

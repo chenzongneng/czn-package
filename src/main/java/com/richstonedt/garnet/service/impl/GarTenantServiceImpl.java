@@ -9,6 +9,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.dao.GarTenantDao;
 import com.richstonedt.garnet.model.GarTenant;
 import com.richstonedt.garnet.service.GarTenantService;
+import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class GarTenantServiceImpl implements GarTenantService {
      */
     @Override
     public void save(GarTenant garTenant) {
+        garTenant.setTenantId(IdGeneratorUtil.generateId());
         tenantDao.save(garTenant);
     }
 
@@ -65,7 +67,7 @@ public class GarTenantServiceImpl implements GarTenantService {
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         tenantDao.deleteById(id);
     }
 
@@ -76,7 +78,7 @@ public class GarTenantServiceImpl implements GarTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void deleteBatch(List<Integer> ids) {
+    public void deleteBatch(List<Long> ids) {
         tenantDao.deleteBatch(ids);
     }
 
@@ -88,7 +90,7 @@ public class GarTenantServiceImpl implements GarTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarTenant queryObject(Integer id) {
+    public GarTenant queryObject(Long id) {
         return tenantDao.queryObject(id);
     }
 

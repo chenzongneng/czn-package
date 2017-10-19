@@ -110,7 +110,7 @@ public class GarApplicationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarApplication.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> searchApplication(@ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Integer appId) {
+    public ResponseEntity<?> searchApplication(@ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
         try {
             return new ResponseEntity<>(applicationService.queryObject(appId), HttpStatus.OK);
         } catch (Throwable t) {

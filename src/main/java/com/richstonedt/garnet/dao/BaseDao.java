@@ -45,7 +45,7 @@ public interface BaseDao<T> {
      * @param id the id
      * @since garnet-core-be-fe 1.0.0
      */
-    void deleteById(@Param(value = "id") Integer id);
+    void deleteById(@Param(value = "id") Long id);
 
 	/**
 	 * Delete batch int.
@@ -53,7 +53,7 @@ public interface BaseDao<T> {
      * @param ids the id
      * @since garnet-core-be-fe 1.0.0
 	 */
-    void deleteBatch(@Param(value = "ids") List<Integer> ids);
+    void deleteBatch(@Param(value = "ids") List<Long> ids);
 
 	/**
 	 * Query object t.
@@ -62,7 +62,7 @@ public interface BaseDao<T> {
 	 * @return the t
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-    T queryObject(@Param(value = "id") Integer id);
+    T queryObject(@Param(value = "id") Long id);
 
 	/**
 	 * Query total int.

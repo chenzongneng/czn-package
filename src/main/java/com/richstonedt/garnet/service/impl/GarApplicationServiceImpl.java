@@ -9,6 +9,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.service.GarApplicationService;
+import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void save(GarApplication garApplication) {
+        garApplication.setAppId(IdGeneratorUtil.generateId());
         applicationDao.save(garApplication);
     }
 
@@ -65,7 +67,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         applicationDao.deleteById(id);
     }
 
@@ -76,7 +78,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void deleteBatch(List<Integer> ids) {
+    public void deleteBatch(List<Long> ids) {
         applicationDao.deleteBatch(ids);
     }
 
@@ -88,7 +90,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarApplication queryObject(Integer id) {
+    public GarApplication queryObject(Long id) {
         return applicationDao.queryObject(id);
     }
 

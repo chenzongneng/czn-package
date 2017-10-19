@@ -32,7 +32,7 @@ public class GarTenant implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "租户ID")
-    private Integer tenantId;
+    private Long tenantId;
 
     /**
      * The Name.
@@ -56,7 +56,7 @@ public class GarTenant implements Serializable {
      * @return property value of tenantId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Integer getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
@@ -66,7 +66,7 @@ public class GarTenant implements Serializable {
      * @param tenantId value to be assigned to property tenantId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setTenantId(Integer tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 

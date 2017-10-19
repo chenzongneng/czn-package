@@ -12,20 +12,23 @@
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarTenant">
         INSERT INTO gar_tenant
         (
+        tenant_id,
             name,
             remark
         )
         VALUES
             (
+        #{tenantId},
                 #{name},
                 #{remark}
             );
     </insert>
 
-    <delete id="deleteById" parameterType="java.lang.Integer">
+    <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM gar_tenant
-        WHERE
+        <where>
             tenant_id = #{id};
+        </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
@@ -56,8 +59,7 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*)
-        FROM gar_tenant;
+        SELECT count(*) FROM gar_tenant;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarTenant">

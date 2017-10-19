@@ -9,6 +9,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.dao.GarUserDao;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.service.GarUserService;
+import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public void save(GarUser garUser) {
+        garUser.setUserId(IdGeneratorUtil.generateId());
         String password = BCrypt.hashpw(garUser.getPassword(), BCrypt.gensalt(12));
         garUser.setPassword(password);
         userDao.save(garUser);
@@ -68,7 +70,7 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 1.0.0
      */
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         userDao.deleteById(id);
     }
 
@@ -79,7 +81,7 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void deleteBatch(List<Integer> ids) {
+    public void deleteBatch(List<Long> ids) {
         userDao.deleteBatch(ids);
     }
 
@@ -91,7 +93,7 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarUser queryObject(Integer id) {
+    public GarUser queryObject(Long id) {
         return userDao.queryObject(id);
     }
 
