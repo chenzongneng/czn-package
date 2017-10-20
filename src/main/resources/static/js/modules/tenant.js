@@ -7,12 +7,11 @@ var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为
 
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'applications',
+        url: baseURL + 'tenants',
         datatype: "json",
         colModel: [
-            {label: '应用ID', name: 'appId', hidden: true, width: 45, key: true},
-            {label: '应用名称', name: 'name', width: 75},
-            {label: '所属公司', name: 'company', width: 90},
+            {label: '租户ID', name: 'tenantId', hidden: true, width: 45, key: true},
+            {label: '租户名称', name: 'name', width: 75},
             {label: '备注', name: 'remark', width: 80},
             {label: '创建时间', name: 'createTime', width: 90}
         ],
@@ -48,9 +47,8 @@ var vm = new Vue({
         searchName: null,
         showList: true,
         title: null,
-        application: {
+        tenant: {
             name: null,
-            company: null,
             remark: null
         }
     },
@@ -62,28 +60,26 @@ var vm = new Vue({
             addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
-            //vm.roleList = {};
-            vm.application = {
-                appId: null,
+            vm.tenant = {
+                tenantId: null,
                 name: null,
-                company: null,
                 remark: null
             };
         },
         update: function () {
             addOrUpdate = 1;
-            var appId = getSelectedRow();
-            if (appId == null) {
+            var tenantId = getSelectedRow();
+            if (tenantId == null) {
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getApplication(appId);
+            vm.getTenant(tenantId);
         },
         del: function () {
-            var appIds = getSelectedRows();
-            if (appIds == null) {
+            var tenantIds = getSelectedRows();
+            if (tenantIds == null) {
                 return;
             }
             swal({
@@ -98,7 +94,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "application?appIds=" + appIds.toString(),
+                        url: baseURL + "tenant?tenantIds=" + tenantIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
@@ -115,9 +111,9 @@ var vm = new Vue({
         saveOrUpdate: function () {
             $.ajax({
                 type: addOrUpdate === 0 ? "POST" : "PUT",
-                url: baseURL + "application",
+                url: baseURL + "tenant",
                 contentType: "application/json",
-                data: JSON.stringify(vm.application),
+                data: JSON.stringify(vm.tenant),
                 dataType: "",
                 success: function () {
                     vm.reload();
@@ -128,13 +124,12 @@ var vm = new Vue({
                 }
             });
         },
-        getApplication: function (appId) {
-            $.get(baseURL + "application/" + appId, function (response) {
+        getTenant: function (tenantId) {
+            $.get(baseURL + "tenant/" + tenantId, function (response) {
                 if (response) {
-                    vm.application.appId = response.appId;
-                    vm.application.name = response.name;
-                    vm.application.company = response.company;
-                    vm.application.remark = response.remark;
+                    vm.tenant.tenantId = response.tenantId;
+                    vm.tenant.name = response.name;
+                    vm.tenant.remark = response.remark;
                 }
             });
         },

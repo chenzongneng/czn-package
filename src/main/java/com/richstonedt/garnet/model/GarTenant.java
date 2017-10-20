@@ -6,11 +6,13 @@
 
 package com.richstonedt.garnet.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <b><code>GarTenant</code></b>
@@ -49,6 +51,14 @@ public class GarTenant implements Serializable {
      */
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    /**
+     * The Create time.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
 
     /**
      * Return the TenantId
@@ -110,6 +120,26 @@ public class GarTenant implements Serializable {
         this.remark = remark;
     }
 
+    /**
+     * Return the CreateTime
+     *
+     * @return property value of createTime
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * Set the CreateTime
+     *
+     * @param createTime value to be assigned to property createTime
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
     /**
      * To String
      *

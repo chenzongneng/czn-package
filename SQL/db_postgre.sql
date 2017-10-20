@@ -245,9 +245,10 @@ ALTER TABLE "public"."gar_application" ADD PRIMARY KEY ("app_id");
 
 DROP TABLE IF EXISTS "public"."gar_tenant";
 CREATE TABLE "public"."gar_tenant" (
-  tenant_id INT8,
-  name      varchar(100),
-  remark    varchar(100)
+  tenant_id     INT8,
+  name          varchar(100),
+  remark        VARCHAR(100),
+  "create_time" TIMESTAMP(6) DEFAULT now()
 )
 ;
 
