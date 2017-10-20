@@ -14,7 +14,9 @@ spring:
     aop:
       auto: true
       proxy-target-class: false
-
+    devtools:
+        restart:
+          additional-exclude: views/**
 # Mybatis配置
 mybatis:
     mapperLocations: classpath:mapper/*.xml

@@ -228,10 +228,11 @@ COMMENT ON COLUMN gar_permission_menu.menu_id IS '菜单ID';*/
 
 DROP TABLE IF EXISTS "public"."gar_application";
 CREATE TABLE "public"."gar_application" (
-  app_id  INT8,
-  name    varchar(100),
-  company varchar(100),
-  remark  varchar(100)
+  app_id        INT8,
+  name          varchar(100),
+  company       varchar(100),
+  remark        VARCHAR(100),
+  "create_time" TIMESTAMP(6) DEFAULT now()
 )
 ;
 
