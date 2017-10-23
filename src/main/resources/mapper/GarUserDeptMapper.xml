@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarUserDeptDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarUserDept">
+        INSERT INTO gar_user_dept
+        (
+            user_id,
+            dept_id
+        )
+        VALUES
+            (
+                #{userId},
+                #{deptId}
+            );
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_user_dept
+        <where>
+            user_id = #{id};
+        </where>
+    </delete>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarUserDept">
+        select * from gar_user_dept
+        <where>
+            user_id = #{id};
+        </where>
+    </select>
+
+    <select id="queryObjectByDeptId" resultType="com.richstonedt.garnet.model.GarUserDept">
+        select * from gar_user_dept
+        <where>
+            dept_id = #{deptId};
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarUserDept">
+        UPDATE gar_user_dept
+        <set>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+        </set>
+        <where>
+            user_id = #{userId};
+        </where>
+    </update>
+</mapper>

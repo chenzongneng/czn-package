@@ -8,12 +8,15 @@ package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarUserDao;
 import com.richstonedt.garnet.model.GarUser;
-import com.richstonedt.garnet.service.GarUserService;
+import com.richstonedt.garnet.model.view.model.GarVMUser;
+import com.richstonedt.garnet.service.*;
 import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +40,18 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Autowired
     private GarUserDao userDao;
+
+    @Autowired
+    private GarTenantService tenantService;
+
+    @Autowired
+    private GarApplicationService applicationService;
+
+    @Autowired
+    private GarUserDeptService userDeptService;
+
+    @Autowired
+    private GarDeptService deptService;
 
     /**
      * Save.
@@ -133,5 +148,32 @@ public class GarUserServiceImpl implements GarUserService {
     @Override
     public GarUser getUserByName(String userName) {
         return userDao.getUserByName(userName);
+    }
+
+    @Override
+    public List<GarVMUser> queryUserList(String searchName, Integer page, Integer limit) {
+        List<GarUser> garUsers = queryObjects(searchName, page, limit);
+        if (CollectionUtils.isEmpty(garUsers)) {
+            return null;
+        }
+        List<GarVMUser> result = new ArrayList<>();
+        for (GarUser user : garUsers) {
+            GarVMUser vmUser = new GarVMUser();
+            String tenantName = tenantService.queryObject(user.getTenantId()).getName();
+            String appName = applicationService.queryObject(user.getAppId()).getName();
+            Long deptId = userDeptService.queryObject(user.getUserId()).getDeptId();
+            String deptName = deptService.queryObject(deptId).getName();
+            vmUser.setAppName(appName);
+            vmUser.setDeptName(deptName);
+            vmUser.setTenantName(tenantName);
+            vmUser.setUserId(user.getUserId());
+            vmUser.setUserName(user.getUserName());
+            vmUser.setEmail(user.getEmail());
+            vmUser.setMobile(user.getMobile());
+            vmUser.setStatus(user.getStatus());
+            vmUser.setCreateTime(user.getCreateTime());
+            result.add(vmUser);
+        }
+        return result;
     }
 }

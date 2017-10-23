@@ -7,22 +7,20 @@
 package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarUser;
+import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarUserService;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.richstonedt.garnet.utils.PageUtil;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <b><code>GarUserController</code></b>
@@ -73,6 +71,26 @@ public class GarUserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create user :" + user);
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询用户列表", notes = "Get user list ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class, responseContainer = "list"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> searchUsers(@ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
+                                         @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
+                                         @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
+        try {
+            List<GarVMUser> list = userService.queryUserList(searchName, page, limit);
+            int totalCount = userService.queryTotal();
+            PageUtil result = new PageUtil(list, totalCount, limit, page);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user list .");
             LOG.error(t.getMessage());
             return GarnetRsUtil.newResponseEntity(t);
         }
