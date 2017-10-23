@@ -106,9 +106,8 @@ var vm = new Vue({
                             vm.reload();
                         },
                         error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "success");
+                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
                         }
-
                     });
                 });
         },

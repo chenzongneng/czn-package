@@ -27,11 +27,10 @@ var vm = new Vue({
     methods: {
         getDept: function () {
             //加载部门树
-            $.get(baseURL + "sys/dept/select", function (r) {
-                ztree = $.fn.zTree.init($("#deptTree"), setting, r.deptList);
+            $.get(baseURL + "depts/add", function (r) {
+                ztree = $.fn.zTree.init($("#deptTree"), setting, r);
                 var node = ztree.getNodeByParam("deptId", vm.dept.parentDeptId);
                 ztree.selectNode(node);
-
                 vm.dept.parentName = node.name;
             })
         },
@@ -47,11 +46,10 @@ var vm = new Vue({
                 return;
             }
 
-            $.get(baseURL + "sys/dept/info/" + deptId, function (r) {
+            $.get(baseURL + "dept/" + deptId, function (r) {
                 vm.showList = false;
                 vm.title = "修改";
-                vm.dept = r.dept;
-
+                vm.dept = r;
                 vm.getDept();
             });
         },
@@ -60,39 +58,42 @@ var vm = new Vue({
             if (deptId == null) {
                 return;
             }
-
-            confirm('确定要删除选中的记录？', function () {
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + "sys/dept/delete",
-                    data: "deptId=" + deptId,
-                    success: function (r) {
-                        if (r.code === 0) {
-                            alert('操作成功', function () {
+            swal({
+                    title: "确定要删除选中的记录？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: "#DD6B55"
+                },
+                function () {
+                    $.ajax({
+                        type: "DELETE",
+                        url: baseURL + "dept/" + deptId,
+                        contentType: "application/json",
+                        dataType: "",
+                        success: function (result) {
+                            if (!result.message) {
+                                swal("删除成功!", "", "success");
                                 vm.reload();
-                            });
-                        } else {
-                            alert(r.msg);
+                            } else {
+                                swal("删除失败!", result.message, "error");
+                            }
                         }
-                    }
+                    });
                 });
-            });
         },
-        saveOrUpdate: function (event) {
-            var url = vm.dept.deptId == null ? "sys/dept/save" : "sys/dept/update";
+        saveOrUpdate: function () {
             $.ajax({
-                type: "POST",
-                url: baseURL + url,
+                type: vm.dept.deptId == null ? "POST" : "PUT",
+                url: baseURL + "dept",
                 contentType: "application/json",
                 data: JSON.stringify(vm.dept),
-                success: function (r) {
-                    if (r.code === 0) {
-                        alert('操作成功', function () {
-                            vm.reload();
-                        });
-                    } else {
-                        alert(r.msg);
-                    }
+                dataType: "",
+                success: function () {
+                    vm.reload();
+                    swal("操作成功!", "", "success");
                 }
             });
         },
@@ -112,7 +113,6 @@ var vm = new Vue({
                     //选择上级部门
                     vm.dept.parentDeptId = node[0].deptId;
                     vm.dept.parentName = node[0].name;
-
                     layer.close(index);
                 }
             });
@@ -136,7 +136,7 @@ var Dept = {
 Dept.initColumn = function () {
     var columns = [
         {field: 'selectItem', radio: true},
-        {title: '部门ID', field: 'deptId', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '部门ID', field: 'deptId', CanHide: 0, Visible: 0, align: 'center', valign: 'middle', width: '80px'},
         {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
         {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'}];

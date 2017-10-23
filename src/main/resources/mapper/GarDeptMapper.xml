@@ -22,14 +22,8 @@
             <if test="subList != null and subList != ''">
                 d.dept_id in (${subList})
             </if>
-            <if test="searchName != '' and searchName != null">
-                and name LIKE CONCAT('%',#{searchName},'%')
-            </if>
         </where>
         order by d.order_num asc
-        <if test="offset != null and limit != null">
-            limit #{limit} offset #{offset}
-        </if>
     </select>
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarDept">
@@ -37,6 +31,8 @@
         (
             dept_id,
             parent_dept_id,
+        tenant_id,
+        app_id,
             name,
             order_num
         )
@@ -44,6 +40,8 @@
             (
                 #{deptId},
                 #{parentDeptId},
+        1,
+        1,
                 #{name},
                 #{orderNum}
             )

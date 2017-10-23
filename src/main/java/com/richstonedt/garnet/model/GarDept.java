@@ -73,7 +73,7 @@ public class GarDept implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "排序")
-    private String orderNum;
+    private Integer orderNum;
 
     /**
      * The Parent name.
@@ -197,7 +197,7 @@ public class GarDept implements Serializable {
      * @return property value of orderNum
      * @since garnet-core-be-fe 0.1.0
      */
-    public String getOrderNum() {
+    public Integer getOrderNum() {
         return orderNum;
     }
 
@@ -207,7 +207,7 @@ public class GarDept implements Serializable {
      * @param orderNum value to be assigned to property orderNum
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setOrderNum(String orderNum) {
+    public void setOrderNum(Integer orderNum) {
         this.orderNum = orderNum;
     }
 

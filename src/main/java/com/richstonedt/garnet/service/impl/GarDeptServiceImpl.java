@@ -109,6 +109,7 @@ public class GarDeptServiceImpl implements GarDeptService {
      */
     @Override
     public List<GarDept> queryObjects(String searchName, Integer page, Integer limit) {
+        //todo 通过用户ID查询部门信息
         String subDeptList = getSubDeptIdList(0L);
         return deptDao.queryDeptList(subDeptList, null, null, null);
     }

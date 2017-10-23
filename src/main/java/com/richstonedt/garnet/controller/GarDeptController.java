@@ -60,9 +60,6 @@ public class GarDeptController {
     /**
      * Gets dept list.
      *
-     * @param page       the page
-     * @param limit      the limit
-     * @param searchName the search name
      * @return the dept list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -71,11 +68,9 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getDeptList(@ApiParam(value = "page,当前页") @RequestParam(value = "page", required = false) Integer page,
-                                         @ApiParam(value = "limit,每页数量") @RequestParam(value = "limit", required = false) Integer limit,
-                                         @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
+    public ResponseEntity<?> getDeptList() {
         try {
-            return new ResponseEntity<>(deptService.queryObjects(searchName, page, limit), HttpStatus.OK);
+            return new ResponseEntity<>(deptService.queryObjects(null, null, null), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to Get dept list ");
             LOG.error(t.getMessage());
@@ -83,29 +78,42 @@ public class GarDeptController {
         }
     }
 
-	/*@RequestMapping("/select")
-    @RequiresPermissions("sys:dept:select")
-	public R select(){
-		Map<String, Object> map = new HashMap<>();
-		//如果不是超级管理员，则只能查询本部门及子部门数据
-		if(getUserId() != Constant.SUPER_ADMIN){
-			map.put("deptFilter", sysDeptService.getSubDeptIdList(getDeptId()));
-		}
-		List<SysDeptEntity> deptList = sysDeptService.queryList(map);
+    /**
+     * Get dept list to add response entity.
+     *
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/depts/add", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询部门列表用于增加部门", notes = "Get dept list to add")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> getDeptListToAdd() {
+        try {
+            List<GarDept> deptList = deptService.queryObjects(null, null, null);
+            //todo 添加一级部门(租户名称)
+            GarDept root = new GarDept();
+            root.setDeptId(0L);
+            root.setName("一级部门");
+            root.setParentDeptId(-1L);
+            //root.setOpen(true);
+            deptList.add(root);
+            return new ResponseEntity<>(deptList, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get dept list to add");
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
 
-		//添加一级部门
-		if(getUserId() == Constant.SUPER_ADMIN){
-			SysDeptEntity root = new SysDeptEntity();
-			root.setDeptId(0L);
-			root.setName("一级部门");
-			root.setParentId(-1L);
-			root.setOpen(true);
-			deptList.add(root);
-		}
-
-		return R.ok().put("deptList", deptList);
-	}*/
-
+    /**
+     * Gets user dept.
+     *
+     * @param token the token
+     * @return the user dept
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/dept/user/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询用户所属部门", notes = "Get user's dept info")
     @ApiResponses(value = {
