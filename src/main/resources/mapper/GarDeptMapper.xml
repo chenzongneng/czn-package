@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarDeptDao">
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarDept">
+        SELECT *
+        FROM gar_dept
+        WHERE dept_id = #{id};
+    </select>
+
+    <select id="queryDeptList" resultType="com.richstonedt.garnet.model.GarDept">
+        select d.*,(select p.name from gar_dept p where p.dept_id = d.parent_dept_id) as parentName
+        from gar_dept d
+        <where>
+            <if test="subList != null and subList != ''">
+                d.dept_id in (${subList})
+            </if>
+            <if test="searchName != '' and searchName != null">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        order by d.order_num asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarDept">
+        INSERT INTO gar_dept
+        (
+            dept_id,
+            parent_dept_id,
+            name,
+            order_num
+        )
+        VALUES
+            (
+                #{deptId},
+                #{parentDeptId},
+                #{name},
+                #{orderNum}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarDept">
+        update gar_dept
+        <set>
+            <if test="parentDeptId != null">
+                parent_dept_id = #{parentDeptId},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum}
+            </if>
+        </set>
+        where dept_id = #{deptId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_dept
+        WHERE dept_id = #{id};
+    </delete>
+
+    <select id="queryDetpIdList" resultType="long">
+        SELECT dept_id
+        FROM gar_dept
+        WHERE parent_dept_id = #{parentDeptId}
+    </select>
+
+</mapper>

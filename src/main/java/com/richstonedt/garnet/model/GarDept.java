@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <b><code>GarDept</code></b>
@@ -73,6 +74,22 @@ public class GarDept implements Serializable {
      */
     @ApiModelProperty(value = "排序")
     private String orderNum;
+
+    /**
+     * The Parent name.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "父部门名称")
+    private String parentName;
+
+    /**
+     * The List.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "部门数据")
+    private List<?> list;
 
     /**
      * Return the DeptId
@@ -192,6 +209,46 @@ public class GarDept implements Serializable {
      */
     public void setOrderNum(String orderNum) {
         this.orderNum = orderNum;
+    }
+
+    /**
+     * Return the ParentName
+     *
+     * @return property value of parentName
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getParentName() {
+        return parentName;
+    }
+
+    /**
+     * Set the ParentName
+     *
+     * @param parentName value to be assigned to property parentName
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    /**
+     * Return the List
+     *
+     * @return property value of list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public List<?> getList() {
+        return list;
+    }
+
+    /**
+     * Set the List
+     *
+     * @param list value to be assigned to property list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setList(List<?> list) {
+        this.list = list;
     }
 
     /**
