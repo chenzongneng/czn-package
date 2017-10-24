@@ -10,6 +10,7 @@ import com.richstonedt.garnet.dao.GarTokenDao;
 import com.richstonedt.garnet.model.GarToken;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.service.GarTokenService;
+import com.richstonedt.garnet.service.GarUserDeptService;
 import com.richstonedt.garnet.service.GarUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,14 @@ public class GarTokenServiceImpl implements GarTokenService {
      */
     @Autowired
     private GarUserService userService;
+
+    /**
+     * The User dept service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarUserDeptService userDeptService;
 
     /**
      * Save.

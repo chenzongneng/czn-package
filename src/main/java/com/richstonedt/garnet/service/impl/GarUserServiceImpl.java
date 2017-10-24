@@ -254,6 +254,18 @@ public class GarUserServiceImpl implements GarUserService {
     }
 
     /**
+     * Search user dept gar user dept.
+     *
+     * @param userId the user id
+     * @return the gar user dept
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public GarUserDept searchUserDept(Long userId) {
+        return userDeptService.queryObject(userId);
+    }
+
+    /**
      * Convert user to vm user gar vm user.
      *
      * @param user the user

@@ -127,6 +127,28 @@ public class GarUserController {
     }
 
     /**
+     * Search user dept response entity.
+     *
+     * @param userId the user id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/userDept/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据userId查询用户部门信息", notes = "Get user dept by userId ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> searchUserDept(@ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId) {
+        try {
+            return new ResponseEntity<>(userService.searchUserDept(userId), HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user dept :" + userId);
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
      * Delete users response entity.
      *
      * @param userIds the user ids
