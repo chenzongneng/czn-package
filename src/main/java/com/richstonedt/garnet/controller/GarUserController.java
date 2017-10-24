@@ -76,6 +76,15 @@ public class GarUserController {
         }
     }
 
+    /**
+     * Search users response entity.
+     *
+     * @param page       the page
+     * @param limit      the limit
+     * @param searchName the search name
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询用户列表", notes = "Get user list ")
     @ApiResponses(value = {

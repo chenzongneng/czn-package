@@ -26,5 +26,12 @@ import java.util.List;
 @Mapper
 public interface GarUserDeptDao extends BaseDao<GarUserDept> {
 
+    /**
+     * Query object by dept id list.
+     *
+     * @param deptId the dept id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarUserDept> queryObjectByDeptId(@Param(value = "deptId") Long deptId);
 }

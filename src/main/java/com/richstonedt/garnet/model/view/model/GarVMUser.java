@@ -26,50 +26,123 @@ import java.io.Serializable;
 @ApiModel(value = "页面用户信息")
 public class GarVMUser extends GarUser implements Serializable {
 
+    /**
+     * The Tenant name.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "租户名称")
     private String tenantName;
 
+    /**
+     * The App name.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "应用名称")
     private String appName;
 
+    /**
+     * The Dept id.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "部门ID")
     private Long deptId;
 
+    /**
+     * The Dept name.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "部门名称")
     private String deptName;
 
+    /**
+     * Gets tenant name.
+     *
+     * @return the tenant name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getTenantName() {
         return tenantName;
     }
 
+    /**
+     * Sets tenant name.
+     *
+     * @param tenantName the tenant name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setTenantName(String tenantName) {
         this.tenantName = tenantName;
     }
 
+    /**
+     * Gets app name.
+     *
+     * @return the app name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getAppName() {
         return appName;
     }
 
+    /**
+     * Sets app name.
+     *
+     * @param appName the app name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
+    /**
+     * Gets dept id.
+     *
+     * @return the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
     public Long getDeptId() {
         return deptId;
     }
 
+    /**
+     * Sets dept id.
+     *
+     * @param deptId the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setDeptId(Long deptId) {
         this.deptId = deptId;
     }
 
+    /**
+     * Gets dept name.
+     *
+     * @return the dept name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getDeptName() {
         return deptName;
     }
 
+    /**
+     * Sets dept name.
+     *
+     * @param deptName the dept name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setDeptName(String deptName) {
         this.deptName = deptName;
     }
 
+    /**
+     * To String
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);

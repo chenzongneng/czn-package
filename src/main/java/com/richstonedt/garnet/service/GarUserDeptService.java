@@ -23,5 +23,12 @@ import java.util.List;
  */
 public interface GarUserDeptService extends BaseService<GarUserDept> {
 
+    /**
+     * Query object by dept id list.
+     *
+     * @param deptId the dept id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarUserDept> queryObjectByDeptId(Long deptId);
 }

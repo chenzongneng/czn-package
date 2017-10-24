@@ -41,15 +41,35 @@ public class GarUserServiceImpl implements GarUserService {
     @Autowired
     private GarUserDao userDao;
 
+    /**
+     * The Tenant service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarTenantService tenantService;
 
+    /**
+     * The Application service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarApplicationService applicationService;
 
+    /**
+     * The User dept service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserDeptService userDeptService;
 
+    /**
+     * The Dept service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarDeptService deptService;
 
@@ -150,6 +170,15 @@ public class GarUserServiceImpl implements GarUserService {
         return userDao.getUserByName(userName);
     }
 
+    /**
+     * Query user list list.
+     *
+     * @param searchName the search name
+     * @param page       the page
+     * @param limit      the limit
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVMUser> queryUserList(String searchName, Integer page, Integer limit) {
         List<GarUser> garUsers = queryObjects(searchName, page, limit);
