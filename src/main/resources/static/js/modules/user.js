@@ -82,7 +82,8 @@ var vm = new Vue({
             password: null,
             email: null,
             mobile: null,
-            status: null
+            status: null,
+            deptName: null
         },
         // 租户列表数据
         tenantList: {
@@ -117,7 +118,8 @@ var vm = new Vue({
                 password: null,
                 email: null,
                 mobile: null,
-                status: 1
+                status: 1,
+                deptName: null
             };
             vm.getUserDept(vm.currentUser.userId);
             vm.getDept();
@@ -201,7 +203,7 @@ var vm = new Vue({
             $.get(baseURL + "depts/add", function (r) {
                 ztree = $.fn.zTree.init($("#deptTree"), setting, r);
                 var node = ztree.getNodeByParam("deptId", vm.user.deptId);
-                if (node != null) {
+                if (node) {
                     ztree.selectNode(node);
                     vm.user.deptName = node.name;
                 }
