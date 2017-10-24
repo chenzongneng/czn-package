@@ -87,7 +87,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public void deleteBatch(List<Long> ids) {
-
+        userDeptDao.deleteBatch(ids);
     }
 
     /**

@@ -6,8 +6,11 @@
 
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
+import com.richstonedt.garnet.config.GarnetServiceException;
 import com.richstonedt.garnet.dao.GarUserDao;
 import com.richstonedt.garnet.model.GarUser;
+import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.*;
 import com.richstonedt.garnet.utils.IdGeneratorUtil;
@@ -117,7 +120,9 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public void deleteBatch(List<Long> ids) {
+        //todo  考虑加入事务
         userDao.deleteBatch(ids);
+        userDeptService.deleteBatch(ids);
     }
 
     /**
@@ -187,22 +192,91 @@ public class GarUserServiceImpl implements GarUserService {
         }
         List<GarVMUser> result = new ArrayList<>();
         for (GarUser user : garUsers) {
-            GarVMUser vmUser = new GarVMUser();
-            String tenantName = tenantService.queryObject(user.getTenantId()).getName();
-            String appName = applicationService.queryObject(user.getAppId()).getName();
-            Long deptId = userDeptService.queryObject(user.getUserId()).getDeptId();
-            String deptName = deptService.queryObject(deptId).getName();
-            vmUser.setAppName(appName);
-            vmUser.setDeptName(deptName);
-            vmUser.setTenantName(tenantName);
-            vmUser.setUserId(user.getUserId());
-            vmUser.setUserName(user.getUserName());
-            vmUser.setEmail(user.getEmail());
-            vmUser.setMobile(user.getMobile());
-            vmUser.setStatus(user.getStatus());
-            vmUser.setCreateTime(user.getCreateTime());
+            GarVMUser vmUser = convertUserToVmUser(user);
             result.add(vmUser);
         }
         return result;
+    }
+
+    /**
+     * Save user.
+     *
+     * @param garVMUser the gar vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void saveUser(GarVMUser garVMUser) {
+        if (userDao.getUserByName(garVMUser.getUserName()) != null) {
+            throw new GarnetServiceException("用户名已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
+        }
+        Long deptId = garVMUser.getDeptId();
+        if (garVMUser.getUserId() == null) {
+            garVMUser.setUserId(IdGeneratorUtil.generateId());
+        }
+        GarUserDept userDept = new GarUserDept();
+        userDept.setDeptId(deptId);
+        userDept.setUserId(garVMUser.getUserId());
+        save(garVMUser);
+        userDeptService.save(userDept);
+    }
+
+    /**
+     * Update user.
+     *
+     * @param garVMUser the gar vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void updateUser(GarVMUser garVMUser) {
+        if (getUserByName(garVMUser.getUserName()) != null) {
+            throw new GarnetServiceException("用户名已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
+        }
+        garVMUser.setPassword(BCrypt.hashpw(garVMUser.getPassword(), BCrypt.gensalt(12)));
+        update(garVMUser);
+        GarUserDept userDept = new GarUserDept();
+        userDept.setUserId(garVMUser.getUserId());
+        userDept.setDeptId(garVMUser.getDeptId());
+        userDeptService.update(userDept);
+    }
+
+    /**
+     * Search user.
+     *
+     * @param userId the user id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public GarVMUser searchUser(Long userId) {
+        return convertUserToVmUser(queryObject(userId));
+    }
+
+    /**
+     * Convert user to vm user gar vm user.
+     *
+     * @param user the user
+     * @return the gar vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private GarVMUser convertUserToVmUser(GarUser user) {
+        GarVMUser vmUser = new GarVMUser();
+        String tenantName = tenantService.queryObject(user.getTenantId()).getName();
+        String appName = applicationService.queryObject(user.getAppId()).getName();
+        Long deptId = userDeptService.queryObject(user.getUserId()).getDeptId();
+        String deptName = deptService.queryObject(deptId).getName();
+        vmUser.setUserId(user.getUserId());
+        vmUser.setTenantId(user.getTenantId());
+        vmUser.setAppId(user.getAppId());
+        vmUser.setDeptId(deptId);
+        vmUser.setPassword(user.getPassword());
+        vmUser.setAppName(appName);
+        vmUser.setDeptName(deptName);
+        vmUser.setTenantName(tenantName);
+        vmUser.setUserId(user.getUserId());
+        vmUser.setUserName(user.getUserName());
+        vmUser.setEmail(user.getEmail());
+        vmUser.setMobile(user.getMobile());
+        vmUser.setStatus(user.getStatus());
+        vmUser.setCreateTime(user.getCreateTime());
+        return vmUser;
     }
 }

@@ -6,7 +6,6 @@
 
 package com.richstonedt.garnet.controller;
 
-import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarUserService;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
@@ -54,29 +53,6 @@ public class GarUserController {
     private GarUserService userService;
 
     /**
-     * Save user response entity.
-     *
-     * @param user the user
-     * @return the response entity
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]新增用户", notes = "Create user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful query"),
-            @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> saveUser(@RequestBody GarUser user) {
-        try {
-            userService.save(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Throwable t) {
-            LOG.error("Failed to create user :" + user);
-            LOG.error(t.getMessage());
-            return GarnetRsUtil.newResponseEntity(t);
-        }
-    }
-
-    /**
      * Search users response entity.
      *
      * @param page       the page
@@ -100,6 +76,97 @@ public class GarUserController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user list .");
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Save user response entity.
+     *
+     * @param garVMUser the gar vm user
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]新增用户", notes = "Create user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> saveUser(@RequestBody GarVMUser garVMUser) {
+        try {
+            userService.saveUser(garVMUser);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to create user :" + garVMUser);
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Search user response entity.
+     *
+     * @param userId the user id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据id查询用户信息", notes = "Get user info by userId ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> searchUser(@ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId) {
+        try {
+            return new ResponseEntity<>(userService.searchUser(userId), HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user info :" + userId);
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Delete users response entity.
+     *
+     * @param userIds the user ids
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/user", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据id批量删除用户", notes = "Delete users")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> deleteUsers(@ApiParam(value = "userIds,用‘,’隔开", required = true) @RequestParam(value = "userIds") String userIds) {
+        try {
+            userService.deleteBatch(GarnetRsUtil.parseStringToList(userIds));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to delete users :" + userIds);
+            LOG.error(t.getMessage());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Update application response entity.
+     *
+     * @param garVMUser the gar vm user
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/user", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据ID更新用户信息", notes = "Update user info")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> updateApplication(@ApiParam(value = "user对象") @RequestBody GarVMUser garVMUser) {
+        try {
+            userService.updateUser(garVMUser);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to update user info  .");
             LOG.error(t.getMessage());
             return GarnetRsUtil.newResponseEntity(t);
         }

@@ -43,4 +43,28 @@ public interface GarUserService extends BaseService<GarUser> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<GarVMUser> queryUserList(String searchName, Integer page, Integer limit);
+
+    /**
+     * Save user.
+     *
+     * @param garVMUser the gar vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void saveUser(GarVMUser garVMUser);
+
+    /**
+     * Update user.
+     *
+     * @param garVMUser the gar vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void updateUser(GarVMUser garVMUser);
+
+    /**
+     * Search user.
+     *
+     * @param userId the user id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    GarVMUser searchUser(Long userId);
 }

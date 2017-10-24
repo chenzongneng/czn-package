@@ -29,6 +29,13 @@
         </where>
     </delete>
 
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_user_dept WHERE user_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarUserDept">
         select * from gar_user_dept
         <where>
