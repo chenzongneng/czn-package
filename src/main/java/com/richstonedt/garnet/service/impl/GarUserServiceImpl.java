@@ -18,6 +18,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,7 +232,9 @@ public class GarUserServiceImpl implements GarUserService {
         if (getUserByName(garVMUser.getUserName()) != null) {
             throw new GarnetServiceException("用户名已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
         }
-        garVMUser.setPassword(BCrypt.hashpw(garVMUser.getPassword(), BCrypt.gensalt(12)));
+        if (!StringUtils.isEmpty(garVMUser.getPassword())) {
+            garVMUser.setPassword(BCrypt.hashpw(garVMUser.getPassword(), BCrypt.gensalt(12)));
+        }
         update(garVMUser);
         GarUserDept userDept = new GarUserDept();
         userDept.setUserId(garVMUser.getUserId());
