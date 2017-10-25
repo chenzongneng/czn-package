@@ -78,7 +78,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getDeptList(@RequestParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<?> getDeptList(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             return new ResponseEntity<>(deptService.getUserDeptList(userId), HttpStatus.OK);
         } catch (Throwable t) {
@@ -100,7 +100,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getDeptListToAdd(@RequestParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<?> getDeptListToAdd(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             List<GarVMDept> deptList = deptService.getUserDeptList(userId);
             GarVMUser vmUser = userService.searchUser(userId);

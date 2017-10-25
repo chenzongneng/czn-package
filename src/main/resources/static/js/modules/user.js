@@ -14,7 +14,7 @@ $(function () {
             {label: '用户名', name: 'userName', width: 75},
             {label: '所属租户', name: 'tenantName', width: 75},
             {label: '所属应用', name: 'appName', width: 75},
-            {label: '所属部门', name: 'deptName', width: 75},
+            {label: '所属部门', name: 'deptNameList', width: 75},
             {label: '邮箱', name: 'email', width: 90},
             {label: '手机号', name: 'mobile', width: 80},
             {
@@ -72,6 +72,7 @@ var vm = new Vue({
     data: {
         searchName: null,
         showList: true,
+        showDeptNameList: true,
         title: null,
         user: {
             userId: null,
@@ -83,7 +84,13 @@ var vm = new Vue({
             email: null,
             mobile: null,
             status: null,
-            deptName: null
+            deptName: null,
+            deptNameList: []
+        },
+        dept: {
+            parentName: null,
+            parentDeptId: 0,
+            orderNum: 0
         },
         // 租户列表数据
         tenantList: {
@@ -104,6 +111,7 @@ var vm = new Vue({
         add: function () {
             addOrUpdate = 0;
             vm.showList = false;
+            vm.showDeptNameList = true;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
@@ -121,7 +129,6 @@ var vm = new Vue({
                 status: 1,
                 deptName: null
             };
-            vm.getUserDept(vm.currentUser.userId);
             vm.getDept();
             vm.getTenantList();
             vm.getAppList();
@@ -200,7 +207,7 @@ var vm = new Vue({
         },
         getDept: function () {
             //加载部门树
-            $.get(baseURL + "depts/add", function (r) {
+            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
                 ztree = $.fn.zTree.init($("#deptTree"), setting, r);
                 var node = ztree.getNodeByParam("deptId", vm.user.deptId);
                 if (node) {
@@ -222,11 +229,6 @@ var vm = new Vue({
                 vm.user.status = response.status;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
-            });
-        },
-        getUserDept: function (userId) {
-            $.get(baseURL + "userDept/" + userId, function (response) {
-                vm.user.deptId = response.deptId;
             });
         },
         /** 查询用户信息 */
