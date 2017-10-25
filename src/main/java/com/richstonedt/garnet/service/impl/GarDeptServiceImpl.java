@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author Sun Jinpeng
  * @version 0.1.0
- * @since garnet-core-be-fe 0.1.0
+ * @since garnet -core-be-fe 0.1.0
  */
 @Service
 public class GarDeptServiceImpl implements GarDeptService {
@@ -393,5 +393,33 @@ public class GarDeptServiceImpl implements GarDeptService {
                 roleDeptService.save(roleDept);
             }
         }
+    }
+
+    private String line = "";
+
+    private Long getMaxDeptId(Long userId) {
+        List<GarUserDept> userDeptList = userDeptService.getUserDeptByUserId(userId);
+        List<String> deptLines = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userDeptList)) {
+            if (userDeptList.size() == 1) {
+                return queryObject(userDeptList.get(0).getDeptId()).getParentDeptId();
+            }
+            for (GarUserDept userDept : userDeptList) {
+                line = userDept.getDeptId().toString();
+                getDeptLine(queryObject(userDept.getDeptId()).getParentDeptId());
+                deptLines.add(StringUtils.reverse(line));
+            }
+        }
+        for (int i = 0; i < deptLines.get(0).split(",").length; i++) {
+        }
+    }
+
+
+    private void getDeptLine(Long parentDeptId) {
+        line += parentDeptId.toString() + ",";
+        if (parentDeptId == 0L) {
+            return;
+        }
+        getDeptLine(deptDao.getDeptByParentDeptId(parentDeptId).getParentDeptId());
     }
 }

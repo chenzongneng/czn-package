@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Sun Jinpeng
  * @version 0.1.0
- * @since garnet-core-be-fe 0.1.0
+ * @since garnet -core-be-fe 0.1.0
  */
 public interface GarDeptService extends BaseService<GarDept> {
 
@@ -29,7 +29,7 @@ public interface GarDeptService extends BaseService<GarDept> {
      *
      * @param parentDeptId the parent dept id
      * @return the list
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     List<Long> queryDetpIdList(Long parentDeptId);
 
@@ -38,7 +38,7 @@ public interface GarDeptService extends BaseService<GarDept> {
      *
      * @param userId the user id
      * @return the user dept list
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     List<GarVMDept> getUserDeptList(Long userId);
 
@@ -47,7 +47,7 @@ public interface GarDeptService extends BaseService<GarDept> {
      *
      * @param deptId the dept id
      * @return the vm dept by dept id
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     GarVMDept getVMDeptByDeptId(Long deptId);
 
@@ -55,7 +55,7 @@ public interface GarDeptService extends BaseService<GarDept> {
      * Save vm dept.
      *
      * @param vmDept the vm dept
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     void saveVMDept(GarVMDept vmDept);
 
@@ -63,7 +63,7 @@ public interface GarDeptService extends BaseService<GarDept> {
      * Update vm dept.
      *
      * @param vmDept the vm dept
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     void updateVMDept(GarVMDept vmDept);
 
@@ -71,7 +71,7 @@ public interface GarDeptService extends BaseService<GarDept> {
      * Delete vm dept.
      *
      * @param deptId the dept id
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     void deleteVMDept(Long deptId);
 }

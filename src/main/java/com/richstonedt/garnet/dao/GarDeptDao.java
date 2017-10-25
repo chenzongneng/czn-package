@@ -46,4 +46,13 @@ public interface GarDeptDao extends BaseDao<GarDept> {
      * @since garnet-core-be-fe 1.0.0
      */
     List<GarDept> queryDeptList(@Param(value = "subList") String subList, @Param(value = "searchName") String searchName, @Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+
+    /**
+     * Gets dept by parent dept id.
+     *
+     * @param parentDeptId the parent dept id
+     * @return the dept by parent dept id
+     * @since garnet -core-be-fe 0.1.0
+     */
+    GarDept getDeptByParentDeptId(@Param(value = "parentDeptId") Long parentDeptId);
 }

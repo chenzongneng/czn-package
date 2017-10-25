@@ -74,4 +74,11 @@
         WHERE parent_dept_id = #{parentDeptId}
     </select>
 
+    <select id="getDeptByParentDeptId" resultType="com.richstonedt.garnet.model.GarDept">
+        SELECT * FROM gar_dept
+        <where>
+            dept_id = #{parentDeptId}
+        </where>
+    </select>
+
 </mapper>
