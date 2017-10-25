@@ -8,11 +8,15 @@ package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarDeptDao;
 import com.richstonedt.garnet.model.GarDept;
-import com.richstonedt.garnet.service.GarDeptService;
+import com.richstonedt.garnet.model.GarUser;
+import com.richstonedt.garnet.model.GarUserDept;
+import com.richstonedt.garnet.model.view.model.GarVMDept;
+import com.richstonedt.garnet.service.*;
 import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +42,38 @@ public class GarDeptServiceImpl implements GarDeptService {
      */
     @Autowired
     private GarDeptDao deptDao;
+
+    /**
+     * The User dept service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarUserDeptService userDeptService;
+
+    /**
+     * The Application service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarApplicationService applicationService;
+
+    /**
+     * The Tenant service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarTenantService tenantService;
+
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarUserService userService;
 
     /**
      * Save.
@@ -109,9 +145,7 @@ public class GarDeptServiceImpl implements GarDeptService {
      */
     @Override
     public List<GarDept> queryObjects(String searchName, Integer page, Integer limit) {
-        //todo 通过用户ID查询部门信息
-        String subDeptList = getSubDeptIdList(0L);
-        return deptDao.queryDeptList(subDeptList, null, null, null);
+        return null;
     }
 
     /**
@@ -139,13 +173,36 @@ public class GarDeptServiceImpl implements GarDeptService {
     }
 
     /**
+     * Gets user dept list.
+     * 获取该用户的部门列表
+     *
+     * @param userId the user id
+     * @return the user dept list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public List<GarVMDept> getUserDeptList(Long userId) {
+        GarUserDept userDept = userDeptService.queryObject(userId);
+        String subDeptList = getSubDeptIdList(userDept.getDeptId());
+        List<GarDept> depts = deptDao.queryDeptList(subDeptList, null, null, null);
+        if (CollectionUtils.isEmpty(depts)) {
+            return null;
+        }
+        List<GarVMDept> result = new ArrayList<>();
+        for (GarDept dept : depts) {
+            result.add(convertDeptToVMDept(dept));
+        }
+        return result;
+    }
+
+    /**
      * Gets sub dept id list.
      *
      * @param deptId the dept id
      * @return the sub dept id list
      * @since garnet-core-be-fe 0.1.0
      */
-    public String getSubDeptIdList(Long deptId) {
+    private String getSubDeptIdList(Long deptId) {
         //部门及子部门ID列表
         List<Long> deptIdList = new ArrayList<>();
 
@@ -175,5 +232,41 @@ public class GarDeptServiceImpl implements GarDeptService {
             }
             deptIdList.add(deptId);
         }
+    }
+
+    /**
+     * Convert dept to vm dept gar vm dept.
+     *
+     * @param dept the dept
+     * @return the gar vm dept
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private GarVMDept convertDeptToVMDept(GarDept dept) {
+        GarVMDept vmDept = new GarVMDept();
+        String appName = applicationService.queryObject(dept.getAppId()).getName();
+        String tenantName = tenantService.queryObject(dept.getTenantId()).getName();
+
+        //获取该部门下的用户列表
+        List<GarUserDept> userDeptList = userDeptService.queryObjectByDeptId(dept.getDeptId());
+        List<GarUser> userList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userDeptList)) {
+            for (GarUserDept userDept : userDeptList) {
+                userList.add(userService.queryObject(userDept.getUserId()));
+            }
+        }
+        vmDept.setUserList(userList);
+
+        //todo 获取该部门下的角色列表
+
+        vmDept.setAppName(appName);
+        vmDept.setTenantName(tenantName);
+        vmDept.setDeptId(dept.getDeptId());
+        vmDept.setParentDeptId(dept.getParentDeptId());
+        vmDept.setTenantId(dept.getTenantId());
+        vmDept.setAppId(dept.getAppId());
+        vmDept.setName(dept.getName());
+        vmDept.setOrderNum(dept.getOrderNum());
+        vmDept.setParentName(dept.getParentName());
+        return vmDept;
     }
 }

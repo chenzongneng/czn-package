@@ -3,69 +3,59 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
+
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.dao.GarUserDeptDao;
-import com.richstonedt.garnet.model.GarUserDept;
-import com.richstonedt.garnet.service.GarUserDeptService;
+import com.richstonedt.garnet.dao.GarRoleDao;
+import com.richstonedt.garnet.model.GarRole;
+import com.richstonedt.garnet.service.GarRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * <b><code>GarUserDeptServiceImpl</code></b>
+ * <b><code>GarRoleServiceImpl</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b> 2017/10/17 10:30
+ * <b>Create Time:</b> 2017/10/25 14:07
  *
  * @author Sun Jinpeng
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
 @Service
-public class GarUserDeptServiceImpl implements GarUserDeptService {
+public class GarRoleServiceImpl implements GarRoleService {
 
     /**
-     * The User dept dao.
+     * The Role dao.
      *
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarUserDeptDao userDeptDao;
-
-    /**
-     * Query Object By Dept Id.
-     *
-     * @param deptId the deptId
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @Override
-    public List<GarUserDept> queryObjectByDeptId(Long deptId) {
-        return userDeptDao.queryObjectByDeptId(deptId);
-    }
+    private GarRoleDao roleDao;
 
     /**
      * Save.
      *
-     * @param garUserDept the garUserDept
+     * @param garRole the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void save(GarUserDept garUserDept) {
-        userDeptDao.save(garUserDept);
+    public void save(GarRole garRole) {
+        roleDao.save(garRole);
     }
 
     /**
      * Update.
      *
-     * @param garUserDept the garUserDept
+     * @param garRole the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void update(GarUserDept garUserDept) {
-        userDeptDao.update(garUserDept);
+    public void update(GarRole garRole) {
+        update(garRole);
     }
 
     /**
@@ -76,7 +66,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public void deleteById(Long id) {
-        userDeptDao.deleteById(id);
+        roleDao.deleteById(id);
     }
 
     /**
@@ -87,7 +77,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public void deleteBatch(List<Long> ids) {
-        userDeptDao.deleteBatch(ids);
+        roleDao.deleteBatch(ids);
     }
 
     /**
@@ -98,23 +88,23 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarUserDept queryObject(Long id) {
-        //todo 目前只支持一个用户只属于一个部门，但一个部门下可以 有多个用户
-        return userDeptDao.queryObject(id);
+    public GarRole queryObject(Long id) {
+        return roleDao.queryObject(id);
     }
 
     /**
      * Query objects list.
      *
      * @param searchName the search name
-     * @param limit      the limit
      * @param page       the offset
+     * @param limit      the limit
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarUserDept> queryObjects(String searchName, Integer page, Integer limit) {
-        return null;
+    public List<GarRole> queryObjects(String searchName, Integer page, Integer limit) {
+        Integer offset = (page - 1) * limit;
+        return roleDao.queryObjects(searchName, limit, offset);
     }
 
     /**
@@ -125,6 +115,6 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public int queryTotal() {
-        return 0;
+        return roleDao.queryTotal();
     }
 }

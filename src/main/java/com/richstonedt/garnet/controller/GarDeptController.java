@@ -7,8 +7,10 @@
 package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarDept;
-import com.richstonedt.garnet.model.GarUserDept;
+import com.richstonedt.garnet.model.view.model.GarVMDept;
+import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarDeptService;
+import com.richstonedt.garnet.service.GarUserService;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -56,77 +58,61 @@ public class GarDeptController {
     @Autowired
     private GarDeptService deptService;
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarUserService userService;
+
 
     /**
      * Gets dept list.
      *
+     * @param userId the user id
      * @return the dept list
      * @since garnet-core-be-fe 0.1.0
      */
-    @RequestMapping(value = "/depts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]查询部门列表", notes = "Get dept list")
+    @RequestMapping(value = "/depts/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询该用户的部门列表", notes = "Get dept list by user id ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getDeptList() {
+    public ResponseEntity<?> getDeptList(@RequestParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
-            return new ResponseEntity<>(deptService.queryObjects(null, null, null), HttpStatus.OK);
+            return new ResponseEntity<>(deptService.getUserDeptList(userId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to Get dept list ");
+            LOG.error("Failed to Get dept list bu userId :" + userId);
             LOG.error(t.getMessage());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
 
     /**
-     * Get dept list to add response entity.
+     * Gets dept list to add.
      *
-     * @return the response entity
+     * @param userId the user id
+     * @return the dept list to add
      * @since garnet-core-be-fe 0.1.0
      */
-    @RequestMapping(value = "/depts/add", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]查询部门列表用于增加部门", notes = "Get dept list to add")
+    @RequestMapping(value = "/depts/add/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询部门列表用于增加部门", notes = "Get dept list to add by user id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getDeptListToAdd() {
+    public ResponseEntity<?> getDeptListToAdd(@RequestParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
-            List<GarDept> deptList = deptService.queryObjects(null, null, null);
-            //todo 添加一级部门(租户名称)
-            GarDept root = new GarDept();
+            List<GarVMDept> deptList = deptService.getUserDeptList(userId);
+            GarVMUser vmUser = userService.searchUser(userId);
+            GarVMDept root = new GarVMDept();
             root.setDeptId(0L);
-            root.setName("一级部门");
+            root.setName(vmUser.getTenantName());
             root.setParentDeptId(-1L);
-            //root.setOpen(true);
             deptList.add(root);
             return new ResponseEntity<>(deptList, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get dept list to add");
-            LOG.error(t.getMessage());
-            return GarnetRsUtil.newResponseEntity(t);
-        }
-    }
-
-    /**
-     * Gets user dept.
-     *
-     * @param token the token
-     * @return the user dept
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @RequestMapping(value = "/dept/user/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]查询用户所属部门", notes = "Get user's dept info")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful query", response = GarDept.class),
-            @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getUserDept(@ApiParam(value = "token", required = true) @PathVariable("token") String token) {
-        try {
-            //todo 根据用户token获取该用户的部门信息
-            GarUserDept userDept = new GarUserDept();
-            userDept.setDeptId(0L);
-            return new ResponseEntity<>(userDept, HttpStatus.OK);
-        } catch (Throwable t) {
-            LOG.error("Failed to get user's dept :" + token);
             LOG.error(t.getMessage());
             return GarnetRsUtil.newResponseEntity(t);
         }

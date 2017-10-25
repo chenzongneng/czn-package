@@ -3,69 +3,83 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
+
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.dao.GarUserDeptDao;
-import com.richstonedt.garnet.model.GarUserDept;
-import com.richstonedt.garnet.service.GarUserDeptService;
+import com.richstonedt.garnet.dao.GarRoleDeptDao;
+import com.richstonedt.garnet.model.GarRoleDept;
+import com.richstonedt.garnet.service.GarRoleDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * <b><code>GarUserDeptServiceImpl</code></b>
+ * <b><code>GarRoleDeptServiceImpl</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b> 2017/10/17 10:30
+ * <b>Create Time:</b> 2017/10/25 14:23
  *
  * @author Sun Jinpeng
  * @version 0.1.0
  * @since garnet-core-be-fe 0.1.0
  */
 @Service
-public class GarUserDeptServiceImpl implements GarUserDeptService {
+public class GarRoleDeptServiceImpl implements GarRoleDeptService {
 
     /**
-     * The User dept dao.
+     * The Role dept dao.
      *
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarUserDeptDao userDeptDao;
+    private GarRoleDeptDao roleDeptDao;
 
     /**
-     * Query Object By Dept Id.
+     * Gets role dept by role id.
      *
-     * @param deptId the deptId
+     * @param roleId the role id
+     * @return the role dept by role id
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarUserDept> queryObjectByDeptId(Long deptId) {
-        return userDeptDao.queryObjectByDeptId(deptId);
+    public List<GarRoleDept> getRoleDeptByRoleId(Long roleId) {
+        return roleDeptDao.getRoleDeptByRoleId(roleId);
+    }
+
+    /**
+     * Gets role dept by dept id.
+     *
+     * @param deptId the dept id
+     * @return the role dept by dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public List<GarRoleDept> getRoleDeptByDeptId(Long deptId) {
+        return roleDeptDao.getRoleDeptByDeptId(deptId);
     }
 
     /**
      * Save.
      *
-     * @param garUserDept the garUserDept
+     * @param garRoleDept the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void save(GarUserDept garUserDept) {
-        userDeptDao.save(garUserDept);
+    public void save(GarRoleDept garRoleDept) {
+        roleDeptDao.save(garRoleDept);
     }
 
     /**
      * Update.
      *
-     * @param garUserDept the garUserDept
+     * @param garRoleDept the t
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public void update(GarUserDept garUserDept) {
-        userDeptDao.update(garUserDept);
+    public void update(GarRoleDept garRoleDept) {
+        roleDeptDao.update(garRoleDept);
     }
 
     /**
@@ -76,7 +90,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public void deleteById(Long id) {
-        userDeptDao.deleteById(id);
+        roleDeptDao.deleteById(id);
     }
 
     /**
@@ -87,7 +101,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public void deleteBatch(List<Long> ids) {
-        userDeptDao.deleteBatch(ids);
+        roleDeptDao.deleteBatch(ids);
     }
 
     /**
@@ -98,22 +112,21 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public GarUserDept queryObject(Long id) {
-        //todo 目前只支持一个用户只属于一个部门，但一个部门下可以 有多个用户
-        return userDeptDao.queryObject(id);
+    public GarRoleDept queryObject(Long id) {
+        return null;
     }
 
     /**
      * Query objects list.
      *
      * @param searchName the search name
-     * @param limit      the limit
      * @param page       the offset
+     * @param limit      the limit
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarUserDept> queryObjects(String searchName, Integer page, Integer limit) {
+    public List<GarRoleDept> queryObjects(String searchName, Integer page, Integer limit) {
         return null;
     }
 

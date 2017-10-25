@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.model.GarDept;
+import com.richstonedt.garnet.model.view.model.GarVMDept;
 
 import java.util.List;
 
@@ -31,6 +32,15 @@ public interface GarDeptService extends BaseService<GarDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<Long> queryDetpIdList(Long parentDeptId);
+
+    /**
+     * Gets user dept list.
+     *
+     * @param userId the user id
+     * @return the user dept list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarVMDept> getUserDeptList(Long userId);
 }
 
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarRoleDeptDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarRoleDept">
+        INSERT INTO gar_role_dept
+        (
+            role_id,
+            dept_id
+        )
+        VALUES
+            (
+                #{roleId},
+                #{deptId}
+            );
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_role_dept
+        <where>
+            role_id = #{id};
+        </where>
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_role_dept WHERE role_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarRoleDept">
+        UPDATE gar_role_dept
+        <set>
+            <if test="deptId != null ">
+                dept_id = #{deptId},
+            </if>
+        </set>
+        <where>
+            role_id = #{roleId};
+        </where>
+    </update>
+
+    <select id="getRoleDeptByRoleId" resultType="com.richstonedt.garnet.model.GarRoleDept">
+        SELECT * FROM gar_role_dept
+        <where>
+            role_id = #{roleId};
+        </where>
+    </select>
+
+    <select id="getRoleDeptByDeptId" resultType="com.richstonedt.garnet.model.GarRoleDept">
+        SELECT * FROM gar_role_dept
+        <where>
+            dept_id = #{deptId};
+        </where>
+    </select>
+</mapper>

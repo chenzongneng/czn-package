@@ -62,9 +62,10 @@ public interface GarUserService extends BaseService<GarUser> {
     void updateUser(GarVMUser garVMUser);
 
     /**
-     * Search user.
+     * Search user gar vm user.
      *
      * @param userId the user id
+     * @return the gar vm user
      * @since garnet-core-be-fe 0.1.0
      */
     GarVMUser searchUser(Long userId);
