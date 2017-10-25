@@ -6,7 +6,6 @@
 
 package com.richstonedt.garnet.controller;
 
-import com.richstonedt.garnet.model.GarDept;
 import com.richstonedt.garnet.model.view.model.GarVMDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarDeptService;
@@ -126,13 +125,13 @@ public class GarDeptController {
      * @since garnet-core-be-fe 0.1.0
      */
     @RequestMapping(value = "/dept/{deptId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据id查询部门", notes = "Get dept by id ")
+    @ApiOperation(value = "[Garnet]根据id查询部门信息", notes = "Get dept by id ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful query", response = GarDept.class),
+            @ApiResponse(code = 200, message = "successful query", response = GarVMDept.class),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> searchDept(@ApiParam(value = "deptId", required = true) @PathVariable("deptId") Long deptId) {
         try {
-            return new ResponseEntity<>(deptService.queryObject(deptId), HttpStatus.OK);
+            return new ResponseEntity<>(deptService.getVMDeptByDeptId(deptId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get dept :" + deptId);
             LOG.error(t.getMessage());
@@ -143,7 +142,7 @@ public class GarDeptController {
     /**
      * Save dept response entity.
      *
-     * @param garDept the gar dept
+     * @param vmDept the gar dept
      * @return the response entity
      * @since garnet-core-be-fe 0.1.0
      */
@@ -152,12 +151,12 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> saveDept(@RequestBody GarDept garDept) {
+    public ResponseEntity<?> saveDept(@RequestBody GarVMDept vmDept) {
         try {
-            deptService.save(garDept);
+            deptService.saveVMDept(vmDept);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to create dept :" + garDept);
+            LOG.error("Failed to create dept :" + vmDept);
             LOG.error(t.getMessage());
             return GarnetRsUtil.newResponseEntity(t);
         }
@@ -166,18 +165,18 @@ public class GarDeptController {
     /**
      * Update dept response entity.
      *
-     * @param garDept the gar dept
+     * @param vmDept the gar dept
      * @return the response entity
      * @since garnet-core-be-fe 0.1.0
      */
     @RequestMapping(value = "/dept", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据ID更新部门", notes = "Update dept")
+    @ApiOperation(value = "[Garnet]更新部门信息", notes = "Update dept")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> updateDept(@RequestBody GarDept garDept) {
+    public ResponseEntity<?> updateDept(@RequestBody GarVMDept vmDept) {
         try {
-            deptService.update(garDept);
+            deptService.updateVMDept(vmDept);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update dept .");

@@ -34,4 +34,12 @@ public interface GarUserDeptDao extends BaseDao<GarUserDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<GarUserDept> queryObjectByDeptId(@Param(value = "deptId") Long deptId);
+
+    /**
+     * Delte user dept by dept id.
+     *
+     * @param deptId the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void deleteUserDeptByDeptId(@Param(value = "deptId") Long deptId);
 }

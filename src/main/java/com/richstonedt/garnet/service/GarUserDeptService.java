@@ -31,4 +31,12 @@ public interface GarUserDeptService extends BaseService<GarUserDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<GarUserDept> queryObjectByDeptId(Long deptId);
+
+    /**
+     * Delte user dept by dept id.
+     *
+     * @param deptId the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void deleteUserDeptByDeptId(Long deptId);
 }

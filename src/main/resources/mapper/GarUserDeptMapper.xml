@@ -36,6 +36,13 @@
         </foreach>
     </delete>
 
+    <delete id="deleteUserDeptByDeptId" parameterType="java.lang.Long">
+        DELETE FROM gar_user_dept
+        <where>
+            dept_id = #{deptId},
+        </where>
+    </delete>
+
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarUserDept">
         select * from gar_user_dept
         <where>

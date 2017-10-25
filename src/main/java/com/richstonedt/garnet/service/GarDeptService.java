@@ -41,6 +41,39 @@ public interface GarDeptService extends BaseService<GarDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<GarVMDept> getUserDeptList(Long userId);
+
+    /**
+     * Gets vm dept by dept id.
+     *
+     * @param deptId the dept id
+     * @return the vm dept by dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    GarVMDept getVMDeptByDeptId(Long deptId);
+
+    /**
+     * Save vm dept.
+     *
+     * @param vmDept the vm dept
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void saveVMDept(GarVMDept vmDept);
+
+    /**
+     * Update vm dept.
+     *
+     * @param vmDept the vm dept
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void updateVMDept(GarVMDept vmDept);
+
+    /**
+     * Delete vm dept.
+     *
+     * @param deptId the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void deleteVMDept(Long deptId);
 }
 
 

@@ -47,6 +47,17 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
     }
 
     /**
+     * Delte user dept by dept id.
+     *
+     * @param deptId the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void deleteUserDeptByDeptId(Long deptId) {
+        userDeptDao.deleteUserDeptByDeptId(deptId);
+    }
+
+    /**
      * Save.
      *
      * @param garUserDept the garUserDept

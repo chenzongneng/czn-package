@@ -61,6 +61,17 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
     }
 
     /**
+     * Delete role dept by dept id.
+     *
+     * @param deptId the dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void deleteRoleDeptByDeptId(Long deptId) {
+        roleDeptDao.deleteRoleDeptByDeptId(deptId);
+    }
+
+    /**
      * Save.
      *
      * @param garRoleDept the t
