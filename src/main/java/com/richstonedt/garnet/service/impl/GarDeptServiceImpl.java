@@ -339,7 +339,7 @@ public class GarDeptServiceImpl implements GarDeptService {
 
         //获取该部门下的用户列表
         List<GarUser> userList = new ArrayList<>();
-        List<GarUserDept> userDeptList = userDeptService.queryObjectByDeptId(dept.getDeptId());
+        List<GarUserDept> userDeptList = userDeptService.getUserDeptByDeptId(dept.getDeptId());
         if (!CollectionUtils.isEmpty(userDeptList)) {
             for (GarUserDept userDept : userDeptList) {
                 userList.add(userService.queryObject(userDept.getUserId()));

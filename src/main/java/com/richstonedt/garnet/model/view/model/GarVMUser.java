@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <b><code>GarLoginResult</code></b>
@@ -55,8 +56,8 @@ public class GarVMUser extends GarUser implements Serializable {
      *
      * @since garnet-core-be-fe 0.1.0
      */
-    @ApiModelProperty(value = "部门名称")
-    private String deptName;
+    @ApiModelProperty(value = "部门名称列表")
+    private List<String> deptNameList;
 
     /**
      * Gets tenant name.
@@ -124,18 +125,18 @@ public class GarVMUser extends GarUser implements Serializable {
      * @return the dept name
      * @since garnet-core-be-fe 0.1.0
      */
-    public String getDeptName() {
-        return deptName;
+    public List<String> getDeptNameList() {
+        return deptNameList;
     }
 
     /**
      * Sets dept name.
      *
-     * @param deptName the dept name
+     * @param deptNameList the dept name
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
+    public void setDeptNameList(List<String> deptNameList) {
+        this.deptNameList = deptNameList;
     }
 
     /**

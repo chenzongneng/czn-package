@@ -193,8 +193,7 @@ public class GarUserServiceImpl implements GarUserService {
         }
         List<GarVMUser> result = new ArrayList<>();
         for (GarUser user : garUsers) {
-            GarVMUser vmUser = convertUserToVmUser(user);
-            result.add(vmUser);
+            result.add(convertUserToVmUser(user));
         }
         return result;
     }
@@ -236,10 +235,6 @@ public class GarUserServiceImpl implements GarUserService {
             garVMUser.setPassword(BCrypt.hashpw(garVMUser.getPassword(), BCrypt.gensalt(12)));
         }
         update(garVMUser);
-        GarUserDept userDept = new GarUserDept();
-        userDept.setUserId(garVMUser.getUserId());
-        userDept.setDeptId(garVMUser.getDeptId());
-        userDeptService.update(userDept);
     }
 
     /**
@@ -254,18 +249,6 @@ public class GarUserServiceImpl implements GarUserService {
     }
 
     /**
-     * Search user dept gar user dept.
-     *
-     * @param userId the user id
-     * @return the gar user dept
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @Override
-    public GarUserDept searchUserDept(Long userId) {
-        return userDeptService.queryObject(userId);
-    }
-
-    /**
      * Convert user to vm user gar vm user.
      *
      * @param user the user
@@ -276,15 +259,22 @@ public class GarUserServiceImpl implements GarUserService {
         GarVMUser vmUser = new GarVMUser();
         String tenantName = tenantService.queryObject(user.getTenantId()).getName();
         String appName = applicationService.queryObject(user.getAppId()).getName();
-        Long deptId = userDeptService.queryObject(user.getUserId()).getDeptId();
-        String deptName = deptService.queryObject(deptId).getName();
+
+        // 获取该用户的部门列表
+        List<String> deptNameList = new ArrayList<>();
+        List<GarUserDept> userDeptList = userDeptService.getUserDeptByUserId(user.getUserId());
+        if (!CollectionUtils.isEmpty(userDeptList)) {
+            for (GarUserDept userDept : userDeptList) {
+                deptNameList.add(deptService.queryObject(userDept.getDeptId()).getName());
+            }
+        }
+        vmUser.setDeptNameList(deptNameList);
+
         vmUser.setUserId(user.getUserId());
         vmUser.setTenantId(user.getTenantId());
         vmUser.setAppId(user.getAppId());
-        vmUser.setDeptId(deptId);
         vmUser.setPassword(user.getPassword());
         vmUser.setAppName(appName);
-        vmUser.setDeptName(deptName);
         vmUser.setTenantName(tenantName);
         vmUser.setUserId(user.getUserId());
         vmUser.setUserName(user.getUserName());

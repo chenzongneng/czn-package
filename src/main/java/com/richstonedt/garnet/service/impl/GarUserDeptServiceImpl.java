@@ -42,8 +42,8 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarUserDept> queryObjectByDeptId(Long deptId) {
-        return userDeptDao.queryObjectByDeptId(deptId);
+    public List<GarUserDept> getUserDeptByDeptId(Long deptId) {
+        return userDeptDao.getUserDeptByDeptId(deptId);
     }
 
     /**
@@ -55,6 +55,18 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
     @Override
     public void deleteUserDeptByDeptId(Long deptId) {
         userDeptDao.deleteUserDeptByDeptId(deptId);
+    }
+
+    /**
+     * Gets user dept by user id.
+     *
+     * @param userId the user id
+     * @return the user dept by user id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public List<GarUserDept> getUserDeptByUserId(Long userId) {
+        return userDeptDao.getUserDeptByUserId(userId);
     }
 
     /**

@@ -7,7 +7,6 @@
 package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.model.GarUser;
-import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 
 import java.util.List;
@@ -69,13 +68,4 @@ public interface GarUserService extends BaseService<GarUser> {
      * @since garnet-core-be-fe 0.1.0
      */
     GarVMUser searchUser(Long userId);
-
-    /**
-     * Search user dept gar user dept.
-     *
-     * @param userId the user id
-     * @return the gar user dept
-     * @since garnet-core-be-fe 0.1.0
-     */
-    GarUserDept searchUserDept(Long userId);
 }

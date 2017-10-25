@@ -30,7 +30,7 @@ public interface GarUserDeptService extends BaseService<GarUserDept> {
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarUserDept> queryObjectByDeptId(Long deptId);
+    List<GarUserDept> getUserDeptByDeptId(Long deptId);
 
     /**
      * Delte user dept by dept id.
@@ -39,4 +39,13 @@ public interface GarUserDeptService extends BaseService<GarUserDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     void deleteUserDeptByDeptId(Long deptId);
+
+    /**
+     * Gets user dept by user id.
+     *
+     * @param userId the user id
+     * @return the user dept by user id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarUserDept> getUserDeptByUserId(Long userId);
 }

@@ -33,7 +33,16 @@ public interface GarUserDeptDao extends BaseDao<GarUserDept> {
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarUserDept> queryObjectByDeptId(@Param(value = "deptId") Long deptId);
+    List<GarUserDept> getUserDeptByDeptId(@Param(value = "deptId") Long deptId);
+
+    /**
+     * Gets user dept by user id.
+     *
+     * @param userId the user id
+     * @return the user dept by user id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarUserDept> getUserDeptByUserId(@Param(value = "userId") Long userId);
 
     /**
      * Delte user dept by dept id.
@@ -42,4 +51,6 @@ public interface GarUserDeptDao extends BaseDao<GarUserDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     void deleteUserDeptByDeptId(@Param(value = "deptId") Long deptId);
+
+
 }

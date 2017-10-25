@@ -50,10 +50,17 @@
         </where>
     </select>
 
-    <select id="queryObjectByDeptId" resultType="com.richstonedt.garnet.model.GarUserDept">
+    <select id="getUserDeptByDeptId" resultType="com.richstonedt.garnet.model.GarUserDept">
         select * from gar_user_dept
         <where>
             dept_id = #{deptId};
+        </where>
+    </select>
+
+    <select id="getUserDeptByUserId" resultType="com.richstonedt.garnet.model.GarUserDept">
+        select * from gar_user_dept
+        <where>
+            user_id = #{userId};
         </where>
     </select>
 
