@@ -52,6 +52,7 @@ $(function () {
     });
 });
 
+var ztree;
 var setting = {
     data: {
         simpleData: {
@@ -63,9 +64,13 @@ var setting = {
         key: {
             url: "nourl"
         }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
     }
 };
-var ztree;
 
 var vm = new Vue({
     el: '#garnetApp',
@@ -129,7 +134,7 @@ var vm = new Vue({
                 status: 1,
                 deptName: null
             };
-            vm.getDept();
+            vm.initDeptTree();
             vm.getTenantList();
             vm.getAppList();
         },
@@ -146,7 +151,7 @@ var vm = new Vue({
             vm.getTenantList();
             vm.getAppList();
             vm.getUser(userId);
-            vm.getDept();
+            vm.initDeptTree();
         },
         del: function () {
             var userIds = getSelectedRows();
@@ -184,6 +189,8 @@ var vm = new Vue({
                 });
         },
         saveOrUpdate: function () {
+            /*var nodes = ztree.getCheckedNodes(true);
+            console.log(nodes);*/
             if (!vm.checkValue()) {
                 return;
             }
@@ -205,15 +212,16 @@ var vm = new Vue({
                 }
             });
         },
-        getDept: function () {
+        initDeptTree: function () {
             //加载部门树
             $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
                 ztree = $.fn.zTree.init($("#deptTree"), setting, r);
-                var node = ztree.getNodeByParam("deptId", vm.user.deptId);
+                ztree.expandAll(true);
+                /*var node = ztree.getNodeByParam("deptId", vm.user.deptId);
                 if (node) {
                     ztree.selectNode(node);
                     vm.user.deptName = node.name;
-                }
+                }*/
             })
         },
         getUser: function (userId) {
@@ -249,7 +257,8 @@ var vm = new Vue({
                 content: jQuery("#deptLayer"),
                 btn: ['确定', '取消'],
                 btn1: function (index) {
-                    var node = ztree.getSelectedNodes();
+                    var node = ztree.getCheckedNodes(true);
+                    console.log(node);
                     //选择上级部门
                     vm.user.deptId = node[0].deptId;
                     vm.user.deptName = node[0].name;
