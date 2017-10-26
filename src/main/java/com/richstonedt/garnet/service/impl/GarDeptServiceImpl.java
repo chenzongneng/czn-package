@@ -408,9 +408,11 @@ public class GarDeptServiceImpl implements GarDeptService {
      * Gets max dept id.
      * 找到同时包含所有部门的最小父部门
      * 1. 通过 userId 找到用户的所有部门
-     * 2. 找到该部门到顶级部门的这条线
+     * 2. 找到每条该部门到顶级部门的这条线
      * 3. 反转这条线，从顶级部门到部门
      * 4. 随便取一条线（默认第一条）找到这些线中最长的相同段
+     *      (如果都在同一部门，那么其中一条线必然包括另外一条线，如果选择长的线，那么将会数组越界，此时上一个点即为该点；
+     *            如果选择短的线，那么程序最终返回该线的最后一个点就是该点。)
      * 5. 那么那个点就是这些部门的最小父部门
      *
      * @param userId the user id
@@ -436,12 +438,16 @@ public class GarDeptServiceImpl implements GarDeptService {
         }
         for (int i = 0; i < listStr.get(0).length; i++) {
             for (String[] strArray : listStr) {
-                if (!strArray[i].equals(listStr.get(0)[i])) {
+                try {
+                    if (!strArray[i].equals(listStr.get(0)[i])) {
+                        return Long.valueOf(listStr.get(0)[i - 1]);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
                     return Long.valueOf(listStr.get(0)[i - 1]);
                 }
             }
         }
-        return 0L;
+        return Long.valueOf(listStr.get(0)[listStr.get(0).length - 1]);
     }
 
     /**
