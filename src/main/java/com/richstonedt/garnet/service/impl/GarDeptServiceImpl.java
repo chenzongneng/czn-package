@@ -197,8 +197,9 @@ public class GarDeptServiceImpl implements GarDeptService {
      */
     @Override
     public List<GarVMDept> getUserDeptList(Long userId) {
-        GarUserDept userDept = userDeptService.queryObject(userId);
-        String subDeptList = getSubDeptIdList(userDept.getDeptId());
+        GarDept garDept = deptDao.getDeptByParentDeptId(getMaxDeptId(userId));
+        Long deptId = garDept == null ? 1 : garDept.getDeptId();
+        String subDeptList = getSubDeptIdList(deptId);
         List<GarDept> depts = deptDao.queryDeptList(subDeptList, null, null, null);
         if (CollectionUtils.isEmpty(depts)) {
             return null;
@@ -395,8 +396,27 @@ public class GarDeptServiceImpl implements GarDeptService {
         }
     }
 
+    /**
+     * The Line.
+     * 存该部门一直到顶级部门这条路线
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private String line = "";
 
+    /**
+     * Gets max dept id.
+     * 找到同时包含所有部门的最小父部门
+     * 1. 通过 userId 找到用户的所有部门
+     * 2. 找到该部门到顶级部门的这条线
+     * 3. 反转这条线，从顶级部门到部门
+     * 4. 随便取一条线（默认第一条）找到这些线中最长的相同段
+     * 5. 那么那个点就是这些部门的最小父部门
+     *
+     * @param userId the user id
+     * @return the max dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
     private Long getMaxDeptId(Long userId) {
         List<GarUserDept> userDeptList = userDeptService.getUserDeptByUserId(userId);
         List<String> deptLines = new ArrayList<>();
@@ -410,13 +430,29 @@ public class GarDeptServiceImpl implements GarDeptService {
                 deptLines.add(StringUtils.reverse(line));
             }
         }
-        for (int i = 0; i < deptLines.get(0).split(",").length; i++) {
+        List<String[]> listStr = new ArrayList<>();
+        for (String deptLine : deptLines) {
+            listStr.add(deptLine.split(","));
         }
+        for (int i = 0; i < listStr.get(0).length; i++) {
+            for (String[] strArray : listStr) {
+                if (!strArray[i].equals(listStr.get(0)[i])) {
+                    return Long.valueOf(listStr.get(0)[i - 1]);
+                }
+            }
+        }
+        return 0L;
     }
 
-
+    /**
+     * Gets dept line.
+     * 通过递归找到这条线
+     *
+     * @param parentDeptId the parent dept id
+     * @since garnet-core-be-fe 0.1.0
+     */
     private void getDeptLine(Long parentDeptId) {
-        line += parentDeptId.toString() + ",";
+        line += "," + parentDeptId.toString();
         if (parentDeptId == 0L) {
             return;
         }
