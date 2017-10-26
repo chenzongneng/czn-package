@@ -44,20 +44,28 @@ public class GarVMUser extends GarUser implements Serializable {
     private String appName;
 
     /**
-     * The Dept id.
-     *
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @ApiModelProperty(value = "部门ID")
-    private Long deptId;
-
-    /**
      * The Dept name.
      *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "部门名称列表")
     private List<String> deptNameList;
+
+    /**
+     * The Dept id list.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "部门ID列表")
+    private List<Long> deptIdList;
+
+    /**
+     * The Dept ids.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "前端传来的部门ID列表，用‘，’隔开")
+    private String deptIds;
 
     /**
      * Gets tenant name.
@@ -100,26 +108,6 @@ public class GarVMUser extends GarUser implements Serializable {
     }
 
     /**
-     * Gets dept id.
-     *
-     * @return the dept id
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    /**
-     * Sets dept id.
-     *
-     * @param deptId the dept id
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    /**
      * Gets dept name.
      *
      * @return the dept name
@@ -137,6 +125,46 @@ public class GarVMUser extends GarUser implements Serializable {
      */
     public void setDeptNameList(List<String> deptNameList) {
         this.deptNameList = deptNameList;
+    }
+
+    /**
+     * Return the DeptIdList
+     *
+     * @return property value of deptIdList
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public List<Long> getDeptIdList() {
+        return deptIdList;
+    }
+
+    /**
+     * Set the DeptIdList
+     *
+     * @param deptIdList value to be assigned to property deptIdList
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setDeptIdList(List<Long> deptIdList) {
+        this.deptIdList = deptIdList;
+    }
+
+    /**
+     * Return the DeptIds
+     *
+     * @return property value of deptIds
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public String getDeptIds() {
+        return deptIds;
+    }
+
+    /**
+     * Set the DeptIds
+     *
+     * @param deptIds value to be assigned to property deptIds
+     * @since garnet-core-be-fe 0.1.0
+     */
+    public void setDeptIds(String deptIds) {
+        this.deptIds = deptIds;
     }
 
     /**

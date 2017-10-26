@@ -13,6 +13,7 @@ import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.*;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
 import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,6 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public void save(GarUser garUser) {
-        garUser.setUserId(IdGeneratorUtil.generateId());
         String password = BCrypt.hashpw(garUser.getPassword(), BCrypt.gensalt(12));
         garUser.setPassword(password);
         userDao.save(garUser);
@@ -122,8 +122,8 @@ public class GarUserServiceImpl implements GarUserService {
     @Override
     public void deleteBatch(List<Long> ids) {
         //todo  考虑加入事务
-        userDao.deleteBatch(ids);
         userDeptService.deleteBatch(ids);
+        userDao.deleteBatch(ids);
     }
 
     /**
@@ -209,15 +209,11 @@ public class GarUserServiceImpl implements GarUserService {
         if (userDao.getUserByName(garVMUser.getUserName()) != null) {
             throw new GarnetServiceException("用户名已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
         }
-        Long deptId = garVMUser.getDeptId();
         if (garVMUser.getUserId() == null) {
             garVMUser.setUserId(IdGeneratorUtil.generateId());
         }
-        GarUserDept userDept = new GarUserDept();
-        userDept.setDeptId(deptId);
-        userDept.setUserId(garVMUser.getUserId());
+        saveUserDept(garVMUser);
         save(garVMUser);
-        userDeptService.save(userDept);
     }
 
     /**
@@ -228,13 +224,17 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Override
     public void updateUser(GarVMUser garVMUser) {
-        if (getUserByName(garVMUser.getUserName()) != null) {
-            throw new GarnetServiceException("用户名已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
-        }
         if (!StringUtils.isEmpty(garVMUser.getPassword())) {
             garVMUser.setPassword(BCrypt.hashpw(garVMUser.getPassword(), BCrypt.gensalt(12)));
         }
-        update(garVMUser);
+        userDeptService.deleteById(garVMUser.getUserId());
+        saveUserDept(garVMUser);
+
+        try {
+            update(garVMUser);
+        } catch (Exception e) {
+            throw new GarnetServiceException("该用户已存在！");
+        }
     }
 
     /**
@@ -262,12 +262,15 @@ public class GarUserServiceImpl implements GarUserService {
 
         // 获取该用户的部门列表
         List<String> deptNameList = new ArrayList<>();
+        List<Long> deptIdList = new ArrayList<>();
         List<GarUserDept> userDeptList = userDeptService.getUserDeptByUserId(user.getUserId());
         if (!CollectionUtils.isEmpty(userDeptList)) {
             for (GarUserDept userDept : userDeptList) {
+                deptIdList.add(userDept.getDeptId());
                 deptNameList.add(deptService.queryObject(userDept.getDeptId()).getName());
             }
         }
+        vmUser.setDeptIdList(deptIdList);
         vmUser.setDeptNameList(deptNameList);
 
         vmUser.setUserId(user.getUserId());
@@ -283,5 +286,23 @@ public class GarUserServiceImpl implements GarUserService {
         vmUser.setStatus(user.getStatus());
         vmUser.setCreateTime(user.getCreateTime());
         return vmUser;
+    }
+
+    /**
+     * Save user dept.
+     *
+     * @param vmUser the vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private void saveUserDept(GarVMUser vmUser) {
+        List<Long> deptIdList = GarnetRsUtil.parseStringToList(vmUser.getDeptIds());
+        if (!CollectionUtils.isEmpty(deptIdList)) {
+            for (Long deptId : deptIdList) {
+                GarUserDept userDept = new GarUserDept();
+                userDept.setUserId(vmUser.getUserId());
+                userDept.setDeptId(deptId);
+                userDeptService.save(userDept);
+            }
+        }
     }
 }

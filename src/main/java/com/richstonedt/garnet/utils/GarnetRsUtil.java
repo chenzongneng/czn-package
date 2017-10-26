@@ -68,7 +68,9 @@ public class GarnetRsUtil {
             if (ids.contains(comma)) {
                 String[] tmpIds = ids.split(",");
                 for (String id : tmpIds) {
-                    idList.add(Long.valueOf(id));
+                    if (!StringUtils.isEmpty(id)) {
+                        idList.add(Long.valueOf(id));
+                    }
                 }
             } else {
                 idList.add(Long.valueOf(ids));
