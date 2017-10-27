@@ -197,7 +197,7 @@ public class GarDeptServiceImpl implements GarDeptService {
      */
     @Override
     public List<GarVMDept> getUserDeptList(Long userId) {
-        GarDept garDept = deptDao.getDeptByParentDeptId(getMaxDeptId(userId));
+        GarDept garDept = deptDao.getDeptByParentDeptId(getMinParentDeptId(userId));
         Long deptId = garDept == null ? 1 : garDept.getDeptId();
         String subDeptList = getSubDeptIdList(deptId);
         List<GarDept> depts = deptDao.queryDeptList(subDeptList, null, null, null);
@@ -405,7 +405,7 @@ public class GarDeptServiceImpl implements GarDeptService {
     private String line = "";
 
     /**
-     * Gets max dept id.
+     * Gets Min Parent Dept Id.
      * 找到同时包含所有部门的最小父部门
      * 1. 通过 userId 找到用户的所有部门
      * 2. 找到每条该部门到顶级部门的这条线
@@ -419,7 +419,7 @@ public class GarDeptServiceImpl implements GarDeptService {
      * @return the max dept id
      * @since garnet-core-be-fe 0.1.0
      */
-    private Long getMaxDeptId(Long userId) {
+    private Long getMinParentDeptId(Long userId) {
         List<GarUserDept> userDeptList = userDeptService.getUserDeptByUserId(userId);
         List<String> deptLines = new ArrayList<>();
         if (!CollectionUtils.isEmpty(userDeptList)) {

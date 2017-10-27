@@ -6,6 +6,7 @@
 var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 
 $(function () {
+    // 初始化用户列表
     $("#jqGrid").jqGrid({
         url: baseURL + 'users',
         datatype: "json",
@@ -52,7 +53,9 @@ $(function () {
     });
 });
 
-var ztree;
+// 部门树
+var deptTree;
+// ztree 配置
 var setting = {
     data: {
         simpleData: {
@@ -77,25 +80,19 @@ var vm = new Vue({
     data: {
         searchName: null,
         showList: true,
-        showDeptNameList: true,
         title: null,
+        // 用户信息
         user: {
             userId: null,
             appId: null,
-            deptId: null,
             tenantId: null,
+            deptIds: null,
             userName: null,
             password: null,
             email: null,
             mobile: null,
             status: null,
-            deptName: null,
-            deptNameList: []
-        },
-        dept: {
-            parentName: null,
-            parentDeptId: 0,
-            orderNum: 0
+            deptIdList: []
         },
         // 租户列表数据
         tenantList: {
@@ -107,6 +104,7 @@ var vm = new Vue({
             selectedApp: "",
             options: []
         },
+        // 当前用户信息
         currentUser: {}
     },
     methods: {
@@ -116,7 +114,6 @@ var vm = new Vue({
         add: function () {
             addOrUpdate = 0;
             vm.showList = false;
-            vm.showDeptNameList = true;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
@@ -124,34 +121,33 @@ var vm = new Vue({
             vm.appList.options = [];
             vm.user = {
                 userId: null,
-                appId: null,
-                tenantId: null,
-                deptId: null,
                 userName: null,
+                tenantId: null,
+                appId: null,
                 password: null,
                 email: null,
                 mobile: null,
                 status: 1,
-                deptName: null
+                deptIds: null
             };
-            vm.initDeptTree();
+            vm.initDeptTreeToAdd();
             vm.getTenantList();
             vm.getAppList();
         },
         update: function () {
-            addOrUpdate = 1;
             var userId = getSelectedRow();
             if (userId == null) {
                 return;
             }
+            addOrUpdate = 1;
             vm.showList = false;
             vm.title = "修改";
             vm.tenantList.options = [];
             vm.appList.options = [];
+            vm.user.deptIdList = [];
+            vm.initDeptTreeToUpdate(userId);
             vm.getTenantList();
             vm.getAppList();
-            vm.getUser(userId);
-            vm.initDeptTree();
         },
         del: function () {
             var userIds = getSelectedRows();
@@ -189,8 +185,12 @@ var vm = new Vue({
                 });
         },
         saveOrUpdate: function () {
-            /*var nodes = ztree.getCheckedNodes(true);
-            console.log(nodes);*/
+            var nodes = deptTree.getCheckedNodes(true);
+            var deptIdList = new Array();
+            for (var i = 0; i < nodes.length; i++) {
+                deptIdList.push(nodes[i].deptId);
+            }
+            vm.user.deptIds = deptIdList.join(",");
             if (!vm.checkValue()) {
                 return;
             }
@@ -212,16 +212,19 @@ var vm = new Vue({
                 }
             });
         },
-        initDeptTree: function () {
+        initDeptTreeToAdd: function () {
             //加载部门树
             $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
-                ztree = $.fn.zTree.init($("#deptTree"), setting, r);
-                ztree.expandAll(true);
-                /*var node = ztree.getNodeByParam("deptId", vm.user.deptId);
-                if (node) {
-                    ztree.selectNode(node);
-                    vm.user.deptName = node.name;
-                }*/
+                deptTree = $.fn.zTree.init($("#deptTree"), setting, r);
+                deptTree.expandAll(true);
+            })
+        },
+        initDeptTreeToUpdate: function (userId) {
+            //加载部门树
+            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
+                deptTree = $.fn.zTree.init($("#deptTree"), setting, r);
+                deptTree.expandAll(true);
+                vm.getUser(userId);
             })
         },
         getUser: function (userId) {
@@ -229,7 +232,7 @@ var vm = new Vue({
                 vm.user.userId = response.userId;
                 vm.user.appId = response.appId;
                 vm.user.tenantId = response.tenantId;
-                vm.user.deptId = response.deptId;
+                //vm.user.deptIdList = response.deptIdList;
                 vm.user.userName = response.userName;
                 vm.user.password = null;
                 vm.user.email = response.email;
@@ -237,33 +240,17 @@ var vm = new Vue({
                 vm.user.status = response.status;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
+                $.each(response.deptIdList, function (index, item) {
+                    // 勾选用户所属的部门
+                    var node = deptTree.getNodeByParam("deptId", item);
+                    deptTree.checkNode(node, true, false);
+                });
             });
         },
         /** 查询用户信息 */
         getCurrentUser: function () {
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
                 vm.currentUser = response;
-            });
-        },
-        deptTree: function () {
-            layer.open({
-                type: 1,
-                offset: '50px',
-                skin: 'layui-layer-molv',
-                title: "选择部门",
-                area: ['300px', '450px'],
-                shade: 0,
-                shadeClose: false,
-                content: jQuery("#deptLayer"),
-                btn: ['确定', '取消'],
-                btn1: function (index) {
-                    var node = ztree.getCheckedNodes(true);
-                    console.log(node);
-                    //选择上级部门
-                    vm.user.deptId = node[0].deptId;
-                    vm.user.deptName = node[0].name;
-                    layer.close(index);
-                }
             });
         },
         reload: function () {
