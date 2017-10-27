@@ -6,7 +6,7 @@
 var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 
 $(function () {
-    // 初始化用户列表
+    /** 初始化用户列表 */
     $("#jqGrid").jqGrid({
         url: baseURL + 'users',
         datatype: "json",
@@ -52,10 +52,10 @@ $(function () {
         }
     });
 });
-
-// 部门树
+/** 部门树 */
 var deptTree;
-// ztree 配置
+
+/** ztree 配置*/
 var setting = {
     data: {
         simpleData: {
@@ -194,9 +194,6 @@ var vm = new Vue({
             if (!vm.checkValue()) {
                 return;
             }
-            vm.doUpInsert();
-        },
-        doUpInsert: function () {
             $.ajax({
                 type: addOrUpdate === 0 ? "POST" : "PUT",
                 url: baseURL + "user",
@@ -232,7 +229,6 @@ var vm = new Vue({
                 vm.user.userId = response.userId;
                 vm.user.appId = response.appId;
                 vm.user.tenantId = response.tenantId;
-                //vm.user.deptIdList = response.deptIdList;
                 vm.user.userName = response.userName;
                 vm.user.password = null;
                 vm.user.email = response.email;
@@ -241,13 +237,12 @@ var vm = new Vue({
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
                 $.each(response.deptIdList, function (index, item) {
-                    // 勾选用户所属的部门
                     var node = deptTree.getNodeByParam("deptId", item);
                     deptTree.checkNode(node, true, false);
                 });
             });
         },
-        /** 查询用户信息 */
+        /** 查询当前用户信息 */
         getCurrentUser: function () {
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
                 vm.currentUser = response;
