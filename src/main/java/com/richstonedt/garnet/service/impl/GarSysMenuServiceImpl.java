@@ -50,7 +50,8 @@ public class GarSysMenuServiceImpl implements GarSysMenuService {
     private List<GarSysMenu> getMenuTreeList(List<GarSysMenu> menuList) {
         List<GarSysMenu> subMenuList = new ArrayList<>();
         for (GarSysMenu entity : menuList) {
-            if (entity.getType() == 0) {//目录
+            //目录
+            if (entity.getType() == 0) {
                 entity.setList(getMenuTreeList(queryListParentId(entity.getMenuId())));
             }
             subMenuList.add(entity);

@@ -1,3 +1,29 @@
+/*
+ * 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+ * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
+var Dept = {
+    id: "deptTable",
+    table: null,
+    layerIndex: -1
+};
+
+/**
+ * 初始化表格的列
+ */
+Dept.initColumn = function () {
+    return [
+        {field: 'selectItem', radio: true},
+        {title: '部门ID', field: 'deptId', CanHide: 0, Visible: 0, align: 'center', valign: 'middle', width: '80px'},
+        {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '用户列表', field: 'userNameList', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '角色列表', field: 'roleNameList', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'}];
+};
+
 var setting = {
     data: {
         simpleData: {
@@ -18,6 +44,8 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
+        // 当前用户信息
+        currentUser: {},
         dept: {
             parentName: null,
             parentDeptId: 0,
@@ -120,29 +148,31 @@ var vm = new Vue({
         reload: function () {
             vm.showList = true;
             Dept.table.refresh();
+        },
+        /** 初始化部门信息 */
+        initDeptInfo: function () {
+            // 获取当前用户信息
+            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
+                vm.currentUser = response;
+
+                // 初始化表格数据
+                var columns = Dept.initColumn();
+                var table = new TreeTable(Dept.id, baseURL + "depts/" + response.userId, columns);
+                //table.setRootCodeValue(r.deptId);
+                table.setExpandColumn(2);
+                table.setIdField("deptId");
+                table.setCodeField("deptId");
+                table.setParentCodeField("parentDeptId");
+                table.setExpandAll(false);
+                table.init();
+                Dept.table = table;
+            });
         }
+    },
+    created: function () {
+        this.initDeptInfo();
     }
 });
-
-var Dept = {
-    id: "deptTable",
-    table: null,
-    layerIndex: -1
-};
-
-/**
- * 初始化表格的列
- */
-Dept.initColumn = function () {
-    var columns = [
-        {field: 'selectItem', radio: true},
-        {title: '部门ID', field: 'deptId', CanHide: 0, Visible: 0, align: 'center', valign: 'middle', width: '80px'},
-        {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
-        {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'}];
-    return columns;
-};
-
 
 function getDeptId() {
     var selected = $('#deptTable').bootstrapTreeTable('getSelections');
@@ -153,19 +183,3 @@ function getDeptId() {
         return selected[0].id;
     }
 }
-
-
-$(function () {
-    $.get(baseURL + "dept/user/" + garnetToken, function (r) {
-        var colunms = Dept.initColumn();
-        var table = new TreeTable(Dept.id, baseURL + "depts", colunms);
-        table.setRootCodeValue(r.deptId);
-        table.setExpandColumn(2);
-        table.setIdField("deptId");
-        table.setCodeField("deptId");
-        table.setParentCodeField("parentDeptId");
-        table.setExpandAll(false);
-        table.init();
-        Dept.table = table;
-    });
-});

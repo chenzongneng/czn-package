@@ -7,8 +7,6 @@
 package com.richstonedt.garnet.model.view.model;
 
 import com.richstonedt.garnet.model.GarDept;
-import com.richstonedt.garnet.model.GarRole;
-import com.richstonedt.garnet.model.GarUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -25,7 +23,7 @@ import java.util.List;
  *
  * @author Sun Jinpeng
  * @version 0.1.0
- * @since garnet-core-be-fe 0.1.0
+ * @since garnet -core-be-fe 0.1.0
  */
 @ApiModel(value = "页面部门信息")
 public class GarVMDept extends GarDept implements Serializable {
@@ -49,14 +47,20 @@ public class GarVMDept extends GarDept implements Serializable {
     /**
      * The User list.
      */
-    @ApiModelProperty(value = "用户列表")
-    private List<GarUser> userList;
+    @ApiModelProperty(value = "用户名列表")
+    private List<String> userNameList;
+
+    @ApiModelProperty(value = "用户ID列表")
+    private List<Long> userIdLList;
 
     /**
      * The Role list.
      */
-    @ApiModelProperty(value = "角色列表")
-    private List<GarRole> roleList;
+    @ApiModelProperty(value = "角色名列表")
+    private List<String> roleNameList;
+
+    @ApiModelProperty(value = "角色ID列表")
+    private List<Long> roleIdLList;
 
     /**
      * The User ids.
@@ -74,7 +78,7 @@ public class GarVMDept extends GarDept implements Serializable {
      * Return the TenantName
      *
      * @return property value of tenantName
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public String getTenantName() {
         return tenantName;
@@ -84,7 +88,7 @@ public class GarVMDept extends GarDept implements Serializable {
      * Set the TenantName
      *
      * @param tenantName value to be assigned to property tenantName
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public void setTenantName(String tenantName) {
         this.tenantName = tenantName;
@@ -94,7 +98,7 @@ public class GarVMDept extends GarDept implements Serializable {
      * Return the AppName
      *
      * @return property value of appName
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public String getAppName() {
         return appName;
@@ -104,57 +108,17 @@ public class GarVMDept extends GarDept implements Serializable {
      * Set the AppName
      *
      * @param appName value to be assigned to property appName
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
     /**
-     * Return the UserList
-     *
-     * @return property value of userList
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public List<GarUser> getUserList() {
-        return userList;
-    }
-
-    /**
-     * Set the UserList
-     *
-     * @param userList value to be assigned to property userList
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public void setUserList(List<GarUser> userList) {
-        this.userList = userList;
-    }
-
-    /**
-     * Return the RoleList
-     *
-     * @return property value of roleList
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public List<GarRole> getRoleList() {
-        return roleList;
-    }
-
-    /**
-     * Set the RoleList
-     *
-     * @param roleList value to be assigned to property roleList
-     * @since garnet-core-be-fe 0.1.0
-     */
-    public void setRoleList(List<GarRole> roleList) {
-        this.roleList = roleList;
-    }
-
-    /**
      * Return the UserIds
      *
      * @return property value of userIds
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public String getUserIds() {
         return userIds;
@@ -164,7 +128,7 @@ public class GarVMDept extends GarDept implements Serializable {
      * Set the UserIds
      *
      * @param userIds value to be assigned to property userIds
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public void setUserIds(String userIds) {
         this.userIds = userIds;
@@ -174,7 +138,7 @@ public class GarVMDept extends GarDept implements Serializable {
      * Return the RoleIds
      *
      * @return property value of roleIds
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public String getRoleIds() {
         return roleIds;
@@ -184,10 +148,42 @@ public class GarVMDept extends GarDept implements Serializable {
      * Set the RoleIds
      *
      * @param roleIds value to be assigned to property roleIds
-     * @since garnet-core-be-fe 0.1.0
+     * @since garnet -core-be-fe 0.1.0
      */
     public void setRoleIds(String roleIds) {
         this.roleIds = roleIds;
+    }
+
+    public List<String> getUserNameList() {
+        return userNameList;
+    }
+
+    public void setUserNameList(List<String> userNameList) {
+        this.userNameList = userNameList;
+    }
+
+    public List<Long> getUserIdLList() {
+        return userIdLList;
+    }
+
+    public void setUserIdLList(List<Long> userIdLList) {
+        this.userIdLList = userIdLList;
+    }
+
+    public List<String> getRoleNameList() {
+        return roleNameList;
+    }
+
+    public void setRoleNameList(List<String> roleNameList) {
+        this.roleNameList = roleNameList;
+    }
+
+    public List<Long> getRoleIdLList() {
+        return roleIdLList;
+    }
+
+    public void setRoleIdLList(List<Long> roleIdLList) {
+        this.roleIdLList = roleIdLList;
     }
 
     /**

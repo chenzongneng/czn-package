@@ -7,7 +7,9 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarDeptDao;
-import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.GarDept;
+import com.richstonedt.garnet.model.GarRoleDept;
+import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMDept;
 import com.richstonedt.garnet.service.*;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
@@ -339,24 +341,30 @@ public class GarDeptServiceImpl implements GarDeptService {
         vmDept.setParentName(dept.getParentName());
 
         //获取该部门下的用户列表
-        List<GarUser> userList = new ArrayList<>();
+        List<String> userNameList = new ArrayList<>();
+        List<Long> userIdList = new ArrayList<>();
         List<GarUserDept> userDeptList = userDeptService.getUserDeptByDeptId(dept.getDeptId());
         if (!CollectionUtils.isEmpty(userDeptList)) {
             for (GarUserDept userDept : userDeptList) {
-                userList.add(userService.queryObject(userDept.getUserId()));
+                userNameList.add(userService.queryObject(userDept.getUserId()).getUserName());
+                userIdList.add(userDept.getUserId());
             }
         }
-        vmDept.setUserList(userList);
+        vmDept.setUserNameList(userNameList);
+        vmDept.setUserIdLList(userIdList);
 
         //获取该部门下的角色列表
-        List<GarRole> roleList = new ArrayList<>();
+        List<String> roleNameList = new ArrayList<>();
+        List<Long> roleIdList = new ArrayList<>();
         List<GarRoleDept> roleDeptList = roleDeptService.getRoleDeptByDeptId(dept.getDeptId());
         if (!CollectionUtils.isEmpty(roleDeptList)) {
             for (GarRoleDept roleDept : roleDeptList) {
-                roleList.add(roleService.queryObject(roleDept.getRoleId()));
+                roleNameList.add(roleService.queryObject(roleDept.getRoleId()).getName());
+                roleIdList.add(roleDept.getRoleId());
             }
         }
-        vmDept.setRoleList(roleList);
+        vmDept.setRoleNameList(roleNameList);
+        vmDept.setRoleIdLList(roleIdList);
         return vmDept;
     }
 
