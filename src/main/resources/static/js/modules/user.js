@@ -91,8 +91,7 @@ var vm = new Vue({
             password: null,
             email: null,
             mobile: null,
-            status: null,
-            deptIdList: []
+            status: null
         },
         // 租户列表数据
         tenantList: {

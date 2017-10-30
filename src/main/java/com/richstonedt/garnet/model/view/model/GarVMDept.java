@@ -46,30 +46,48 @@ public class GarVMDept extends GarDept implements Serializable {
 
     /**
      * The User list.
+     *
+     * @since garnet -core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户名列表")
     private List<String> userNameList;
 
+    /**
+     * The User id l list.
+     *
+     * @since garnet -core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "用户ID列表")
     private List<Long> userIdLList;
 
     /**
      * The Role list.
+     *
+     * @since garnet -core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "角色名列表")
     private List<String> roleNameList;
 
+    /**
+     * The Role id l list.
+     *
+     * @since garnet -core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "角色ID列表")
     private List<Long> roleIdLList;
 
     /**
      * The User ids.
+     *
+     * @since garnet -core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户ID,以‘，’隔开")
     private String userIds;
 
     /**
      * The Role ids.
+     *
+     * @since garnet -core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "角色ID,以‘，’隔开")
     private String roleIds;
@@ -154,34 +172,81 @@ public class GarVMDept extends GarDept implements Serializable {
         this.roleIds = roleIds;
     }
 
+    /**
+     * Gets user name list.
+     *
+     * @return the user name list
+     */
     public List<String> getUserNameList() {
         return userNameList;
     }
 
+    /**
+     * Sets user name list.
+     *
+     * @param userNameList the user name list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public void setUserNameList(List<String> userNameList) {
         this.userNameList = userNameList;
     }
 
+    /**
+     * Gets user id l list.
+     *
+     * @return the user id l list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public List<Long> getUserIdLList() {
         return userIdLList;
     }
 
+    /**
+     * Sets user id l list.
+     *
+     * @param userIdLList the user id l list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public void setUserIdLList(List<Long> userIdLList) {
         this.userIdLList = userIdLList;
     }
 
+    /**
+     * Gets role name list.
+     *
+     * @return the role name list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public List<String> getRoleNameList() {
         return roleNameList;
     }
 
+    /**
+     * Sets role name list.
+     *
+     * @param roleNameList the role name list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public void setRoleNameList(List<String> roleNameList) {
         this.roleNameList = roleNameList;
     }
 
+    /**
+     * Gets role id l list.
+     *
+     * @return the role id l list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public List<Long> getRoleIdLList() {
         return roleIdLList;
     }
 
+    /**
+     * Sets role id l list.
+     *
+     * @param roleIdLList the role id l list
+     * @since garnet -core-be-fe 0.1.0
+     */
     public void setRoleIdLList(List<Long> roleIdLList) {
         this.roleIdLList = roleIdLList;
     }
