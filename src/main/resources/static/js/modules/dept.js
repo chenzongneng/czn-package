@@ -141,13 +141,17 @@ var vm = new Vue({
             if (deptId == null) {
                 return;
             }
+            vm.showList = false;
+            vm.title = "修改";
+            vm.tenantList.options = [];
+            vm.appList.options = [];
+            /*            vm.dept.userIdList = [];
+                        vm.dept.roleIdList = [];*/
+            vm.dept = {};
+            vm.getTenantList();
+            vm.getAppList();
+            vm.initTreesToUpdate(deptId);
 
-            $.get(baseURL + "dept/" + deptId, function (r) {
-                vm.showList = false;
-                vm.title = "修改";
-                vm.dept = r;
-                vm.getDept();
-            });
         },
         del: function () {
             var deptId = getDeptId();
@@ -231,22 +235,67 @@ var vm = new Vue({
             vm.showList = true;
             Dept.table.refresh();
         },
+        /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
-            //加载部门树
+            // 加载部门树
             $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
             });
 
-            //加载用户树
+            // 加载用户树
             $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
                 userTree.expandAll(true);
             });
 
-            //加载角色树
+            // 加载角色树
             $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
                 roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
                 roleTree.expandAll(true);
+            });
+        },
+        /** 更新按钮初始化数据 */
+        initTreesToUpdate: function (deptId) {
+            // 加载部门树
+            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+
+                // 加载用户树
+                $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
+                    userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
+                    userTree.expandAll(true);
+
+                    // 加载角色树
+                    $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
+                        roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
+                        roleTree.expandAll(true);
+
+                        // 获取部门信息
+                        vm.getDeptInfo(deptId);
+                    });
+                });
+            });
+        },
+        /** 根据ID获取部门信息 */
+        getDeptInfo: function (deptId) {
+            $.get(baseURL + "dept/" + deptId, function (response) {
+                vm.dept.deptId = response.deptId;
+                vm.dept.appId = response.appId;
+                vm.dept.tenantId = response.tenantId;
+                vm.dept.name = response.name;
+                vm.tenantList.selectedTenant = response.tenantId;
+                vm.appList.selectedApp = response.appId;
+                vm.dept.parentName = response.parentName;
+                vm.dept.parentDeptId = response.parentDeptId;
+                vm.dept.orderNum = response.orderNum;
+                $.each(response.userIdLList, function (index, item) {
+                    var node = userTree.getNodeByParam("userId", item);
+                    userTree.checkNode(node, true, false);
+                });
+                $.each(response.roleIdLList, function (index, item) {
+                    var node = roleTree.getNodeByParam("roleId", item);
+                    roleTree.checkNode(node, true, false);
+                });
             });
         },
         /** 初始化部门信息 */

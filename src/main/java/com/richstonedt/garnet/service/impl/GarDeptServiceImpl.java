@@ -331,6 +331,10 @@ public class GarDeptServiceImpl implements GarDeptService {
         GarVMDept vmDept = new GarVMDept();
         String appName = applicationService.queryObject(dept.getAppId()).getName();
         String tenantName = tenantService.queryObject(dept.getTenantId()).getName();
+        GarDept parentDept = deptDao.getDeptByParentDeptId(dept.getParentDeptId());
+        if (parentDept != null) {
+            vmDept.setParentName(parentDept.getName());
+        }
 
         vmDept.setAppName(appName);
         vmDept.setTenantName(tenantName);
@@ -340,7 +344,6 @@ public class GarDeptServiceImpl implements GarDeptService {
         vmDept.setAppId(dept.getAppId());
         vmDept.setName(dept.getName());
         vmDept.setOrderNum(dept.getOrderNum());
-        vmDept.setParentName(dept.getParentName());
 
         //获取该部门下的用户列表
         List<String> userNameList = new ArrayList<>();
