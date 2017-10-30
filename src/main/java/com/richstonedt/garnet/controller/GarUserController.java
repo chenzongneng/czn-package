@@ -66,11 +66,12 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> searchUsers(@ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
+    public ResponseEntity<?> searchUsers(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
+                                         @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                          @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                          @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
-            List<GarVMUser> list = userService.queryUserList(searchName, page, limit);
+            List<GarVMUser> list = userService.queryUserList(token, searchName, page, limit);
             int totalCount = userService.queryTotal();
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);

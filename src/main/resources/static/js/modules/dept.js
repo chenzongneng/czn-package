@@ -24,7 +24,9 @@ Dept.initColumn = function () {
         {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'}];
 };
 
-var setting = {
+/** 部门树 */
+var deptTree;
+var deptTreeSetting = {
     data: {
         simpleData: {
             enable: true,
@@ -33,11 +35,58 @@ var setting = {
             rootPId: -1
         },
         key: {
-            url: "nourl"
+            url: "nourl",
+            name: "name"
         }
     }
 };
-var ztree;
+
+
+/** 用户树 */
+var userTree;
+/** ztree 配置*/
+var userTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "userId"
+            //pIdKey: "parentDeptId",
+            //rootPId: -1
+        },
+        key: {
+            url: "nourl",
+            name: "userName"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
+/** 角色树 */
+var roleTree;
+/** ztree 配置*/
+var roleTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "roleId"
+            //pIdKey: "parentDeptId",
+            //rootPId: -1
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
 
 var vm = new Vue({
     el: '#rrapp',
@@ -47,26 +96,33 @@ var vm = new Vue({
         // 当前用户信息
         currentUser: {},
         dept: {
+            deptId: null,
+            parentDeptId: null,
+            tenantId: null,
+            appId: null,
+            name: null,
             parentName: null,
-            parentDeptId: 0,
-            orderNum: 0
+            orderNum: 0,
+            userIds: null,
+            roleIds: null
         }
     },
     methods: {
-        getDept: function () {
-            //加载部门树
-            $.get(baseURL + "depts/add", function (r) {
-                ztree = $.fn.zTree.init($("#deptTree"), setting, r);
-                var node = ztree.getNodeByParam("deptId", vm.dept.parentDeptId);
-                ztree.selectNode(node);
-                vm.dept.parentName = node.name;
-            })
-        },
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.dept = {parentName: null, parentDeptId: 0, orderNum: 0};
-            vm.getDept();
+            vm.dept = {
+                deptId: null,
+                parentDeptId: null,
+                tenantId: null,
+                appId: null,
+                name: null,
+                parentName: null,
+                orderNum: 0,
+                userIds: null,
+                roleIds: null
+            };
+            vm.initTreesToAdd();
         },
         update: function () {
             var deptId = getDeptId();
@@ -137,7 +193,7 @@ var vm = new Vue({
                 content: jQuery("#deptLayer"),
                 btn: ['确定', '取消'],
                 btn1: function (index) {
-                    var node = ztree.getSelectedNodes();
+                    var node = deptTree.getSelectedNodes();
                     //选择上级部门
                     vm.dept.parentDeptId = node[0].deptId;
                     vm.dept.parentName = node[0].name;
@@ -149,12 +205,23 @@ var vm = new Vue({
             vm.showList = true;
             Dept.table.refresh();
         },
+        initTreesToAdd: function () {
+            //加载部门树
+            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            });
+
+            //加载用户树
+            $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
+                userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
+                userTree.expandAll(true);
+            });
+        },
         /** 初始化部门信息 */
         initDeptInfo: function () {
             // 获取当前用户信息
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
                 vm.currentUser = response;
-
                 // 初始化表格数据
                 var columns = Dept.initColumn();
                 var table = new TreeTable(Dept.id, baseURL + "depts/" + response.userId, columns);

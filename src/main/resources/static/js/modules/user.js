@@ -46,6 +46,10 @@ $(function () {
             page: "page",
             rows: "limit"
         },
+        // 在URL中传递参数
+        postData: {
+            token: garnetToken
+        },
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});

@@ -36,13 +36,14 @@ public interface GarUserService extends BaseService<GarUser> {
     /**
      * Query user list list.
      *
+     * @param token the token
      * @param searchName the search name
      * @param page       the page
      * @param limit      the limit
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarVMUser> queryUserList(String searchName, Integer page, Integer limit);
+    List<GarVMUser> queryUserList(String token, String searchName, Integer page, Integer limit);
 
     /**
      * Save user.

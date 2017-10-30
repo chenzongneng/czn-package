@@ -79,6 +79,14 @@ public class GarUserServiceImpl implements GarUserService {
     private GarDeptService deptService;
 
     /**
+     * The Token service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarTokenService tokenService;
+
+    /**
      * Save.
      *
      * @param garUser the t
@@ -186,8 +194,10 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarVMUser> queryUserList(String searchName, Integer page, Integer limit) {
-        List<GarUser> garUsers = queryObjects(searchName, page, limit);
+    public List<GarVMUser> queryUserList(String token, String searchName, Integer page, Integer limit) {
+        Integer offset = (page - 1) * limit;
+        GarUser currentUser = tokenService.getUserInfoByToken(token);
+        List<GarUser> garUsers = userDao.queryUserList(currentUser.getTenantId(), searchName, limit, offset);
         if (CollectionUtils.isEmpty(garUsers)) {
             return null;
         }

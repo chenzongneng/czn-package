@@ -10,6 +10,8 @@ import com.richstonedt.garnet.model.GarUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <b><code>GarUserDao</code></b>
  * <p>
@@ -32,4 +34,17 @@ public interface GarUserDao extends BaseDao<GarUser> {
      * @since garnet-core-be-fe 0.1.0
      */
     GarUser getUserByName(@Param(value = "userName") String userName);
+
+    /**
+     * Query user list list.
+     *
+     * @param tenantId   the tenant Id
+     * @param searchName the search name
+     * @param limit      the limit
+     * @param offset     the offset
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarUser> queryUserList(@Param(value = "tenantId") Long tenantId, @Param(value = "searchName") String searchName,
+                                @Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
 }
