@@ -25,7 +25,7 @@ import java.util.List;
  * @version 0.1.0
  * @since garnet -core-be-fe 0.1.0
  */
-@ApiModel(value = "页面部门信息")
+@ApiModel(value = "前端页面部门信息")
 public class GarVMDept extends GarDept implements Serializable {
 
     /**

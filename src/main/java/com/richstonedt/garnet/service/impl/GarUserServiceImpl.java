@@ -289,7 +289,6 @@ public class GarUserServiceImpl implements GarUserService {
         vmUser.setPassword(user.getPassword());
         vmUser.setAppName(appName);
         vmUser.setTenantName(tenantName);
-        vmUser.setUserId(user.getUserId());
         vmUser.setUserName(user.getUserName());
         vmUser.setEmail(user.getEmail());
         vmUser.setMobile(user.getMobile());

@@ -38,14 +38,12 @@ public interface GarDeptDao extends BaseDao<GarDept> {
     /**
      * Query objects list.
      *
+     * @param tenantId   the tenant Id
      * @param subList    the sub list
-     * @param searchName the search name
-     * @param limit      the limit
-     * @param offset     the offset
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<GarDept> queryDeptList(@Param(value = "subList") String subList, @Param(value = "searchName") String searchName, @Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+    List<GarDept> queryDeptList(@Param(value = "tenantId") Long tenantId, @Param(value = "subList") String subList);
 
     /**
      * Gets dept by parent dept id.

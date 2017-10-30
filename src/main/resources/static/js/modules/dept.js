@@ -105,12 +105,26 @@ var vm = new Vue({
             orderNum: 0,
             userIds: null,
             roleIds: null
+        },
+        // 租户列表数据
+        tenantList: {
+            selectedTenant: "",
+            options: []
+        },
+        // 应用列表数据
+        appList: {
+            selectedApp: "",
+            options: []
         }
     },
     methods: {
         add: function () {
             vm.showList = false;
             vm.title = "新增";
+            vm.tenantList.selectedTenant = "";
+            vm.tenantList.options = [];
+            vm.appList.selectedApp = "";
+            vm.appList.options = [];
             vm.dept = {
                 deptId: null,
                 parentDeptId: null,
@@ -123,6 +137,8 @@ var vm = new Vue({
                 roleIds: null
             };
             vm.initTreesToAdd();
+            vm.getTenantList();
+            vm.getAppList();
         },
         update: function () {
             var deptId = getDeptId();
@@ -233,6 +249,28 @@ var vm = new Vue({
                 table.setExpandAll(false);
                 table.init();
                 Dept.table = table;
+            });
+        },
+        /** 租户列表onchange 事件*/
+        selectTenant: function () {
+            vm.user.tenantId = vm.tenantList.selectedTenant;
+        },
+        /** 应用列表onchange 事件*/
+        selectApp: function () {
+            vm.user.appId = vm.appList.selectedApp;
+        },
+        getTenantList: function () {
+            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.tenantList.options.push(item);
+                })
+            });
+        },
+        getAppList: function () {
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.appList.options.push(item);
+                })
             });
         }
     },

@@ -7,6 +7,9 @@
 package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.model.GarRole;
+import com.richstonedt.garnet.model.view.model.GarVMRole;
+
+import java.util.List;
 
 /**
  * <b><code>GarApplicationService</code></b>
@@ -20,4 +23,16 @@ import com.richstonedt.garnet.model.GarRole;
  * @since garnet-core-be-fe 0.1.0
  */
 public interface GarRoleService extends BaseService<GarRole> {
+
+    /**
+     * Query role list list.
+     *
+     * @param token      the token
+     * @param searchName the search name
+     * @param page       the page
+     * @param limit      the limit
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarVMRole> queryRoleList(String token, String searchName, Integer page, Integer limit);
 }

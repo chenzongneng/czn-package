@@ -19,8 +19,11 @@
         select d.*,(select p.name from gar_dept p where p.dept_id = d.parent_dept_id) as parentName
         from gar_dept d
         <where>
+            <if test="tenantId != null ">
+                tenant_id = #{tenantId}
+            </if>
             <if test="subList != null and subList != ''">
-                d.dept_id in (${subList})
+                and d.dept_id in (${subList})
             </if>
         </where>
         order by d.order_num asc

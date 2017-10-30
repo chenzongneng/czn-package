@@ -9,6 +9,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.dao.GarDeptDao;
 import com.richstonedt.garnet.model.GarDept;
 import com.richstonedt.garnet.model.GarRoleDept;
+import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMDept;
 import com.richstonedt.garnet.service.*;
@@ -199,10 +200,11 @@ public class GarDeptServiceImpl implements GarDeptService {
      */
     @Override
     public List<GarVMDept> getUserDeptList(Long userId) {
+        GarUser user = userService.queryObject(userId);
         GarDept garDept = deptDao.getDeptByParentDeptId(getMinParentDeptId(userId));
         Long deptId = garDept == null ? 1 : garDept.getDeptId();
         String subDeptList = getSubDeptIdList(deptId);
-        List<GarDept> depts = deptDao.queryDeptList(subDeptList, null, null, null);
+        List<GarDept> depts = deptDao.queryDeptList(user.getTenantId(), subDeptList);
         if (CollectionUtils.isEmpty(depts)) {
             return null;
         }

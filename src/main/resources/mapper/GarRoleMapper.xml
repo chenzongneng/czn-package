@@ -62,6 +62,22 @@
         </if>
     </select>
 
+    <select id="queryRoleList" resultType="com.richstonedt.garnet.model.GarRole">
+        select * from gar_role
+        <where>
+            <if test="tenantId != null">
+                tenant_id = #{tenantId}
+            </if>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        ORDER BY app_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
     <select id="queryTotal" resultType="int">
         SELECT count(*)
         FROM gar_role;
