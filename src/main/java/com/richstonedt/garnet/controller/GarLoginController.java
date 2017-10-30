@@ -125,7 +125,7 @@ public class GarLoginController {
             return new ResponseEntity<>(result, header, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get Kaptcha ");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -178,7 +178,7 @@ public class GarLoginController {
             return new ResponseEntity<>(loginResult, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to login");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

@@ -39,7 +39,7 @@
     <delete id="deleteUserDeptByDeptId" parameterType="java.lang.Long">
         DELETE FROM gar_user_dept
         <where>
-            dept_id = #{deptId},
+            dept_id = #{deptId}
         </where>
     </delete>
 
@@ -68,7 +68,7 @@
         UPDATE gar_user_dept
         <set>
             <if test="deptId != null">
-                dept_id = #{deptId},
+                dept_id = #{deptId}
             </if>
         </set>
         <where>

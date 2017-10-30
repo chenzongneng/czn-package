@@ -189,7 +189,7 @@ var vm = new Vue({
         },
         saveOrUpdate: function () {
             var nodes = deptTree.getCheckedNodes(true);
-            var deptIdList = new Array();
+            var deptIdList = [];
             for (var i = 0; i < nodes.length; i++) {
                 deptIdList.push(nodes[i].deptId);
             }

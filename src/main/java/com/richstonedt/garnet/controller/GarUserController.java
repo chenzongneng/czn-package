@@ -77,7 +77,7 @@ public class GarUserController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user list .");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -100,7 +100,7 @@ public class GarUserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create user :" + garVMUser);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -122,7 +122,7 @@ public class GarUserController {
             return new ResponseEntity<>(userService.searchUser(userId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user info :" + userId);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -145,7 +145,7 @@ public class GarUserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete users :" + userIds);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -168,7 +168,7 @@ public class GarUserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update user info  .");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

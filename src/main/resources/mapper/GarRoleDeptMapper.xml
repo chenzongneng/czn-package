@@ -39,7 +39,7 @@
     <delete id="deleteRoleDeptByDeptId" parameterType="java.lang.Long">
         DELETE FROM gar_role_dept
         <where>
-            dept_id = #{deptId},
+            dept_id = #{deptId}
         </where>
     </delete>
 
@@ -48,7 +48,7 @@
         UPDATE gar_role_dept
         <set>
             <if test="deptId != null ">
-                dept_id = #{deptId},
+                dept_id = #{deptId}
             </if>
         </set>
         <where>

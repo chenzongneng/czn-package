@@ -82,8 +82,8 @@ public class GarDeptController {
         try {
             return new ResponseEntity<>(deptService.getUserDeptList(userId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to Get dept list bu userId :" + userId);
-            LOG.error(t.getMessage());
+            LOG.error("Failed to Get dept list by userId :" + userId);
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -112,7 +112,7 @@ public class GarDeptController {
             return new ResponseEntity<>(deptList, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get dept list to add");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -134,7 +134,7 @@ public class GarDeptController {
             return new ResponseEntity<>(deptService.getVMDeptByDeptId(deptId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get dept :" + deptId);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -157,7 +157,7 @@ public class GarDeptController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create dept :" + vmDept);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -180,7 +180,7 @@ public class GarDeptController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update dept .");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -205,11 +205,11 @@ public class GarDeptController {
                 map.put("message", "请先删除子部门");
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
-            deptService.deleteById(deptId);
+            deptService.deleteVMDept(deptId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete applications :" + deptId);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

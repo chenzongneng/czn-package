@@ -50,8 +50,6 @@ var userTreeSetting = {
         simpleData: {
             enable: true,
             idKey: "userId"
-            //pIdKey: "parentDeptId",
-            //rootPId: -1
         },
         key: {
             url: "nourl",
@@ -73,8 +71,6 @@ var roleTreeSetting = {
         simpleData: {
             enable: true,
             idKey: "roleId"
-            //pIdKey: "parentDeptId",
-            //rootPId: -1
         },
         key: {
             url: "nourl",
@@ -185,6 +181,20 @@ var vm = new Vue({
                 });
         },
         saveOrUpdate: function () {
+            var userNodes = userTree.getCheckedNodes(true);
+            var userIdList = [];
+            for (var i = 0; i < userNodes.length; i++) {
+                userIdList.push(userNodes[i].userId);
+            }
+            vm.dept.userIds = userIdList.join(",");
+
+            var roleNodes = roleTree.getCheckedNodes(true);
+            var roleIdList = [];
+            for (var k = 0; k < roleNodes.length; k++) {
+                roleIdList.push(roleNodes[k].roleId);
+            }
+            vm.dept.roleIds = roleIdList.join(",");
+
             $.ajax({
                 type: vm.dept.deptId == null ? "POST" : "PUT",
                 url: baseURL + "dept",
@@ -232,6 +242,12 @@ var vm = new Vue({
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
                 userTree.expandAll(true);
             });
+
+            //加载角色树
+            $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
+                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
+                roleTree.expandAll(true);
+            });
         },
         /** 初始化部门信息 */
         initDeptInfo: function () {
@@ -253,11 +269,11 @@ var vm = new Vue({
         },
         /** 租户列表onchange 事件*/
         selectTenant: function () {
-            vm.user.tenantId = vm.tenantList.selectedTenant;
+            vm.dept.tenantId = vm.tenantList.selectedTenant;
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
-            vm.user.appId = vm.appList.selectedApp;
+            vm.dept.appId = vm.appList.selectedApp;
         },
         getTenantList: function () {
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {

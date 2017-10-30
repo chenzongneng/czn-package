@@ -81,7 +81,7 @@ public class GarRoleController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user role .");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

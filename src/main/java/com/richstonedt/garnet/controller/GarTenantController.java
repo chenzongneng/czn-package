@@ -70,7 +70,7 @@ public class GarTenantController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create tenant :" + tenant);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -93,7 +93,7 @@ public class GarTenantController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete tenants :" + tenantIds);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -115,7 +115,7 @@ public class GarTenantController {
             return new ResponseEntity<>(tenantService.queryObject(tenantId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get tenant :" + tenantId);
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -144,7 +144,7 @@ public class GarTenantController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get tenants.");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -167,7 +167,7 @@ public class GarTenantController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update tenant .");
-            LOG.error(t.getMessage());
+            LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
