@@ -18,6 +18,8 @@ Dept.initColumn = function () {
         {field: 'selectItem', radio: true},
         {title: '部门ID', field: 'deptId', CanHide: 0, Visible: 0, align: 'center', valign: 'middle', width: '80px'},
         {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '所属租户', field: 'tenantName', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '所属应用', field: 'appName', align: 'center', valign: 'middle', sortable: true, width: '180px'},
         {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '用户列表', field: 'userNameList', align: 'center', valign: 'middle', sortable: true, width: '100px'},
         {title: '角色列表', field: 'roleNameList', align: 'center', valign: 'middle', sortable: true, width: '100px'},

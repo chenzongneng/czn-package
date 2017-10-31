@@ -52,7 +52,7 @@ var vm = new Vue({
         searchName: null,
         title: null,
         sql: [],
-        log:{
+        log: {
             id: null,
             userName: null,
             operation: null,
@@ -69,7 +69,7 @@ var vm = new Vue({
         },
         detail: function () {
             var logId = getSelectedRow();
-            console.log(">>>>>>>"+logId);
+            console.log(">>>>>>>" + logId);
             if (logId == null) {
                 return;
             }
@@ -80,23 +80,23 @@ var vm = new Vue({
         },
         getLogDetail: function (id) {
             vm.sql = [];
-            $.get(baseURL + "v1.0/log/"+id, function (response) {
+            $.get(baseURL + "v1.0/log/" + id, function (response) {
                 vm.log.id = response.id;
                 vm.log.userName = response.userName;
-                vm.log.operation =  response.operation;
+                vm.log.operation = response.operation;
                 vm.log.method = response.method;
-                vm.log.url =  response.url;
-                vm.log.ip =  response.ip;
+                vm.log.url = response.url;
+                vm.log.ip = response.ip;
                 vm.formatSql(response.sql);
-                vm.log.createdTime =  response.createdTime;
+                vm.log.createdTime = response.createdTime;
             });
         },
         formatSql: function (sql) {
             var sqlArray = sql.split(";");
-            for(var i = 0; i < sqlArray.length; i++){
+            for (var i = 0; i < sqlArray.length; i++) {
                 vm.sql.push(sqlArray[i]);
             }
-         },
+        },
         reload: function (event) {
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {

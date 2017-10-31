@@ -38,6 +38,7 @@ if (!garnetToken) {
 $.jgrid.defaults.width = 1000;
 $.jgrid.defaults.responsive = true;
 $.jgrid.defaults.styleUI = 'Bootstrap';
+
 /*$.extend($.jgrid.defaults, {
     ajaxGridOptions: {
         headers: {

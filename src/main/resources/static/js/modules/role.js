@@ -4,21 +4,18 @@
  * All rights reserved.
  */
 
-/*var roleId = localStorage.getItem("roleId");
-if(roleId == 'null'){
-    roleId ='';
-}*/
-var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 $(function () {
+    /** 初始化角色列表 */
     $("#jqGrid").jqGrid({
-        url: baseURL + 'v1.0/roleList',
+        url: baseURL + 'roles',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'id', index: "id", width: 45, key: true},
+            {label: '角色ID', name: 'roleId', hidden: true, index: "role_id", width: 45, key: true},
             {label: '角色名称', name: 'name', index: "name", width: 75},
-            {label: '所属部门', name: 'deptName', width: 75},
-            {label: '备注', name: 'remark', width: 100},
-            {label: '创建时间', name: 'createTime', index: "create_time", width: 80}
+            {label: '所属租户', name: 'tenantName', width: 75},
+            {label: '所属应用', name: 'appName', width: 75},
+            {label: '部门列表', name: 'deptNameList', width: 75},
+            {label: '创建时间', name: 'createTime', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -37,10 +34,11 @@ $(function () {
         },
         prmNames: {
             page: "page",
-            rows: "limit",
-            order: "order"
+            rows: "limit"
         },
-        postData:{tenantId:roleId},
+        postData: {
+            token: garnetToken
+        },
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
@@ -48,54 +46,19 @@ $(function () {
     });
 });
 
-//菜单树
-var menu_ztree;
-var menu_setting = {
-    data: {
-        simpleData: {
-            enable: true,
-            idKey: "menuId",
-            pIdKey: "parentId",
-            rootPId: -1
-        },
-        key: {
-            url: "nourl"
-        }
-    },
-    check: {
-        enable: true,
-        nocheckInherit: true
-    }
-};
-
-//部门结构树
-var dept_ztree;
-var dept_setting = {
+/** 部门结构树 */
+var deptTree;
+var deptTreeSetting = {
     data: {
         simpleData: {
             enable: true,
             idKey: "deptId",
-            pIdKey: "parentId",
+            pIdKey: "parentDeptId",
             rootPId: -1
         },
         key: {
-            url: "nourl"
-        }
-    }
-};
-
-//数据树
-var data_ztree;
-var data_setting = {
-    data: {
-        simpleData: {
-            enable: true,
-            idKey: "deptId",
-            pIdKey: "parentId",
-            rootPId: -1
-        },
-        key: {
-            url: "nourl"
+            url: "nourl",
+            name: "name"
         }
     },
     check: {
@@ -108,183 +71,162 @@ var data_setting = {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        q: {
-            roleName: null
-        },
+        searchName: null,
         showList: true,
         title: null,
         role: {
-            id:null,
-            tenantId:roleId,
+            roleId: null,
+            tenantId: null,
+            appId: null,
             name: null,
-            remark:null
+            remark: null,
+            deptIds: null
         },
-        // 是否显示 选择部门 下拉列表
-        isShowDept:false,
-        // 下拉列表数据
-        parentDepartments:{
-            selectedDepartment:"",
+        // 租户列表数据
+        tenantList: {
+            selectedTenant: "",
             options: []
-        }
+        },
+        // 应用列表数据
+        appList: {
+            selectedApp: "",
+            options: []
+        },
+        // 当前用户信息
+        currentUser: {}
     },
     methods: {
+        /**  查询按钮点击事件 */
         query: function () {
             vm.reload();
         },
+        /**  新增按钮点击事件 */
         add: function () {
-            addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
+            vm.tenantList.selectedTenant = "";
+            vm.tenantList.options = [];
+            vm.appList.selectedApp = "";
+            vm.appList.options = [];
             vm.role = {
-                id:null,
-                tenantId:roleId,
+                roleId: null,
+                tenantId: null,
+                appId: null,
                 name: null,
-                remark:null
+                remark: null,
+                deptIds: null
             };
-            /*vm.getMenuTree(null);
-
-            vm.getDept();
-
-            vm.getDataTree();*/
-            vm.checkAdmin();
+            vm.initTreesToAdd();
+            vm.getTenantList();
+            vm.getAppList();
         },
+        /**  更新按钮点击事件 */
         update: function () {
-            addOrUpdate = 1;// 更新 的点击事件
-            vm.showList = false;
-            vm.title = "修改";
-            /*vm.getDataTree();
-            vm.getMenuTree(roleId);
-            vm.getDept();*/
-            vm.checkAdmin();
-            vm.getRoleById();
-        },
-        del: function () {
-            var selectedRoleIds = getSelectedRows();
-            if (selectedRoleIds == null) {
+            var roleId = getSelectedRow();
+            if (!roleId) {
                 return;
             }
-            console.log(selectedRoleIds);
-            confirm('确定要删除选中的记录？', function () {
-                $.ajax({
-                    type: "DELETE",
-                    url: baseURL + "v1.0/role?idList=" + selectedRoleIds.toString(),
-                    contentType: "application/json",
-                    dataType:"",
-                    success: function () {
-                        alert('操作成功', function () {
-                            vm.reload();
-                        });
-                    },
-                    error: function () {
-                        alert('操作失败', function () {
-                            vm.reload();
-                        });
-                    }
-                });
-            });
+            vm.showList = false;
+            vm.title = "修改";
+            vm.tenantList.options = [];
+            vm.appList.options = [];
+            vm.role.deptIdList = [];
+            vm.initTreesToUpdate(roleId);
+            vm.getTenantList();
+            vm.getAppList();
         },
-        getRole: function (roleId) {
-            $.get(baseURL + "sys/role/info/" + roleId, function (r) {
-                vm.role = r.role;
-
-                //勾选角色所拥有的菜单
-                var menuIds = vm.role.menuIdList;
-                for (var i = 0; i < menuIds.length; i++) {
-                    var node = menu_ztree.getNodeByParam("menuId", menuIds[i]);
-                    menu_ztree.checkNode(node, true, false);
-                }
-
-                //勾选角色所拥有的部门数据权限
-                var deptIds = vm.role.deptIdList;
-                for (var i = 0; i < deptIds.length; i++) {
-                    var node = data_ztree.getNodeByParam("deptId", deptIds[i]);
-                    data_ztree.checkNode(node, true, false);
-                }
-
-                vm.getDept();
-            });
-        },
-        saveOrUpdate: function () {
-           /* //获取选择的菜单
-            var nodes = menu_ztree.getCheckedNodes(true);
-            var menuIdList = new Array();
-            for (var i = 0; i < nodes.length; i++) {
-                menuIdList.push(nodes[i].menuId);
+        /**  删除按钮点击事件 */
+        del: function () {
+            var roleIds = getSelectedRows();
+            if (!roleIds) {
+                return;
             }
-            vm.role.menuIdList = menuIdList;
-
-            //获取选择的数据
-            var nodes = data_ztree.getCheckedNodes(true);
-            var deptIdList = new Array();
+            swal({
+                    title: "确定要删除选中的记录？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: "#DD6B55"
+                },
+                function () {
+                    $.ajax({
+                        type: "DELETE",
+                        url: baseURL + "role?roleIds=" + roleIds.toString(),
+                        contentType: "application/json",
+                        dataType: "",
+                        success: function () {
+                            swal("删除成功!", "", "success");
+                            vm.reload();
+                        },
+                        error: function () {
+                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        }
+                    });
+                });
+        },
+        /**  新增或更新确认 */
+        saveOrUpdate: function () {
+            // 获取部门树选择的部门
+            var nodes = deptTree.getCheckedNodes(true);
+            var deptIdList = [];
             for (var i = 0; i < nodes.length; i++) {
                 deptIdList.push(nodes[i].deptId);
             }
-            vm.role.deptIdList = deptIdList;*/
-            var url = "v1.0/role";
+            vm.role.deptIds = deptIdList.join(",");
             $.ajax({
-                type: addOrUpdate === 0 ? "POST":"PUT",
-                url: baseURL + url,
+                type: vm.role.roleId === null ? "POST" : "PUT",
+                url: baseURL + "role",
                 contentType: "application/json",
                 data: JSON.stringify(vm.role),
                 dataType: '',
                 success: function () {
-                    alert('操作成功', function () {
-                        vm.reload();
-                    });
+                    vm.reload();
+                    swal("操作成功!", "", "success");
+                },
+                error: function (response) {
+                    swal(response.responseJSON.errorMessage, "", "error");
                 }
             });
         },
-        getMenuTree: function (roleId) {
-            //加载菜单树
-            $.get(baseURL + "sys/menu/list", function (r) {
-                menu_ztree = $.fn.zTree.init($("#menuTree"), menu_setting, r);
-                //展开所有节点
-                menu_ztree.expandAll(true);
-
-                if (roleId != null) {
-                    vm.getRole(roleId);
-                }
-            });
-        },
-        getDataTree: function (roleId) {
-            //加载菜单树
-            $.get(baseURL + "sys/dept/list", function (r) {
-                data_ztree = $.fn.zTree.init($("#dataTree"), data_setting, r);
-                //展开所有节点
-                data_ztree.expandAll(true);
-            });
-        },
-        getDept: function () {
+        /** 添加按钮初始化数据 */
+        initTreesToAdd: function () {
             //加载部门树
-            $.get(baseURL + "sys/dept/list", function (r) {
-                dept_ztree = $.fn.zTree.init($("#deptTree"), dept_setting, r);
-                var node = dept_ztree.getNodeByParam("deptId", vm.role.deptId);
-                if (node != null) {
-                    dept_ztree.selectNode(node);
-
-                    vm.role.deptName = node.name;
-                }
+            $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+                deptTree.expandAll(true);
             })
         },
-        deptTree: function () {
-            layer.open({
-                type: 1,
-                offset: '50px',
-                skin: 'layui-layer-molv',
-                title: "选择部门",
-                area: ['300px', '450px'],
-                shade: 0,
-                shadeClose: false,
-                content: jQuery("#deptLayer"),
-                btn: ['确定', '取消'],
-                btn1: function (index) {
-                    var node = dept_ztree.getSelectedNodes();
-                    //选择上级部门
-                    vm.role.deptId = node[0].deptId;
-                    vm.role.deptName = node[0].name;
-
-                    layer.close(index);
-                }
+        /** 更新按钮初始化数据 */
+        initTreesToUpdate: function (roleId) {
+            //加载部门树
+            $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+                deptTree.expandAll(true);
+                vm.getRoleById(roleId);
+            })
+        },
+        /** 通过id 得到一个role对象 */
+        getRoleById: function (roleId) {
+            $.get(baseURL + "role/" + roleId, function (response) {
+                vm.role.roleId = response.roleId;
+                vm.role.appId = response.appId;
+                vm.role.tenantId = response.tenantId;
+                vm.role.name = response.name;
+                vm.role.remark = response.remark;
+                vm.tenantList.selectedTenant = response.tenantId;
+                vm.appList.selectedApp = response.appId;
+                $.each(response.deptIdList, function (index, item) {
+                    var node = deptTree.getNodeByParam("deptId", item);
+                    deptTree.checkNode(node, true, false);
+                });
+            });
+        },
+        /** 查询当前用户信息 */
+        getCurrentUser: function () {
+            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
+                vm.currentUser = response;
             });
         },
         /** 重新加载 */
@@ -292,41 +234,37 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                url: baseURL + 'v1.0/roleList',
-                postData: {roleName: vm.q.roleName},
+                postData: {searchName: vm.searchName},
                 page: page
             }).trigger("reloadGrid");
         },
-        /** 是否是 超级管理员*/
-        checkAdmin:function(){
-            if(roleId === ''){
-                vm.isShowDept = true;
-            }
-            if(vm.isShowDept){
-                vm.parentDepartments.options = [];
-                $.get(baseURL + "v1.0/parentDepartments", function (response) {
-                    $.each(response,function(index,item){
-                        vm.parentDepartments.options.push(item);
-                    });
-                });
-            }
+        /** 租户列表onchange 事件*/
+        selectTenant: function () {
+            vm.role.tenantId = vm.tenantList.selectedTenant;
         },
-        /** 下拉列表onchange 事件*/
-        selectTenantValue:function () {
-            vm.role.tenantId = vm.parentDepartments.selectedDepartment;
+        /** 应用列表onchange 事件*/
+        selectApp: function () {
+            vm.role.appId = vm.appList.selectedApp;
         },
-        /** 通过id 得到一个role对象 */
-        getRoleById:function(){
-            var selectedRoleId = getSelectedRow();
-            if (selectedRoleId == null) {
-                return;
-            }
-            vm.role.id = selectedRoleId;
-            $.get(baseURL + "v1.0/role/"+roleIds, function (response) {
-                vm.parentDepartments.selectedDepartment = response.tenantId;
-                vm.role.name = response.name;
-                vm.role.remark = response.remark;
+        /**  获取租户列表 */
+        getTenantList: function () {
+            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.tenantList.options.push(item);
+                })
+            });
+        },
+        /**  获取应用列表 */
+        getAppList: function () {
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.appList.options.push(item);
+                })
             });
         }
+    },
+    /**  初始化页面时执行该方法 */
+    created: function () {
+        this.getCurrentUser();
     }
 });

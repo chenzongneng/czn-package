@@ -157,7 +157,7 @@ var vm = new Vue({
             if (!userIds) {
                 return;
             }
-            if(userIds.includes(vm.currentUser.userId.toString())){
+            if (userIds.includes(vm.currentUser.userId.toString())) {
                 swal("您不能删除自己!", "", "error");
                 return;
             }
@@ -218,8 +218,8 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initDeptTreeToAdd: function () {
             //加载部门树
-            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
-                deptTree = $.fn.zTree.init($("#deptTree"), setting, r);
+            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), setting, response);
                 deptTree.expandAll(true);
             })
         },
@@ -261,7 +261,7 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'searchName': vm.searchName},
+                postData: {searchName: vm.searchName},
                 page: page
             }).trigger("reloadGrid");
         },

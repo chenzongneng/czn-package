@@ -75,19 +75,19 @@ var vm = new Vue({
                         type: "POST",
                         url: baseURL + "v1.0/password",
                         data: {
-                            userId : vm.user.userId,
-                            password : vm.password,
-                            newPassword : vm.newPassword
+                            userId: vm.user.userId,
+                            password: vm.password,
+                            newPassword: vm.newPassword
                         },
                         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                         dataType: "",
                         success: function () {
-                        layer.close(index);
-                        swal("修改密码成功!", "", "success");
-                        },
-                        error:function (response) {
                             layer.close(index);
-                            swal("修改密码失败！",response.responseJSON.errorMessage, "error");
+                            swal("修改密码成功!", "", "success");
+                        },
+                        error: function (response) {
+                            layer.close(index);
+                            swal("修改密码失败！", response.responseJSON.errorMessage, "error");
                         }
                     });
                 }

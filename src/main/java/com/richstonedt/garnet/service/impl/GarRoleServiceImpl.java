@@ -102,7 +102,7 @@ public class GarRoleServiceImpl implements GarRoleService {
      */
     @Override
     public void update(GarRole garRole) {
-        update(garRole);
+        roleDao.update(garRole);
     }
 
     /**
@@ -234,13 +234,13 @@ public class GarRoleServiceImpl implements GarRoleService {
      */
     @Override
     public void updateRole(GarVMRole garVMRole) {
-        update(garVMRole);
-
         // 先删除与部门的关联，在插入
         roleDeptService.deleteById(garVMRole.getRoleId());
         saveRoleDept(garVMRole);
 
         // todo 先删除与权限的关联，在插入
+
+        update(garVMRole);
     }
 
     /**
@@ -289,7 +289,7 @@ public class GarRoleServiceImpl implements GarRoleService {
      */
     private void saveRoleDept(GarVMRole garVMRole) {
         List<Long> deptIdList = GarnetRsUtil.parseStringToList(garVMRole.getDeptIds());
-        if (CollectionUtils.isEmpty(deptIdList)) {
+        if (!CollectionUtils.isEmpty(deptIdList)) {
             for (Long deptId : deptIdList) {
                 GarRoleDept roleDept = new GarRoleDept();
                 roleDept.setDeptId(deptId);
