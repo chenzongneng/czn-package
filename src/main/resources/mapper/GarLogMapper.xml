@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarLogDao">
+
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarLog">
+        SELECT * FROM gar_log
+        <where>
+            <if test="searchName != null and searchName != ''">
+                username like CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        ORDER BY created_time desc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>;
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(1)
+        FROM gar_log;
+    </select>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarLog">
+        SELECT * FROM gar_log
+        <where>
+            id = #{id};
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarLog">
+        INSERT INTO gar_log
+        (
+            username,
+            operation,
+            method,
+            url,
+            ip,
+            sql
+        )
+        VALUES
+            (
+                #{userName},
+                #{operation},
+                #{method},
+                #{url},
+                #{ip},
+                #{sql}
+            );
+    </insert>
+
+</mapper>
