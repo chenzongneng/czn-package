@@ -4,13 +4,13 @@
  * All rights reserved.
  */
 
-/** 请求前缀,写完整链接或从context开始的链接 */
+/** 请求url前缀 */
 var baseURL = "http://localhost:8080/garnet/v1.0/";
 
 /** token */
 var garnetToken = localStorage.getItem("garnetToken");
-if (garnetToken == 'null') {
-    parent.location.href = baseURL + 'login.html';
+if (!garnetToken) {
+    parent.location.href = 'login.html';
 }
 
 /** 权限判断 */
@@ -46,7 +46,7 @@ $.jgrid.defaults.styleUI = 'Bootstrap';
     }
 });*/
 
-// 选择一条记录
+/** 选择jqGrid列表中的一条记录 */
 function getSelectedRow() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
@@ -64,7 +64,7 @@ function getSelectedRow() {
     return rowKey;
 }
 
-// 选择多条记录
+/** 选择jqGrid列表中的多条记录 */
 function getSelectedRows() {
     var grid = $("#jqGrid");
     var rowKey = grid.getGridParam("selrow");
@@ -76,7 +76,7 @@ function getSelectedRows() {
     return grid.getGridParam("selarrrow");
 }
 
-/** 重写window属性 */
+/** 重写window中的alert属性 */
 window.alert = function (msg, callback) {
     parent.layer.alert(msg, function (index) {
         parent.layer.close(index);
@@ -85,6 +85,7 @@ window.alert = function (msg, callback) {
         }
     });
 };
+/** 重写window中的confirm属性 */
 window.confirm = function (msg, callback) {
     parent.layer.confirm(msg, {btn: ['确定', '取消']}, function () {
         if (typeof(callback) === "function") {

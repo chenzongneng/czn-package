@@ -3,7 +3,6 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
-var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 
 $(function () {
     /** 初始化用户列表 */
@@ -58,7 +57,6 @@ $(function () {
 });
 /** 部门树 */
 var deptTree;
-
 /** ztree 配置*/
 var setting = {
     data: {
@@ -111,11 +109,12 @@ var vm = new Vue({
         currentUser: {}
     },
     methods: {
+        /**  查询按钮点击事件 */
         query: function () {
             vm.reload();
         },
+        /**  新增按钮点击事件 */
         add: function () {
-            addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
@@ -137,12 +136,12 @@ var vm = new Vue({
             vm.getTenantList();
             vm.getAppList();
         },
+        /**  更新按钮点击事件 */
         update: function () {
             var userId = getSelectedRow();
-            if (userId == null) {
+            if (!userId) {
                 return;
             }
-            addOrUpdate = 1;
             vm.showList = false;
             vm.title = "修改";
             vm.tenantList.options = [];
@@ -152,9 +151,10 @@ var vm = new Vue({
             vm.getTenantList();
             vm.getAppList();
         },
+        /**  删除按钮点击事件 */
         del: function () {
             var userIds = getSelectedRows();
-            if (userIds == null) {
+            if (!userIds) {
                 return;
             }
             if(userIds.includes(vm.currentUser.userId.toString())){
@@ -187,18 +187,21 @@ var vm = new Vue({
                     });
                 });
         },
+        /**  新增或更新确认 */
         saveOrUpdate: function () {
+            // 获取部门树选择的部门
             var nodes = deptTree.getCheckedNodes(true);
             var deptIdList = [];
             for (var i = 0; i < nodes.length; i++) {
                 deptIdList.push(nodes[i].deptId);
             }
             vm.user.deptIds = deptIdList.join(",");
+            // 校验字段
             if (!vm.checkValue()) {
                 return;
             }
             $.ajax({
-                type: addOrUpdate === 0 ? "POST" : "PUT",
+                type: vm.user.userId === null ? "POST" : "PUT",
                 url: baseURL + "user",
                 contentType: "application/json",
                 data: JSON.stringify(vm.user),
@@ -212,6 +215,7 @@ var vm = new Vue({
                 }
             });
         },
+        /** 添加按钮初始化数据 */
         initDeptTreeToAdd: function () {
             //加载部门树
             $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
@@ -219,6 +223,7 @@ var vm = new Vue({
                 deptTree.expandAll(true);
             })
         },
+        /** 更新按钮初始化数据 */
         initDeptTreeToUpdate: function (userId) {
             //加载部门树
             $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
@@ -227,6 +232,7 @@ var vm = new Vue({
                 vm.getUser(userId);
             })
         },
+        /** 根据用户ID获取用户信息 */
         getUser: function (userId) {
             $.get(baseURL + "user/" + userId, function (response) {
                 vm.user.userId = response.userId;
@@ -259,6 +265,7 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
+        /** 校验字段 */
         checkValue: function () {
             var emailReg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
             var telReg = /^1[34578]\d{9}$/;
@@ -282,7 +289,7 @@ var vm = new Vue({
             var chineseReg = /^[\u4e00-\u9fa5]{0,}$/; // 中文正则
             var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
 
-            if (!(isPassword && addOrUpdate === 1)) {
+            if (!(isPassword && vm.user.userId)) {
                 if (!value) {
                     swal({
                         title: name + '不能为空！',
@@ -330,6 +337,7 @@ var vm = new Vue({
         selectApp: function () {
             vm.user.appId = vm.appList.selectedApp;
         },
+        /**  获取租户列表 */
         getTenantList: function () {
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
@@ -337,6 +345,7 @@ var vm = new Vue({
                 })
             });
         },
+        /**  获取应用列表 */
         getAppList: function () {
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
@@ -345,6 +354,7 @@ var vm = new Vue({
             });
         }
     },
+    /**  初始化页面时执行该方法 */
     created: function () {
         this.getCurrentUser();
     }

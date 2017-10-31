@@ -3,9 +3,9 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
-var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 
 $(function () {
+    /**  初始化租户列表  */
     $("#jqGrid").jqGrid({
         url: baseURL + 'tenants',
         datatype: "json",
@@ -53,11 +53,12 @@ var vm = new Vue({
         }
     },
     methods: {
+        /**  查询按钮点击事件 */
         query: function () {
             vm.reload();
         },
+        /**  新增按钮点击事件 */
         add: function () {
-            addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
             vm.tenant = {
@@ -66,10 +67,10 @@ var vm = new Vue({
                 remark: null
             };
         },
+        /**  更新按钮点击事件 */
         update: function () {
-            addOrUpdate = 1;
             var tenantId = getSelectedRow();
-            if (tenantId == null) {
+            if (!tenantId) {
                 return;
             }
             vm.showList = false;
@@ -77,9 +78,10 @@ var vm = new Vue({
 
             vm.getTenant(tenantId);
         },
+        /**  删除按钮点击事件 */
         del: function () {
             var tenantIds = getSelectedRows();
-            if (tenantIds == null) {
+            if (!tenantIds) {
                 return;
             }
             swal({
@@ -108,9 +110,10 @@ var vm = new Vue({
                     });
                 });
         },
+        /**  新增或更新确认 */
         saveOrUpdate: function () {
             $.ajax({
-                type: addOrUpdate === 0 ? "POST" : "PUT",
+                type: vm.tenant.tenantId === null ? "POST" : "PUT",
                 url: baseURL + "tenant",
                 contentType: "application/json",
                 data: JSON.stringify(vm.tenant),
@@ -124,6 +127,7 @@ var vm = new Vue({
                 }
             });
         },
+        /**  根据ID获取租户信息 */
         getTenant: function (tenantId) {
             $.get(baseURL + "tenant/" + tenantId, function (response) {
                 if (response) {

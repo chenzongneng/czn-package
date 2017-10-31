@@ -3,9 +3,9 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
-var addOrUpdate = 0; // 保存或者更新按钮点击事件 0 为新增 , 1 为 更新
 
 $(function () {
+    /**  初始化应用列表  */
     $("#jqGrid").jqGrid({
         url: baseURL + 'applications',
         datatype: "json",
@@ -55,14 +55,14 @@ var vm = new Vue({
         }
     },
     methods: {
+        /**  查询按钮点击事件 */
         query: function () {
             vm.reload();
         },
+        /**  新增按钮点击事件 */
         add: function () {
-            addOrUpdate = 0;
             vm.showList = false;
             vm.title = "新增";
-            //vm.roleList = {};
             vm.application = {
                 appId: null,
                 name: null,
@@ -70,10 +70,10 @@ var vm = new Vue({
                 remark: null
             };
         },
+        /**  更新按钮点击事件 */
         update: function () {
-            addOrUpdate = 1;
             var appId = getSelectedRow();
-            if (appId == null) {
+            if (!appId) {
                 return;
             }
             vm.showList = false;
@@ -81,9 +81,10 @@ var vm = new Vue({
 
             vm.getApplication(appId);
         },
+        /**  删除按钮点击事件 */
         del: function () {
             var appIds = getSelectedRows();
-            if (appIds == null) {
+            if (!appIds) {
                 return;
             }
             swal({
@@ -111,9 +112,10 @@ var vm = new Vue({
                     });
                 });
         },
+        /**  新增或更新确认 */
         saveOrUpdate: function () {
             $.ajax({
-                type: addOrUpdate === 0 ? "POST" : "PUT",
+                type: vm.application.appId === null ? "POST" : "PUT",
                 url: baseURL + "application",
                 contentType: "application/json",
                 data: JSON.stringify(vm.application),
@@ -127,6 +129,7 @@ var vm = new Vue({
                 }
             });
         },
+        /**  根据ID获取应用信息 */
         getApplication: function (appId) {
             $.get(baseURL + "application/" + appId, function (response) {
                 if (response) {

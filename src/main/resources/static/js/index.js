@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-//生成菜单
+/** 生成菜单 */
 var menuItem = Vue.extend({
     name: 'menu-item',
     props: {item: {}, index: 0},
@@ -26,7 +26,7 @@ var menuItem = Vue.extend({
         '</li>'
     ].join('')
 });
-//注册菜单组件
+/** 注册菜单组件 */
 Vue.component('menuItem', menuItem);
 
 var vm = new Vue({
@@ -100,12 +100,14 @@ var vm = new Vue({
             //window.close();
         }
     },
+    /**  初始化页面时执行该方法 */
     created: function () {
         this.getMenuList();
         this.getUser();
     }
 });
 
+/** 菜单路由 */
 function routerList(router, menuList) {
     for (var key in menuList) {
         var menu = menuList[key];
@@ -127,7 +129,7 @@ function routerList(router, menuList) {
     }
 }
 
-//iframe自适应
+/** iframe自适应 */
 $(window).on('resize', function () {
     var $content = $('.content');
     $content.height($(this).height() - 120);

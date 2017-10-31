@@ -114,6 +114,11 @@ var vm = new Vue({
         }
     },
     methods: {
+        /**  查询按钮点击事件 */
+        query: function () {
+            vm.reload();
+        },
+        /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
             vm.title = "新增";
@@ -136,26 +141,27 @@ var vm = new Vue({
             vm.getTenantList();
             vm.getAppList();
         },
+        /**  更新按钮点击事件 */
         update: function () {
             var deptId = getDeptId();
-            if (deptId == null) {
+            if (!deptId) {
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
             vm.tenantList.options = [];
             vm.appList.options = [];
-            /*            vm.dept.userIdList = [];
-                        vm.dept.roleIdList = [];*/
-            vm.dept = {};
+            vm.dept.userIdList = [];
+            vm.dept.roleIdList = [];
             vm.getTenantList();
             vm.getAppList();
             vm.initTreesToUpdate(deptId);
 
         },
+        /**  删除按钮点击事件 */
         del: function () {
             var deptId = getDeptId();
-            if (deptId == null) {
+            if (!deptId) {
                 return;
             }
             swal({
@@ -184,7 +190,9 @@ var vm = new Vue({
                     });
                 });
         },
+        /**  新增或更新确认 */
         saveOrUpdate: function () {
+            // 获取用户树选择的用户
             var userNodes = userTree.getCheckedNodes(true);
             var userIdList = [];
             for (var i = 0; i < userNodes.length; i++) {
@@ -192,6 +200,7 @@ var vm = new Vue({
             }
             vm.dept.userIds = userIdList.join(",");
 
+            // 获取角色树选择的角色
             var roleNodes = roleTree.getCheckedNodes(true);
             var roleIdList = [];
             for (var k = 0; k < roleNodes.length; k++) {
@@ -200,7 +209,7 @@ var vm = new Vue({
             vm.dept.roleIds = roleIdList.join(",");
 
             $.ajax({
-                type: vm.dept.deptId == null ? "POST" : "PUT",
+                type: vm.dept.deptId === null ? "POST" : "PUT",
                 url: baseURL + "dept",
                 contentType: "application/json",
                 data: JSON.stringify(vm.dept),
@@ -211,6 +220,7 @@ var vm = new Vue({
                 }
             });
         },
+        /**  部门树点击事件 */
         deptTree: function () {
             layer.open({
                 type: 1,
@@ -256,7 +266,7 @@ var vm = new Vue({
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (deptId) {
-            // 加载部门树
+            // 加载部门树  封装ajax 请求，防止数据异步导致页面数据错乱
             $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
 
@@ -288,10 +298,12 @@ var vm = new Vue({
                 vm.dept.parentName = response.parentName;
                 vm.dept.parentDeptId = response.parentDeptId;
                 vm.dept.orderNum = response.orderNum;
+                // 勾选已有用户
                 $.each(response.userIdLList, function (index, item) {
                     var node = userTree.getNodeByParam("userId", item);
                     userTree.checkNode(node, true, false);
                 });
+                // 勾选已有角色
                 $.each(response.roleIdLList, function (index, item) {
                     var node = roleTree.getNodeByParam("roleId", item);
                     roleTree.checkNode(node, true, false);
@@ -306,7 +318,6 @@ var vm = new Vue({
                 // 初始化表格数据
                 var columns = Dept.initColumn();
                 var table = new TreeTable(Dept.id, baseURL + "depts/" + response.userId, columns);
-                //table.setRootCodeValue(r.deptId);
                 table.setExpandColumn(2);
                 table.setIdField("deptId");
                 table.setCodeField("deptId");
@@ -324,6 +335,7 @@ var vm = new Vue({
         selectApp: function () {
             vm.dept.appId = vm.appList.selectedApp;
         },
+        /**  获取租户列表 */
         getTenantList: function () {
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
@@ -331,6 +343,7 @@ var vm = new Vue({
                 })
             });
         },
+        /**  获取应用列表 */
         getAppList: function () {
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
@@ -339,15 +352,17 @@ var vm = new Vue({
             });
         }
     },
+    /**  初始化页面时执行该方法 */
     created: function () {
         this.initDeptInfo();
     }
 });
 
+/**  获取选择的部门ID */
 function getDeptId() {
     var selected = $('#deptTable').bootstrapTreeTable('getSelections');
-    if (selected.length == 0) {
-        alert("请选择一条记录");
+    if (selected.length === 0) {
+        swal("请选择一条记录!", "", "warning");
         return false;
     } else {
         return selected[0].id;
