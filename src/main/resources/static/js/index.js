@@ -96,8 +96,7 @@ var vm = new Vue({
         /** 退出登录 */
         logout: function () {
             localStorage.removeItem("garnetToken");
-            location.href = baseURL + 'login.html';
-            //window.close();
+            location.href = 'login.html';
         }
     },
     /**  初始化页面时执行该方法 */
@@ -122,7 +121,6 @@ function routerList(router, menuList) {
                 $(".treeview-menu li").removeClass("active");
                 $(".sidebar-menu li").removeClass("active");
                 $("a[href='" + url + "']").parents("li").addClass("active");
-
                 vm.navTitle = $("a[href='" + url + "']").text();
             });
         }

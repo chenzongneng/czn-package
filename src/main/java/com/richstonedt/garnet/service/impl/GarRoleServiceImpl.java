@@ -12,6 +12,8 @@ import com.richstonedt.garnet.model.GarRoleDept;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.view.model.GarVMRole;
 import com.richstonedt.garnet.service.*;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -122,6 +124,11 @@ public class GarRoleServiceImpl implements GarRoleService {
      */
     @Override
     public void deleteBatch(List<Long> ids) {
+        // 删除与部门关联的角色
+        roleDeptService.deleteBatch(ids);
+
+        // todo 删除与权限关联的角色
+
         roleDao.deleteBatch(ids);
     }
 
@@ -189,6 +196,54 @@ public class GarRoleServiceImpl implements GarRoleService {
     }
 
     /**
+     * Save role.
+     *
+     * @param garVMRole the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void saveRole(GarVMRole garVMRole) {
+        if (garVMRole.getRoleId() == null) {
+            garVMRole.setRoleId(IdGeneratorUtil.generateId());
+        }
+        // 保存角色与部门关联
+        saveRoleDept(garVMRole);
+
+        // todo 保存角色与权限关联
+
+        save(garVMRole);
+    }
+
+    /**
+     * Search role gar vm role.
+     *
+     * @param roleId the role id
+     * @return the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public GarVMRole searchRole(Long roleId) {
+        return convertRoleToVmRole(queryObject(roleId));
+    }
+
+    /**
+     * Update role.
+     *
+     * @param garVMRole the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void updateRole(GarVMRole garVMRole) {
+        update(garVMRole);
+
+        // 先删除与部门的关联，在插入
+        roleDeptService.deleteById(garVMRole.getRoleId());
+        saveRoleDept(garVMRole);
+
+        // todo 先删除与权限的关联，在插入
+    }
+
+    /**
      * Convert role to vm role gar vm role.
      *
      * @param role the role
@@ -224,5 +279,23 @@ public class GarRoleServiceImpl implements GarRoleService {
         vmRole.setRemark(role.getRemark());
         vmRole.setCreateTime(role.getCreateTime());
         return vmRole;
+    }
+
+    /**
+     * Save role dept.
+     *
+     * @param garVMRole the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private void saveRoleDept(GarVMRole garVMRole) {
+        List<Long> deptIdList = GarnetRsUtil.parseStringToList(garVMRole.getDeptIds());
+        if (CollectionUtils.isEmpty(deptIdList)) {
+            for (Long deptId : deptIdList) {
+                GarRoleDept roleDept = new GarRoleDept();
+                roleDept.setDeptId(deptId);
+                roleDept.setRoleId(garVMRole.getRoleId());
+                roleDeptService.save(roleDept);
+            }
+        }
     }
 }

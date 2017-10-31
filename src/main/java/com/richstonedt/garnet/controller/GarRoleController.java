@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -81,6 +78,96 @@ public class GarRoleController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user role .");
+            LOG.error(t.toString());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Search role response entity.
+     *
+     * @param roleId the role id
+     * @return the response entity
+     */
+    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据id查询角色信息", notes = "Get role info by roleId ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> searchRole(@ApiParam(value = "roleId", required = true) @PathVariable(value = "roleId") Long roleId) {
+        try {
+            return new ResponseEntity<>(roleService.searchRole(roleId), HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get role info :" + roleId);
+            LOG.error(t.toString());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Save role response entity.
+     *
+     * @param garVMRole the gar vm role
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/role", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]新增角色", notes = "Create role")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> saveRole(@RequestBody GarVMRole garVMRole) {
+        try {
+            roleService.saveRole(garVMRole);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to create role :" + garVMRole);
+            LOG.error(t.toString());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Delete roles response entity.
+     *
+     * @param roleIds the role ids
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/role", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据id批量删除角色", notes = "Delete roles")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> deleteRoles(@ApiParam(value = "roleIds,用‘,’隔开", required = true) @RequestParam(value = "roleIds") String roleIds) {
+        try {
+            roleService.deleteBatch(GarnetRsUtil.parseStringToList(roleIds));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to delete roles :" + roleIds);
+            LOG.error(t.toString());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Update role response entity.
+     *
+     * @param garVMRole the gar vm role
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/role", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据ID更新角色信息", notes = "Update role info")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> updateRole(@RequestBody GarVMRole garVMRole) {
+        try {
+            roleService.updateRole(garVMRole);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to update role info.");
             LOG.error(t.toString());
             return GarnetRsUtil.newResponseEntity(t);
         }

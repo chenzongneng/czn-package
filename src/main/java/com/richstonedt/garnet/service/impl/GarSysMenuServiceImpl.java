@@ -29,6 +29,9 @@ import java.util.List;
 @Service
 public class GarSysMenuServiceImpl implements GarSysMenuService {
 
+    /**
+     * The Sys menu dao.
+     */
     @Autowired
     private GarSysMenuDao sysMenuDao;
 
@@ -47,6 +50,13 @@ public class GarSysMenuServiceImpl implements GarSysMenuService {
         return menuList;
     }
 
+    /**
+     * Gets menu tree list.
+     *
+     * @param menuList the menu list
+     * @return the menu tree list
+     * @since garnet-core-be-fe 0.1.0
+     */
     private List<GarSysMenu> getMenuTreeList(List<GarSysMenu> menuList) {
         List<GarSysMenu> subMenuList = new ArrayList<>();
         for (GarSysMenu entity : menuList) {
@@ -59,6 +69,13 @@ public class GarSysMenuServiceImpl implements GarSysMenuService {
         return subMenuList;
     }
 
+    /**
+     * Query list parent id list.
+     *
+     * @param parentId the parent id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     private List<GarSysMenu> queryListParentId(Long parentId) {
         return sysMenuDao.queryListParentId(parentId);
     }

@@ -35,4 +35,29 @@ public interface GarRoleService extends BaseService<GarRole> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<GarVMRole> queryRoleList(String token, String searchName, Integer page, Integer limit);
+
+    /**
+     * Save role.
+     *
+     * @param garVMRole the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void saveRole(GarVMRole garVMRole);
+
+    /**
+     * Search role gar vm role.
+     *
+     * @param roleId the role id
+     * @return the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    GarVMRole searchRole(Long roleId);
+
+    /**
+     * Update role.
+     *
+     * @param garVMRole the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void updateRole(GarVMRole garVMRole);
 }

@@ -151,7 +151,7 @@ public class GarUserController {
     }
 
     /**
-     * Update application response entity.
+     * Update user response entity.
      *
      * @param garVMUser the gar vm user
      * @return the response entity
@@ -162,7 +162,7 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> updateApplication(@ApiParam(value = "user对象") @RequestBody GarVMUser garVMUser) {
+    public ResponseEntity<?> updateUser(@RequestBody GarVMUser garVMUser) {
         try {
             userService.updateUser(garVMUser);
             return new ResponseEntity<>(HttpStatus.OK);

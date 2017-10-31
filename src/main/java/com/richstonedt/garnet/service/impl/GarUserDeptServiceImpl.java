@@ -122,7 +122,6 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      */
     @Override
     public GarUserDept queryObject(Long id) {
-        //todo 目前只支持一个用户只属于一个部门，但一个部门下可以 有多个用户
         return userDeptDao.queryObject(id);
     }
 

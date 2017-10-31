@@ -53,6 +53,12 @@ public class GarSysMenuController {
     @Autowired
     private GarSysMenuService sysMenuService;
 
+    /**
+     * Search sys menu response entity.
+     *
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/sysMenu", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询系统菜单", notes = "Search system menu")
     @ApiResponses(value = {
