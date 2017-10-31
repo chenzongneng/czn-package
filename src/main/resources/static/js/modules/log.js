@@ -6,17 +6,17 @@
 
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'v1.0/logs',
+        url: baseURL + 'logs',
         datatype: "json",
         colModel: [
-            {label: 'ID', name: 'id', width: 20, key: true},
+            {label: 'ID', name: 'id', hidden: true, width: 20, key: true},
             {label: '用户名', name: 'userName', width: 40},
             {label: '用户操作', name: 'operation', width: 80},
             {label: '请求方法', name: 'method', width: 35},
             {label: '请求URL', name: 'url', width: 90},
             {label: 'IP地址', name: 'ip', width: 50},
             {label: '执行SQL', name: 'sql', width: 90},
-            {label: '请求时间', name: 'createdTime', width: 70}
+            {label: '请求时间', name: 'createTime', width: 70}
         ],
         viewrecords: true,
         height: 385,
@@ -35,8 +35,7 @@ $(function () {
         },
         prmNames: {
             page: "page",
-            rows: "limit",
-            order: "order"
+            rows: "limit"
         },
         gridComplete: function () {
             //隐藏grid底部滚动条
@@ -60,7 +59,7 @@ var vm = new Vue({
             url: null,
             ip: null,
             sql: null,
-            createdTime: null
+            createTime: null
         }
     },
     methods: {
@@ -69,7 +68,6 @@ var vm = new Vue({
         },
         detail: function () {
             var logId = getSelectedRow();
-            console.log(">>>>>>>" + logId);
             if (logId == null) {
                 return;
             }
@@ -80,7 +78,7 @@ var vm = new Vue({
         },
         getLogDetail: function (id) {
             vm.sql = [];
-            $.get(baseURL + "v1.0/log/" + id, function (response) {
+            $.get(baseURL + "log/" + id, function (response) {
                 vm.log.id = response.id;
                 vm.log.userName = response.userName;
                 vm.log.operation = response.operation;
@@ -88,7 +86,7 @@ var vm = new Vue({
                 vm.log.url = response.url;
                 vm.log.ip = response.ip;
                 vm.formatSql(response.sql);
-                vm.log.createdTime = response.createdTime;
+                vm.log.createTime = response.createTime;
             });
         },
         formatSql: function (sql) {
