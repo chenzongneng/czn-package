@@ -68,8 +68,7 @@ public class GarSysMenuController {
         try {
             return new ResponseEntity<>(sysMenuService.getUserMenuList(), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to search system menu");
-            LOG.error(t.toString());
+            LOG.error("Failed to search system menu", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

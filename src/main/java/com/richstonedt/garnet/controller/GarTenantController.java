@@ -69,8 +69,7 @@ public class GarTenantController {
             tenantService.save(tenant);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to create tenant :" + tenant);
-            LOG.error(t.toString());
+            LOG.error("Failed to create tenant :" + tenant, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -92,8 +91,7 @@ public class GarTenantController {
             tenantService.deleteBatch(GarnetRsUtil.parseStringToList(tenantIds));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete tenants :" + tenantIds);
-            LOG.error(t.toString());
+            LOG.error("Failed to delete tenants :" + tenantIds, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -114,8 +112,7 @@ public class GarTenantController {
         try {
             return new ResponseEntity<>(tenantService.queryObject(tenantId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get tenant :" + tenantId);
-            LOG.error(t.toString());
+            LOG.error("Failed to get tenant :" + tenantId, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -143,8 +140,7 @@ public class GarTenantController {
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get tenants.");
-            LOG.error(t.toString());
+            LOG.error("Failed to get tenants.", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -166,8 +162,7 @@ public class GarTenantController {
             tenantService.update(tenant);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to update tenant .");
-            LOG.error(t.toString());
+            LOG.error("Failed to update tenant .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

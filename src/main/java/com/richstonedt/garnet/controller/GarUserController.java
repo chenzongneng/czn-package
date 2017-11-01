@@ -76,8 +76,7 @@ public class GarUserController {
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get user list .");
-            LOG.error(t.toString());
+            LOG.error("Failed to get user list .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -99,8 +98,7 @@ public class GarUserController {
             userService.saveUser(garVMUser);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to create user :" + garVMUser);
-            LOG.error(t.toString());
+            LOG.error("Failed to create user :" + garVMUser, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -121,8 +119,7 @@ public class GarUserController {
         try {
             return new ResponseEntity<>(userService.searchUser(userId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get user info :" + userId);
-            LOG.error(t.toString());
+            LOG.error("Failed to get user info :" + userId, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -144,8 +141,7 @@ public class GarUserController {
             userService.deleteBatch(GarnetRsUtil.parseStringToList(userIds));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete users :" + userIds);
-            LOG.error(t.toString());
+            LOG.error("Failed to delete users :" + userIds, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -167,8 +163,7 @@ public class GarUserController {
             userService.updateUser(garVMUser);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to update user info  .");
-            LOG.error(t.toString());
+            LOG.error("Failed to update user info  .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

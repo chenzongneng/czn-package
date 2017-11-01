@@ -67,8 +67,7 @@ public class GarTokenController {
         try {
             return new ResponseEntity<>(tokenService.getUserInfoByToken(token), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Get user info by token" + token);
-            LOG.error(t.toString());
+            LOG.error("Get user info by token = " + token, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

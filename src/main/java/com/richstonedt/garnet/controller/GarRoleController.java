@@ -77,8 +77,7 @@ public class GarRoleController {
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get user role .");
-            LOG.error(t.toString());
+            LOG.error("Failed to get user role .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -98,8 +97,7 @@ public class GarRoleController {
         try {
             return new ResponseEntity<>(roleService.searchRole(roleId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get role info :" + roleId);
-            LOG.error(t.toString());
+            LOG.error("Failed to get role info :" + roleId, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -121,8 +119,7 @@ public class GarRoleController {
             roleService.saveRole(garVMRole);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to create role :" + garVMRole);
-            LOG.error(t.toString());
+            LOG.error("Failed to create role :" + garVMRole, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -144,8 +141,7 @@ public class GarRoleController {
             roleService.deleteBatch(GarnetRsUtil.parseStringToList(roleIds));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete roles :" + roleIds);
-            LOG.error(t.toString());
+            LOG.error("Failed to delete roles :" + roleIds, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -167,8 +163,7 @@ public class GarRoleController {
             roleService.updateRole(garVMRole);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to update role info.");
-            LOG.error(t.toString());
+            LOG.error("Failed to update role info.", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

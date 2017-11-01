@@ -69,8 +69,7 @@ public class GarApplicationController {
             applicationService.save(application);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to create application :" + application);
-            LOG.error(t.toString());
+            LOG.error("Failed to create application :" + application, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -92,8 +91,7 @@ public class GarApplicationController {
             applicationService.deleteBatch(GarnetRsUtil.parseStringToList(appIds));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete applications :" + appIds);
-            LOG.error(t.toString());
+            LOG.error("Failed to delete applications :" + appIds, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -114,8 +112,7 @@ public class GarApplicationController {
         try {
             return new ResponseEntity<>(applicationService.queryObject(appId), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get application :" + appId);
-            LOG.error(t.toString());
+            LOG.error("Failed to get application :" + appId, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -143,8 +140,7 @@ public class GarApplicationController {
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get applications .");
-            LOG.error(t.toString());
+            LOG.error("Failed to get applications .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -166,8 +162,7 @@ public class GarApplicationController {
             applicationService.update(application);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to update applications .");
-            LOG.error(t.toString());
+            LOG.error("Failed to update applications .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

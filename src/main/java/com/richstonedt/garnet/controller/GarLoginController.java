@@ -124,8 +124,7 @@ public class GarLoginController {
             header.setCacheControl("no-store, no-cache");
             return new ResponseEntity<>(result, header, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get Kaptcha ");
-            LOG.error(t.toString());
+            LOG.error("Failed to get Kaptcha ", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -181,8 +180,7 @@ public class GarLoginController {
             loginResult.setMessage("登录成功");
             return new ResponseEntity<>(loginResult, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to login");
-            LOG.error(t.toString());
+            LOG.error("Failed to login", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

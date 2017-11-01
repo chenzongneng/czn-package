@@ -65,8 +65,7 @@ public class GarLogOperationController {
         try {
             return new ResponseEntity<>(logOperationService.getAllOperations(), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get operation list .");
-            LOG.error(t.toString());
+            LOG.error("Failed to get operation list .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -88,8 +87,7 @@ public class GarLogOperationController {
             logOperationService.save(logOperation);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to create operation :" + logOperation);
-            LOG.error(t.toString());
+            LOG.error("Failed to create operation :" + logOperation, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -111,8 +109,7 @@ public class GarLogOperationController {
             logOperationService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete log operation  :" + id);
-            LOG.error(t.toString());
+            LOG.error("Failed to delete log operation  :" + id, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -134,8 +131,7 @@ public class GarLogOperationController {
             logOperationService.deleteBatch(GarnetRsUtil.parseStringToList(ids));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete log Operations :" + ids);
-            LOG.error(t.toString());
+            LOG.error("Failed to delete log Operations :" + ids, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -156,8 +152,7 @@ public class GarLogOperationController {
         try {
             return new ResponseEntity<>(logOperationService.queryObject(id), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get log Operation info :" + id);
-            LOG.error(t.toString());
+            LOG.error("Failed to get log Operation info :" + id, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -179,8 +174,7 @@ public class GarLogOperationController {
             logOperationService.update(logOperation);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to update log Operation info  .");
-            LOG.error(t.toString());
+            LOG.error("Failed to update log Operation info  .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

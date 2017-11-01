@@ -75,8 +75,7 @@ public class GarLogController {
             PageUtil result = new PageUtil(list, logService.queryTotal(), limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get log list .");
-            LOG.error(t.toString());
+            LOG.error("Failed to get log list .", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
@@ -97,8 +96,7 @@ public class GarLogController {
         try {
             return new ResponseEntity<>(logService.queryObject(id), HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to get log info :" + id);
-            LOG.error(t.toString());
+            LOG.error("Failed to get log info :" + id, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
