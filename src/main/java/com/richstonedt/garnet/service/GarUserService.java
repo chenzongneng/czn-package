@@ -69,4 +69,14 @@ public interface GarUserService extends BaseService<GarUser> {
      * @since garnet-core-be-fe 0.1.0
      */
     GarVMUser searchUser(Long userId);
+
+    /**
+     * Change password.
+     *
+     * @param userId      the user id
+     * @param oldPassword the old password
+     * @param newPassword the new password
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void changePassword(Long userId, String oldPassword, String newPassword);
 }

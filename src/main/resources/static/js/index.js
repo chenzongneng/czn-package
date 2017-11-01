@@ -62,6 +62,8 @@ var vm = new Vue({
         },
         /** 修改密码 */
         updatePassword: function () {
+            vm.password = '';
+            vm.newPassword = '';
             layer.open({
                 type: 1,
                 skin: 'layui-layer-molv',
@@ -73,10 +75,10 @@ var vm = new Vue({
                 btn1: function (index) {
                     $.ajax({
                         type: "POST",
-                        url: baseURL + "v1.0/password",
+                        url: baseURL + "password",
                         data: {
                             userId: vm.user.userId,
-                            password: vm.password,
+                            oldPassword: vm.password,
                             newPassword: vm.newPassword
                         },
                         contentType: "application/x-www-form-urlencoded; charset=UTF-8",

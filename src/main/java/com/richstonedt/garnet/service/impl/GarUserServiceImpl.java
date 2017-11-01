@@ -259,6 +259,23 @@ public class GarUserServiceImpl implements GarUserService {
     }
 
     /**
+     * Change password.
+     *
+     * @param userId      the user id
+     * @param oldPassword the old password
+     * @param newPassword the new password
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        GarUser user = queryObject(userId);
+        if (!BCrypt.checkpw(oldPassword, user.getPassword())) {
+            throw new GarnetServiceException("原密码不正确，请重新输入");
+        }
+        userDao.updatePassword(userId, BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
+    }
+
+    /**
      * Convert user to vm user gar vm user.
      *
      * @param user the user

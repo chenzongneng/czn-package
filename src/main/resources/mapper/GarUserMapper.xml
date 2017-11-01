@@ -124,4 +124,14 @@
             user_id = #{userId};
         </where>
     </update>
+
+    <update id="updatePassword">
+        UPDATE gar_user
+        <set>
+            password = #{password}
+        </set>
+        <where>
+            user_id = #{userId};
+        </where>
+    </update>
 </mapper>

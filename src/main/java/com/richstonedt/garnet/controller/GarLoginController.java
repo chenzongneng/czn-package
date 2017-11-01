@@ -140,6 +140,10 @@ public class GarLoginController {
      * @since garnet-core-be-fe 0.1.0
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]用户登录接口", notes = "User login")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "login successful"),
+            @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> login(@ApiParam(value = "loginFrom,源登录项目名") @RequestParam(value = "loginFrom") String loginFrom,
                                    @RequestBody GarUserLogin userLogin) throws IOException {
         try {
@@ -179,6 +183,32 @@ public class GarLoginController {
         } catch (Throwable t) {
             LOG.error("Failed to login");
             LOG.error(t.toString());
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Change password response entity.
+     *
+     * @param userId      the user id
+     * @param oldPassword the old password
+     * @param newPassword the new password
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]用户修改密码接口", notes = "User change password")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> changePassword(@ApiParam(value = "userId，用户ID") @RequestParam(value = "userId") Long userId,
+                                            @ApiParam(value = "oldPassword，旧密码") @RequestParam(value = "oldPassword") String oldPassword,
+                                            @ApiParam(value = "newPassword，新密码") @RequestParam(value = "newPassword") String newPassword) {
+        try {
+            userService.changePassword(userId, oldPassword, newPassword);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to login", t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

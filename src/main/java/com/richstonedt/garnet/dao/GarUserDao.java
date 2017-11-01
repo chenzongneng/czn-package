@@ -47,4 +47,13 @@ public interface GarUserDao extends BaseDao<GarUser> {
      */
     List<GarUser> queryUserList(@Param(value = "tenantId") Long tenantId, @Param(value = "searchName") String searchName,
                                 @Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+
+    /**
+     * Update password.
+     *
+     * @param userId   the user id
+     * @param password the password
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void updatePassword(@Param(value = "userId") Long userId, @Param(value = "password") String password);
 }
