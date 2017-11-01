@@ -10,11 +10,11 @@ $(function () {
         url: baseURL + 'applications',
         datatype: "json",
         colModel: [
-            {label: '应用ID', name: 'appId', hidden: true, width: 45, key: true},
-            {label: '应用名称', name: 'name', width: 75},
-            {label: '所属公司', name: 'company', width: 90},
-            {label: '备注', name: 'remark', width: 80},
-            {label: '创建时间', name: 'createTime', width: 90}
+            {label: '应用ID', name: 'appId', align: 'center', hidden: true, width: 20, key: true},
+            {label: '应用名称', name: 'name', align: 'center', width: 80},
+            {label: '所属公司', name: 'company', align: 'center', width: 80},
+            {label: '备注', name: 'remark', align: 'center', width: 80},
+            {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -38,6 +38,10 @@ $(function () {
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+            // 设置表头居中
+            $('.ui-jqgrid .ui-jqgrid-htable .ui-th-div').css('text-align', 'center');
+            // checkBox 对齐
+            $('.ui-jqgrid td input, .ui-jqgrid td select, .ui-jqgrid td textarea').css('margin-left', '6px');
         }
     });
 });

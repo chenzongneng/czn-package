@@ -10,21 +10,21 @@ $(function () {
         url: baseURL + 'users',
         datatype: "json",
         colModel: [
-            {label: '用户ID', name: 'userId', hidden: true, index: "user_id", width: 45, key: true},
-            {label: '用户名', name: 'userName', width: 75},
-            {label: '所属租户', name: 'tenantName', width: 75},
-            {label: '所属应用', name: 'appName', width: 75},
-            {label: '所属部门', name: 'deptNameList', width: 75},
-            {label: '邮箱', name: 'email', width: 90},
-            {label: '手机号', name: 'mobile', width: 80},
+            {label: '用户ID', name: 'userId', align: 'center', hidden: true, index: "user_id", width: 20, key: true},
+            {label: '用户名', name: 'userName', align: 'center', width: 70},
+            {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
+            {label: '所属应用', name: 'appName', align: 'center', width: 70},
+            {label: '所属部门', name: 'deptNameList', align: 'center', width: 100},
+            {label: '邮箱', name: 'email', align: 'center', width: 80},
+            {label: '手机号', name: 'mobile', align: 'center', width: 80},
             {
-                label: '状态', name: 'status', width: 80, formatter: function (value, options, row) {
+                label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
                 return value === 0 ?
                     '<span class="label label-danger">禁用</span>' :
                     '<span class="label label-success">正常</span>';
             }
             },
-            {label: '创建时间', name: 'createTime', width: 90}
+            {label: '创建时间', align: 'center', name: 'createTime', width: 90}
         ],
         viewrecords: true,
         height: 385,
@@ -50,8 +50,12 @@ $(function () {
             token: garnetToken
         },
         gridComplete: function () {
-            //隐藏grid底部滚动条
+            // 隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+            // 设置表头居中
+            $('.ui-jqgrid .ui-jqgrid-htable .ui-th-div').css('text-align', 'center');
+            // checkBox 对齐
+            $('.ui-jqgrid td input, .ui-jqgrid td select, .ui-jqgrid td textarea').css('margin-left', '6px');
         }
     });
 });

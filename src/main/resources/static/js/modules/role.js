@@ -10,12 +10,12 @@ $(function () {
         url: baseURL + 'roles',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'roleId', hidden: true, index: "role_id", width: 45, key: true},
-            {label: '角色名称', name: 'name', index: "name", width: 75},
-            {label: '所属租户', name: 'tenantName', width: 75},
-            {label: '所属应用', name: 'appName', width: 75},
-            {label: '部门列表', name: 'deptNameList', width: 75},
-            {label: '创建时间', name: 'createTime', width: 80}
+            {label: '角色ID', name: 'roleId', align: 'center', hidden: true, index: "role_id", width: 20, key: true},
+            {label: '角色名称', name: 'name', align: 'center', width: 70},
+            {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
+            {label: '所属应用', name: 'appName', align: 'center', width: 70},
+            {label: '部门列表', name: 'deptNameList', align: 'center', width: 100},
+            {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
         height: 385,
@@ -42,6 +42,10 @@ $(function () {
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+            // 设置表头居中
+            $('.ui-jqgrid .ui-jqgrid-htable .ui-th-div').css('text-align', 'center');
+            // checkBox 对齐
+            $('.ui-jqgrid td input, .ui-jqgrid td select, .ui-jqgrid td textarea').css('margin-left', '6px');
         }
     });
 });
