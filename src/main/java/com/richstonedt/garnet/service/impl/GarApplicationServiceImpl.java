@@ -45,7 +45,9 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void save(GarApplication garApplication) {
-        garApplication.setAppId(IdGeneratorUtil.generateId());
+        if (garApplication.getAppId() == null) {
+            garApplication.setAppId(IdGeneratorUtil.generateId());
+        }
         applicationDao.save(garApplication);
     }
 

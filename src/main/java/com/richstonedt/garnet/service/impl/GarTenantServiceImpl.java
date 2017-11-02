@@ -45,7 +45,9 @@ public class GarTenantServiceImpl implements GarTenantService {
      */
     @Override
     public void save(GarTenant garTenant) {
-        garTenant.setTenantId(IdGeneratorUtil.generateId());
+        if (garTenant.getTenantId() == null) {
+            garTenant.setTenantId(IdGeneratorUtil.generateId());
+        }
         tenantDao.save(garTenant);
     }
 

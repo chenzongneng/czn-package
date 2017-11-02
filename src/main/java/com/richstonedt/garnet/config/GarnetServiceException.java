@@ -7,11 +7,11 @@
 package com.richstonedt.garnet.config;
 
 /**
- * <b><code>LteDetectiveServiceException</code></b>
+ * <b><code>GarnetServiceException</code></b>
  * <p/>
- * lte-detective Service Exception
+ * Garnet Service Exception
  * <p/>
- * <b>Creation Time:</b> 2016年11月28日 下午5:24:39
+ * <b>Creation Time:</b> 2017年10月28日 下午5:24:39
  *
  * @author chenzechao
  * @since garnet 1.0.0
