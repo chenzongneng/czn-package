@@ -10,7 +10,7 @@ import com.richstonedt.garnet.model.GarToken;
 import com.richstonedt.garnet.model.GarUser;
 
 /**
- * <b><code>GarApplicationService</code></b>
+ * <b><code>GarTokenService</code></b>
  * <p>
  * class_comment
  * </p>

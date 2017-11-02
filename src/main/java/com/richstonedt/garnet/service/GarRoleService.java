@@ -12,7 +12,7 @@ import com.richstonedt.garnet.model.view.model.GarVMRole;
 import java.util.List;
 
 /**
- * <b><code>GarApplicationService</code></b>
+ * <b><code>GarRoleService</code></b>
  * <p>
  * class_comment
  * </p>
