@@ -12,6 +12,7 @@ $(function () {
         colModel: [
             {label: '租户ID', name: 'tenantId', align: 'center', hidden: true, width: 20, key: true},
             {label: '租户名称', name: 'name', align: 'center', width: 80},
+            {label: '应用列表', name: 'appNameList', align: 'center', width: 100},
             {label: '备注', name: 'remark', align: 'center', width: 80},
             {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
