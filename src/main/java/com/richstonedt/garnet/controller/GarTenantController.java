@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarTenant;
+import com.richstonedt.garnet.model.view.model.GarVMTenant;
 import com.richstonedt.garnet.service.GarTenantService;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
 import com.richstonedt.garnet.utils.PageUtil;
@@ -64,9 +65,9 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> saveTenant(@RequestBody GarTenant tenant) {
+    public ResponseEntity<?> saveTenant(@RequestBody GarVMTenant tenant) {
         try {
-            tenantService.save(tenant);
+            tenantService.saveTenant(tenant);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create tenant :" + tenant, t);
@@ -110,7 +111,7 @@ public class GarTenantController {
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> searchTenant(@ApiParam(value = "tenantId", required = true) @PathVariable(value = "tenantId") Long tenantId) {
         try {
-            return new ResponseEntity<>(tenantService.queryObject(tenantId), HttpStatus.OK);
+            return new ResponseEntity<>(tenantService.getVmTenantByTenantId(tenantId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get tenant :" + tenantId, t);
             return GarnetRsUtil.newResponseEntity(t);
@@ -135,7 +136,7 @@ public class GarTenantController {
                                            @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                            @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
-            List<GarTenant> list = tenantService.queryObjects(searchName, page, limit);
+            List<GarVMTenant> list = tenantService.queryVmTenants(searchName, page, limit);
             int totalCount = tenantService.queryTotal();
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -157,9 +158,9 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> updateTenant(@ApiParam(value = "tenant对象") @RequestBody GarTenant tenant) {
+    public ResponseEntity<?> updateTenant(@ApiParam(value = "tenant对象") @RequestBody GarVMTenant tenant) {
         try {
-            tenantService.update(tenant);
+            tenantService.updateVmTenant(tenant);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update tenant .", t);

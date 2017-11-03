@@ -7,12 +7,19 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarTenantDao;
+import com.richstonedt.garnet.model.GarApplicationTenant;
 import com.richstonedt.garnet.model.GarTenant;
+import com.richstonedt.garnet.model.view.model.GarVMTenant;
+import com.richstonedt.garnet.service.GarAppTenantService;
+import com.richstonedt.garnet.service.GarApplicationService;
 import com.richstonedt.garnet.service.GarTenantService;
+import com.richstonedt.garnet.utils.GarnetRsUtil;
 import com.richstonedt.garnet.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +43,22 @@ public class GarTenantServiceImpl implements GarTenantService {
      */
     @Autowired
     private GarTenantDao tenantDao;
+
+    /**
+     * The App tenant service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarAppTenantService appTenantService;
+
+    /**
+     * The Application service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Autowired
+    private GarApplicationService applicationService;
 
     /**
      * Save.
@@ -82,6 +105,9 @@ public class GarTenantServiceImpl implements GarTenantService {
     @Override
     public void deleteBatch(List<Long> ids) {
         tenantDao.deleteBatch(ids);
+        for (Long id : ids) {
+            appTenantService.deleteApplicationTenantByTenantId(id);
+        }
     }
 
     /**
@@ -120,5 +146,112 @@ public class GarTenantServiceImpl implements GarTenantService {
     @Override
     public int queryTotal() {
         return tenantDao.queryTotal();
+    }
+
+    /**
+     * Save tenant.
+     *
+     * @param vmTenant the vm tenant
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void saveTenant(GarVMTenant vmTenant) {
+        if (vmTenant.getTenantId() == null) {
+            vmTenant.setTenantId(IdGeneratorUtil.generateId());
+        }
+        saveApplicationTenant(vmTenant);
+        save(vmTenant);
+    }
+
+    /**
+     * Save application tenant.
+     *
+     * @param vmTenant the vm tenant
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private void saveApplicationTenant(GarVMTenant vmTenant) {
+        List<Long> appIds = GarnetRsUtil.parseStringToList(vmTenant.getAppIds());
+        if (!CollectionUtils.isEmpty(appIds)) {
+            for (Long appId : appIds) {
+                GarApplicationTenant applicationTenant = new GarApplicationTenant();
+                applicationTenant.setTenantId(vmTenant.getTenantId());
+                applicationTenant.setAppId(appId);
+                appTenantService.save(applicationTenant);
+            }
+        }
+    }
+
+    /**
+     * Gets vm tenant by tenant id.
+     *
+     * @param tenantId the tenant id
+     * @return the vm tenant by tenant id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public GarVMTenant getVmTenantByTenantId(Long tenantId) {
+        return convertTenantToVmTenant(queryObject(tenantId));
+    }
+
+    /**
+     * Convert tenant to vm tenant gar vm tenant.
+     *
+     * @param tenant the tenant
+     * @return the gar vm tenant
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private GarVMTenant convertTenantToVmTenant(GarTenant tenant) {
+        GarVMTenant vmTenant = new GarVMTenant();
+        List<String> appNameList = new ArrayList<>();
+        List<Long> appIdList = new ArrayList<>();
+        List<GarApplicationTenant> appTenantList = appTenantService.getApplicationTenantByTenantId(tenant.getTenantId());
+        if (!CollectionUtils.isEmpty(appTenantList)) {
+            for (GarApplicationTenant appTenant : appTenantList) {
+                appIdList.add(appTenant.getAppId());
+                appNameList.add(applicationService.queryObject(appTenant.getAppId()).getName());
+            }
+        }
+        vmTenant.setAppIdList(appIdList);
+        vmTenant.setAppNameList(appNameList);
+        vmTenant.setTenantId(tenant.getTenantId());
+        vmTenant.setName(tenant.getName());
+        vmTenant.setRemark(tenant.getRemark());
+        vmTenant.setCreateTime(tenant.getCreateTime());
+        return vmTenant;
+    }
+
+    /**
+     * Query vm tenants list.
+     *
+     * @param searchName the search name
+     * @param page       the page
+     * @param limit      the limit
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public List<GarVMTenant> queryVmTenants(String searchName, Integer page, Integer limit) {
+        List<GarVMTenant> vmTenantList = new ArrayList<>();
+        List<GarTenant> tenantList = queryObjects(searchName, page, limit);
+        if (!CollectionUtils.isEmpty(tenantList)) {
+            for (GarTenant tenant : tenantList) {
+                vmTenantList.add(convertTenantToVmTenant(tenant));
+            }
+        }
+        return vmTenantList;
+    }
+
+    /**
+     * Update vm tenant.
+     *
+     * @param vmTenant the vm tenant
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @Override
+    public void updateVmTenant(GarVMTenant vmTenant) {
+        update(vmTenant);
+
+        appTenantService.deleteApplicationTenantByTenantId(vmTenant.getTenantId());
+        saveApplicationTenant(vmTenant);
     }
 }

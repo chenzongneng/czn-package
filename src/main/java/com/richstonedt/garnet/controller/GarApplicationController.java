@@ -6,7 +6,7 @@
 
 package com.richstonedt.garnet.controller;
 
-import com.richstonedt.garnet.model.GarApplication;
+import com.richstonedt.garnet.model.view.model.GarVMApplication;
 import com.richstonedt.garnet.service.GarApplicationService;
 import com.richstonedt.garnet.utils.GarnetRsUtil;
 import com.richstonedt.garnet.utils.PageUtil;
@@ -64,9 +64,9 @@ public class GarApplicationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> saveApplication(@RequestBody GarApplication application) {
+    public ResponseEntity<?> saveApplication(@RequestBody GarVMApplication application) {
         try {
-            applicationService.save(application);
+            applicationService.saveApplication(application);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to create application :" + application, t);
@@ -106,11 +106,11 @@ public class GarApplicationController {
     @RequestMapping(value = "/application/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询应用", notes = "Get application by id ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful query", response = GarApplication.class),
+            @ApiResponse(code = 200, message = "successful query", response = GarVMApplication.class),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> searchApplication(@ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
         try {
-            return new ResponseEntity<>(applicationService.queryObject(appId), HttpStatus.OK);
+            return new ResponseEntity<>(applicationService.getVmApplicationByAppId(appId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get application :" + appId, t);
             return GarnetRsUtil.newResponseEntity(t);
@@ -129,13 +129,13 @@ public class GarApplicationController {
     @RequestMapping(value = "/applications", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询应用列表", notes = "Get application list ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful query", response = GarApplication.class, responseContainer = "list"),
+            @ApiResponse(code = 200, message = "successful query", response = GarVMApplication.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> searchApplications(@ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                                 @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                                 @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
-            List<GarApplication> list = applicationService.queryObjects(searchName, page, limit);
+            List<GarVMApplication> list = applicationService.queryVmApplications(searchName, page, limit);
             int totalCount = applicationService.queryTotal();
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -157,9 +157,9 @@ public class GarApplicationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> updateApplication(@ApiParam(value = "application对象") @RequestBody GarApplication application) {
+    public ResponseEntity<?> updateApplication(@ApiParam(value = "application对象") @RequestBody GarVMApplication application) {
         try {
-            applicationService.update(application);
+            applicationService.updateVmApplication(application);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to update applications .", t);

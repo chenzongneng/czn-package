@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarApplicationTenantDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarApplicationTenant">
+        INSERT INTO gar_application_tenant
+        (
+            app_id,
+            tenant_id
+        )
+        VALUES
+            (
+                #{appId},
+                #{tenantId}
+            );
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_application_tenant
+        <where>
+            app_id = #{id};
+        </where>
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_application_tenant WHERE app_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRoleDeptByTenantId" parameterType="java.lang.Long">
+        DELETE FROM gar_application_tenant
+        <where>
+            tenant_id = #{tenantId}
+        </where>
+    </delete>
+
+    <select id="getApplicationTenantByAppId" resultType="com.richstonedt.garnet.model.GarApplicationTenant">
+        SELECT * FROM gar_application_tenant
+        <where>
+            app_id = #{appId};
+        </where>
+    </select>
+
+    <select id="getApplicationTenantByTenantId" resultType="com.richstonedt.garnet.model.GarApplicationTenant">
+        SELECT * FROM gar_application_tenant
+        <where>
+            tenant_id = #{tenantId};
+        </where>
+    </select>
+</mapper>

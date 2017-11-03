@@ -7,6 +7,9 @@
 package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.model.GarTenant;
+import com.richstonedt.garnet.model.view.model.GarVMTenant;
+
+import java.util.List;
 
 /**
  * <b><code>GarTenantService</code></b>
@@ -20,4 +23,40 @@ import com.richstonedt.garnet.model.GarTenant;
  * @since garnet-core-be-fe 0.1.0
  */
 public interface GarTenantService extends BaseService<GarTenant> {
+
+    /**
+     * Save tenant.
+     *
+     * @param vmTenant the vm tenant
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void saveTenant(GarVMTenant vmTenant);
+
+    /**
+     * Gets vm tenant by tenant id.
+     *
+     * @param tenantId the tenant id
+     * @return the vm tenant by tenant id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    GarVMTenant getVmTenantByTenantId(Long tenantId);
+
+    /**
+     * Query vm tenants list.
+     *
+     * @param searchName the search name
+     * @param page       the page
+     * @param limit      the limit
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarVMTenant> queryVmTenants(String searchName, Integer page, Integer limit);
+
+    /**
+     * Update vm tenant.
+     *
+     * @param vmTenant the vm tenant
+     * @since garnet-core-be-fe 0.1.0
+     */
+    void updateVmTenant(GarVMTenant vmTenant);
 }
