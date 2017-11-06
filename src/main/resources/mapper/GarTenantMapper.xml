@@ -49,7 +49,7 @@
         select * from gar_tenant
         <where>
             <if test="searchName != null and searchName != ''">
-                and name LIKE CONCAT('%',#{searchName},'%')
+                name LIKE CONCAT('%',#{searchName},'%')
             </if>
         </where>
         ORDER BY tenant_id asc

@@ -46,6 +46,26 @@ $(function () {
     });
 });
 
+/** 用户树 */
+var appTree;
+var appTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "appId"
+        },
+        key: {
+            //url: "nourl",
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -54,7 +74,9 @@ var vm = new Vue({
         title: null,
         tenant: {
             name: null,
-            remark: null
+            remark: null,
+            appIds: null,
+            appNames: []
         }
     },
     methods: {
@@ -69,8 +91,16 @@ var vm = new Vue({
             vm.tenant = {
                 tenantId: null,
                 name: null,
-                remark: null
+                remark: null,
+                appIds: null,
+                appNames: []
             };
+
+            // 加载应用树
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
+                appTree.expandAll(true);
+            });
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -80,8 +110,12 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-
-            vm.getTenant(tenantId);
+            // 加载应用树
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
+                appTree.expandAll(true);
+                vm.getTenant(tenantId);
+            });
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -139,6 +173,33 @@ var vm = new Vue({
                     vm.tenant.tenantId = response.tenantId;
                     vm.tenant.name = response.name;
                     vm.tenant.remark = response.remark;
+                }
+            });
+        },
+        /**  应用树点击事件 */
+        appTree: function () {
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择应用",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#appLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    vm.tenant.appNames = [];
+                    vm.tenant.appIds = null;
+                    // 获取应用树选择的应用
+                    var appNodes = appTree.getCheckedNodes(true);
+                    var appIdList = [];
+                    for (var i = 0; i < appNodes.length; i++) {
+                        appIdList.push(appNodes[i].appId);
+                        vm.tenant.appNames.push(appNodes[i].name);
+                    }
+                    vm.tenant.appIds = appIdList.join(",");
+                    layer.close(index);
                 }
             });
         },
