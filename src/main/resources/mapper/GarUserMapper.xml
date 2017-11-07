@@ -10,7 +10,7 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarUserDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarUser">
-        INSERT INTO gar_user
+        INSERT INTO gar_users
         (
         user_id,
             tenant_id,
@@ -35,35 +35,35 @@
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_user
+        DELETE FROM gar_users
         <where>
             user_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_user WHERE user_id in
+        delete from gar_users WHERE user_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarUser">
-        select * from gar_user
+        select * from gar_users
         <where>
             user_id = #{id};
         </where>
     </select>
 
     <select id="getUserByName" resultType="com.richstonedt.garnet.model.GarUser">
-        select * from gar_user
+        select * from gar_users
         <where>
             username = #{userName};
         </where>
     </select>
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarUser">
-        select * from gar_user
+        select * from gar_users
         <where>
             <if test="searchName != null and searchName != ''">
                 and username LIKE CONCAT('%',#{searchName},'%')
@@ -76,7 +76,7 @@
     </select>
 
     <select id="queryUserList" resultType="com.richstonedt.garnet.model.GarUser">
-        select * from gar_user
+        select * from gar_users
         <where>
             <if test="tenantId != null">
                 tenant_id = #{tenantId}
@@ -92,11 +92,11 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*) FROM gar_user;
+        SELECT count(*) FROM gar_users;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarUser">
-        UPDATE gar_user
+        UPDATE gar_users
         <set>
             <if test="tenantId != null">
                 tenant_id = #{tenantId},
@@ -126,7 +126,7 @@
     </update>
 
     <update id="updatePassword">
-        UPDATE gar_user
+        UPDATE gar_users
         <set>
             password = #{password}
         </set>

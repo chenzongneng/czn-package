@@ -10,7 +10,7 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarRoleDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarRole">
-        INSERT INTO gar_role
+        INSERT INTO gar_roles
         (
             role_id,
             tenant_id,
@@ -29,28 +29,28 @@
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_role
+        DELETE FROM gar_roles
         <where>
             role_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_role WHERE role_id in
+        delete from gar_roles WHERE role_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarRole">
-        select * from gar_role
+        select * from gar_roles
         <where>
             role_id = #{id};
         </where>
     </select>
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarRole">
-        select * from gar_role
+        select * from gar_roles
         <where>
             <if test="searchName != null and searchName != ''">
                 and name LIKE CONCAT('%',#{searchName},'%')
@@ -63,7 +63,7 @@
     </select>
 
     <select id="queryRoleList" resultType="com.richstonedt.garnet.model.GarRole">
-        select * from gar_role
+        select * from gar_roles
         <where>
             <if test="tenantId != null">
                 tenant_id = #{tenantId}
@@ -80,11 +80,11 @@
 
     <select id="queryTotal" resultType="int">
         SELECT count(*)
-        FROM gar_role;
+        FROM gar_roles;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarRole">
-        UPDATE gar_role
+        UPDATE gar_roles
         <set>
             <if test="tenantId != null ">
                 tenant_id = #{tenantId},

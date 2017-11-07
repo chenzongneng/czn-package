@@ -11,11 +11,11 @@
 
     <select id="getAllOperations" resultType="com.richstonedt.garnet.model.GarLogOperation">
         SELECT *
-        FROM gar_log_operation;
+        FROM gar_log_operations;
     </select>
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarLogOperation">
-        INSERT INTO gar_log_operation VALUES
+        INSERT INTO gar_log_operations VALUES
             (
                 #{id},
                 #{url},
@@ -25,14 +25,14 @@
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_log_operation
+        DELETE FROM gar_log_operations
         <where>
             id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        DELETE FROM gar_log_operation
+        DELETE FROM gar_log_operations
         <where>
             id in
             <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
@@ -42,14 +42,14 @@
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarLogOperation">
-        SELECT * FROM gar_log_operation
+        SELECT * FROM gar_log_operations
         <where>
             id = #{id};
         </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarLogOperation">
-        UPDATE gar_log_operation
+        UPDATE gar_log_operations
         <set>
             <if test="url != null and url != ''">
                 url = #{url},

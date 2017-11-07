@@ -11,13 +11,13 @@
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarDept">
         SELECT *
-        FROM gar_dept
+        FROM gar_depts
         WHERE dept_id = #{id};
     </select>
 
     <select id="queryDeptList" resultType="com.richstonedt.garnet.model.GarDept">
-        select d.*,(select p.name from gar_dept p where p.dept_id = d.parent_dept_id) as parentName
-        from gar_dept d
+        select d.*,(select p.name from gar_depts p where p.dept_id = d.parent_dept_id) as parentName
+        from gar_depts d
         <where>
             <if test="tenantId != null ">
                 tenant_id = #{tenantId}
@@ -30,7 +30,7 @@
     </select>
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarDept">
-        INSERT INTO gar_dept
+        INSERT INTO gar_depts
         (
             dept_id,
             parent_dept_id,
@@ -51,7 +51,7 @@
     </insert>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarDept">
-        update gar_dept
+        update gar_depts
         <set>
             <if test="parentDeptId != null">
                 parent_dept_id = #{parentDeptId},
@@ -67,18 +67,18 @@
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_dept
+        DELETE FROM gar_depts
         WHERE dept_id = #{id};
     </delete>
 
     <select id="queryDetpIdList" resultType="long">
         SELECT dept_id
-        FROM gar_dept
+        FROM gar_depts
         WHERE parent_dept_id = #{parentDeptId}
     </select>
 
     <select id="getDeptByParentDeptId" resultType="com.richstonedt.garnet.model.GarDept">
-        SELECT * FROM gar_dept
+        SELECT * FROM gar_depts
         <where>
             dept_id = #{parentDeptId}
         </where>

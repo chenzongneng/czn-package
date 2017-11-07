@@ -10,7 +10,7 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarLogDao">
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarLog">
-        SELECT * FROM gar_log
+        SELECT * FROM gar_logs
         <where>
             <if test="searchName != null and searchName != ''">
                 username like CONCAT('%',#{searchName},'%')
@@ -24,18 +24,18 @@
 
     <select id="queryTotal" resultType="int">
         SELECT count(1)
-        FROM gar_log;
+        FROM gar_logs;
     </select>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarLog">
-        SELECT * FROM gar_log
+        SELECT * FROM gar_logs
         <where>
             id = #{id};
         </where>
     </select>
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarLog">
-        INSERT INTO gar_log
+        INSERT INTO gar_logs
         (
             username,
             operation,

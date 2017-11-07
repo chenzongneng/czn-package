@@ -10,7 +10,7 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarTenantDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarTenant">
-        INSERT INTO gar_tenant
+        INSERT INTO gar_tenants
         (
         tenant_id,
             name,
@@ -25,28 +25,28 @@
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_tenant
+        DELETE FROM gar_tenants
         <where>
             tenant_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_tenant WHERE tenant_id in
+        delete from gar_tenants WHERE tenant_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarTenant">
-        select * from gar_tenant
+        select * from gar_tenants
         <where>
             tenant_id = #{id};
         </where>
     </select>
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarTenant">
-        select * from gar_tenant
+        select * from gar_tenants
         <where>
             <if test="searchName != null and searchName != ''">
                 name LIKE CONCAT('%',#{searchName},'%')
@@ -59,11 +59,11 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*) FROM gar_tenant;
+        SELECT count(*) FROM gar_tenants;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarTenant">
-        UPDATE gar_tenant
+        UPDATE gar_tenants
         <set>
             <if test="name != null and name != ''">
                 name = #{name},

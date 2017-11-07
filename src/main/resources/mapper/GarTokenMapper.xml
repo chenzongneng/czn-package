@@ -10,7 +10,7 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarTokenDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarToken">
-        INSERT INTO gar_token
+        INSERT INTO gar_tokens
         (
         user_id,
             token,
@@ -27,21 +27,21 @@
     </insert>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarToken">
-        select * from gar_token
+        select * from gar_tokens
         <where>
             user_id = #{id};
         </where>
     </select>
 
     <select id="queryByToken" resultType="com.richstonedt.garnet.model.GarToken">
-        select * from gar_token
+        select * from gar_tokens
         <where>
             token = #{token}
         </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarToken">
-        update gar_token
+        update gar_tokens
         <set>
             <if test="token != null and token != ''">
                 token = #{token},
