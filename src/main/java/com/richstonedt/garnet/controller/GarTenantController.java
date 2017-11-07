@@ -107,7 +107,7 @@ public class GarTenantController {
     @RequestMapping(value = "/tenant/{tenantId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询租户信息", notes = "Get tenant by id ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful query", response = GarTenant.class),
+            @ApiResponse(code = 200, message = "successful query", response = GarVMTenant.class),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> searchTenant(@ApiParam(value = "tenantId", required = true) @PathVariable(value = "tenantId") Long tenantId) {
         try {

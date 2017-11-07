@@ -55,7 +55,6 @@ var appTreeSetting = {
             idKey: "appId"
         },
         key: {
-            //url: "nourl",
             name: "name"
         }
     },
@@ -110,6 +109,8 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
+            vm.tenant.appIds = null;
+            vm.tenant.appNames = [];
             // 加载应用树
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
@@ -173,6 +174,14 @@ var vm = new Vue({
                     vm.tenant.tenantId = response.tenantId;
                     vm.tenant.name = response.name;
                     vm.tenant.remark = response.remark;
+                    // 勾选已有应用
+                    $.each(response.appIdList, function (index, item) {
+                        var node = appTree.getNodeByParam("appId", item);
+                        appTree.checkNode(node, true, false);
+                    });
+                    $.each(response.appNameList, function (index, item) {
+                        vm.tenant.appNames.push(item);
+                    })
                 }
             });
         },
