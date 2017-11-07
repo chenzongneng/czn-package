@@ -12,6 +12,7 @@ $(function () {
         colModel: [
             {label: '应用ID', name: 'appId', align: 'center', hidden: true, width: 20, key: true},
             {label: '应用名称', name: 'name', align: 'center', width: 80},
+            {label: '租户列表', name: 'tenantNameList', align: 'center', width: 100},
             {label: '所属公司', name: 'company', align: 'center', width: 80},
             {label: '备注', name: 'remark', align: 'center', width: 80},
             {label: '创建时间', name: 'createTime', align: 'center', width: 80}
@@ -46,6 +47,26 @@ $(function () {
     });
 });
 
+/** 用户树 */
+var tenantTree;
+var tenantTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "tenantId"
+        },
+        key: {
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -55,7 +76,9 @@ var vm = new Vue({
         application: {
             name: null,
             company: null,
-            remark: null
+            remark: null,
+            tenantNames: [],
+            tenantIds: null
         }
     },
     methods: {
@@ -71,8 +94,16 @@ var vm = new Vue({
                 appId: null,
                 name: null,
                 company: null,
-                remark: null
+                remark: null,
+                tenantNames: [],
+                tenantIds: null
             };
+
+            // 加载租户树
+            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
+                tenantTree.expandAll(true);
+            });
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -83,7 +114,14 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
 
-            vm.getApplication(appId);
+            vm.application.tenantIds = null;
+            vm.application.tenantNames = [];
+            // 加载应用树
+            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
+                tenantTree.expandAll(true);
+                vm.getApplication(appId);
+            });
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -141,6 +179,42 @@ var vm = new Vue({
                     vm.application.name = response.name;
                     vm.application.company = response.company;
                     vm.application.remark = response.remark;
+
+                    // 勾选已有应用
+                    $.each(response.tenantIdList, function (index, item) {
+                        var node = tenantTree.getNodeByParam("tenantId", item);
+                        tenantTree.checkNode(node, true, false);
+                    });
+                    $.each(response.tenantNameList, function (index, item) {
+                        vm.application.tenantNames.push(item);
+                    })
+                }
+            });
+        },
+        /**  租户树点击事件 */
+        tenantTree: function () {
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择租户",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#tenantLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    vm.application.tenantNames = [];
+                    vm.application.tenantIds = "";
+                    // 获取应用树选择的应用
+                    var tenantNodes = tenantTree.getCheckedNodes(true);
+                    var tenantIdList = [];
+                    for (var i = 0; i < tenantNodes.length; i++) {
+                        tenantIdList.push(tenantNodes[i].tenantId);
+                        vm.application.tenantNames.push(tenantNodes[i].name);
+                    }
+                    vm.application.tenantIds = tenantIdList.join(",");
+                    layer.close(index);
                 }
             });
         },
