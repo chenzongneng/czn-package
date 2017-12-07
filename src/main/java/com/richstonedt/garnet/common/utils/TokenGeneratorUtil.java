@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet.utils;
+package com.richstonedt.garnet.common.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

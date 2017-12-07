@@ -9,7 +9,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.dao.GarLogDao;
 import com.richstonedt.garnet.model.GarLog;
 import com.richstonedt.garnet.service.GarLogService;
-import com.richstonedt.garnet.utils.IdGeneratorUtil;
+import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

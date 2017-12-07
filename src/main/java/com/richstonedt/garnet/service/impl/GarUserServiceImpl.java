@@ -13,8 +13,8 @@ import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.*;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
-import com.richstonedt.garnet.utils.IdGeneratorUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserServiceImpl</code></b>

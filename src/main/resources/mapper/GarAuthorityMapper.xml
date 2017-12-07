@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarAuthorityDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarAuthority">
+        INSERT INTO gar_authority
+        (
+            name,
+            description,
+            status
+        )
+        VALUES
+            (
+                #{name},
+                #{description},
+                #{status}
+            );
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_authority
+        <where>
+            authority_id = #{id};
+        </where>
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_authority WHERE authority_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarAuthority">
+        select * from gar_authority
+        <where>
+            authority_id = #{id};
+        </where>
+    </select>
+
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarAuthority">
+        select * from gar_authority
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        ORDER BY authority_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM gar_authority;
+    </select>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarAuthority">
+        UPDATE gar_authority
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        <where>
+            authority_id = #{authorityId};
+        </where>
+    </update>
+
+</mapper>

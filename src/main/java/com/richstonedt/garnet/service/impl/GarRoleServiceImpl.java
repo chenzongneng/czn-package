@@ -7,13 +7,11 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarRoleDao;
-import com.richstonedt.garnet.model.GarRole;
-import com.richstonedt.garnet.model.GarRoleDept;
-import com.richstonedt.garnet.model.GarUser;
+import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.view.model.GarVMRole;
 import com.richstonedt.garnet.service.*;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
-import com.richstonedt.garnet.utils.IdGeneratorUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -83,6 +81,12 @@ public class GarRoleServiceImpl implements GarRoleService {
     @Autowired
     private GarRoleDeptService roleDeptService;
 
+    @Autowired
+    private GarRoleAuthorityService roleAuthorityService;
+
+    @Autowired
+    private GarAuthorityService authorityService;
+
     /**
      * Save.
      *
@@ -128,6 +132,7 @@ public class GarRoleServiceImpl implements GarRoleService {
         roleDeptService.deleteBatch(ids);
 
         // todo 删除与权限关联的角色
+        roleAuthorityService.deleteBatch(ids);
 
         roleDao.deleteBatch(ids);
     }
@@ -269,6 +274,12 @@ public class GarRoleServiceImpl implements GarRoleService {
         vmRole.setDeptNameList(deptNameList);
 
         // todo  获取该角色的权限列表
+        List<String> authorityNameList = new ArrayList<>();
+        List<GarRoleAuthority> roleAuthorities = roleAuthorityService.getRoleAuthorityByRoleId(role.getRoleId());
+        for (GarRoleAuthority roleAuthority : roleAuthorities) {
+            authorityNameList.add(authorityService.queryObject(roleAuthority.getAuthorityId()).getName());
+        }
+        vmRole.setAuthorityNameList(authorityNameList);
 
         vmRole.setTenantId(role.getTenantId());
         vmRole.setAppId(role.getAppId());

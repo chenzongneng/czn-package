@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarAuthorityPermissionDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarAuthorityPermission">
+        INSERT INTO gar_authority_permission
+        (
+            authority_id,
+            permission_id
+        )
+        VALUES
+            (
+                #{authorityId},
+                #{permissionId}
+            );
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_authority_permission
+        <where>
+            authority_id = #{id};
+        </where>
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_authority_permission WHERE authority_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarAuthorityPermission">
+        UPDATE gar_authority_permission
+        <set>
+            <if test="permissionId != null ">
+                permission_id= #{permissionId}
+            </if>
+        </set>
+        <where>
+            authority_id = #{authorityId};
+        </where>
+    </update>
+
+    <select id="getAuthorityPermissionByAuthorityId" resultType="com.richstonedt.garnet.model.GarAuthorityPermission">
+        SELECT * FROM gar_authority_permission
+        <where>
+            authority_id = #{authorityId};
+        </where>
+    </select>
+
+    <select id="getAuthorityPermissionByPermissionId" resultType="com.richstonedt.garnet.model.GarAuthorityPermission">
+        SELECT * FROM gar_authority_permission
+        <where>
+            permission_id= #{permissionId};
+        </where>
+    </select>
+
+
+    <delete id="deleteAuthorityPermissionByAuthorityId" parameterType="java.lang.Long">
+        DELETE FROM gar_authority_permission
+        <where>
+            permissionId= #{permissionId}
+        </where>
+    </delete>
+
+    <select id="getPermissionIdsByAuthorityIds" resultType="_long" parameterType="java.util.Set">
+        SELECT ap.permission_id
+        from gar_authority_permission AS ap WHERE authority_id in
+        <foreach collection="authorityIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

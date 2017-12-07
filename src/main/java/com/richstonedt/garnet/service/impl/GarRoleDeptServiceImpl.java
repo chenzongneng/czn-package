@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarRoleDeptServiceImpl</code></b>
@@ -69,6 +70,11 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
     @Override
     public void deleteRoleDeptByDeptId(Long deptId) {
         roleDeptDao.deleteRoleDeptByDeptId(deptId);
+    }
+
+    @Override
+    public Set<Long> getRoleIdsByDeptIds(Set<Long> deptIds) {
+        return roleDeptDao.getRoleIdsByDeptIds(deptIds);
     }
 
     /**

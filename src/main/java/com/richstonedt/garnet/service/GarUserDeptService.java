@@ -9,6 +9,7 @@ package com.richstonedt.garnet.service;
 import com.richstonedt.garnet.model.GarUserDept;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserDeptService</code></b>
@@ -48,4 +49,6 @@ public interface GarUserDeptService extends BaseService<GarUserDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     List<GarUserDept> getUserDeptByUserId(Long userId);
+
+    Set<Long> getDeptIdsByUserId(Long userId);
 }

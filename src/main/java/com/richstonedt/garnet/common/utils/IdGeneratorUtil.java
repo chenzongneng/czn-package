@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet.utils;
+package com.richstonedt.garnet.common.utils;
 
 /**
  * <b><code>IdGeneratorUtil</code></b>

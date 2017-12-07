@@ -4,12 +4,13 @@ server:
         uri-encoding: UTF-8
         max-threads: 1000
         min-spare-threads: 30
-    port: 8080
+    port: 12306
     context-path: /garnet
 
 spring:
     profiles:
-        active: dev
+#        active: dev
+        active: local
     # AOP config
     aop:
       auto: true

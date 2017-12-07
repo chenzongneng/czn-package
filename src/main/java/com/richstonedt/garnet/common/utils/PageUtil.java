@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet.utils;
+package com.richstonedt.garnet.common.utils;
 
 import java.io.Serializable;
 import java.util.List;

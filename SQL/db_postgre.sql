@@ -109,25 +109,25 @@ COMMENT ON COLUMN gar_role_dept.role_id IS '角色ID';
 COMMENT ON COLUMN gar_role_dept.dept_id IS '部门ID';
 
 
-DROP TABLE IF EXISTS "public"."gar_permission";
-CREATE TABLE "public"."gar_permission" (
-  permission_id INT8,
-  tenant_id     INT8         NOT NULL,
-  app_id        INT8         NOT NULL,
-  name          VARCHAR(100) NOT NULL,
-  class         varchar(255),
-  actions       varchar(255),
-  resource      varchar(255)
-)
-;
-COMMENT ON COLUMN "public"."gar_permission"."tenant_id" IS '租户ID';
-COMMENT ON COLUMN "public"."gar_permission"."app_id" IS '应用ID';
-COMMENT ON COLUMN "public"."gar_permission"."name" IS '这个Permission具体的名称';
-COMMENT ON COLUMN "public"."gar_permission"."class" IS '这个Permission对应的java类';
-COMMENT ON COLUMN "public"."gar_permission"."actions" IS '用户可以在这个资源上的权限列表，譬如read（读，访问），edit（编辑）。当赋予到Privilege时只能选择其中一个';
-COMMENT ON COLUMN "public"."gar_permission"."resource" IS '通过属性来定义该Permission控制的资源';
-
-ALTER TABLE "public"."gar_permission" ADD PRIMARY KEY ("permission_id");
+-- DROP TABLE IF EXISTS "public"."gar_permission";
+-- CREATE TABLE "public"."gar_permission" (
+--   permission_id INT8,
+--   tenant_id     INT8         NOT NULL,
+--   app_id        INT8         NOT NULL,
+--   name          VARCHAR(100) NOT NULL,
+--   class         varchar(255),
+--   actions       varchar(255),
+--   resource      varchar(255)
+-- )
+-- ;
+-- COMMENT ON COLUMN "public"."gar_permission"."tenant_id" IS '租户ID';
+-- COMMENT ON COLUMN "public"."gar_permission"."app_id" IS '应用ID';
+-- COMMENT ON COLUMN "public"."gar_permission"."name" IS '这个Permission具体的名称';
+-- COMMENT ON COLUMN "public"."gar_permission"."class" IS '这个Permission对应的java类';
+-- COMMENT ON COLUMN "public"."gar_permission"."actions" IS '用户可以在这个资源上的权限列表，譬如read（读，访问），edit（编辑）。当赋予到Privilege时只能选择其中一个';
+-- COMMENT ON COLUMN "public"."gar_permission"."resource" IS '通过属性来定义该Permission控制的资源';
+--
+-- ALTER TABLE "public"."gar_permission" ADD PRIMARY KEY ("permission_id");
 
 
 /*DROP TABLE IF EXISTS "public"."gar_menu";

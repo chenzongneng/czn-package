@@ -7,7 +7,7 @@
 package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.service.GarSysMenuService;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

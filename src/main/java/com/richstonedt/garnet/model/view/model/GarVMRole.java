@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.model.view.model;
 
+import com.richstonedt.garnet.model.GarAuthority;
 import com.richstonedt.garnet.model.GarRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -69,7 +70,8 @@ public class GarVMRole extends GarRole implements Serializable {
     private String deptIds;
 
     // todo 权限属性
-
+    @ApiModelProperty(value = "权限名称列表")
+    private List<String> authorityNameList;
 
     /**
      * Return the TenantName
@@ -179,5 +181,12 @@ public class GarVMRole extends GarRole implements Serializable {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
+    }
+
+    public List<String> getAuthorityNameList() {
+        return authorityNameList;
+    }
+    public void setAuthorityNameList(List<String> authorityNameList) {
+        this.authorityNameList = authorityNameList;
     }
 }

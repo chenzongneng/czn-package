@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserDeptDao</code></b>
@@ -51,4 +52,6 @@ public interface GarRoleDeptDao extends BaseDao<GarRoleDept> {
      * @since garnet-core-be-fe 0.1.0
      */
     void deleteRoleDeptByDeptId(@Param(value = "deptId") Long deptId);
+
+    Set<Long> getRoleIdsByDeptIds(@Param(value = "deptIds")Set<Long> deptIds);
 }

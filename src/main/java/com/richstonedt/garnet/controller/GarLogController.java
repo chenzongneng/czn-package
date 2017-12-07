@@ -8,8 +8,8 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.GarLog;
 import com.richstonedt.garnet.service.GarLogService;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
-import com.richstonedt.garnet.utils.PageUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.PageUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

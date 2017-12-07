@@ -8,9 +8,10 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.model.view.model.GarVMApplication;
 import com.richstonedt.garnet.service.GarApplicationService;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
-import com.richstonedt.garnet.utils.PageUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.PageUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]新增应用", notes = "Create application")
+    @RequiresPermissions("application:add")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -83,6 +85,7 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id批量删除应用", notes = "Delete applications")
+    @RequiresPermissions("application:delete:batch")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -105,6 +108,7 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询应用", notes = "Get application by id ")
+    @RequiresPermissions("application:info")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMApplication.class),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -128,6 +132,7 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/applications", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询应用列表", notes = "Get application list ")
+    @RequiresPermissions("application:list")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMApplication.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -154,6 +159,7 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据ID更新应用", notes = "Update application")
+    @RequiresPermissions("application:update")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})

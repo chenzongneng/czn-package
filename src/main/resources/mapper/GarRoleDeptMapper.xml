@@ -69,4 +69,11 @@
             dept_id = #{deptId};
         </where>
     </select>
+    <select id="getRoleIdsByDeptIds" resultType="_long" parameterType="java.util.Set">
+        SELECT rd.role_id
+        FROM gar_role_dept AS rd WHERE dept_id in
+        <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

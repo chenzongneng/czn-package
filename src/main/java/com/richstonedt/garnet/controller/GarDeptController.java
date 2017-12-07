@@ -10,7 +10,7 @@ import com.richstonedt.garnet.model.view.model.GarVMDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarDeptService;
 import com.richstonedt.garnet.service.GarUserService;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

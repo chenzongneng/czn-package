@@ -75,4 +75,11 @@
             user_id = #{userId};
         </where>
     </update>
+    <select id="getDeptIdsByUserId" resultType="_long">
+        SELECT ud.dept_id
+        FROM gar_user_dept AS ud
+        <where>
+            user_id = #{userId}
+        </where>
+    </select>
 </mapper>

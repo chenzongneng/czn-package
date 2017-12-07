@@ -5,7 +5,9 @@
  */
 
 /** 请求url前缀 */
-var baseURL = "http://localhost:8080/garnet/v1.0/";
+// TODO:暂时修改
+// var baseURL = "http://localhost:8080/garnet/v1.0/";
+var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
 
 /** token */
 var garnetToken = localStorage.getItem("garnetToken");
@@ -19,20 +21,26 @@ if (!garnetToken) {
 }*/
 
 /** jquery全局配置 */
-/*$.ajaxSetup({
+$.ajaxSetup({
     dataType: "json",
     cache: false,
     headers: {
-        "token": token,
-        "gempileToken": localStorage.getItem("gempileToken")
+        // "token": token,
+        // "gempileToken": localStorage.getItem("gempileToken")
+        "garnetToken": localStorage.getItem("garnetToken"),
+        "userToken": localStorage.getItem("userToken")
     },
+
     complete: function (xhr) {
         // token过期，则跳转到登录页面
         if (xhr.responseJSON.code == 401) {
-            parent.location.href = baseURL + 'login.html';
+            // alert("token过期");
+            parent.location.href = 'login.html';
+        }else if(xhr.responseJSON.code == 403) {
+            alert("没有权限");
         }
     }
-});*/
+});
 
 /** jqGrid 配置 */
 $.jgrid.defaults.width = 1000;

@@ -15,6 +15,7 @@ $(function () {
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
             {label: '所属应用', name: 'appName', align: 'center', width: 70},
             {label: '部门列表', name: 'deptNameList', align: 'center', width: 100},
+            {label: '权限列表', name: 'authorityNameList', align: 'center', width: 100},
             {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,

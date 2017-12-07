@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserDeptServiceImpl</code></b>
@@ -67,6 +68,11 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
     @Override
     public List<GarUserDept> getUserDeptByUserId(Long userId) {
         return userDeptDao.getUserDeptByUserId(userId);
+    }
+
+    @Override
+    public Set<Long> getDeptIdsByUserId(Long userId) {
+        return userDeptDao.getDeptIdsByUserId(userId);
     }
 
     /**

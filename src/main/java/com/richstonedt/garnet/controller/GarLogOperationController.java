@@ -9,7 +9,7 @@ package com.richstonedt.garnet.controller;
 import com.richstonedt.garnet.model.GarLogOperation;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarLogOperationService;
-import com.richstonedt.garnet.utils.GarnetRsUtil;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

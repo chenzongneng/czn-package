@@ -137,7 +137,8 @@
             <id>dev</id>
             <properties>
                 <deploy.env>dev</deploy.env>
-                <tomcat-url>http://192.168.6.97:8080/manager/text</tomcat-url>
+                <!--<tomcat-url>http://192.168.6.97:8080/manager/text</tomcat-url>-->
+                <tomcat-url>http://localhost:12306/manager/text</tomcat-url>
                 <tomcat-username>tomcat</tomcat-username>
                 <tomcat-password>tomcatuser</tomcat-password>
             </properties>

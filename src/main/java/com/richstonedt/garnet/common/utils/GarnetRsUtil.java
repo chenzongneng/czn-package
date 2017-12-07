@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet.utils;
+package com.richstonedt.garnet.common.utils;
 
 import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.config.GarnetServiceException;

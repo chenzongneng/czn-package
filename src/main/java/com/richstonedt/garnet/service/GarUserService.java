@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserService</code></b>

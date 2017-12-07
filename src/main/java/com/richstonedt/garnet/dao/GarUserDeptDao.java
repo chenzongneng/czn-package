@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserDeptDao</code></b>
@@ -53,4 +54,5 @@ public interface GarUserDeptDao extends BaseDao<GarUserDept> {
     void deleteUserDeptByDeptId(@Param(value = "deptId") Long deptId);
 
 
+    Set<Long> getDeptIdsByUserId(@Param(value = "userId") Long userId);
 }
