@@ -11,6 +11,7 @@ import com.richstonedt.garnet.service.GarRoleService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class GarRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("role:list")
     public ResponseEntity<?> searchUsers(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
                                          @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                          @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
@@ -93,6 +95,7 @@ public class GarRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("role:info")
     public ResponseEntity<?> searchRole(@ApiParam(value = "roleId", required = true) @PathVariable(value = "roleId") Long roleId) {
         try {
             return new ResponseEntity<>(roleService.searchRole(roleId), HttpStatus.OK);
@@ -114,6 +117,7 @@ public class GarRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("role:create")
     public ResponseEntity<?> saveRole(@RequestBody GarVMRole garVMRole) {
         try {
             roleService.saveRole(garVMRole);
@@ -136,6 +140,7 @@ public class GarRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("role:delete:batch")
     public ResponseEntity<?> deleteRoles(@ApiParam(value = "roleIds,用‘,’隔开", required = true) @RequestParam(value = "roleIds") String roleIds) {
         try {
             roleService.deleteBatch(GarnetRsUtil.parseStringToList(roleIds));
@@ -158,6 +163,7 @@ public class GarRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("role:update")
     public ResponseEntity<?> updateRole(@RequestBody GarVMRole garVMRole) {
         try {
             roleService.updateRole(garVMRole);

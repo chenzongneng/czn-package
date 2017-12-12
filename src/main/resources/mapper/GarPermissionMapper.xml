@@ -9,52 +9,54 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarPermissionDao">
 
-    <insert id="save" parameterType="com.richstonedt.garnet.model.GarPermission">
-        INSERT INTO gar_permission
+    <insert id="save" keyProperty="permissionId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarPermission">
+        INSERT INTO gar_permissions
         (
+        application_id,
+        parent_id,
         name,
         permission,
         description,
         url,
-        api,
         method,
         status
         )
         VALUES
             (
+                #{applicationId},
+                #{parentId},
                 #{name},
                 #{permission},
                 #{description},
                 #{url},
-                #{api},
                 #{method},
                 #{status}
             );
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_permission
+        DELETE FROM gar_permissions
         <where>
             permission_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_permission WHERE permission_id in
+        delete from gar_permissions WHERE permission_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarPermission">
-        select * from gar_permission
+        select * from gar_permissions
         <where>
             permission_id = #{id};
         </where>
     </select>
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarPermission">
-        select * from gar_permission
+        select * from gar_permissions
         <where>
             <if test="searchName != null and searchName != ''">
                 and `name` LIKE CONCAT('%',#{searchName},'%')
@@ -67,12 +69,18 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*) FROM gar_permission;
+        SELECT count(*) FROM gar_permissions;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarPermission">
-        UPDATE gar_permission
+        UPDATE gar_permissions
         <set>
+            <if test="applicationId != null">
+                application_id = #{applicationId},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
             <if test="name != null and  name!=''">
                 name = #{name},
             </if>
@@ -84,9 +92,6 @@
             </if>
             <if test="url != null and url != ''">
                 url = #{url},
-            </if>
-            <if test="api != null and api != ''">
-                api = #{api},
             </if>
             <if test="method != null and method != ''">
                 method = #{method},
@@ -102,15 +107,21 @@
 
     <select id="getPermissionsByIds" resultType="string" parameterType="java.util.Set">
         SELECT p.permission
-        from gar_permission AS p WHERE permission_id in
+        from gar_permissions AS p WHERE permission_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
     <select id="getPermissionByPermission" resultType="com.richstonedt.garnet.model.GarPermission">
         SELECT *
-        FROM gar_permission
+        FROM gar_permissions
         WHERE permission=#{permission}
+    </select>
+
+    <select id="getPermissionByApplicationIdAndStatus" resultType="com.richstonedt.garnet.model.GarPermission">
+        SELECT *
+        FROM gar_permissions p
+        WHERE p.application_id=#{applicationId} AND p.status=#{status}
     </select>
 
 </mapper>

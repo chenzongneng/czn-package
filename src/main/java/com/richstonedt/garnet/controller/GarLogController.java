@@ -11,6 +11,7 @@ import com.richstonedt.garnet.service.GarLogService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class GarLogController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarLog.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:list"})
     public ResponseEntity<?> getAllLogs(
             @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
@@ -92,6 +94,7 @@ public class GarLogController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarLog.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:info"})
     public ResponseEntity<?> getDetailLog(@ApiParam(value = "id,log ID", required = true) @PathVariable(value = "id") Long id) {
         try {
             return new ResponseEntity<>(logService.queryObject(id), HttpStatus.OK);

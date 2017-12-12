@@ -11,13 +11,13 @@
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarSysMenu">
         SELECT *
-        FROM gar_sys_menu
+        FROM gar_sys_menus
         WHERE menu_id = #{id}
     </select>
 
     <select id="queryListParentId" resultType="com.richstonedt.garnet.model.GarSysMenu">
         SELECT *
-        FROM gar_sys_menu
+        FROM gar_sys_menus
         WHERE parent_id = #{parentId}
         ORDER BY order_num ASC
     </select>
@@ -26,9 +26,9 @@
         SELECT
             m.*,
             (SELECT p.name
-        FROM gar_sys_menu p
+        FROM gar_sys_menus p
              WHERE p.menu_id = m.parent_id) AS parentName
-        FROM gar_sys_menu m
+        FROM gar_sys_menus m
         ORDER BY m.order_num ASC
     </select>
 </mapper>

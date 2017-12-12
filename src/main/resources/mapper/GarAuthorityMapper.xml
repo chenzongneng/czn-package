@@ -10,7 +10,7 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarAuthorityDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarAuthority">
-        INSERT INTO gar_authority
+        INSERT INTO gar_authorities
         (
             name,
             description,
@@ -25,28 +25,28 @@
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_authority
+        DELETE FROM gar_authorities
         <where>
             authority_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_authority WHERE authority_id in
+        delete from gar_authorities WHERE authority_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarAuthority">
-        select * from gar_authority
+        select * from gar_authorities
         <where>
             authority_id = #{id};
         </where>
     </select>
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarAuthority">
-        select * from gar_authority
+        select * from gar_authorities
         <where>
             <if test="searchName != null and searchName != ''">
                 and name LIKE CONCAT('%',#{searchName},'%')
@@ -60,11 +60,11 @@
 
     <select id="queryTotal" resultType="int">
         SELECT count(*)
-        FROM gar_authority;
+        FROM gar_authorities;
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarAuthority">
-        UPDATE gar_authority
+        UPDATE gar_authorities
         <set>
             <if test="name != null and name != ''">
                 name = #{name},

@@ -11,6 +11,7 @@ import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarLogOperationService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class GarLogOperationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:operation:info"})
     public ResponseEntity<?> searchOperations() {
         try {
             return new ResponseEntity<>(logOperationService.getAllOperations(), HttpStatus.OK);
@@ -82,6 +84,7 @@ public class GarLogOperationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:operation:create"})
     public ResponseEntity<?> saveOperation(@RequestBody GarLogOperation logOperation) {
         try {
             logOperationService.save(logOperation);
@@ -104,6 +107,7 @@ public class GarLogOperationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:operation:delete"})
     public ResponseEntity<?> deleteLogOperation(@ApiParam(value = "id", required = true) @PathVariable(value = "id") Long id) {
         try {
             logOperationService.deleteById(id);
@@ -126,6 +130,7 @@ public class GarLogOperationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:operation:delete:batch"})
     public ResponseEntity<?> deleteLogOperations(@ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
             logOperationService.deleteBatch(GarnetRsUtil.parseStringToList(ids));
@@ -148,6 +153,7 @@ public class GarLogOperationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:operation:info"})
     public ResponseEntity<?> searchLogOperation(@ApiParam(value = "id", required = true) @PathVariable(value = "id") Long id) {
         try {
             return new ResponseEntity<>(logOperationService.queryObject(id), HttpStatus.OK);
@@ -169,6 +175,7 @@ public class GarLogOperationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"log:operation:update"})
     public ResponseEntity<?> updateUser(@RequestBody GarLogOperation logOperation) {
         try {
             logOperationService.update(logOperation);

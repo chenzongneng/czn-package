@@ -28,6 +28,12 @@ public class GarPermission implements Serializable {
     @ApiModelProperty(value = "访问权限ID")
     private Long permissionId;
 
+    @ApiModelProperty(value = "应用ID")
+    private Long applicationId;
+
+    @ApiModelProperty(value = "父访问权限ID")
+    private Long parentId;
+
     @ApiModelProperty(value = "具体名称")
     private String name;
 
@@ -39,9 +45,6 @@ public class GarPermission implements Serializable {
 
     @ApiModelProperty(value = "对应的链接")
     private String url;
-
-    @ApiModelProperty(value = "API")
-    private String api;
 
     @ApiModelProperty(value = "方法")
     private String method;
@@ -97,12 +100,20 @@ public class GarPermission implements Serializable {
         this.url = url;
     }
 
-    public String getApi() {
-        return api;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public void setApi(String api) {
-        this.api = api;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public String getMethod() {

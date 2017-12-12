@@ -12,6 +12,7 @@ import com.richstonedt.garnet.service.GarTenantService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("tenant:create")
     public ResponseEntity<?> saveTenant(@RequestBody GarVMTenant tenant) {
         try {
             tenantService.saveTenant(tenant);
@@ -87,6 +89,7 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("tenant:delete:batch")
     public ResponseEntity<?> deleteTenants(@ApiParam(value = "tenantIds,用‘,’隔开", required = true) @RequestParam(value = "tenantIds") String tenantIds) {
         try {
             tenantService.deleteBatch(GarnetRsUtil.parseStringToList(tenantIds));
@@ -109,6 +112,7 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMTenant.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("tenant:info")
     public ResponseEntity<?> searchTenant(@ApiParam(value = "tenantId", required = true) @PathVariable(value = "tenantId") Long tenantId) {
         try {
             return new ResponseEntity<>(tenantService.getVmTenantByTenantId(tenantId), HttpStatus.OK);
@@ -132,6 +136,7 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarTenant.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("tenant:list")
     public ResponseEntity<?> searchTenants(@ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                            @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                            @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
@@ -158,6 +163,7 @@ public class GarTenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("tenant:update")
     public ResponseEntity<?> updateTenant(@ApiParam(value = "tenant对象") @RequestBody GarVMTenant tenant) {
         try {
             tenantService.updateVmTenant(tenant);

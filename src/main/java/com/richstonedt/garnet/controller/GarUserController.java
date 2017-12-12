@@ -11,6 +11,7 @@ import com.richstonedt.garnet.service.GarUserService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("user:list")
     public ResponseEntity<?> searchUsers(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
                                          @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                          @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
@@ -93,6 +95,7 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("user:create")
     public ResponseEntity<?> saveUser(@RequestBody GarVMUser garVMUser) {
         try {
             userService.saveUser(garVMUser);
@@ -115,6 +118,7 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMUser.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("user:info")
     public ResponseEntity<?> searchUser(@ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId) {
         try {
             return new ResponseEntity<>(userService.searchUser(userId), HttpStatus.OK);
@@ -136,6 +140,7 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("user:delete:batch")
     public ResponseEntity<?> deleteUsers(@ApiParam(value = "userIds,用‘,’隔开", required = true) @RequestParam(value = "userIds") String userIds) {
         try {
             userService.deleteBatch(GarnetRsUtil.parseStringToList(userIds));
@@ -158,6 +163,7 @@ public class GarUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("user:update")
     public ResponseEntity<?> updateUser(@RequestBody GarVMUser garVMUser) {
         try {
             userService.updateUser(garVMUser);

@@ -12,6 +12,7 @@ import com.richstonedt.garnet.service.GarDeptService;
 import com.richstonedt.garnet.service.GarUserService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"user:dept:info"})
     public ResponseEntity<?> getDeptList(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             return new ResponseEntity<>(deptService.getUserDeptList(userId), HttpStatus.OK);
@@ -99,6 +101,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"user:dept:list:add"})
     public ResponseEntity<?> getDeptListToAdd(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             List<GarVMDept> deptList = deptService.getUserDeptList(userId);
@@ -127,6 +130,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMDept.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"dept:info"})
     public ResponseEntity<?> searchDept(@ApiParam(value = "deptId", required = true) @PathVariable("deptId") Long deptId) {
         try {
             return new ResponseEntity<>(deptService.getVMDeptByDeptId(deptId), HttpStatus.OK);
@@ -148,6 +152,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"dept:create"})
     public ResponseEntity<?> saveDept(@RequestBody GarVMDept vmDept) {
         try {
             deptService.saveVMDept(vmDept);
@@ -170,6 +175,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"dept:update"})
     public ResponseEntity<?> updateDept(@RequestBody GarVMDept vmDept) {
         try {
             deptService.updateVMDept(vmDept);
@@ -192,6 +198,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"dept:dele"})
     public ResponseEntity<?> deleteDept(@ApiParam(value = "deptId", required = true) @PathVariable(value = "deptId") Long deptId) {
         try {
             List<Long> deptList = deptService.queryDetpIdList(deptId);

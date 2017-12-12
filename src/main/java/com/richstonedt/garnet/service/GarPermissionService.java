@@ -28,6 +28,7 @@ public interface GarPermissionService extends BaseService<GarPermission> {
 
     Set<String> getPermissionsByIds(Set<Long> ids);
 
-    int importPermissionFromAnnotation(Class controllerClass);
+    void importPermissionFromAnnotation(Class controllerClass, Long applicationId);
 
+    List<GarVmPermission> queryPermissionListByApplicationId(Long appicationId);
 }

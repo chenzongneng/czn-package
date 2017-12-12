@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,8 +49,8 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-//    @RequiresPermissions("permission:list")
-    public ResponseEntity<?> searchAuthorities(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
+    @RequiresPermissions("permission:list")
+    public ResponseEntity<?> searchPermissions(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
                                                @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                                @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                                @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
@@ -68,15 +65,33 @@ public class GarPermissionController {
         }
     }
 
+    @RequestMapping(value = "/permissions/appicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]通过应用ID查询访问权限列表", notes = "Get permission list by application id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("application:permission:list")
+    public ResponseEntity<?> searchPermissions(
+            @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
+        try {
+            List<GarVmPermission> list = permissionService.queryPermissionListByApplicationId(applicationId);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user role .", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
 
-    @RequestMapping(value = "/importPermissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+    @RequestMapping(value = "/importPermissions/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]导入访问权限列表", notes = "import permissions ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> searchAuthorities() {
+    public ResponseEntity<?> importPermissions(
+            @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
         try {
-            permissionService.importPermissionFromAnnotation(this.getClass());
+            permissionService.importPermissionFromAnnotation(this.getClass(),applicationId);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user role .", t);

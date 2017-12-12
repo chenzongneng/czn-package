@@ -26,8 +26,10 @@ import java.util.Set;
  */
 @Mapper
 public interface GarPermissionDao extends BaseDao<GarPermission> {
+
     Set<String> getPermissionsByIds(@Param("ids") Set<Long> ids);
 
     List<GarPermission> getPermissionByPermission(@Param("permission") String permission);
 
+    List<GarPermission> getPermissionByApplicationIdAndStatus(@Param("applicationId")Long applicationId, @Param("status")int status);
 }

@@ -103,21 +103,27 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public int importPermissionFromAnnotation(Class controllerClass) {
-        int count = 0;
-        List<GarPermission> permissionList = new ArrayList<>();
+    public void importPermissionFromAnnotation(Class controllerClass,Long applicationId) {
         List<Class<?>> classList = ClassUtil.getClassListFromPackage(controllerClass);
         if (!CollectionUtils.isEmpty(classList)) {
             for (Class<?> clazz : classList) {
-                permissionList.addAll(this.getPermissionsByAnnotation(clazz));
+                this.getPermissionsByAnnotation(clazz,applicationId);
             }
         }
-        System.out.println("TEST:permissionList:   " + permissionList);
-        this.updatePermissions(permissionList);
-        return count;
     }
 
-    private List<GarPermission> getPermissionsByAnnotation(Class<?> clazz) {
+    @Override
+    public List<GarVmPermission> queryPermissionListByApplicationId(Long appicationId) {
+        List<GarPermission> permissionList = permissionDao.getPermissionByApplicationIdAndStatus(appicationId, 1);
+        List<GarVmPermission> vmPermissionList = new ArrayList<>();
+        for (GarPermission garPermission:permissionList) {
+            GarVmPermission vmPermission = convertPermissionToVMPermission(garPermission);
+            vmPermissionList.add(vmPermission);
+        }
+        return vmPermissionList;
+    }
+
+    private void getPermissionsByAnnotation(Class<?> clazz,Long applicationId) {
         List<GarPermission> permissions = new ArrayList<>();
         Method[] methods = clazz.getMethods();
         String baseUrl = "";
@@ -130,6 +136,13 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         if (!ObjectUtils.isEmpty(apiAnnotation) && !ObjectUtils.isEmpty(apiAnnotation.tags())) {
             api = apiAnnotation.tags()[0];
         }
+
+        GarPermission parentPermission = new GarPermission();
+        parentPermission.setApplicationId(1L);
+        parentPermission.setName(api);
+        parentPermission.setStatus(1);
+        saveOrUpdatePermission(parentPermission);
+
         if (!ObjectUtils.isEmpty(methods)) {
             for (Method method : methods) {
                 RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
@@ -137,9 +150,10 @@ public class GarPermissionServiceImpl implements GarPermissionService {
                     GarPermission permission = new GarPermission();
                     ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
                     RequestMapping methodMapping = method.getAnnotation(RequestMapping.class);
+                    permission.setApplicationId(applicationId);
+                    permission.setParentId(parentPermission.getPermissionId());
                     permission.setPermission(requiresPermissions.value()[0]);
                     permission.setName(apiOperation.value());
-                    permission.setApi(api);
                     permission.setDescription(apiOperation.notes());
                     permission.setUrl(baseUrl + methodMapping.value()[0]);
                     permission.setMethod(methodMapping.method()[0].toString());
@@ -148,21 +162,25 @@ public class GarPermissionServiceImpl implements GarPermissionService {
                 }
             }
         }
-        return permissions;
+        updatePermissions(permissions);
     }
 
     private void updatePermissions(List<GarPermission> permissions) {
 
         for (GarPermission permission : permissions) {
-            List<GarPermission> dbPermissions = permissionDao.getPermissionByPermission(permission.getPermission());
-            if (CollectionUtils.isEmpty(dbPermissions)) {
-                permissionDao.save(permission);
-            } else {
-                permission.setPermissionId(dbPermissions.get(0).getPermissionId());
-                permissionDao.update(permission);
-            }
+          saveOrUpdatePermission(permission);
         }
 
+    }
+
+    private void saveOrUpdatePermission(GarPermission permission) {
+        List<GarPermission> dbPermissions = permissionDao.getPermissionByPermission(permission.getPermission());
+        if (CollectionUtils.isEmpty(dbPermissions)) {
+            permissionDao.save(permission);
+        } else {
+            permission.setPermissionId(dbPermissions.get(0).getPermissionId());
+            permissionDao.update(permission);
+        }
     }
 
 }

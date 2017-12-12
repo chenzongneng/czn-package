@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarMenuDao">
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarMenu"  keyProperty="menuId" useGeneratedKeys="true" >
+        INSERT INTO gar_menus
+        (
+            application_id,
+            type,
+            name,
+            description,
+            code,
+            parent_code,
+            icon,
+            url,
+            order_num,
+            status
+        )
+        VALUES
+            (
+                #{applicationId},
+                #{type},
+                #{name},
+                #{description},
+                #{code},
+                #{parentCode},
+                #{icon},
+                #{url},
+                #{orderNum},
+                #{status}
+            );
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_menus
+        <where>
+            menu_id = #{id};
+        </where>
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_menus WHERE menu_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarMenu">
+        select * from gar_menus
+        <where>
+            menu_id = #{id};
+        </where>
+    </select>
+
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarMenu">
+        select * from gar_menus
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+        </where>
+        ORDER BY menu_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM gar_menus;
+    </select>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarMenu">
+        UPDATE gar_menus
+        <set>
+            <if test="applicationId != null">
+                application_id = #{applicationId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description}
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code}
+            </if>
+            <if test="parentCode != null and parentCode != ''">
+                parent_code = #{parentCode}
+            </if>
+            <if test="icon != null and icon != ''">
+                icon = #{icon}
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url}
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum}
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        <where>
+            menu_id = #{menuId};
+        </where>
+    </update>
+
+    <select id="getMenuNameByCode" resultType="java.lang.String">
+        SELECT m.name
+        FROM gar_menus m
+        WHERE m.code = #{code}
+    </select>
+</mapper>

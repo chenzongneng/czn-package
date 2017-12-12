@@ -63,6 +63,9 @@ public class GarnetRsUtil {
      */
     public static List<Long> parseStringToList(String ids) {
         List<Long> idList = new ArrayList<>();
+        if (StringUtils.isEmpty(ids)) {
+            return idList;
+        }
         try {
             String comma = ",";
             if (ids.contains(comma)) {
