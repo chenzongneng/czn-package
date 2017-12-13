@@ -185,6 +185,11 @@ public class GarUserServiceImpl implements GarUserService {
         return userDao.getUserByName(userName);
     }
 
+    @Override
+    public GarUser getUserByNameAndAppId(String userName, Long appId) {
+        return userDao.getUserByNameAndAppId(userName,appId);
+    }
+
     /**
      * Query user list list.
      *

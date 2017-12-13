@@ -34,6 +34,8 @@ public interface GarUserService extends BaseService<GarUser> {
      */
     GarUser getUserByName(String userName);
 
+    GarUser getUserByNameAndAppId(String userName,Long appId);
+
     /**
      * Query user list list.
      *

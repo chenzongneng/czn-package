@@ -138,13 +138,15 @@ public class GarLoginController {
      * @throws IOException the io exception
      * @since garnet-core-be-fe 0.1.0
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/login/{appId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]用户登录接口", notes = "User login")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "login successful"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> login(@ApiParam(value = "loginFrom,源登录项目名") @RequestParam(value = "loginFrom") String loginFrom,
-                                   @RequestBody GarUserLogin userLogin) throws IOException {
+    public ResponseEntity<?> login(
+            @ApiParam(value = "loginFrom,源登录项目名") @PathVariable(value = "appId") Long appId,
+            @ApiParam(value = "loginFrom,源登录项目名") @RequestParam(value = "loginFrom") String loginFrom,
+            @RequestBody GarUserLogin userLogin) throws IOException {
         try {
             GarLoginResult loginResult = new GarLoginResult();
             String kaptcha = kaptchaMap.get(userLogin.getNowTime());
@@ -154,7 +156,7 @@ public class GarLoginController {
                 return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
             kaptchaMap.remove("kaptcha");
-            GarUser user = userService.getUserByName(userLogin.getUserName());
+            GarUser user = userService.getUserByNameAndAppId(userLogin.getUserName(),appId);
             if (user == null) {
                 loginResult.setLoginStatus("failure");
                 loginResult.setMessage("账号不存在");
@@ -178,6 +180,7 @@ public class GarLoginController {
             loginResult.setUserToken(tokenGenerator.createUserToken(user.getUserId()));
             loginResult.setLoginStatus("success");
             loginResult.setMessage("登录成功");
+            loginResult.setUserId(user.getUserId());
             return new ResponseEntity<>(loginResult, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to login", t);

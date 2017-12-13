@@ -107,30 +107,6 @@ public class GarSysMenu implements Serializable {
     @ApiModelProperty(value = "list")
     private List<?> list;
 
-    @ApiModelProperty(value = "菜单编号")
-    private String code;
-
-    @ApiModelProperty(value = "菜单父编号")
-    private String pcode;
-
-    @ApiModelProperty(value = "别名")
-    private String alias;
-
-    @ApiModelProperty(value = "层级")
-    private Integer levels;
-
-    @ApiModelProperty(value = "资源")
-    private String source;
-
-    @ApiModelProperty(value = "路径")
-    private String path;
-
-    @ApiModelProperty(value = "状态")
-    private Integer status;
-
-    @ApiModelProperty(value = "是否开放")
-    private Integer isOpen;
-
     /**
      * Sets menu id.
      *
@@ -328,69 +304,5 @@ public class GarSysMenu implements Serializable {
      */
     public void setOpen(Boolean open) {
         this.open = open;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getPcode() {
-        return pcode;
-    }
-
-    public void setPcode(String pcode) {
-        this.pcode = pcode;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    public Integer getLevels() {
-        return levels;
-    }
-
-    public void setLevels(Integer levels) {
-        this.levels = levels;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getIsOpen() {
-        return isOpen;
-    }
-
-    public void setIsOpen(Integer isOpen) {
-        this.isOpen = isOpen;
     }
 }

@@ -14,6 +14,7 @@ var garnetToken = localStorage.getItem("garnetToken");
 if (!garnetToken) {
     parent.location.href = 'login.html';
 }
+var userId = localStorage.getItem("userId");
 
 /** 权限判断 */
 /*function hasPermission(permission) {

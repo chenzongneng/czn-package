@@ -31,4 +31,5 @@
         FROM gar_sys_menus m
         ORDER BY m.order_num ASC
     </select>
+
 </mapper>

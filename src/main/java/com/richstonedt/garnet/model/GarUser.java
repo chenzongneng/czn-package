@@ -38,7 +38,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Tenant id.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "租户ID")
@@ -46,7 +46,7 @@ public class GarUser implements Serializable {
 
     /**
      * The App id.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用ID")

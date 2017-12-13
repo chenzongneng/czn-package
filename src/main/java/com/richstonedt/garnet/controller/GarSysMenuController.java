@@ -8,16 +8,15 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.service.GarSysMenuService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.richstonedt.garnet.service.GarUserMenuService;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +52,9 @@ public class GarSysMenuController {
     @Autowired
     private GarSysMenuService sysMenuService;
 
+    @Autowired
+    private GarUserMenuService userMenuService;
+
     /**
      * Search sys menu response entity.
      *
@@ -67,6 +69,49 @@ public class GarSysMenuController {
     public ResponseEntity<?> searchSysMenu() {
         try {
             return new ResponseEntity<>(sysMenuService.getUserMenuList(), HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to search system menu", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    /**
+     * Search sys menu response entity.
+     *
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/menu/userId/{userId}/appId/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询系统菜单", notes = "Search system menu")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> searchSysMenu(
+            @ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId,
+            @ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
+        try {
+            return new ResponseEntity<>(userMenuService.getUserMenuList(userId,appId), HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to search system menu", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+    /**
+     * Search sys menu response entity.
+     *
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @RequestMapping(value = "/button/userId/{userId}/appId/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询系统菜单", notes = "Search system menu")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> searchButton(
+            @ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId,
+            @ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
+        try {
+            return new ResponseEntity<>(userMenuService.getButtonCodeMapListByUserId(userId,appId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to search system menu", t);
             return GarnetRsUtil.newResponseEntity(t);

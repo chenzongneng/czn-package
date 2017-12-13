@@ -16,7 +16,7 @@ var menuItem = Vue.extend({
         '<i class="fa fa-angle-left pull-right"></i>',
         '</a>',
         '<ul v-if="item.type === 0" class="treeview-menu">',
-        '<menu-item :item="item" :index="index" v-for="(item, index) in item.list"></menu-item>',
+        '<menu-item :item="item" :index="index" v-for="(item, index) in item.menuList"></menu-item>',
         '</ul>',
         '<a v-if="item.type === 1" :href="\'#\'+item.url">',
         '<i v-if="item.icon != null" :class="item.icon"></i>',
@@ -34,6 +34,7 @@ var vm = new Vue({
     data: {
         user: {},
         menuList: {},
+        buttonList: {},
         main: "main.html",
         password: '',
         newPassword: '',
@@ -42,12 +43,19 @@ var vm = new Vue({
     methods: {
         /** 查询菜单列表 */
         getMenuList: function () {
-            $.getJSON(baseURL + "sysMenu", function (r) {
+            $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1", function (r) {
                 vm.menuList = r;
                 //路由
                 var router = new Router();
                 routerList(router, vm.menuList);
                 router.start();
+            });
+        },
+        /** 查询按钮列表 */
+        getButtonList: function () {
+            $.getJSON(baseURL + "button/userId/" + userId + "/appId/1", function (r) {
+                vm.buttonList = r;
+                console.log(vm.buttonList)
             });
         },
         /** 查询用户信息 */
@@ -105,6 +113,7 @@ var vm = new Vue({
     created: function () {
         this.getMenuList();
         this.getUser();
+        this.getButtonList();
     }
 });
 
@@ -113,7 +122,7 @@ function routerList(router, menuList) {
     for (var key in menuList) {
         var menu = menuList[key];
         if (menu.type == 0) {
-            routerList(router, menu.list);
+            routerList(router, menu.menuList);
         } else if (menu.type == 1) {
             router.add('#' + menu.url, function () {
                 var url = window.location.hash;

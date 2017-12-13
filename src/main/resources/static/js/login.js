@@ -32,14 +32,16 @@ var vm = new Vue({
             };
             $.ajax({
                 type: "POST",
-                url: baseURL + "login?loginFrom=garnet",
+                url: baseURL + "login/1?loginFrom=garnet",
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 dataType: "",
                 success: function (result) {
+                    console.log(JSON.stringify(result));
                     if (result.loginStatus == "success") {
                         localStorage.setItem("garnetToken", result.garnetToken);
                         localStorage.setItem("userToken", result.userToken);
+                        localStorage.setItem("userId", result.userId);
                         parent.location.href = 'index.html';
                     } else {
                         vm.error = true;

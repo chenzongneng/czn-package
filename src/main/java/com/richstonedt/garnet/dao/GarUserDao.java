@@ -35,6 +35,8 @@ public interface GarUserDao extends BaseDao<GarUser> {
      */
     GarUser getUserByName(@Param(value = "userName") String userName);
 
+    GarUser getUserByNameAndAppId(@Param(value = "userName") String userName, @Param("appId") Long appId);
+
     /**
      * Query user list list.
      *

@@ -58,6 +58,8 @@ public class GarLoginResult implements Serializable {
     @ApiModelProperty(value = "用户信息token")
     private String userToken;
 
+    private Long userId;
+
     /**
      * Return the LoginStatus
      *
@@ -136,6 +138,14 @@ public class GarLoginResult implements Serializable {
      */
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     /**

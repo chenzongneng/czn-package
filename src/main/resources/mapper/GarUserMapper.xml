@@ -12,20 +12,16 @@
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarUser">
         INSERT INTO gar_users
         (
-        user_id,
-            tenant_id,
-            app_id,
+            user_id,
             username,
             password,
             email,
             mobile,
-        status
+            status
         )
         VALUES
             (
         #{userId},
-                #{tenantId},
-                #{appId},
                 #{userName},
                 #{password},
                 #{email},
@@ -59,6 +55,13 @@
         select * from gar_users
         <where>
             username = #{userName};
+        </where>
+    </select>
+
+    <select id="getUserByNameAndAppId" resultType="com.richstonedt.garnet.model.GarUser">
+        select * from gar_v_user_application
+        <where>
+            username = #{userName} AND app_id = #{appId};
         </where>
     </select>
 
