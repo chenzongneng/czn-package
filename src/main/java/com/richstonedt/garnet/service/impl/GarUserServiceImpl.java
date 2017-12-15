@@ -290,8 +290,8 @@ public class GarUserServiceImpl implements GarUserService {
      */
     private GarVMUser convertUserToVmUser(GarUser user) {
         GarVMUser vmUser = new GarVMUser();
-        String tenantName = tenantService.queryObject(user.getTenantId()).getName();
-        String appName = applicationService.queryObject(user.getAppId()).getName();
+//        String tenantName = tenantService.queryObject(user.getTenantId()).getName();
+//        String appName = applicationService.queryObject(user.getAppId()).getName();
 
         // 获取该用户的部门列表
         List<String> deptNameList = new ArrayList<>();
@@ -310,8 +310,8 @@ public class GarUserServiceImpl implements GarUserService {
         vmUser.setTenantId(user.getTenantId());
         vmUser.setAppId(user.getAppId());
         vmUser.setPassword(user.getPassword());
-        vmUser.setAppName(appName);
-        vmUser.setTenantName(tenantName);
+//        vmUser.setAppName(appName);
+//        vmUser.setTenantName(tenantName);
         vmUser.setUserName(user.getUserName());
         vmUser.setEmail(user.getEmail());
         vmUser.setMobile(user.getMobile());

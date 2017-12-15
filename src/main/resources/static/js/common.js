@@ -33,12 +33,12 @@ $.ajaxSetup({
     },
 
     complete: function (xhr) {
+        var response = JSON.parse(xhr.responseText);
         // token过期，则跳转到登录页面
-        if (xhr.responseJSON.code == 401) {
-            // alert("token过期");
+        if (response.code == 401) {
             parent.location.href = 'login.html';
-        }else if(xhr.responseJSON.code == 403) {
-            alert("没有权限");
+        } else if (response.code == 403) {
+            swal("没有权限", "", "error");
         }
     }
 });

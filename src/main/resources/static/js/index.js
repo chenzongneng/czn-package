@@ -28,13 +28,15 @@ var menuItem = Vue.extend({
 });
 /** 注册菜单组件 */
 Vue.component('menuItem', menuItem);
-
+var buttons;
 var vm = new Vue({
-    el: '#garnetApp',
+    el: '#garnetIndexApp',
     data: {
         user: {},
         menuList: {},
-        buttonList: {},
+        buttonList: {
+
+        },
         main: "main.html",
         password: '',
         newPassword: '',
@@ -53,9 +55,9 @@ var vm = new Vue({
         },
         /** 查询按钮列表 */
         getButtonList: function () {
+            $.ajaxSettings.async = false;
             $.getJSON(baseURL + "button/userId/" + userId + "/appId/1", function (r) {
-                vm.buttonList = r;
-                console.log(vm.buttonList)
+                buttons = r;
             });
         },
         /** 查询用户信息 */
@@ -116,6 +118,7 @@ var vm = new Vue({
         this.getButtonList();
     }
 });
+
 
 /** 菜单路由 */
 function routerList(router, menuList) {

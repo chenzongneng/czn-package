@@ -5,6 +5,7 @@
  */
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.dao.GarUserPermissionDao;
 import com.richstonedt.garnet.model.GarToken;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.service.*;
@@ -41,15 +42,12 @@ public class GarShiroServiceImpl implements GarShiroService {
     private GarAuthorityPermissionService authorityPermissionService;
     @Autowired
     private GarPermissionService permissionService;
+    @Autowired
+    private GarUserPermissionDao userPermissionDao;
 
     @Override
     public Set<String> getUserPermissions(long userId) {
-        Set<Long> deptIds = userDeptService.getDeptIdsByUserId(userId);
-        Set<Long> roleIds = roleDeptService.getRoleIdsByDeptIds(deptIds);
-        System.out.println("TEST:deptIds:  "+deptIds);
-        Set<Long> authorityIds = roleAuthorityService.getAuthorityIdsByRoleIds(roleIds);
-        Set<Long> permissionIds = authorityPermissionService.getPermissionIdsByAuthorityIds(authorityIds);
-        return permissionService.getPermissionsByIds(permissionIds);
+        return userPermissionDao.getPermissionByUserIdAndAppId(userId,1L);
     }
 
     @Override

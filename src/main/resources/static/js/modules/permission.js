@@ -11,7 +11,6 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '访问权限ID', name: 'permissionId', align: 'center', hidden: true, index: "permission_id", width: 20, key: true},
-            {label: 'API', name: 'api', align: 'center', width: 70},
             {label: '具体名称', name: 'name', align: 'center', width: 70},
             {label: '访问权限标识符', name: 'permission', align: 'center', width: 70},
             {label: '说明', name: 'description', align: 'center', width: 70},

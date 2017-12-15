@@ -164,4 +164,21 @@ CREATE VIEW "public"."gar_v_user_menu" AS
     LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
     LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
     LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
-  WHERE m.status = 1
+  WHERE m.status = 1;
+
+DROP VIEW IF EXISTS "public"."gar_v_user_permission";
+CREATE VIEW "public"."gar_v_user_permission" AS
+  SELECT DISTINCT
+    u.user_id,
+    ap.app_id,
+    p.permission
+  FROM gar_users u
+    LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
+    LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
+    LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
+    LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
+    LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
+    LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+    LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
+    LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
+  WHERE m.status = 1 AND p.status = 1;
