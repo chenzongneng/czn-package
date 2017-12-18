@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -352,8 +353,11 @@ public class GarDeptServiceImpl implements GarDeptService {
         List<GarUserDept> userDeptList = userDeptService.getUserDeptByDeptId(dept.getDeptId());
         if (!CollectionUtils.isEmpty(userDeptList)) {
             for (GarUserDept userDept : userDeptList) {
-                userNameList.add(userService.queryObject(userDept.getUserId()).getUserName());
-                userIdList.add(userDept.getUserId());
+                GarUser user = userService.queryObject(userDept.getUserId());
+                if (!ObjectUtils.isEmpty(user)) {
+                    userNameList.add(user.getUserName());
+                    userIdList.add(userDept.getUserId());
+                }
             }
         }
         vmDept.setUserNameList(userNameList);

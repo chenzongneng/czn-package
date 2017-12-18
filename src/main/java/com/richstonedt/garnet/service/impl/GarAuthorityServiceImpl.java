@@ -5,7 +5,9 @@
  */
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.dao.GarAuthorityDao;
+import com.richstonedt.garnet.dao.GarAuthorityMenuDao;
 import com.richstonedt.garnet.model.GarAuthority;
 import com.richstonedt.garnet.model.view.model.GarVMAuthority;
 import com.richstonedt.garnet.service.GarAuthorityService;
@@ -32,6 +34,9 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
 
     @Autowired
     private GarAuthorityDao authorityDao;
+
+    @Autowired
+    private GarAuthorityMenuDao authorityMenuDao;
 
 
     private BeanCopier entityToVMCopier = BeanCopier.create(GarAuthority.class, GarVMAuthority.class,
@@ -88,8 +93,8 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
 
     @Override
     public void saveAuthority(GarVMAuthority garVMAuthority) {
-        GarAuthority authority = this.convertVmAuthorityToAuthority(garVMAuthority);
-        authorityDao.save(authority);
+        authorityDao.save(garVMAuthority);
+        saveAuthorityMenu(garVMAuthority);
     }
 
     @Override
@@ -100,19 +105,24 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
 
     @Override
     public void updateAuthority(GarVMAuthority garVMAuthority) {
-        GarAuthority authority = this.convertVmAuthorityToAuthority(garVMAuthority);
-        update(authority);
+        update(garVMAuthority);
+        authorityMenuDao.deleteByAuthorityId(garVMAuthority.getAuthorityId());
+        saveAuthorityMenu(garVMAuthority);
     }
 
     private GarVMAuthority convertAuthorityToVmAuthority(GarAuthority garAuthority) {
         GarVMAuthority vmAuthority = new GarVMAuthority();
         entityToVMCopier.copy(garAuthority,vmAuthority,null);
+        List<Long> menuId = authorityMenuDao.getMenuIdByAuthorityId(garAuthority.getAuthorityId());
+        vmAuthority.setMenuIdList(menuId);
+
         return vmAuthority;
     }
 
-    private GarAuthority convertVmAuthorityToAuthority(GarVMAuthority vmAuthority) {
-        GarAuthority authority = new GarVMAuthority();
-        vmToEntityCopier.copy(vmAuthority,authority,null);
-        return authority;
+    private void saveAuthorityMenu(GarVMAuthority vmAuthority) {
+        List<Long> menuIds = GarnetRsUtil.parseStringToList(vmAuthority.getMenuIds());
+        for (Long menuId : menuIds) {
+            authorityMenuDao.save(vmAuthority.getAuthorityId(), menuId);
+        }
     }
 }

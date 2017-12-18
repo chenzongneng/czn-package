@@ -16,11 +16,11 @@ $(function () {
                 label: '类型', align: 'center', name: 'type', width: 50, formatter: function (value, options, row) {
                 switch (value) {
                     case 0:
-                        return'<span class="label label-primary">目录</span>';
+                        return '<span class="label label-primary">目录</span>';
                     case 1:
-                        return'<span class="label label-success">菜单</span>';
+                        return '<span class="label label-success">菜单</span>';
                     case 2:
-                        return'<span class="label label-info">按钮</span>';
+                        return '<span class="label label-info">按钮</span>';
                     default:
                         return "";
                 }
@@ -29,7 +29,9 @@ $(function () {
             {label: '说明', name: 'description', align: 'center', width: 70},
             {label: '菜单标识', name: 'code', align: 'center', width: 70},
             {label: '父菜单标识', name: 'parentCode', align: 'center', width: 70},
-            {label: '菜单图标', name: 'icon', align: 'center', width: 70},
+            {label: '菜单图标', name: 'icon', align: 'center', width: 70,formatter:function (value) {
+                return "<i class=\"" + value + "\">";
+            }},
             {label: '菜单URL', name: 'url', align: 'center', width: 70},
             {label: '排序', name: 'orderNum', align: 'center', width: 100},
             {
@@ -72,7 +74,7 @@ $(function () {
     });
 });
 
-/** 部门结构树 */
+/** 访问权限结构树 */
 var permissionTree;
 var permissionTreeSetting = {
     data: {
@@ -180,7 +182,7 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-            // 获取部门树选择的部门
+            // 获取访问权限树选择的访问权限
             var nodes = permissionTree.getCheckedNodes(true);
             var permissionIdList = [];
             for (var i = 0; i < nodes.length; i++) {
@@ -207,16 +209,16 @@ var vm = new Vue({
         },
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
-            //加载部门树
-            $.get(baseURL + "/permissions/appicationId/" + vm.menu.applicationId, function (response) {
+            //加载访问权限树
+            $.get(baseURL + "/permissions/applicationId/" + vm.menu.applicationId, function (response) {
                 permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                 permissionTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (menuId) {
-            //加载部门树
-            $.get(baseURL + "permissions/" + vm.menu.applicationId, function (response) {
+            //加载访问权限树
+            $.get(baseURL + "permissions/applicationId/" + vm.menu.applicationId, function (response) {
                 permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                 permissionTree.expandAll(true);
                 vm.getMenuById(menuId);
@@ -227,9 +229,15 @@ var vm = new Vue({
             $.get(baseURL + "menu/" + menuId, function (response) {
                 vm.menu.menuId = response.menuId;
                 vm.menu.applicationId = response.applicationId;
-                vm.menu.tenantId = response.tenantId;
+                vm.menu.type = response.type;
                 vm.menu.name = response.name;
-                vm.menu.remark = response.remark;
+                vm.menu.description = response.description;
+                vm.menu.code = response.code;
+                vm.menu.parentCode = response.parentCode;
+                vm.menu.icon = response.icon;
+                vm.menu.url = response.url;
+                vm.menu.orderNum = response.orderNum;
+                vm.menu.status = response.status;
                 vm.appList.selectedApp = response.applicationId;
                 $.each(response.permissionIdList, function (index, item) {
                     var node = permissionTree.getNodeByParam("permissionId", item);

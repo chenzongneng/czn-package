@@ -6,8 +6,10 @@
 package com.richstonedt.garnet.model.view.model;
 
 import com.richstonedt.garnet.model.GarAuthority;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <b><code>GarVMAuthority</code></b>
@@ -22,6 +24,36 @@ import java.io.Serializable;
  */
 public class GarVMAuthority extends GarAuthority implements Serializable {
 
+    @ApiModelProperty(value = "菜单ID，用‘,’隔开")
+    private String menuIds;
 
+    @ApiModelProperty(value = "菜单ID列表")
+    private List<Long> menuIdList;
 
+    @ApiModelProperty(value = "菜单ID列表")
+    private List<String> menuCodeList;
+
+    public String getMenuIds() {
+        return menuIds;
+    }
+
+    public void setMenuIds(String menuIds) {
+        this.menuIds = menuIds;
+    }
+
+    public List<Long> getMenuIdList() {
+        return menuIdList;
+    }
+
+    public void setMenuIdList(List<Long> menuIdList) {
+        this.menuIdList = menuIdList;
+    }
+
+    public List<String> getMenuCodeList() {
+        return menuCodeList;
+    }
+
+    public void setMenuCodeList(List<String> menuCodeList) {
+        this.menuCodeList = menuCodeList;
+    }
 }

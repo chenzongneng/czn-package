@@ -27,6 +27,9 @@ public class GarAuthority implements Serializable {
     @ApiModelProperty(value = "权限ID")
     private Long authorityId;
 
+    @ApiModelProperty(value = "应用ID")
+    private Long applicationId;
+
     @ApiModelProperty(value = "具体名称")
     private String name;
 
@@ -68,26 +71,12 @@ public class GarAuthority implements Serializable {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof GarAuthority)) {
-            return false;
-        }
-
-        GarAuthority that = (GarAuthority) o;
-
-        return (getAuthorityId() != null ? getAuthorityId().equals(that.getAuthorityId()) : that.getAuthorityId() == null) && (getName() != null ? getName().equals(that.getName()) : that.getName() == null) && (getDescription() != null ? getDescription().equals(that.getDescription()) : that.getDescription() == null) && (getStatus() != null ? getStatus().equals(that.getStatus()) : that.getStatus() == null);
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getAuthorityId() != null ? getAuthorityId().hashCode() : 0;
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
-        return result;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
+
 }

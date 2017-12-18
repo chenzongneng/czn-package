@@ -1,7 +1,10 @@
 package com.richstonedt.garnet.dao;
 
+import com.richstonedt.garnet.model.GarPermission;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <b><code>GarMenuPermissionDao</code></b>
@@ -18,5 +21,11 @@ import org.apache.ibatis.annotations.Param;
 public interface GarMenuPermissionDao {
 
     void save(@Param("menuId")Long menuId,@Param("permissionId")Long permissionId);
+
+    void deleteByMenuId(@Param("menuId") Long menuId);
+
+    List<Long> getPermissionIdByMenuId(@Param("menuId") Long menuId);
+
+    List<GarPermission> getPermissionByMenuId(@Param("menuId") Long menuId);
 
 }

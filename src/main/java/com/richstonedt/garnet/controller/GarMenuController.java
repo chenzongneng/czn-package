@@ -63,6 +63,23 @@ public class GarMenuController {
         }
     }
 
+    @RequestMapping(value = "/menus/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]通过应用查询应用菜单列表", notes = "Get application menu list by app id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMMenu.class, responseContainer = "list"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"application:menu:list"})
+    public ResponseEntity<?> searchMenusByAppId(
+            @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
+        try {
+            List<GarVMMenu> list = menuService.queryMenuListByAppId(applicationId);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user menu .", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
     @RequestMapping(value = "/menu/{menuId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询菜单信息", notes = "Get menu info by menuId ")
     @ApiResponses(value = {

@@ -96,6 +96,17 @@ public class GarMenuServiceImpl implements GarMenuService {
     }
 
     @Override
+    public List<GarVMMenu> queryMenuListByAppId(Long appId) {
+        List<GarMenu> menuList = menuDao.getMenusByAppId(appId);
+        List<GarVMMenu> vmMenuList = new ArrayList<>();
+        for (GarMenu menu : menuList) {
+            GarVMMenu vmMenu = convertMenuToVmMenu(menu);
+            vmMenuList.add(vmMenu);
+        }
+        return vmMenuList;
+    }
+
+    @Override
     public void saveMenu(GarVMMenu garVMMenu) {
         menuDao.save(garVMMenu);
         saveMenuPermission(garVMMenu);
@@ -108,8 +119,10 @@ public class GarMenuServiceImpl implements GarMenuService {
     }
 
     @Override
-    public void updateMenu(GarVMMenu garVMMenu) {
-        update(garVMMenu);
+    public void updateMenu(GarVMMenu vmMenu) {
+        update(vmMenu);
+        menuPermissionDao.deleteByMenuId(vmMenu.getMenuId());
+        saveMenuPermission(vmMenu);
     }
 
     private GarVMMenu convertMenuToVmMenu(GarMenu garMenu) {
@@ -117,6 +130,7 @@ public class GarMenuServiceImpl implements GarMenuService {
         entityToVMCopier.copy(garMenu, vmMenu, null);
         vmMenu.setParentName(menuDao.getMenuNameByCode(garMenu.getParentCode()));
         vmMenu.setApplicationName(applicationDao.queryObject(garMenu.getApplicationId()).getName());
+        vmMenu.setPermissionIdList(menuPermissionDao.getPermissionIdByMenuId(vmMenu.getMenuId()));
         return vmMenu;
     }
 

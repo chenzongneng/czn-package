@@ -11,7 +11,7 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '访问权限ID', name: 'permissionId', align: 'center', hidden: true, index: "permission_id", width: 20, key: true},
-            {label: '具体名称', name: 'name', align: 'center', width: 70},
+            {label: '具体名称', name: 'name', align: 'left', width: 70},
             {label: '访问权限标识符', name: 'permission', align: 'center', width: 70},
             {label: '说明', name: 'description', align: 'center', width: 70},
             {label: '对应的链接', name: 'url', align: 'center', width: 70},
@@ -204,19 +204,19 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载部门树
-            $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
-                deptTree.expandAll(true);
-            })
+            // $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
+            //     deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            //     deptTree.expandAll(true);
+            // })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (authorityId) {
             //加载部门树
-            $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
-                deptTree.expandAll(true);
-                vm.getRoleById(authorityId);
-            })
+            // $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
+            //     deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            //     deptTree.expandAll(true);
+            //     vm.getRoleById(authorityId);
+            // })
         },
         /** 通过id 得到一个authority对象 */
         getRoleById: function (authorityId) {

@@ -31,7 +31,7 @@ public class GarUserMenuServiceImpl implements GarUserMenuService {
 
     @Override
     public List<GarUserMenu> getUserMenuList(Long userId, Long appId) {
-        List<GarUserMenu> parentMenuList = userMenuDao.getUserMenuByUserIdAndAppIdAndParentCode(userId, appId,"Root");
+        List<GarUserMenu> parentMenuList = userMenuDao.getUserMenuByUserIdAndAppIdAndParentCode(userId, appId,"root");
         return getMenuTreeList(userId,appId, parentMenuList);
     }
 

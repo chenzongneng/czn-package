@@ -113,8 +113,8 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public List<GarVmPermission> queryPermissionListByApplicationId(Long appicationId) {
-        List<GarPermission> permissionList = permissionDao.getPermissionByApplicationIdAndStatus(appicationId, 1);
+    public List<GarVmPermission> queryPermissionListByApplicationId(Long applicationId) {
+        List<GarPermission> permissionList = permissionDao.getPermissionByApplicationIdAndStatus(applicationId, 1);
         List<GarVmPermission> vmPermissionList = new ArrayList<>();
         for (GarPermission garPermission:permissionList) {
             GarVmPermission vmPermission = convertPermissionToVMPermission(garPermission);

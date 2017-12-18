@@ -27,11 +27,13 @@ COMMENT ON COLUMN "public"."gar_users"."create_time" IS '创建时间';
 DROP TABLE IF EXISTS "public"."gar_authorities";
 CREATE TABLE "public"."gar_authorities" (
   authority_id BIGSERIAL PRIMARY KEY,
+  application_id INT8,
   name         VARCHAR(100) COLLATE "default" NOT NULL,
   description  VARCHAR(512) COLLATE "default",
   status       INT4
 );
 COMMENT ON TABLE "public"."gar_authorities" IS '权限';
+COMMENT ON COLUMN "public"."gar_authorities"."application_id" IS '应用ID';
 COMMENT ON COLUMN "public"."gar_authorities"."name" IS '具体名称';
 COMMENT ON COLUMN "public"."gar_authorities"."description" IS '详细说明';
 COMMENT ON COLUMN "public"."gar_authorities"."status" IS '状态';
@@ -77,6 +79,7 @@ CREATE TABLE "public"."gar_menus" (
 
 ALTER TABLE "public"."gar_menus"
   ADD UNIQUE ("code");
+CREATE INDEX "gar_menus_parent_code_idx" on gar_menus(parent_code);
 
 COMMENT ON TABLE "public"."gar_menus" IS '菜单';
 COMMENT ON COLUMN "public"."gar_menus"."application_id" IS '应用ID';
@@ -137,19 +140,19 @@ COMMENT ON COLUMN "public"."gar_menu_permission"."permission_id" IS '访问权�
 DROP VIEW IF EXISTS "public"."gar_v_user_application";
 CREATE VIEW "public"."gar_v_user_application" AS
   SELECT
-    a.app_id AS app_id,
-    u.user_id AS user_id,
-    u.username AS username,
-    u.password AS password,
-    u.email AS email,
-    u.mobile AS mobile,
-    u.status AS status,
+    a.app_id      AS app_id,
+    u.user_id     AS user_id,
+    u.username    AS username,
+    u.password    AS password,
+    u.email       AS email,
+    u.mobile      AS mobile,
+    u.status      AS status,
     u.create_time AS create_time
   FROM gar_users u
     LEFT JOIN gar_user_application ua ON u.user_id = ua.user_id
     LEFT JOIN gar_applications a ON a.app_id = ua.app_id
   WHERE a.app_id NOTNULL;
-
+COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-应用视图';
 
 DROP VIEW IF EXISTS "public"."gar_v_user_menu";
 CREATE VIEW "public"."gar_v_user_menu" AS
@@ -165,6 +168,7 @@ CREATE VIEW "public"."gar_v_user_menu" AS
     LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
     LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
   WHERE m.status = 1;
+COMMENT ON VIEW "public"."gar_v_user_menu" IS '用户-菜单视图';
 
 DROP VIEW IF EXISTS "public"."gar_v_user_permission";
 CREATE VIEW "public"."gar_v_user_permission" AS
@@ -182,3 +186,23 @@ CREATE VIEW "public"."gar_v_user_permission" AS
     LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
     LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
   WHERE m.status = 1 AND p.status = 1;
+COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-访问权限视图';
+
+DROP VIEW IF EXISTS "public"."gar_v_menu_permission";
+CREATE VIEW "public"."gar_v_menu_permission" AS
+  SELECT
+    m.menu_id,
+    m.name AS menu_name,
+    p.permission_id,
+    p.application_id,
+    p.parent_id,
+    p.name,
+    p.permission,
+    p.description,
+    p.url,
+    p.method,
+    p.status
+  FROM gar_menus m
+    LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
+    LEFT JOIN gar_permissions p ON p.permission_id = mp.permission_id;
+COMMENT ON VIEW "public"."gar_v_menu_permission" IS '菜单-访问权限视图';

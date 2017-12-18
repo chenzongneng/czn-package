@@ -9,16 +9,18 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarAuthorityDao">
 
-    <insert id="save" parameterType="com.richstonedt.garnet.model.GarAuthority">
+    <insert id="save" keyProperty="authorityId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarAuthority">
         INSERT INTO gar_authorities
         (
             name,
+            application_id,
             description,
             status
         )
         VALUES
             (
                 #{name},
+                #{applicationId},
                 #{description},
                 #{status}
             );

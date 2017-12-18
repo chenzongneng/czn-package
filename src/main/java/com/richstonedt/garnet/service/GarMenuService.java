@@ -25,6 +25,8 @@ public interface GarMenuService extends BaseService<GarMenu> {
 
     List<GarVMMenu> queryMenuList(String searchName, Integer page, Integer limit);
 
+    List<GarVMMenu> queryMenuListByAppId(Long appId);
+
     void saveMenu(GarVMMenu garVMMenu);
 
     GarVMMenu searchMenu(Long menuId);

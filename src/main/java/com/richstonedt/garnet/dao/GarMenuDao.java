@@ -9,6 +9,8 @@ import com.richstonedt.garnet.model.GarMenu;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <b><code>GarMenuDao</code></b>
  * <p>
@@ -25,4 +27,5 @@ public interface GarMenuDao extends BaseDao<GarMenu> {
 
     String getMenuNameByCode(@Param("code") String code);
 
+    List<GarMenu> getMenusByAppId(@Param("appId")Long appId);
 }

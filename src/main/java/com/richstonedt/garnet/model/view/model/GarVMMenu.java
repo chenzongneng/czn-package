@@ -6,10 +6,12 @@
 package com.richstonedt.garnet.model.view.model;
 
 import com.richstonedt.garnet.model.GarMenu;
+import com.richstonedt.garnet.model.GarPermission;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <b><code>GarVMMenu</code></b>
@@ -31,8 +33,11 @@ public class GarVMMenu extends GarMenu implements Serializable {
     @ApiModelProperty(value = "父菜单名称")
     private String parentName;
 
-    @ApiModelProperty(value = "父菜单名称")
+    @ApiModelProperty(value = "访问权限ID，用‘,’隔开")
     private String permissionIds;
+
+    @ApiModelProperty(value = "访问权限ID列表")
+    private List<Long > permissionIdList;
 
     public String getApplicationName() {
         return applicationName;
@@ -56,5 +61,13 @@ public class GarVMMenu extends GarMenu implements Serializable {
 
     public void setPermissionIds(String permissionIds) {
         this.permissionIds = permissionIds;
+    }
+
+    public List<Long> getPermissionIdList() {
+        return permissionIdList;
+    }
+
+    public void setPermissionIdList(List<Long> permissionIdList) {
+        this.permissionIdList = permissionIdList;
     }
 }

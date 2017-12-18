@@ -10,7 +10,15 @@ $(function () {
         url: baseURL + 'authorities',
         datatype: "json",
         colModel: [
-            {label: '权限ID', name: 'authorityId', align: 'center', hidden: true, index: "authority_id", width: 20, key: true},
+            {
+                label: '权限ID',
+                name: 'authorityId',
+                align: 'center',
+                hidden: true,
+                index: "authority_id",
+                width: 20,
+                key: true
+            },
             {label: '权限名称', name: 'name', align: 'center', width: 70},
             {label: '详细说明', name: 'description', align: 'center', width: 70},
             {
@@ -55,6 +63,27 @@ $(function () {
     });
 });
 
+/** 菜单结构树 */
+var menuTree;
+var menuTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "code",
+            pIdKey: "parentCode",
+            rootPId: "root"
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "s", "N": "s"}
+    }
+};
 
 var vm = new Vue({
     el: '#garnetApp',
@@ -64,13 +93,15 @@ var vm = new Vue({
         title: null,
         authority: {
             authorityId: null,
+            applicationId: 1,
             name: null,
             description: null,
+            menuIds: null,
             status: 1
         },
         // 租户列表数据
-        tenantList: {
-            selectedTenant: "",
+        menuList: {
+            selectedMenu: "",
             options: []
         },
         // 应用列表数据
@@ -92,10 +123,14 @@ var vm = new Vue({
             vm.title = "新增";
             vm.authority = {
                 authorityId: null,
+                applicationId: 1,
                 name: null,
                 description: null,
+                menuIds: null,
                 status: 1
             };
+            vm.getAppList();
+            vm.initTreesToAdd();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -105,7 +140,8 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-            vm.getAuthorityById(authorityId);
+            vm.initTreesToUpdate(authorityId);
+            vm.getAppList();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -140,6 +176,14 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+            // 获取菜单树选择的菜单
+            var nodes = menuTree.getCheckedNodes(true);
+            var permissionIdList = [];
+            for (var i = 0; i < nodes.length; i++) {
+                permissionIdList.push(nodes[i].menuId);
+            }
+            vm.authority.menuIds = permissionIdList.join(",");
+            console.log(JSON.stringify(vm.authority));
             $.ajax({
                 type: vm.authority.authorityId === null ? "POST" : "PUT",
                 url: baseURL + "authority",
@@ -155,6 +199,23 @@ var vm = new Vue({
                 }
             });
         },
+        /** 添加按钮初始化数据 */
+        initTreesToAdd: function () {
+            //加载菜单树
+            $.get(baseURL + "/menus/applicationId/" + vm.authority.applicationId, function (response) {
+                menuTree = $.fn.zTree.init($("#menuTree"), menuTreeSetting, response);
+                menuTree.expandAll(true);
+            })
+        },
+        /** 更新按钮初始化数据 */
+        initTreesToUpdate: function (authorityId) {
+            //加载访问权限树
+            $.get(baseURL + "menus/applicationId/" + vm.authority.applicationId, function (response) {
+                menuTree = $.fn.zTree.init($("#menuTree"), menuTreeSetting, response);
+                menuTree.expandAll(true);
+                vm.getAuthorityById(authorityId);
+            })
+        },
         /** 通过id 得到一个authority对象 */
         getAuthorityById: function (authorityId) {
             $.get(baseURL + "authority/" + authorityId, function (response) {
@@ -162,6 +223,17 @@ var vm = new Vue({
                 vm.authority.name = response.name;
                 vm.authority.description = response.description;
                 vm.authority.status = response.status;
+                $.each(response.menuIdList, function (index, item) {
+                    var node = menuTree.getNodeByParam("menuId", item);
+                    console.log(JSON.stringify(node));
+                    menuTree.checkNode(node, true, false);
+                });
+            });
+        },
+        /** 查询当前用户信息 */
+        getCurrentUser: function () {
+            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
+                vm.currentUser = response;
             });
         },
         /** 重新加载 */
@@ -173,6 +245,18 @@ var vm = new Vue({
                 page: page
             }).trigger("reloadGrid");
         },
+        /** 应用列表onchange 事件*/
+        selectApp: function () {
+            vm.initTreesToAdd()
+        },
+        /**  获取应用列表 */
+        getAppList: function () {
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.appList.options.push(item);
+                })
+            });
+        }
     },
     /**  初始化页面时执行该方法 */
     created: function () {

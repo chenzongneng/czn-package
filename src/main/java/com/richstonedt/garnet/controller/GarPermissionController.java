@@ -65,7 +65,7 @@ public class GarPermissionController {
         }
     }
 
-    @RequestMapping(value = "/permissions/appicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/permissions/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]通过应用ID查询访问权限列表", notes = "Get permission list by application id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
