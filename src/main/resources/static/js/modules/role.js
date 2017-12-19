@@ -103,6 +103,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
+            console.log("111"+JSON.stringify(vm.currentUser));return;
             vm.reload();
         },
         /**  新增按钮点击事件 */
@@ -127,6 +128,7 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
+            console.log(JSON.stringify(vm.currentUser));return;
             var roleId = getSelectedRow();
             if (!roleId) {
                 return;
@@ -206,6 +208,7 @@ var vm = new Vue({
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (roleId) {
             //加载部门树
+            console.log(JSON.stringify(vm.currentUser));
             $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
                 deptTree.expandAll(true);
@@ -232,6 +235,7 @@ var vm = new Vue({
         getCurrentUser: function () {
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
                 vm.currentUser = response;
+                console.log(JSON.stringify(vm.currentUser));
             });
         },
         /** 重新加载 */
@@ -271,5 +275,13 @@ var vm = new Vue({
     /**  初始化页面时执行该方法 */
     created: function () {
         this.getCurrentUser();
+    },
+    watch: {
+        "currentUser": {
+            handler: function (newV, oldV) {
+                alert(10)
+            },
+            deep:true
+        }
     }
 });

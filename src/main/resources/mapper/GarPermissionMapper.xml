@@ -124,4 +124,10 @@
         WHERE p.application_id=#{applicationId} AND p.status=#{status}
     </select>
 
+    <select id="getPermissionByName" resultType="com.richstonedt.garnet.model.GarPermission">
+        SELECT *
+        FROM gar_permissions
+        WHERE name = #{name}
+    </select>
+
 </mapper>

@@ -9,22 +9,42 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarUserMenuDao">
 
+    <sql id="subTable">
+        (
+            SELECT DISTINCT
+                u.user_id AS user_id,
+                ap.app_id AS app_id,
+                m.*
+            FROM gar_users u
+                LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
+                LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
+                LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
+                LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
+                LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
+                LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+            WHERE m.status = 1
+        ) AS um
+    </sql>
+
     <select id="getUserMenuByUserIdAndType" resultType="com.richstonedt.garnet.model.GarUserMenu">
         SELECT *
-        FROM gar_v_user_menu
-        WHERE user_id = #{userId} AND type = #{type}
+        FROM
+          <include refid="subTable"/>
+        WHERE um.user_id =#{userId} AND um.type = #{type}
     </select>
 
     <select id="getUserMenuByUserIdAndAppIdAndParentCode" resultType="com.richstonedt.garnet.model.GarUserMenu">
         SELECT *
-        FROM gar_v_user_menu
+        FROM
+        <include refid="subTable"/>
         WHERE user_id = #{userId} AND app_id = #{appId} AND parent_code = #{parentCode}
         ORDER BY order_num ASC
     </select>
 
     <select id="getButtonCodeByUserId" resultType="java.lang.String">
         SELECT code
-        FROM gar_v_user_menu
+        FROM
+        <include refid="subTable"/>
         WHERE user_id = #{userId} AND app_id = #{appId} AND type = 2
     </select>
 
