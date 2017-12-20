@@ -110,6 +110,16 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
         saveAuthorityMenu(garVMAuthority);
     }
 
+    @Override
+    public List<GarVMAuthority> queryAuthorityListByApplicationId(Long applicationId) {
+        List<GarAuthority> authorityList = authorityDao.getAuthorityListByApplicationId(applicationId);
+        List<GarVMAuthority> result = new ArrayList<>();
+        for (GarAuthority authority : authorityList) {
+            result.add(convertAuthorityToVmAuthority(authority));
+        }
+        return result;
+    }
+
     private GarVMAuthority convertAuthorityToVmAuthority(GarAuthority garAuthority) {
         GarVMAuthority vmAuthority = new GarVMAuthority();
         entityToVMCopier.copy(garAuthority,vmAuthority,null);

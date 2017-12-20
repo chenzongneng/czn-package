@@ -33,16 +33,6 @@ public class GarShiroServiceImpl implements GarShiroService {
     @Autowired
     private GarUserService userService;
     @Autowired
-    private GarUserDeptService userDeptService;
-    @Autowired
-    private GarRoleDeptService roleDeptService;
-    @Autowired
-    private GarRoleAuthorityService roleAuthorityService;
-    @Autowired
-    private GarAuthorityPermissionService authorityPermissionService;
-    @Autowired
-    private GarPermissionService permissionService;
-    @Autowired
     private GarUserPermissionDao userPermissionDao;
 
     @Override

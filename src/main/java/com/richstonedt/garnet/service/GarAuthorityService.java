@@ -30,4 +30,6 @@ public interface GarAuthorityService extends BaseService<GarAuthority> {
     GarVMAuthority searchAuthority(Long authorityId);
 
     void updateAuthority(GarVMAuthority garVMAuthority);
+
+    List<GarVMAuthority> queryAuthorityListByApplicationId(Long applicationId);
 }

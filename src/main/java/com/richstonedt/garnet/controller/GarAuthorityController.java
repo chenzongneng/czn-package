@@ -126,4 +126,21 @@ public class GarAuthorityController {
         }
     }
 
+    @RequestMapping(value = "/authorities/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询通过应用ID权限列表", notes = "Get authority list by application id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMAuthority.class, responseContainer = "list"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"application:authority:list"})
+    public ResponseEntity<?> searchAuthoritiesByApplicationId(
+            @ApiParam(value = "authorityId", required = true) @PathVariable(value = "applicationId") Long applicationId) {
+        try {
+            List<GarVMAuthority> authorityList = authorityService.queryAuthorityListByApplicationId(applicationId);
+            return new ResponseEntity<>(authorityList, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user authority .", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
 }

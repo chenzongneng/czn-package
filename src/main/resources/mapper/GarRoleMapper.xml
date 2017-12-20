@@ -16,7 +16,8 @@
             tenant_id,
             app_id,
             name,
-            remark
+            remark,
+            create_time
         )
         VALUES
             (
@@ -24,7 +25,8 @@
                 #{tenantId},
                 #{appId},
                 #{name},
-                #{remark}
+                #{remark},
+                #{createTime}
             );
     </insert>
 

@@ -32,7 +32,7 @@ import java.util.Map;
  * @date 2017-04-20 18:33
  * @since garnet-core-be-fe 1.0.0
  */
-//@Configuration
+@Configuration
 public class ShiroConfig {
 
     /**

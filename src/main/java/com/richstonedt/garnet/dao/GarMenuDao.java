@@ -28,4 +28,6 @@ public interface GarMenuDao extends BaseDao<GarMenu> {
     String getMenuNameByCode(@Param("code") String code);
 
     List<GarMenu> getMenusByAppId(@Param("appId")Long appId);
+
+    List<GarMenu> queryMenus(@Param(value = "searchName") String searchName, @Param("applicationId")Long applicationId,@Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
 }

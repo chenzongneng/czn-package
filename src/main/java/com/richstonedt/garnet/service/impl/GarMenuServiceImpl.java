@@ -85,9 +85,9 @@ public class GarMenuServiceImpl implements GarMenuService {
     }
 
     @Override
-    public List<GarVMMenu> queryMenuList(String searchName, Integer page, Integer limit) {
+    public List<GarVMMenu> queryMenuList(String searchName, Long applicationId, Integer page, Integer limit) {
         Integer offset = (page - 1) * limit;
-        List<GarMenu> authorities = menuDao.queryObjects(searchName, limit, offset);
+        List<GarMenu> authorities = menuDao.queryMenus(searchName,applicationId, limit, offset);
         List<GarVMMenu> result = new ArrayList<>();
         for (GarMenu menu : authorities) {
             result.add(convertMenuToVmMenu(menu));

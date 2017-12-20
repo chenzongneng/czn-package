@@ -7,6 +7,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.model.view.model.GarPermissionForImport;
 import com.richstonedt.garnet.model.view.model.GarVMRole;
 import com.richstonedt.garnet.model.view.model.GarVmPermission;
 import com.richstonedt.garnet.service.GarPermissionService;
@@ -50,13 +51,15 @@ public class GarPermissionController {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions("permission:list")
-    public ResponseEntity<?> searchPermissions(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
-                                               @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
-                                               @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
-                                               @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
+    public ResponseEntity<?> searchPermissions(
+            @ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
+            @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
+            @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
+            @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName,
+            @ApiParam(value = "应用ID") @RequestParam(value = "applicationId", required = false) Long applicationId) {
         try {
-            List<GarVmPermission> list = permissionService.queryPermissionList(searchName, page, limit);
-            int totalCount = permissionService.queryTotal();
+            List<GarVmPermission> list = permissionService.queryPermissionList(searchName,applicationId, page, limit);
+            int totalCount = permissionService.queryTotalPermission(searchName,applicationId);
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
@@ -84,14 +87,31 @@ public class GarPermissionController {
 
 
     @RequestMapping(value = "/importPermissions/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]获取可导入的访问权限列表数据", notes = "get permissions which can import to database")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> getImportPermissions(
+            @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
+        try {
+            List<GarPermissionForImport> permissionList = permissionService.getImportPermissionFromAnnotation(this.getClass(), applicationId);
+            return new ResponseEntity<>(permissionList, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get user role .", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    @RequestMapping(value = "/importPermissions/{applicationId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]导入访问权限列表", notes = "import permissions ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMRole.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> importPermissions(
+            @RequestBody List<GarPermissionForImport> permissionList,
             @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
         try {
-            permissionService.importPermissionFromAnnotation(this.getClass(),applicationId);
+            permissionService.importPermissionFromAnnotation(permissionList, applicationId);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user role .", t);

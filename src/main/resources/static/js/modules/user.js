@@ -81,6 +81,8 @@ var setting = {
     }
 };
 
+var currentUser;
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -109,8 +111,6 @@ var vm = new Vue({
             selectedApp: "",
             options: []
         },
-        // 当前用户信息
-        currentUser: {}
     },
     methods: {
         /**  查询按钮点击事件 */
@@ -161,7 +161,7 @@ var vm = new Vue({
             if (!userIds) {
                 return;
             }
-            if (userIds.includes(vm.currentUser.userId.toString())) {
+            if (userIds.includes(currentUser.userId.toString())) {
                 swal("您不能删除自己!", "", "error");
                 return;
             }
@@ -222,7 +222,7 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initDeptTreeToAdd: function () {
             //加载部门树
-            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
+            $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), setting, response);
                 deptTree.expandAll(true);
             })
@@ -230,7 +230,7 @@ var vm = new Vue({
         /** 更新按钮初始化数据 */
         initDeptTreeToUpdate: function (userId) {
             //加载部门树
-            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (r) {
+            $.get(baseURL + "depts/add/" + currentUser.userId, function (r) {
                 deptTree = $.fn.zTree.init($("#deptTree"), setting, r);
                 deptTree.expandAll(true);
                 vm.getUser(userId);
@@ -258,7 +258,7 @@ var vm = new Vue({
         /** 查询当前用户信息 */
         getCurrentUser: function () {
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
-                vm.currentUser = response;
+                currentUser = response;
             });
         },
         reload: function () {

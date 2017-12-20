@@ -34,4 +34,8 @@ public interface GarPermissionDao extends BaseDao<GarPermission> {
     List<GarPermission> getPermissionByApplicationIdAndStatus(@Param("applicationId")Long applicationId, @Param("status")int status);
 
     List<GarPermission> getPermissionByName(@Param("name") String name);
+
+    List<GarPermission> queryPermissions(@Param(value = "searchName") String searchName, @Param("applicationId")Long applicationId,@Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+
+    int queryTotalPermission(@Param(value = "searchName") String searchName, @Param("applicationId")Long applicationId);
 }

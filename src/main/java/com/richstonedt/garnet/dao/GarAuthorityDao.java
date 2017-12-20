@@ -7,6 +7,9 @@ package com.richstonedt.garnet.dao;
 
 import com.richstonedt.garnet.model.GarAuthority;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <b><code>GarAuthorityDao</code></b>
@@ -21,4 +24,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface GarAuthorityDao extends BaseDao<GarAuthority> {
+
+    List<GarAuthority> getAuthorityListByApplicationId(@Param("applicationId") Long applicationId);
+
 }

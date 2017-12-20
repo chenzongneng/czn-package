@@ -124,7 +124,21 @@
     <select id="getMenusByAppId" resultType="com.richstonedt.garnet.model.GarMenu">
         SELECT *
         FROM gar_menus
-        WHERE application_id = #{appId}
+        WHERE application_id = #{appId} AND status = 1
         ORDER BY menu_id asc
     </select>
+    <select id="queryMenus" resultType="com.richstonedt.garnet.model.GarMenu">
+        select * from gar_menus
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+            <if test="applicationId != null">
+                and application_id = #{applicationId}
+            </if>
+        </where>
+        ORDER BY menu_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if></select>
 </mapper>

@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.dao.GarRoleAuthorityDao;
 import com.richstonedt.garnet.dao.GarRoleDao;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.view.model.GarVMRole;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,7 +84,7 @@ public class GarRoleServiceImpl implements GarRoleService {
     private GarRoleDeptService roleDeptService;
 
     @Autowired
-    private GarRoleAuthorityService roleAuthorityService;
+    private GarRoleAuthorityDao roleAuthorityDao;
 
     @Autowired
     private GarAuthorityService authorityService;
@@ -132,7 +134,7 @@ public class GarRoleServiceImpl implements GarRoleService {
         roleDeptService.deleteBatch(ids);
 
         // todo 删除与权限关联的角色
-        roleAuthorityService.deleteBatch(ids);
+        roleAuthorityDao.deleteBatchByRoleIds(ids);
 
         roleDao.deleteBatch(ids);
     }
@@ -215,7 +217,9 @@ public class GarRoleServiceImpl implements GarRoleService {
         saveRoleDept(garVMRole);
 
         // todo 保存角色与权限关联
+        saveRoleAuthority(garVMRole);
 
+        garVMRole.setCreateTime(new Date());
         save(garVMRole);
     }
 
@@ -244,6 +248,8 @@ public class GarRoleServiceImpl implements GarRoleService {
         saveRoleDept(garVMRole);
 
         // todo 先删除与权限的关联，在插入
+        roleAuthorityDao.deleteRoleAuthorityByRoleId(garVMRole.getRoleId());
+        saveRoleAuthority(garVMRole);
 
         update(garVMRole);
     }
@@ -258,6 +264,7 @@ public class GarRoleServiceImpl implements GarRoleService {
     private GarVMRole convertRoleToVmRole(GarRole role) {
         GarVMRole vmRole = new GarVMRole();
         String tenantName = tenantService.queryObject(role.getTenantId()).getName();
+        System.out.println("TEST:" + role.getAppId());
         String appName = applicationService.queryObject(role.getAppId()).getName();
 
         // 获取该角色的部门列表
@@ -274,12 +281,10 @@ public class GarRoleServiceImpl implements GarRoleService {
         vmRole.setDeptNameList(deptNameList);
 
         // todo  获取该角色的权限列表
-        List<String> authorityNameList = new ArrayList<>();
-        List<GarRoleAuthority> roleAuthorities = roleAuthorityService.getRoleAuthorityByRoleId(role.getRoleId());
-        for (GarRoleAuthority roleAuthority : roleAuthorities) {
-            authorityNameList.add(authorityService.queryObject(roleAuthority.getAuthorityId()).getName());
-        }
+        List<String> authorityNameList = roleAuthorityDao.getAuthorityNamesByRoleId(role.getRoleId());
         vmRole.setAuthorityNameList(authorityNameList);
+        List<Long> authorityIdList = roleAuthorityDao.getAuthorityIdsByRoleId(role.getRoleId());
+        vmRole.setAuthorityIdList(authorityIdList);
 
         vmRole.setTenantId(role.getTenantId());
         vmRole.setAppId(role.getAppId());
@@ -306,6 +311,16 @@ public class GarRoleServiceImpl implements GarRoleService {
                 roleDept.setDeptId(deptId);
                 roleDept.setRoleId(garVMRole.getRoleId());
                 roleDeptService.save(roleDept);
+            }
+        }
+    }
+
+
+    private void saveRoleAuthority(GarVMRole garVMRole) {
+        List<Long> authorityIdList = GarnetRsUtil.parseStringToList(garVMRole.getAuthorityIds());
+        if (!CollectionUtils.isEmpty(authorityIdList)) {
+            for (Long authorityId : authorityIdList) {
+                roleAuthorityDao.saveRoleAuthority(garVMRole.getRoleId(), authorityId);
             }
         }
     }

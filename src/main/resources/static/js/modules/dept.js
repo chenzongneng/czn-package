@@ -86,6 +86,8 @@ var roleTreeSetting = {
     }
 };
 
+var currentUser;
+
 var vm = new Vue({
     el: '#rrapp',
     data: {
@@ -250,7 +252,7 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             // 加载部门树
-            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
+            $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
             });
 
@@ -269,7 +271,7 @@ var vm = new Vue({
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (deptId) {
             // 加载部门树  封装ajax 请求，防止数据异步导致页面数据错乱
-            $.get(baseURL + "depts/add/" + vm.currentUser.userId, function (response) {
+            $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
 
                 // 加载用户树
@@ -316,7 +318,7 @@ var vm = new Vue({
         initDeptInfo: function () {
             // 获取当前用户信息
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
-                vm.currentUser = response;
+                currentUser = response;
                 // 初始化表格数据
                 var columns = Dept.initColumn();
                 var table = new TreeTable(Dept.id, baseURL + "depts/" + response.userId, columns);

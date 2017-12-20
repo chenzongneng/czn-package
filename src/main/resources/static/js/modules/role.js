@@ -73,6 +73,28 @@ var deptTreeSetting = {
     }
 };
 
+/** 部门结构树 */
+var authorityTree;
+var authorityTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "authorityId"
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
+var currentUser;
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -103,7 +125,6 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            console.log("111"+JSON.stringify(vm.currentUser));return;
             vm.reload();
         },
         /**  新增按钮点击事件 */
@@ -120,7 +141,8 @@ var vm = new Vue({
                 appId: null,
                 name: null,
                 remark: null,
-                deptIds: null
+                deptIds: null,
+                authorityIdList:null
             };
             vm.initTreesToAdd();
             vm.getTenantList();
@@ -128,13 +150,13 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
-            console.log(JSON.stringify(vm.currentUser));return;
             var roleId = getSelectedRow();
             if (!roleId) {
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
+            vm.appList.selectedApp = "";
             vm.tenantList.options = [];
             vm.appList.options = [];
             vm.role.deptIdList = [];
@@ -176,12 +198,27 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             // 获取部门树选择的部门
-            var nodes = deptTree.getCheckedNodes(true);
+            var depts = deptTree.getCheckedNodes(true);
             var deptIdList = [];
-            for (var i = 0; i < nodes.length; i++) {
-                deptIdList.push(nodes[i].deptId);
+            for (var i = 0; i < depts.length; i++) {
+                deptIdList.push(depts[i].deptId);
             }
             vm.role.deptIds = deptIdList.join(",");
+            // 获取权限树选择的权限
+            var authorities = authorityTree.getCheckedNodes(true);
+            var authorityIdList = [];
+            for (var i = 0; i < authorities.length; i++) {
+                authorityIdList.push(authorities[i].authorityId);
+            }
+            vm.role.authorityIds = authorityIdList.join(",");
+            if(vm.role.tenantId === null) {
+                alert("请选择租户");
+                return;
+            }
+            if(vm.role.appId === null) {
+                alert("请选择应用");
+                return;
+            }
             $.ajax({
                 type: vm.role.roleId === null ? "POST" : "PUT",
                 url: baseURL + "role",
@@ -200,20 +237,29 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载部门树
-            $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
+            $.get(baseURL + "depts/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
-                deptTree.expandAll(true);
+                deptTree.expandAll(f);
+            })
+            //加载权限树
+            $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
+                authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
+                authorityTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (roleId) {
             //加载部门树
-            console.log(JSON.stringify(vm.currentUser));
-            $.get(baseURL + "depts/" + vm.currentUser.userId, function (response) {
+            $.get(baseURL + "depts/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
                 deptTree.expandAll(true);
+            });
+            //加载权限树
+            $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
+                authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
+                authorityTree.expandAll(true);
                 vm.getRoleById(roleId);
-            })
+            });
         },
         /** 通过id 得到一个role对象 */
         getRoleById: function (roleId) {
@@ -223,19 +269,24 @@ var vm = new Vue({
                 vm.role.tenantId = response.tenantId;
                 vm.role.name = response.name;
                 vm.role.remark = response.remark;
+                vm.role.authorityIdList = response.authorityIdList;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
                 $.each(response.deptIdList, function (index, item) {
                     var node = deptTree.getNodeByParam("deptId", item);
                     deptTree.checkNode(node, true, false);
                 });
+                $.each(response.authorityIdList, function (index, item) {
+                    var node = authorityTree.getNodeByParam("authorityId", item);
+                    authorityTree.checkNode(node, true, false);
+                });
             });
         },
         /** 查询当前用户信息 */
         getCurrentUser: function () {
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
-                vm.currentUser = response;
-                console.log(JSON.stringify(vm.currentUser));
+                // vm.currentUser = response;
+                currentUser = response;
             });
         },
         /** 重新加载 */
@@ -254,6 +305,7 @@ var vm = new Vue({
         /** 应用列表onchange 事件*/
         selectApp: function () {
             vm.role.appId = vm.appList.selectedApp;
+            vm.roadAuthorityTree();
         },
         /**  获取租户列表 */
         getTenantList: function () {
@@ -270,18 +322,22 @@ var vm = new Vue({
                     vm.appList.options.push(item);
                 })
             });
+        },
+        /** 加载权限树 */
+        roadAuthorityTree:function () {
+            //加载权限树
+            $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
+                authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
+                authorityTree.expandAll(true);
+            })
+            $.each(vm.role.authorityIdList, function (index, item) {
+                var node = authorityTree.getNodeByParam("authorityId", item);
+                authorityTree.checkNode(node, true, false);
+            });
         }
     },
     /**  初始化页面时执行该方法 */
     created: function () {
         this.getCurrentUser();
-    },
-    watch: {
-        "currentUser": {
-            handler: function (newV, oldV) {
-                alert(10)
-            },
-            deep:true
-        }
     }
 });

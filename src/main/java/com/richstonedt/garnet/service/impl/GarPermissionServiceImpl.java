@@ -6,8 +6,10 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.common.utils.ClassUtil;
+import com.richstonedt.garnet.controller.GarPermissionController;
 import com.richstonedt.garnet.dao.GarPermissionDao;
 import com.richstonedt.garnet.model.GarPermission;
+import com.richstonedt.garnet.model.view.model.GarPermissionForImport;
 import com.richstonedt.garnet.model.view.model.GarVmPermission;
 import com.richstonedt.garnet.service.GarPermissionService;
 import io.swagger.annotations.Api;
@@ -82,10 +84,10 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public List<GarVmPermission> queryPermissionList(String searchName, Integer page, Integer limit) {
+    public List<GarVmPermission> queryPermissionList(String searchName,Long applicationId, Integer page, Integer limit) {
         int offset = (page - 1) * limit;
         List<GarVmPermission> vmPermissions = new ArrayList<>();
-        List<GarPermission> permissions = permissionDao.queryObjects(searchName, limit, offset);
+        List<GarPermission> permissions = permissionDao.queryPermissions(searchName,applicationId, limit, offset);
         for (GarPermission permission : permissions) {
             vmPermissions.add(convertPermissionToVMPermission(permission));
         }
@@ -104,13 +106,8 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public void importPermissionFromAnnotation(Class controllerClass, Long applicationId) {
-        List<Class<?>> classList = ClassUtil.getClassListFromPackage(controllerClass);
-        if (!CollectionUtils.isEmpty(classList)) {
-            for (Class<?> clazz : classList) {
-                this.getPermissionsByAnnotation(clazz, applicationId);
-            }
-        }
+    public void importPermissionFromAnnotation(List<GarPermissionForImport> permissionList, Long applicationId) {
+        importPermission(permissionList);
     }
 
     @Override
@@ -124,7 +121,25 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         return vmPermissionList;
     }
 
-    private void getPermissionsByAnnotation(Class<?> clazz, Long applicationId) {
+    @Override
+    public List<GarPermissionForImport> getImportPermissionFromAnnotation(Class controllerClass, Long applicationId) {
+
+        List<GarPermissionForImport> importPermissionList = new ArrayList<>();
+        List<Class<?>> classList = ClassUtil.getClassListFromPackage(controllerClass);
+        if (!CollectionUtils.isEmpty(classList)) {
+            for (Class<?> clazz : classList) {
+                importPermissionList.add(this.getPermissionsByAnnotation(clazz, applicationId));
+            }
+        }
+        return importPermissionList;
+    }
+
+    @Override
+    public int queryTotalPermission(String searchName, Long applicationId) {
+        return permissionDao.queryTotalPermission(searchName, applicationId);
+    }
+
+    private GarPermissionForImport getPermissionsByAnnotation(Class<?> clazz, Long applicationId) {
         List<GarPermission> permissions = new ArrayList<>();
         Method[] methods = clazz.getMethods();
         String baseUrl = "";
@@ -138,12 +153,14 @@ public class GarPermissionServiceImpl implements GarPermissionService {
             api = apiAnnotation.tags()[0];
         }
 
+        GarPermissionForImport permissionForImport = new GarPermissionForImport();
+
         GarPermission parentPermission = new GarPermission();
         parentPermission.setApplicationId(1L);
         parentPermission.setName(api);
         parentPermission.setStatus(1);
-        saveOrUpdatePermission(parentPermission, true);
-
+//        saveOrUpdatePermission(parentPermission, true);
+        permissionForImport.setPermission(parentPermission);
         if (!ObjectUtils.isEmpty(methods)) {
             for (Method method : methods) {
                 RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
@@ -162,8 +179,10 @@ public class GarPermissionServiceImpl implements GarPermissionService {
                     permissions.add(permission);
                 }
             }
-            updatePermissions(permissions);
+//            updatePermissions(permissions);
+            permissionForImport.setPermissionList(permissions);
         }
+        return permissionForImport;
     }
 
     private void updatePermissions(List<GarPermission> permissions) {
@@ -185,6 +204,21 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         } else {
             permission.setPermissionId(dbPermissions.get(0).getPermissionId());
             permissionDao.update(permission);
+        }
+    }
+
+    private void importPermission(List<GarPermissionForImport> importPermissionList) {
+        for (GarPermissionForImport importPermission : importPermissionList) {
+            GarPermission parentPermission = importPermission.getPermission();
+            if (!ObjectUtils.isEmpty(parentPermission)) {
+                saveOrUpdatePermission(parentPermission, true);
+                if (!CollectionUtils.isEmpty(importPermission.getPermissionList())) {
+                    for (GarPermission permission : importPermission.getPermissionList()) {
+                        permission.setParentId(parentPermission.getPermissionId());
+                        saveOrUpdatePermission(permission, false);
+                    }
+                }
+            }
         }
     }
 

@@ -83,4 +83,9 @@
         </where>
     </update>
 
+    <select id="getAuthorityListByApplicationId" resultType="com.richstonedt.garnet.model.GarAuthority">
+        SELECT *
+        FROM gar_authorities
+        WHERE application_id = #{applicationId}
+    </select>
 </mapper>

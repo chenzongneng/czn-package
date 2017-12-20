@@ -24,13 +24,15 @@ import java.util.Set;
  * @since garnet-core-be-fe  1.0.0
  */
 @Mapper
-public interface GarRoleAuthorityDao extends BaseDao<GarRoleAuthority> {
+public interface GarRoleAuthorityDao {
 
-    List<GarRoleAuthority> getRoleAuthorityByRoleId(@Param(value = "roleId") Long roleId);
+    void saveRoleAuthority(@Param("roleId") Long roleId, @Param("authorityId") Long authorityId);
 
-    List<GarRoleAuthority> getRoleAuthorityByAuthorityId(@Param(value = "authorityId") Long authorityId);
+    void deleteRoleAuthorityByRoleId(@Param("roleId") Long roleId);
 
-    void deleteRoleAuthorityByAuthorityId(@Param(value = "authorityId") Long authorityId);
+    void deleteBatchByRoleIds(@Param("roleIds")List<Long> roleIds);
 
-    Set<Long> getAuthorityIdsByRoleIds(@Param(value = "roleIds")Set<Long> roleIds);
+    List<String> getAuthorityNamesByRoleId(@Param("roleId")Long roleId);
+
+    List<Long> getAuthorityIdsByRoleId(@Param("roleId")Long roleId);
 }

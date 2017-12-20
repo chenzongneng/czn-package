@@ -24,14 +24,17 @@ $(function () {
                     default:
                         return "";
                 }
-            }},
+            }
+            },
             {label: '菜单名称', name: 'name', align: 'center', width: 70},
             {label: '说明', name: 'description', align: 'center', width: 70},
             {label: '菜单标识', name: 'code', align: 'center', width: 70},
             {label: '父菜单标识', name: 'parentCode', align: 'center', width: 70},
-            {label: '菜单图标', name: 'icon', align: 'center', width: 70,formatter:function (value) {
+            {
+                label: '菜单图标', name: 'icon', align: 'center', width: 70, formatter: function (value) {
                 return "<i class=\"" + value + "\">";
-            }},
+            }
+            },
             {label: '菜单URL', name: 'url', align: 'center', width: 70},
             {label: '排序', name: 'orderNum', align: 'center', width: 100},
             {
@@ -39,7 +42,8 @@ $(function () {
                 return value === 0 ?
                     '<span class="label label-danger">禁用</span>' :
                     '<span class="label label-success">正常</span>';
-            }}
+            }
+            }
         ],
         viewrecords: true,
         height: 385,
@@ -74,6 +78,23 @@ $(function () {
     });
 });
 
+/** 菜单结构树 */
+var menuTree;
+var menuTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "code",
+            pIdKey: "parentCode",
+            rootPId: "root"
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    }
+};
+
 /** 访问权限结构树 */
 var permissionTree;
 var permissionTreeSetting = {
@@ -96,25 +117,38 @@ var permissionTreeSetting = {
     }
 };
 
+var applicationList = {
+    // 应用列表数据
+    appList: {
+        selectedApp: "",
+        options: []
+    },
+    // 搜索框应用列表数据
+    appSearchList: {
+        selectedApp: "",
+        options: []
+    }
+};
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
         searchName: null,
         showList: true,
+        showParentCode: false,
+        isNotButton: true,
         title: null,
         menu: {
             menuId: null,
             name: null,
+            parentName: null,
             applicationId: 1,
-            permissionIds: null
-        },
-        // 应用列表数据
-        appList: {
-            selectedApp: "",
-            options: []
+            permissionIds: null,
+            orderNum: 0
         },
         option: {
-            appId: 1
+            appId: 1,
+            appSearchId: null
         }
     },
     methods: {
@@ -126,16 +160,18 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.appList.selectedApp = 1;
-            vm.appList.options = [];
+            applicationList.appList.selectedApp = 1;
+            applicationList.appList.options = [];
             vm.menu = {
                 menuId: null,
                 applicationId: 1,
                 name: null,
-                permissionIds: null
+                parentName: null,
+                permissionIds: null,
+                orderNum: 0
             };
             vm.initTreesToAdd();
-            vm.getAppList();
+            vm.loadMenuTree();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -146,8 +182,9 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "修改";
             vm.menu.permissionIdList = [];
+            vm.showParentCode = true;
             vm.initTreesToUpdate(menuId);
-            vm.getAppList();
+            vm.loadMenuTree();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -186,7 +223,7 @@ var vm = new Vue({
             var nodes = permissionTree.getCheckedNodes(true);
             var permissionIdList = [];
             for (var i = 0; i < nodes.length; i++) {
-                if(!nodes[i].isParent){
+                if (!nodes[i].isParent) {
                     permissionIdList.push(nodes[i].permissionId);
                 }
             }
@@ -234,15 +271,17 @@ var vm = new Vue({
                 vm.menu.description = response.description;
                 vm.menu.code = response.code;
                 vm.menu.parentCode = response.parentCode;
+                vm.menu.parentName = response.parentName;
                 vm.menu.icon = response.icon;
                 vm.menu.url = response.url;
                 vm.menu.orderNum = response.orderNum;
                 vm.menu.status = response.status;
-                vm.appList.selectedApp = response.applicationId;
+                applicationList.appList.selectedApp = response.applicationId;
                 $.each(response.permissionIdList, function (index, item) {
                     var node = permissionTree.getNodeByParam("permissionId", item);
                     permissionTree.checkNode(node, true, false);
                 });
+                vm.typeChange();
             });
         },
         /** 查询当前用户信息 */
@@ -256,7 +295,7 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {searchName: vm.searchName},
+                postData: {searchName: vm.searchName, applicationId: vm.option.appSearchId},
                 page: page
             }).trigger("reloadGrid");
         },
@@ -268,13 +307,54 @@ var vm = new Vue({
         getAppList: function () {
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
-                    vm.appList.options.push(item);
+                    console.log(JSON.stringify(item));
+                    applicationList.appList.options.push(item);
+                    applicationList.appSearchList.options.push(item);
                 })
             });
+        },
+        //加载菜单树
+        loadMenuTree: function () {
+            $.get(baseURL + "/menus/applicationId/" + vm.menu.applicationId, function (response) {
+                menuTree = $.fn.zTree.init($("#menuTree"), menuTreeSetting, response);
+                menuTree.expandAll(true);
+            })
+        },
+        /**  菜单树点击事件 */
+        menuTree: function () {
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = menuTree.getSelectedNodes();
+                    //选择上级部门
+                    // console.log(JSON.stringify(node));
+                    vm.menu.parentCode = node[0].parentCode;
+                    vm.menu.parentName = node[0].name;
+                    vm.menu.code = node[0].parentCode;
+                    vm.showParentCode = true;
+                    layer.close(index);
+                }
+            });
+        },
+        typeChange: function () {
+            if (vm.menu.type === 2) {
+                vm.isNotButton = false;
+            } else {
+                vm.isNotButton = true;
+            }
         }
     },
     /**  初始化页面时执行该方法 */
     created: function () {
         this.getCurrentUser();
+        this.getAppList();
     }
 });

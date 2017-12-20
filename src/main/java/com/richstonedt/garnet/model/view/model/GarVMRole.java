@@ -73,6 +73,12 @@ public class GarVMRole extends GarRole implements Serializable {
     @ApiModelProperty(value = "权限名称列表")
     private List<String> authorityNameList;
 
+    @ApiModelProperty(value = "权限ID列表")
+    private List<Long> authorityIdList;
+
+    @ApiModelProperty(value = "权限ID,以‘，’隔开")
+    private String authorityIds;
+
     /**
      * Return the TenantName
      *
@@ -173,6 +179,30 @@ public class GarVMRole extends GarRole implements Serializable {
         this.deptIds = deptIds;
     }
 
+    public List<String> getAuthorityNameList() {
+        return authorityNameList;
+    }
+
+    public void setAuthorityNameList(List<String> authorityNameList) {
+        this.authorityNameList = authorityNameList;
+    }
+
+    public String getAuthorityIds() {
+        return authorityIds;
+    }
+
+    public void setAuthorityIds(String authorityIds) {
+        this.authorityIds = authorityIds;
+    }
+
+    public List<Long> getAuthorityIdList() {
+        return authorityIdList;
+    }
+
+    public void setAuthorityIdList(List<Long> authorityIdList) {
+        this.authorityIdList = authorityIdList;
+    }
+
     /**
      * To String
      *
@@ -183,10 +213,4 @@ public class GarVMRole extends GarRole implements Serializable {
         return ReflectionToStringBuilder.toString(this);
     }
 
-    public List<String> getAuthorityNameList() {
-        return authorityNameList;
-    }
-    public void setAuthorityNameList(List<String> authorityNameList) {
-        this.authorityNameList = authorityNameList;
-    }
 }

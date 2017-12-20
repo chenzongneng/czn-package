@@ -9,12 +9,21 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarUserMenuDao">
 
-    <sql id="subTable">
-        (
+    <sql id="subQuery">
             SELECT DISTINCT
                 u.user_id AS user_id,
                 ap.app_id AS app_id,
-                m.*
+                m.menu_id AS menu_id,
+                m.application_id AS application_id,
+                m.type AS type,
+                m.name AS name,
+                m.description AS description,
+                m.code AS code,
+                m.parent_code AS parent_code,
+                m.icon AS icon,
+                m.url AS url,
+                m.order_num AS order_num,
+                m.status AS status
             FROM gar_users u
                 LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
                 LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
@@ -23,29 +32,28 @@
                 LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
                 LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
             WHERE m.status = 1
-        ) AS um
     </sql>
 
     <select id="getUserMenuByUserIdAndType" resultType="com.richstonedt.garnet.model.GarUserMenu">
-        SELECT *
+        SELECT um.*
         FROM
-          <include refid="subTable"/>
+        (<include refid="subQuery"/>) AS um
         WHERE um.user_id =#{userId} AND um.type = #{type}
     </select>
 
     <select id="getUserMenuByUserIdAndAppIdAndParentCode" resultType="com.richstonedt.garnet.model.GarUserMenu">
-        SELECT *
+        SELECT um.*
         FROM
-        <include refid="subTable"/>
-        WHERE user_id = #{userId} AND app_id = #{appId} AND parent_code = #{parentCode}
+        (<include refid="subQuery"/>) AS um
+        WHERE um.user_id = #{userId} AND app_id = #{appId} AND parent_code = #{parentCode}
         ORDER BY order_num ASC
     </select>
 
     <select id="getButtonCodeByUserId" resultType="java.lang.String">
-        SELECT code
+        SELECT um.code
         FROM
-        <include refid="subTable"/>
-        WHERE user_id = #{userId} AND app_id = #{appId} AND type = 2
+        (<include refid="subQuery"/>) AS um
+        WHERE um.user_id = #{userId} AND um.app_id = #{appId} AND um.type = 2
     </select>
 
 

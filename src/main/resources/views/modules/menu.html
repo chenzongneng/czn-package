@@ -33,7 +33,14 @@
     <div v-show="showList">
         <div class="grid-btn">
             <div class="form-group col-sm-2">
-                <input class="form-control" v-model="searchName" @keyup.enter="query" placeholder="角色名称">
+                <input class="form-control" v-model="searchName" @keyup.enter="query" placeholder="菜单名称">
+            </div>
+            <div class="form-group col-sm-2">
+                <select class="form-control" v-model="option.appSearchId">
+                    <option v-for="option in applicationList.appSearchList.options" v-bind:value="option.appId">
+                        {{ option.name }}
+                    </option>
+                </select>
             </div>
             <a class="btn btn-default" @click="query">查询</a>
             <a class="btn btn-primary" @click="add" v-if="buttons.garnetDevelopmentMenuAdd">
@@ -51,6 +58,16 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
+                <div class="col-sm-2 control-label">所属应用</div>
+                <div class="col-sm-10">
+                    <select class="form-control" v-model="menu.applicationId" @change="selectApp">
+                        <option v-for="option in applicationList.appList.options" v-bind:value="option.appId">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label">菜单名称</div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="menu.name" placeholder="菜单名称"/>
@@ -65,14 +82,27 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">类型</div>
                 <label class="radio-inline">
-                    <input type="radio" name="type" value="0" v-model="menu.type"/> 目录
+                    <input type="radio" name="type" @change="typeChange" value="0" v-model="menu.type"/> 目录
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="type" value="1" v-model="menu.type"/> 菜单
+                    <input type="radio" name="type" @change="typeChange" value="1" v-model="menu.type"/> 菜单
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="type" value="2" v-model="menu.type"/> 按钮
+                    <input type="radio" name="type" @change="typeChange" value="2" v-model="menu.type"/> 按钮
                 </label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">上级菜单</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" style="cursor:pointer;" v-model="menu.parentName"
+                           @click="menuTree" readonly="readonly" placeholder="上级菜单"/>
+                </div>
+            </div>
+            <div class="form-group" v-if="showParentCode">
+                <div class="col-sm-2 control-label">父菜单标识</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="menu.parentCode" placeholder="父菜单标识"/>
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">菜单标识</div>
@@ -80,19 +110,13 @@
                     <input class="form-control" v-model="menu.code" placeholder="菜单标识"/>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">父菜单标识</div>
-                <div class="col-sm-10">
-                    <input class="form-control" v-model="menu.parentCode" placeholder="父菜单标识"/>
-                </div>
-            </div>
-            <div class="form-group">
+            <div class="form-group" v-if="isNotButton">
                 <div class="col-sm-2 control-label">图标</div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="menu.icon" placeholder="图标"/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="isNotButton">
                 <div class="col-sm-2 control-label">url</div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="menu.url" placeholder="url"/>
@@ -113,16 +137,6 @@
                     <input type="radio" name="status" value="1" v-model="menu.status"/> 启用
                 </label>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">所属应用</div>
-                <div class="col-sm-10">
-                    <select class="form-control" v-model="menu.applicationId" @change="selectApp">
-                        <option v-for="option in appList.options" v-bind:value="option.appId">
-                            {{ option.name }}
-                        </option>
-                    </select>
-                </div>
-            </div>
             <div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">
                 <div class="form-group col-md-6">
                     <strong class="col-sm-5 control-label">选择访问权限</strong>
@@ -138,6 +152,11 @@
             </div>
         </form>
     </div>
+</div>
+
+<!-- 选择菜单 -->
+<div id="menuLayer" style="display: none;padding:10px;">
+    <ul id="menuTree" class="ztree"></ul>
 </div>
 
 <script src="../libs/router.js"></script>

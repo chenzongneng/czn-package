@@ -48,12 +48,14 @@ public class GarMenuController {
             @ApiResponse(code = 200, message = "successful query", response = GarVMMenu.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions({"menu:list"})
-    public ResponseEntity<?> searchMenus(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
-                                         @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
-                                         @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
-                                         @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
+    public ResponseEntity<?> searchMenus(
+            @ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
+            @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
+            @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
+            @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName,
+            @ApiParam(value = "应用ID,搜索名") @RequestParam(value = "applicationId", required = false) Long applicationId) {
         try {
-            List<GarVMMenu> list = menuService.queryMenuList(searchName, page, limit);
+            List<GarVMMenu> list = menuService.queryMenuList(searchName,applicationId, page, limit);
             int totalCount = menuService.queryTotal();
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -94,7 +96,7 @@ public class GarMenuController {
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
-    
+
     @RequestMapping(value = "/menu", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]新增菜单", notes = "Create menu")
     @ApiResponses(value = {
@@ -112,7 +114,7 @@ public class GarMenuController {
     }
 
     @RequestMapping(value = "/menu", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据ID更新菜单信息", notes = "Update menu info")
+    @ApiOperation(value = "[Garnet]根据更新菜单信息", notes = "Update menu info")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -126,7 +128,7 @@ public class GarMenuController {
             return GarnetRsUtil.newResponseEntity(t);
         }
     }
-    
+
     @RequestMapping(value = "/menu", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id批量删除菜单", notes = "Delete menus")
     @ApiResponses(value = {

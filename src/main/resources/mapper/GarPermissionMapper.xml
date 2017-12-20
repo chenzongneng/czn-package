@@ -59,7 +59,7 @@
         select * from gar_permissions
         <where>
             <if test="searchName != null and searchName != ''">
-                and `name` LIKE CONCAT('%',#{searchName},'%')
+                and name LIKE CONCAT('%',#{searchName},'%')
             </if>
         </where>
         ORDER BY permission_id asc
@@ -128,6 +128,33 @@
         SELECT *
         FROM gar_permissions
         WHERE name = #{name}
+    </select>
+    <select id="queryPermissions" resultType="com.richstonedt.garnet.model.GarPermission">
+        select * from gar_permissions
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+            <if test="applicationId != null">
+                and application_id = #{applicationId}
+            </if>
+        </where>
+        ORDER BY permission_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
+    <select id="queryTotalPermission" resultType="java.lang.Integer">
+        select count(1) from gar_permissions
+        <where>
+            <if test="searchName != null and searchName != ''">
+                and name LIKE CONCAT('%',#{searchName},'%')
+            </if>
+            <if test="applicationId != null">
+                and application_id = #{applicationId}
+            </if>
+        </where>
     </select>
 
 </mapper>

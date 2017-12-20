@@ -5,7 +5,9 @@
  */
 package com.richstonedt.garnet.service;
 
+import com.richstonedt.garnet.controller.GarPermissionController;
 import com.richstonedt.garnet.model.GarPermission;
+import com.richstonedt.garnet.model.view.model.GarPermissionForImport;
 import com.richstonedt.garnet.model.view.model.GarVmPermission;
 
 import java.util.List;
@@ -24,11 +26,15 @@ import java.util.Set;
  */
 public interface GarPermissionService extends BaseService<GarPermission> {
 
-    List<GarVmPermission> queryPermissionList(String searchName, Integer page, Integer limit);
+    List<GarVmPermission> queryPermissionList(String searchName,Long applicationId, Integer page, Integer limit);
 
     Set<String> getPermissionsByIds(Set<Long> ids);
 
-    void importPermissionFromAnnotation(Class controllerClass, Long applicationId);
+    void importPermissionFromAnnotation(List<GarPermissionForImport> permissionList, Long applicationId);
 
     List<GarVmPermission> queryPermissionListByApplicationId(Long applicationId);
+
+    List<GarPermissionForImport> getImportPermissionFromAnnotation(Class controllerClass, Long applicationId);
+
+    int queryTotalPermission(String searchName, Long applicationId);
 }

@@ -9,28 +9,26 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarUserPermissionDao">
 
-    <sql id="subTable">
-        (
-            SELECT DISTINCT
-                u.user_id AS user_id,
-                ap.app_id AS app_id,
-                p.permission AS permission
-            FROM gar_users u
-                LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
-                LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
-                LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
-                LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
-                LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
-                LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
-                LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
-                LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
-            WHERE m.status = 1 AND p.status = 1
-        ) AS up
+    <sql id="subQuery">
+        SELECT DISTINCT
+            u.user_id    AS user_id,
+            ap.app_id    AS app_id,
+            p.permission AS permission
+        FROM gar_users u
+            LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
+            LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
+            LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
+            LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
+            LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
+            LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+            LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
+            LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
+        WHERE m.status = 1 AND p.status = 1
     </sql>
 
     <select id="getPermissionByUserIdAndAppId" resultType="java.lang.String">
         SELECT up.permission
-        FROM <include refid="subTable"/>
+        FROM (<include refid="subQuery"/>) AS up
         WHERE user_id = #{userId} AND app_id = #{appId}
     </select>
 
