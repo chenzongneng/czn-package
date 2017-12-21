@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarMenuDao</code></b>
@@ -29,5 +30,7 @@ public interface GarMenuDao extends BaseDao<GarMenu> {
 
     List<GarMenu> getMenusByAppId(@Param("appId")Long appId);
 
-    List<GarMenu> queryMenus(@Param(value = "searchName") String searchName, @Param("applicationId")Long applicationId,@Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+    List<GarMenu> getMenusByParams(Map<String,Object> params);
+
+    int getTotalMenuByParam(Map<String,Object> params);
 }

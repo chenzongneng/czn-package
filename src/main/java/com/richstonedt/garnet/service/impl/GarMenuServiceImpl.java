@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarMenuServiceImpl</code></b>
@@ -85,9 +86,8 @@ public class GarMenuServiceImpl implements GarMenuService {
     }
 
     @Override
-    public List<GarVMMenu> queryMenuList(String searchName, Long applicationId, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        List<GarMenu> authorities = menuDao.queryMenus(searchName,applicationId, limit, offset);
+    public List<GarVMMenu> queryMenuListByParams(Map<String, Object> params) {
+        List<GarMenu> authorities = menuDao.getMenusByParams(params);
         List<GarVMMenu> result = new ArrayList<>();
         for (GarMenu menu : authorities) {
             result.add(convertMenuToVmMenu(menu));
@@ -123,6 +123,11 @@ public class GarMenuServiceImpl implements GarMenuService {
         update(vmMenu);
         menuPermissionDao.deleteByMenuId(vmMenu.getMenuId());
         saveMenuPermission(vmMenu);
+    }
+
+    @Override
+    public int queryTotalMenuByParam(Map<String, Object> params) {
+        return menuDao.getTotalMenuByParam(params);
     }
 
     private GarVMMenu convertMenuToVmMenu(GarMenu garMenu) {

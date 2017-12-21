@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -159,6 +160,7 @@ public class GarTenantServiceImpl implements GarTenantService {
         if (vmTenant.getTenantId() == null) {
             vmTenant.setTenantId(IdGeneratorUtil.generateId());
         }
+        vmTenant.setCreateTime(new Date());
         saveApplicationTenant(vmTenant);
         save(vmTenant);
     }

@@ -133,10 +133,10 @@ var applicationList = {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        searchName: null,
+        name: null,
         showList: true,
         showParentCode: false,
-        isNotButton: true,
+        isNotButton: false,
         title: null,
         menu: {
             menuId: null,
@@ -148,7 +148,7 @@ var vm = new Vue({
         },
         option: {
             appId: 1,
-            appSearchId: null
+            appSearchId: ""
         }
     },
     methods: {
@@ -167,8 +167,10 @@ var vm = new Vue({
                 applicationId: 1,
                 name: null,
                 parentName: null,
+                type: 2,
                 permissionIds: null,
-                orderNum: 0
+                orderNum: 0,
+                status: 1
             };
             vm.initTreesToAdd();
             vm.loadMenuTree();
@@ -295,7 +297,7 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {searchName: vm.searchName, applicationId: vm.option.appSearchId},
+                postData: {name: vm.name, applicationId: vm.option.appSearchId},
                 page: page
             }).trigger("reloadGrid");
         },
@@ -345,7 +347,7 @@ var vm = new Vue({
             });
         },
         typeChange: function () {
-            if (vm.menu.type === 2) {
+            if (vm.menu.type === "2") {
                 vm.isNotButton = false;
             } else {
                 vm.isNotButton = true;

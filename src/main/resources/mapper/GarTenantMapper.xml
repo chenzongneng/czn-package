@@ -14,13 +14,15 @@
         (
         tenant_id,
             name,
-            remark
+            remark,
+            create_time
         )
         VALUES
             (
         #{tenantId},
                 #{name},
-                #{remark}
+                #{remark},
+                #{createTime}
             );
     </insert>
 

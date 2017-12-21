@@ -9,6 +9,7 @@ import com.richstonedt.garnet.model.GarMenu;
 import com.richstonedt.garnet.model.view.model.GarVMMenu;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarMenuService</code></b>
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public interface GarMenuService extends BaseService<GarMenu> {
 
-    List<GarVMMenu> queryMenuList(String searchName,Long applicationId, Integer page, Integer limit);
+    List<GarVMMenu> queryMenuListByParams(Map<String, Object> params);
 
     List<GarVMMenu> queryMenuListByAppId(Long appId);
 
@@ -32,4 +33,6 @@ public interface GarMenuService extends BaseService<GarMenu> {
     GarVMMenu searchMenu(Long menuId);
 
     void updateMenu(GarVMMenu garVMMenu);
+
+    int queryTotalMenuByParam(Map<String, Object> params);
 }

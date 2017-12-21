@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -35,7 +36,7 @@ public interface GarPermissionDao extends BaseDao<GarPermission> {
 
     List<GarPermission> getPermissionByName(@Param("name") String name);
 
-    List<GarPermission> queryPermissions(@Param(value = "searchName") String searchName, @Param("applicationId")Long applicationId,@Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+    List<GarPermission> getPermissionsByParams(Map<String,Object> params);
 
-    int queryTotalPermission(@Param(value = "searchName") String searchName, @Param("applicationId")Long applicationId);
+    int queryTotalPermission(Map<String,Object> params);
 }

@@ -81,7 +81,7 @@ var applicationList = {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        searchName: null,
+        name: null,
         showList: true,
         title: null,
         permission: {
@@ -89,7 +89,7 @@ var vm = new Vue({
         },
         option: {
             appId: 1,
-            appSearchId: null
+            appSearchId: ""
         },
         // 当前用户信息
         currentUser: {}
@@ -106,13 +106,15 @@ var vm = new Vue({
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
             applicationList.appList.selectedApp = "";
-            applicationList.appList.options = [];
             vm.permission = {
-                permissionId: null
+                permissionId: null,
+                name: null,
+                permission: null,
+                description: null,
+                url: null,
+                method: "GET",
+                status: 1
             };
-            vm.initTreesToAdd();
-            vm.getTenantList();
-            vm.getAppList();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -122,11 +124,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-            vm.tenantList.options = [];
-            applicationList.appList.options = [];
-            vm.initTreesToUpdate(permissionId);
-            vm.getTenantList();
-            vm.getAppList();
+            vm.getPermissionById(permissionId);
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -176,28 +174,22 @@ var vm = new Vue({
                 }
             });
         },
-        /** 添加按钮初始化数据 */
-        initTreesToAdd: function () {
-
-        },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (permissionId) {
-
+            vm.getPermissionById(permissionId);
         },
         /** 通过id 得到一个permission对象 */
-        getRoleById: function (permissionId) {
+        getPermissionById: function (permissionId) {
             $.get(baseURL + "permission/" + permissionId, function (response) {
                 vm.permission.permissionId = response.permissionId;
-                vm.permission.appId = response.appId;
-                vm.permission.tenantId = response.tenantId;
+                vm.permission.applicationId = response.applicationId;
                 vm.permission.name = response.name;
-                vm.permission.remark = response.remark;
-                vm.tenantList.selectedTenant = response.tenantId;
+                vm.permission.permission = response.permission;
+                vm.permission.description = response.description;
+                vm.permission.url = response.url;
+                vm.permission.method = response.method;
+                vm.permission.status = response.status;
                 applicationList.appList.selectedApp = response.appId;
-                $.each(response.deptIdList, function (index, item) {
-                    var node = deptTree.getNodeByParam("deptId", item);
-                    deptTree.checkNode(node, true, false);
-                });
             });
         },
         /** 查询当前用户信息 */
@@ -211,7 +203,7 @@ var vm = new Vue({
             vm.showList = true;
             var page = $("#jqGrid").jqGrid('getGridParam', 'page');
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {searchName: vm.searchName, applicationId: vm.option.appSearchId},
+                postData: {name: vm.name, applicationId: vm.option.appSearchId},
                 page: page
             }).trigger("reloadGrid");
         },

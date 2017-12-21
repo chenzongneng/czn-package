@@ -19,7 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarMenuController</code></b>
@@ -52,11 +54,17 @@ public class GarMenuController {
             @ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
             @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
-            @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName,
-            @ApiParam(value = "应用ID,搜索名") @RequestParam(value = "applicationId", required = false) Long applicationId) {
+            @ApiParam(value = "名称") @RequestParam(value = "name", required = false) String name,
+            @ApiParam(value = "应用ID") @RequestParam(value = "applicationId", required = false) Long applicationId) {
         try {
-            List<GarVMMenu> list = menuService.queryMenuList(searchName,applicationId, page, limit);
-            int totalCount = menuService.queryTotal();
+            Integer offset = (page - 1) * limit;
+            Map<String, Object> params = new HashMap<>();
+            params.put("limit", limit);
+            params.put("offset", offset);
+            params.put("name", name);
+            params.put("applicationId", applicationId);
+            List<GarVMMenu> list = menuService.queryMenuListByParams(params);
+            int totalCount = menuService.queryTotalMenuByParam(params);
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {

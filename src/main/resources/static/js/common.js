@@ -36,9 +36,15 @@ $.ajaxSetup({
         var response = JSON.parse(xhr.responseText);
         // token过期，则跳转到登录页面
         if (response.code == 401) {
-            parent.location.href = 'login.html';
+            parent.location.href = '../login.html';
         } else if (response.code == 403) {
-            swal("没有权限", "", "error");
+            swal({
+                    title: "没有权限",
+                    type: "error"
+                },
+                function () {
+                    parent.location.href = '../index.html';
+                });
         }
     }
 });

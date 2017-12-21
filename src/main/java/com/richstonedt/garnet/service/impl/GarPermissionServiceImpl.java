@@ -6,7 +6,6 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.common.utils.ClassUtil;
-import com.richstonedt.garnet.controller.GarPermissionController;
 import com.richstonedt.garnet.dao.GarPermissionDao;
 import com.richstonedt.garnet.model.GarPermission;
 import com.richstonedt.garnet.model.view.model.GarPermissionForImport;
@@ -20,13 +19,10 @@ import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <b><code>GarPermissionServiceImpl</code></b>
@@ -84,10 +80,9 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public List<GarVmPermission> queryPermissionList(String searchName,Long applicationId, Integer page, Integer limit) {
-        int offset = (page - 1) * limit;
+    public List<GarVmPermission> queryPermissionList(Map<String,Object> params) {
         List<GarVmPermission> vmPermissions = new ArrayList<>();
-        List<GarPermission> permissions = permissionDao.queryPermissions(searchName,applicationId, limit, offset);
+        List<GarPermission> permissions = permissionDao.getPermissionsByParams(params);
         for (GarPermission permission : permissions) {
             vmPermissions.add(convertPermissionToVMPermission(permission));
         }
@@ -107,7 +102,7 @@ public class GarPermissionServiceImpl implements GarPermissionService {
 
     @Override
     public void importPermissionFromAnnotation(List<GarPermissionForImport> permissionList, Long applicationId) {
-        importPermission(permissionList);
+        importPermission(permissionList,applicationId);
     }
 
     @Override
@@ -135,8 +130,14 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public int queryTotalPermission(String searchName, Long applicationId) {
-        return permissionDao.queryTotalPermission(searchName, applicationId);
+    public int queryTotalPermission(Map<String,Object> params) {
+        return permissionDao.queryTotalPermission(params);
+    }
+
+    @Override
+    public GarVmPermission getPermissionById(Long permissionsId) {
+        GarPermission permission = permissionDao.queryObject(permissionsId);
+        return convertPermissionToVMPermission(permission);
     }
 
     private GarPermissionForImport getPermissionsByAnnotation(Class<?> clazz, Long applicationId) {
@@ -192,13 +193,16 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     private void saveOrUpdatePermission(GarPermission permission, boolean isParent) {
-        List<GarPermission> dbPermissions;
-        // 如果是父级
+        Map<String, Object> params = new HashMap<>();
+        params.put("applicationId", permission.getApplicationId());
+        // 如果是父级,根据名称和应用id获取，子级则通过权限和应用id获取
         if (isParent) {
-            dbPermissions = permissionDao.getPermissionByName(permission.getName());
+            params.put("name", permission.getName());
         } else {
-            dbPermissions = permissionDao.getPermissionByPermission(permission.getPermission());
+            params.put("permission", permission.getPermission());
         }
+        List<GarPermission> dbPermissions = permissionDao.getPermissionsByParams(params);
+        // 如果访问权限不存在就新增，否则进行修改
         if (CollectionUtils.isEmpty(dbPermissions)) {
             permissionDao.save(permission);
         } else {
@@ -207,13 +211,17 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         }
     }
 
-    private void importPermission(List<GarPermissionForImport> importPermissionList) {
+    private void importPermission(List<GarPermissionForImport> importPermissionList,Long applicationId) {
+        // 遍历需要导入的对象
         for (GarPermissionForImport importPermission : importPermissionList) {
             GarPermission parentPermission = importPermission.getPermission();
             if (!ObjectUtils.isEmpty(parentPermission)) {
+                parentPermission.setApplicationId(applicationId);
                 saveOrUpdatePermission(parentPermission, true);
+                // 获取并保存子权限
                 if (!CollectionUtils.isEmpty(importPermission.getPermissionList())) {
                     for (GarPermission permission : importPermission.getPermissionList()) {
+                        parentPermission.setApplicationId(applicationId);
                         permission.setParentId(parentPermission.getPermissionId());
                         saveOrUpdatePermission(permission, false);
                     }
