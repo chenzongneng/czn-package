@@ -240,26 +240,17 @@ var vm = new Vue({
             $.get(baseURL + "depts/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
                 deptTree.expandAll(f);
-            })
+            });
             //加载权限树
-            $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
+            $.get(baseURL + "authorities/applicationId/" + vm.appList.selectedApp, function (response) {
                 authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
                 authorityTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (roleId) {
-            //加载部门树
-            $.get(baseURL + "depts/" + currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
-                deptTree.expandAll(true);
-            });
-            //加载权限树
-            $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
-                authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
-                authorityTree.expandAll(true);
-                vm.getRoleById(roleId);
-            });
+            vm.getRoleById(roleId);
+            vm.initTree();
         },
         /** 通过id 得到一个role对象 */
         getRoleById: function (roleId) {
@@ -272,15 +263,27 @@ var vm = new Vue({
                 vm.role.authorityIdList = response.authorityIdList;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
-                $.each(response.deptIdList, function (index, item) {
-                    var node = deptTree.getNodeByParam("deptId", item);
-                    deptTree.checkNode(node, true, false);
+                //加载部门树
+                $.get(baseURL + "depts/" + currentUser.userId, function (response) {
+                    deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+                    deptTree.expandAll(true);
+                    $.each(vm.role.deptIdList, function (index, item) {
+                        var node = deptTree.getNodeByParam("deptId", item);
+                        deptTree.checkNode(node, true, false);
+                    });
                 });
-                $.each(response.authorityIdList, function (index, item) {
-                    var node = authorityTree.getNodeByParam("authorityId", item);
-                    authorityTree.checkNode(node, true, false);
+                //加载权限树
+                $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
+                    authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
+                    authorityTree.expandAll(true);
+                    $.each(vm.role.authorityIdList, function (index, item) {
+                        var node = authorityTree.getNodeByParam("authorityId", item);
+                        authorityTree.checkNode(node, true, false);
+                    });
                 });
             });
+        },
+        initTree:function () {
         },
         /** 查询当前用户信息 */
         getCurrentUser: function () {
@@ -326,7 +329,7 @@ var vm = new Vue({
         /** 加载权限树 */
         roadAuthorityTree:function () {
             //加载权限树
-            $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
+            $.get(baseURL + "authorities/applicationId/" + vm.appList.selectedApp, function (response) {
                 authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
                 authorityTree.expandAll(true);
             })

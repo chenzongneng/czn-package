@@ -51,7 +51,6 @@ public class GarMenuController {
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions({"menu:list"})
     public ResponseEntity<?> searchMenus(
-            @ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
             @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
             @ApiParam(value = "名称") @RequestParam(value = "name", required = false) String name,

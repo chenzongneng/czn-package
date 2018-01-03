@@ -33,6 +33,9 @@ public class GarAuthority implements Serializable {
     @ApiModelProperty(value = "具体名称")
     private String name;
 
+    @ApiModelProperty(value = "通配符")
+    private String wildcard;
+
     @ApiModelProperty(value = "详细说明")
     private String description;
 
@@ -79,4 +82,11 @@ public class GarAuthority implements Serializable {
         this.applicationId = applicationId;
     }
 
+    public String getWildcard() {
+        return wildcard;
+    }
+
+    public void setWildcard(String wildcard) {
+        this.wildcard = wildcard;
+    }
 }

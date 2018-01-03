@@ -24,6 +24,9 @@ import java.util.List;
  */
 public class GarVMAuthority extends GarAuthority implements Serializable {
 
+    @ApiModelProperty(value = "应用名称")
+    private String applicationName;
+
     @ApiModelProperty(value = "菜单ID，用‘,’隔开")
     private String menuIds;
 
@@ -32,6 +35,14 @@ public class GarVMAuthority extends GarAuthority implements Serializable {
 
     @ApiModelProperty(value = "菜单ID列表")
     private List<String> menuCodeList;
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
 
     public String getMenuIds() {
         return menuIds;

@@ -50,6 +50,7 @@ public class GarnetExceptionHandler implements HandlerExceptionResolver {
                 t.printStackTrace();
             }
         }
+        ex.printStackTrace();
         return new ModelAndView();
     }
 }

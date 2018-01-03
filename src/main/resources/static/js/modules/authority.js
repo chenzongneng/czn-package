@@ -19,7 +19,9 @@ $(function () {
                 width: 20,
                 key: true
             },
+            {label: '应用名称', name: 'applicationName', align: 'center', width: 70},
             {label: '权限名称', name: 'name', align: 'center', width: 70},
+            {label: '通配符', name: 'wildcard', align: 'center', width: 70},
             {label: '详细说明', name: 'description', align: 'center', width: 70},
             {
                 label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
@@ -75,13 +77,19 @@ var menuTreeSetting = {
         },
         key: {
             url: "nourl",
-            name: "name"
+            name: "name",
+            title:"path"
         }
     },
     check: {
-        enable: true,
+        enable: false,
         nocheckInherit: true,
         chkboxType: {"Y": "s", "N": "s"}
+    },
+    callback:{
+        beforeClick:function (treeId, treeNode, clickFlag) {
+            vm.authority.wildcard = treeNode.path + "%";
+        }
     }
 };
 
@@ -95,6 +103,7 @@ var vm = new Vue({
             authorityId: null,
             applicationId: 1,
             name: null,
+            wildcard: null,
             description: null,
             menuIds: null,
             status: 1
@@ -221,6 +230,7 @@ var vm = new Vue({
             $.get(baseURL + "authority/" + authorityId, function (response) {
                 vm.authority.authorityId = response.authorityId;
                 vm.authority.name = response.name;
+                vm.authority.wildcard = response.wildcard;
                 vm.authority.description = response.description;
                 vm.authority.status = response.status;
                 $.each(response.menuIdList, function (index, item) {

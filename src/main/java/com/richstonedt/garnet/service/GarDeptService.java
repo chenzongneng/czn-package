@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.GarDept;
 import com.richstonedt.garnet.model.view.model.GarVMDept;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarDeptService</code></b>
@@ -74,6 +75,10 @@ public interface GarDeptService extends BaseService<GarDept> {
      * @since garnet -core-be-fe 0.1.0
      */
     void deleteVMDept(Long deptId);
+
+    List<GarVMDept> queryDeptListByParams(Map<String, Object> params);
+
+    int queryTotalMenuByParam(Map<String, Object> params);
 }
 
 

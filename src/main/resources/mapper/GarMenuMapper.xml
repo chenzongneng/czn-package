@@ -27,6 +27,7 @@
             description,
             code,
             parent_code,
+            path,
             icon,
             url,
             order_num,
@@ -40,6 +41,7 @@
                 #{description},
                 #{code},
                 #{parentCode},
+                #{path},
                 #{icon},
                 #{url},
                 #{orderNum},
@@ -107,6 +109,9 @@
             <if test="parentCode != null and parentCode != ''">
                 parent_code = #{parentCode},
             </if>
+            <if test="path != null and path != ''">
+                path = #{parentCode},
+            </if>
             <if test="icon != null and icon != ''">
                 icon = #{icon},
             </if>
@@ -135,7 +140,7 @@
         SELECT *
         FROM gar_menus
         WHERE application_id = #{appId} AND status = 1
-        ORDER BY code asc
+        ORDER BY order_num asc
     </select>
 
     <select id="getMenusByParams" parameterType="java.util.Map" resultType="com.richstonedt.garnet.model.GarMenu">

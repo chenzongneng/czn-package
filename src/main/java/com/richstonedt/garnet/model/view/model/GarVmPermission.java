@@ -21,4 +21,14 @@ import java.io.Serializable;
  * @since garnet-core-be-fe  1.0.0
  */
 public class GarVmPermission extends GarPermission implements Serializable {
+
+    private String parentName;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 }

@@ -29,12 +29,14 @@ CREATE TABLE "public"."gar_authorities" (
   authority_id BIGSERIAL PRIMARY KEY,
   application_id INT8,
   name         VARCHAR(100) COLLATE "default" NOT NULL,
+  wildcard  VARCHAR(512) COLLATE "default",
   description  VARCHAR(512) COLLATE "default",
   status       INT4
 );
 COMMENT ON TABLE "public"."gar_authorities" IS '权限';
 COMMENT ON COLUMN "public"."gar_authorities"."application_id" IS '应用ID';
 COMMENT ON COLUMN "public"."gar_authorities"."name" IS '具体名称';
+COMMENT ON COLUMN "public"."gar_authorities"."wildcard" IS '通配符';
 COMMENT ON COLUMN "public"."gar_authorities"."description" IS '详细说明';
 COMMENT ON COLUMN "public"."gar_authorities"."status" IS '状态';
 
@@ -71,6 +73,7 @@ CREATE TABLE "public"."gar_menus" (
   description    VARCHAR(255) COLLATE "default",
   code           VARCHAR(255) COLLATE "default",
   parent_code    VARCHAR(255) COLLATE "default",
+  path           VARCHAR(255) COLLATE "default",
   icon           VARCHAR(255) COLLATE "default",
   url            VARCHAR(255) COLLATE "default",
   order_num      INT4,
@@ -88,6 +91,7 @@ COMMENT ON COLUMN "public"."gar_menus"."name" IS '菜单名称';
 COMMENT ON COLUMN "public"."gar_menus"."description" IS '说明';
 COMMENT ON COLUMN "public"."gar_menus"."code" IS '菜单标识';
 COMMENT ON COLUMN "public"."gar_menus"."parent_code" IS '父菜单标识';
+COMMENT ON COLUMN "public"."gar_menus"."path" IS '路径标识';
 COMMENT ON COLUMN "public"."gar_menus"."icon" IS '菜单图标';
 COMMENT ON COLUMN "public"."gar_menus"."url" IS '菜单URL';
 COMMENT ON COLUMN "public"."gar_menus"."order_num" IS '排序';
@@ -138,6 +142,10 @@ COMMENT ON COLUMN "public"."gar_menu_permission"."permission_id" IS '访问权�
 --------------------- 视图 ----------------------
 
 DROP VIEW IF EXISTS "public"."gar_v_user_application";
+DROP VIEW IF EXISTS "public"."gar_v_user_menu";
+DROP VIEW IF EXISTS "public"."gar_v_user_permission";
+DROP VIEW IF EXISTS "public"."gar_v_menu_permission";
+
 CREATE VIEW "public"."gar_v_user_application" AS
   SELECT
     a.app_id      AS app_id,
@@ -154,7 +162,6 @@ CREATE VIEW "public"."gar_v_user_application" AS
   WHERE a.app_id NOTNULL;
 COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-应用视图';
 
-DROP VIEW IF EXISTS "public"."gar_v_user_menu";
 CREATE VIEW "public"."gar_v_user_menu" AS
   SELECT DISTINCT
     u.user_id,
@@ -170,7 +177,6 @@ CREATE VIEW "public"."gar_v_user_menu" AS
   WHERE m.status = 1;
 COMMENT ON VIEW "public"."gar_v_user_menu" IS '用户-菜单视图';
 
-DROP VIEW IF EXISTS "public"."gar_v_user_permission";
 CREATE VIEW "public"."gar_v_user_permission" AS
   SELECT DISTINCT
     u.user_id,
@@ -188,7 +194,6 @@ CREATE VIEW "public"."gar_v_user_permission" AS
   WHERE m.status = 1 AND p.status = 1;
 COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-访问权限视图';
 
-DROP VIEW IF EXISTS "public"."gar_v_menu_permission";
 CREATE VIEW "public"."gar_v_menu_permission" AS
   SELECT
     m.menu_id,

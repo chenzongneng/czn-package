@@ -6,17 +6,22 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
+import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.dao.GarAuthorityDao;
 import com.richstonedt.garnet.dao.GarAuthorityMenuDao;
+import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.GarAuthority;
 import com.richstonedt.garnet.model.view.model.GarVMAuthority;
 import com.richstonedt.garnet.service.GarAuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarAuthorityServiceImpl</code></b>
@@ -38,6 +43,11 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
     @Autowired
     private GarAuthorityMenuDao authorityMenuDao;
 
+    @Autowired
+    private GarApplicationDao applicationDao;
+
+    // 应用名称的map，缓存起来避免从实体转换为vm的时候都要去数据库查找应用名称
+    private Map<Long,String> applicationNameMap = new HashMap<>();
 
     private BeanCopier entityToVMCopier = BeanCopier.create(GarAuthority.class, GarVMAuthority.class,
             false);
@@ -88,6 +98,8 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
         for (GarAuthority authority : authorities) {
             result.add(convertAuthorityToVmAuthority(authority));
         }
+        // 使用几等将缓存清除，不然会存在内存中，如果有变动将可能无法同步。
+        applicationNameMap.clear();
         return result;
     }
 
@@ -123,6 +135,14 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
     private GarVMAuthority convertAuthorityToVmAuthority(GarAuthority garAuthority) {
         GarVMAuthority vmAuthority = new GarVMAuthority();
         entityToVMCopier.copy(garAuthority,vmAuthority,null);
+        String applicationName = applicationNameMap.get(garAuthority.getApplicationId());
+        if (StringUtils.isEmpty(applicationName)) {
+            GarApplication application = applicationDao.queryObject(garAuthority.getApplicationId());
+            applicationNameMap.put(garAuthority.getApplicationId(), application.getName());
+            vmAuthority.setApplicationName(application.getName());
+        } else {
+            vmAuthority.setApplicationName(applicationName);
+        }
         List<Long> menuId = authorityMenuDao.getMenuIdByAuthorityId(garAuthority.getAuthorityId());
         vmAuthority.setMenuIdList(menuId);
 

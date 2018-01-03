@@ -9,14 +9,17 @@ import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.dao.GarMenuDao;
 import com.richstonedt.garnet.dao.GarMenuPermissionDao;
+import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.GarMenu;
 import com.richstonedt.garnet.model.view.model.GarVMMenu;
 import com.richstonedt.garnet.service.GarMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +46,8 @@ public class GarMenuServiceImpl implements GarMenuService {
     @Autowired
     private GarApplicationDao applicationDao;
 
+    // 应用名称的map，缓存起来避免从实体转换为vm的时候都要去数据库查找应用名称
+    private Map<Long,String> applicationNameMap = new HashMap<>();
 
     private BeanCopier entityToVMCopier = BeanCopier.create(GarMenu.class, GarVMMenu.class,
             false);
@@ -92,6 +97,7 @@ public class GarMenuServiceImpl implements GarMenuService {
         for (GarMenu menu : authorities) {
             result.add(convertMenuToVmMenu(menu));
         }
+        applicationNameMap.clear();
         return result;
     }
 
@@ -103,6 +109,7 @@ public class GarMenuServiceImpl implements GarMenuService {
             GarVMMenu vmMenu = convertMenuToVmMenu(menu);
             vmMenuList.add(vmMenu);
         }
+        applicationNameMap.clear();
         return vmMenuList;
     }
 
@@ -115,7 +122,9 @@ public class GarMenuServiceImpl implements GarMenuService {
     @Override
     public GarVMMenu searchMenu(Long menuId) {
         GarMenu menu = menuDao.queryObject(menuId);
-        return convertMenuToVmMenu(menu);
+        GarVMMenu garVMMenu = convertMenuToVmMenu(menu);
+        applicationNameMap.clear();
+        return garVMMenu;
     }
 
     @Override
@@ -134,7 +143,14 @@ public class GarMenuServiceImpl implements GarMenuService {
         GarVMMenu vmMenu = new GarVMMenu();
         entityToVMCopier.copy(garMenu, vmMenu, null);
         vmMenu.setParentName(menuDao.getMenuNameByCode(garMenu.getParentCode()));
-        vmMenu.setApplicationName(applicationDao.queryObject(garMenu.getApplicationId()).getName());
+        String applicationName = applicationNameMap.get(garMenu.getApplicationId());
+        if (StringUtils.isEmpty(applicationName)) {
+            GarApplication application = applicationDao.queryObject(garMenu.getApplicationId());
+            applicationNameMap.put(garMenu.getApplicationId(), application.getName());
+            vmMenu.setApplicationName(application.getName());
+        } else {
+            vmMenu.setApplicationName(applicationName);
+        }
         vmMenu.setPermissionIdList(menuPermissionDao.getPermissionIdByMenuId(vmMenu.getMenuId()));
         return vmMenu;
     }

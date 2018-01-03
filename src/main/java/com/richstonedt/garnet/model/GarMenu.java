@@ -45,6 +45,9 @@ public class GarMenu implements Serializable {
     @ApiModelProperty(value = "父菜单标识")
     private String parentCode;
 
+    @ApiModelProperty(value = "路径标识")
+    private String path;
+
     @ApiModelProperty(value = "菜单图标")
     private String icon;
 
@@ -143,5 +146,13 @@ public class GarMenu implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

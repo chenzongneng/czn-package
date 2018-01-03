@@ -7,10 +7,12 @@
 package com.richstonedt.garnet.dao;
 
 import com.richstonedt.garnet.model.GarDept;
+import com.richstonedt.garnet.model.view.model.GarVMDept;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarDeptDao</code></b>
@@ -53,4 +55,8 @@ public interface GarDeptDao extends BaseDao<GarDept> {
      * @since garnet -core-be-fe 0.1.0
      */
     GarDept getDeptByParentDeptId(@Param(value = "parentDeptId") Long parentDeptId);
+
+    List<GarDept> getDeptListByParams(Map<String, Object> params);
+
+    int getTotalDeptByParam(Map<String, Object> params);
 }

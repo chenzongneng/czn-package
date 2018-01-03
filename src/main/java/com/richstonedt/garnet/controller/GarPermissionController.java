@@ -53,10 +53,10 @@ public class GarPermissionController {
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions("permission:list")
     public ResponseEntity<?> searchPermissions(
-            @ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
             @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
             @ApiParam(value = "searchName,搜索名") @RequestParam(value = "name", required = false) String name,
+            @ApiParam(value = "父权限ID") @RequestParam(value = "parentId", required = false) Long parentId,
             @ApiParam(value = "应用ID") @RequestParam(value = "applicationId", required = false) Long applicationId) {
         try {
             int offset = (page - 1) * limit;
@@ -64,6 +64,7 @@ public class GarPermissionController {
             params.put("limit", limit);
             params.put("offset", offset);
             params.put("searchName", name);
+            params.put("parentId", parentId);
             params.put("applicationId", applicationId);
             List<GarVmPermission> list = permissionService.queryPermissionList(params);
             int totalCount = permissionService.queryTotalPermission(params);
@@ -93,11 +94,11 @@ public class GarPermissionController {
     }
 
     @RequestMapping(value = "/permission/{permissionsId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据id查询权限信息", notes = "Get permission info by permissionId ")
+    @ApiOperation(value = "[Garnet]根据id查询访问权限信息", notes = "Get permission info by permissionId ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVmPermission.class),
             @ApiResponse(code = 500, message = "internal server error")})
-//    @RequiresPermissions({"permission:info"})
+    @RequiresPermissions({"permission:info"})
     public ResponseEntity<?> searchPermission(@ApiParam(value = "permissionsId", required = true) @PathVariable(value = "permissionsId") Long permissionsId) {
         try {
             return new ResponseEntity<>(permissionService.getPermissionById(permissionsId), HttpStatus.OK);
@@ -108,11 +109,11 @@ public class GarPermissionController {
     }
 
     @RequestMapping(value = "/permission", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]新增权限", notes = "Create permission")
+    @ApiOperation(value = "[Garnet]新增访问权限", notes = "Create permission")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-//    @RequiresPermissions({"permission:create"})
+    @RequiresPermissions({"permission:create"})
     public ResponseEntity<?> savePermission(@RequestBody GarVmPermission garVMPermission) {
         try {
             permissionService.save(garVMPermission);
@@ -124,11 +125,11 @@ public class GarPermissionController {
     }
 
     @RequestMapping(value = "/permission", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据ID更新权限信息", notes = "Update permission info")
+    @ApiOperation(value = "[Garnet]根据ID更新访问权限信息", notes = "Update permission info")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-//    @RequiresPermissions({"permission:update"})
+    @RequiresPermissions({"permission:update"})
     public ResponseEntity<?> updatePermission(@RequestBody GarVmPermission garVMPermission) {
         try {
             permissionService.update(garVMPermission);

@@ -24,6 +24,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarDeptServiceImpl</code></b>
@@ -284,6 +285,22 @@ public class GarDeptServiceImpl implements GarDeptService {
         roleDeptService.deleteRoleDeptByDeptId(deptId);
 
         deleteById(deptId);
+    }
+
+    @Override
+    public List<GarVMDept> queryDeptListByParams(Map<String, Object> params) {
+        List<GarDept> deptList = deptDao.getDeptListByParams(params);
+        List<GarVMDept> vmDeptList = new ArrayList<>(deptList.size());
+        for (GarDept dept: deptList) {
+            GarVMDept vmDept = convertDeptToVMDept(dept);
+            vmDeptList.add(vmDept);
+        }
+        return vmDeptList;
+    }
+
+    @Override
+    public int queryTotalMenuByParam(Map<String, Object> params) {
+        return deptDao.getTotalDeptByParam(params);
     }
 
     /**

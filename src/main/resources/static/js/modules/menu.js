@@ -11,9 +11,9 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '菜单ID', name: 'menuId', align: 'center', hidden: true, index: "menu_id", width: 20, key: true},
-            {label: '应用名称', name: 'applicationName', align: 'center', width: 70},
+            {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
             {
-                label: '类型', align: 'center', name: 'type', width: 50, formatter: function (value, options, row) {
+                label: '类型', align: 'center', name: 'type', width: 20, formatter: function (value, options, row) {
                 switch (value) {
                     case 0:
                         return '<span class="label label-primary">目录</span>';
@@ -26,19 +26,20 @@ $(function () {
                 }
             }
             },
-            {label: '菜单名称', name: 'name', align: 'center', width: 70},
+            {label: '菜单名称', name: 'name', align: 'center', width: 40},
             {label: '说明', name: 'description', align: 'center', width: 70},
-            {label: '菜单标识', name: 'code', align: 'center', width: 70},
             {label: '父菜单标识', name: 'parentCode', align: 'center', width: 70},
+            {label: '菜单标识', name: 'code', align: 'center', width: 70},
+            {label: '路径标识', name: 'path', align: 'center', width: 70},
+            // {
+            //     label: '菜单图标', name: 'icon', align: 'center', width: 70, formatter: function (value) {
+            //     return "<i class=\"" + value + "\">";
+            // }
+            // },
+            // {label: '菜单URL', name: 'url', align: 'center', width: 70},
+            {label: '排序', name: 'orderNum', align: 'center', width: 20},
             {
-                label: '菜单图标', name: 'icon', align: 'center', width: 70, formatter: function (value) {
-                return "<i class=\"" + value + "\">";
-            }
-            },
-            {label: '菜单URL', name: 'url', align: 'center', width: 70},
-            {label: '排序', name: 'orderNum', align: 'center', width: 100},
-            {
-                label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
+                label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
                 return value === 0 ?
                     '<span class="label label-danger">禁用</span>' :
                     '<span class="label label-success">正常</span>';
@@ -161,7 +162,6 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             applicationList.appList.selectedApp = 1;
-            applicationList.appList.options = [];
             vm.menu = {
                 menuId: null,
                 applicationId: 1,
@@ -222,6 +222,10 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             // 获取访问权限树选择的访问权限
+            if(vm.menu.parentCode == vm.menu.code) {
+                swal("父子标志不能相同", "", "error");
+                return;
+            }
             var nodes = permissionTree.getCheckedNodes(true);
             var permissionIdList = [];
             for (var i = 0; i < nodes.length; i++) {
@@ -274,6 +278,7 @@ var vm = new Vue({
                 vm.menu.code = response.code;
                 vm.menu.parentCode = response.parentCode;
                 vm.menu.parentName = response.parentName;
+                vm.menu.path = response.path;
                 vm.menu.icon = response.icon;
                 vm.menu.url = response.url;
                 vm.menu.orderNum = response.orderNum;
@@ -338,9 +343,10 @@ var vm = new Vue({
                     var node = menuTree.getSelectedNodes();
                     //选择上级部门
                     // console.log(JSON.stringify(node));
-                    vm.menu.parentCode = node[0].parentCode;
+                    vm.menu.parentCode = node[0].code;
                     vm.menu.parentName = node[0].name;
-                    vm.menu.code = node[0].parentCode;
+                    vm.menu.code = node[0].code;
+                    vm.menu.path = node[0].path + "/";
                     vm.showParentCode = true;
                     layer.close(index);
                 }

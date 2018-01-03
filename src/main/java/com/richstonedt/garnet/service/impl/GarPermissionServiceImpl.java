@@ -160,6 +160,7 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         parentPermission.setApplicationId(1L);
         parentPermission.setName(api);
         parentPermission.setStatus(1);
+        parentPermission.setParentId(0L);
 //        saveOrUpdatePermission(parentPermission, true);
         permissionForImport.setPermission(parentPermission);
         if (!ObjectUtils.isEmpty(methods)) {

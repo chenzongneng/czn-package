@@ -29,8 +29,10 @@
                 LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
                 LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
                 LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
-                LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
-                LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+--                 LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
+--                 LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+                LEFT JOIN gar_authorities a ON a.authority_id = ra.authority_id
+                LEFT JOIN gar_menus m ON m.path LIKE a.wildcard
             WHERE m.status = 1
     </sql>
 

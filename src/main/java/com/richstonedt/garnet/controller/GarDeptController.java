@@ -6,6 +6,7 @@
 
 package com.richstonedt.garnet.controller;
 
+import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.view.model.GarVMDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
 import com.richstonedt.garnet.service.GarDeptService;
@@ -67,6 +68,32 @@ public class GarDeptController {
     private GarUserService userService;
 
 
+    @RequestMapping(value = "/depts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]查询该用户的部门列表", notes = "Get dept list by user id ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"dept:info"})
+    public ResponseEntity<?> getDeptList(
+            @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
+            @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
+            @ApiParam(value = "名称") @RequestParam(value = "name", required = false) String name) {
+        try {
+            Integer offset = (page - 1) * limit;
+            Map<String, Object> params = new HashMap<>();
+            params.put("limit", limit);
+            params.put("offset", offset);
+            params.put("name", name);
+            List<GarVMDept> list = deptService.queryDeptListByParams(params);
+            int totalCount = deptService.queryTotalMenuByParam(params);
+            PageUtil result = new PageUtil(list, totalCount, limit, page);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to Get dept list ", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
     /**
      * Gets dept list.
      *
@@ -80,7 +107,7 @@ public class GarDeptController {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions({"user:dept:info"})
-    public ResponseEntity<?> getDeptList(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<?> getDeptListByUserId(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             return new ResponseEntity<>(deptService.getUserDeptList(userId), HttpStatus.OK);
         } catch (Throwable t) {

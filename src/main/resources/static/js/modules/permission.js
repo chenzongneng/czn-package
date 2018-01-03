@@ -78,6 +78,23 @@ var applicationList = {
     }
 };
 
+/** 访问权限结构树 */
+var parentTree;
+var parentTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey:"permissionId",
+            pIdKey:"parentId",
+            rootPId: 0
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    }
+};
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -103,12 +120,12 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.tenantList.selectedTenant = "";
-            vm.tenantList.options = [];
             applicationList.appList.selectedApp = "";
             vm.permission = {
                 permissionId: null,
                 name: null,
+                parentName: null,
+                parentId: 0,
                 permission: null,
                 description: null,
                 url: null,
@@ -213,7 +230,7 @@ var vm = new Vue({
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
-            vm.permission.applicationId = applicationList.appList.selectedApp;
+
         },
         /**  获取应用列表 */
         getAppList: function () {
@@ -222,6 +239,42 @@ var vm = new Vue({
                     applicationList.appList.options.push(item);
                     applicationList.appSearchList.options.push(item);
                 })
+            });
+        },
+        //加载父权限
+        loadParentTree: function () {
+            $.get(baseURL + "permissions?page=1&limit=1000&parentId=0&applicationId=" + vm.permission.applicationId, function (response) {
+                parentTree = $.fn.zTree.init($("#parentTree"), parentTreeSetting, response.list);
+                parentTree.expandAll(true);
+            })
+        },
+        /**  父树点击事件 */
+        parentTree: function () {
+            vm.loadParentTree();
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择访问权限",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#parentLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = parentTree.getSelectedNodes();
+                    //选择上级部门
+                    console.log(JSON.stringify(node));
+                    vm.permission.parentName = node[0].name;
+                    vm.permission.parentId = node[0].permissionId;
+                    vm.permission.permission = node[0].permission;
+                    vm.permission.description = node[0].description;
+                    vm.permission.url = node[0].url;
+                    vm.permission.method = node[0].method;
+                    vm.permission.status = node[0].status;
+                    vm.showParentCode = true;
+                    layer.close(index);
+                }
             });
         }
     },

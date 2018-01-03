@@ -25,7 +25,53 @@ Dept.initColumn = function () {
         {title: '角色列表', field: 'roleNameList', align: 'center', valign: 'middle', sortable: true, width: '150px'},
         {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '60px'}];
 };
-
+$(function () {
+    /** 初始化角色列表 */
+    $("#jqGrid").jqGrid({
+        url: baseURL + 'depts',
+        datatype: "json",
+        colModel: [
+            {label: '部门ID', name: 'deptId', align: 'center', hidden: true, index: "menu_id", width: 20, key: true},
+            {label: '部门名称', name: 'name', align: 'center', width: 40},
+            {label: '所属租户', name: 'tenantName', align: 'center', width: 40},
+            {label: '所属应用', name: 'appName', align: 'center', width: 70},
+            {label: '上级部门', name: 'parentName', align: 'center', width: 70},
+            {label: '用户列表', name: 'userNameList', align: 'center', width: 70},
+            {label: '角色列表', name: 'roleNameList', align: 'center', width: 70},
+            {label: '排序号', name: 'orderNum', align: 'center', width: 20}
+        ],
+        viewrecords: true,
+        height: 385,
+        rowNum: 10,
+        rowList: [10, 30, 50],
+        rownumbers: true,
+        rownumWidth: 25,
+        autowidth: true,
+        multiselect: true,
+        pager: "#jqGridPager",
+        jsonReader: {
+            root: "list",
+            page: "currPage",
+            total: "totalPage",
+            records: "totalCount"
+        },
+        prmNames: {
+            page: "page",
+            rows: "limit"
+        },
+        postData: {
+            token: garnetToken
+        },
+        gridComplete: function () {
+            //隐藏grid底部滚动条
+            $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+            // 设置表头居中
+            $('.ui-jqgrid .ui-jqgrid-htable .ui-th-div').css('text-align', 'center');
+            // checkBox 对齐
+            $('.ui-jqgrid td input, .ui-jqgrid td select, .ui-jqgrid td textarea').css('margin-left', '6px');
+        }
+    });
+});
 /** 部门树 */
 var deptTree;
 var deptTreeSetting = {
@@ -320,7 +366,7 @@ var vm = new Vue({
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
                 currentUser = response;
                 // 初始化表格数据
-                var columns = Dept.initColumn();
+                // var columns = Dept.initColumn();
                 var table = new TreeTable(Dept.id, baseURL + "depts/" + response.userId, columns);
                 table.setExpandColumn(2);
                 table.setIdField("deptId");

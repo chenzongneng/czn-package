@@ -23,7 +23,7 @@
             LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
             LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
             LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
-        WHERE m.status = 1 AND p.status = 1
+        WHERE m.status = 1 AND p.status = 1 AND p.permission NOTNULL
     </sql>
 
     <select id="getPermissionByUserIdAndAppId" resultType="java.lang.String">

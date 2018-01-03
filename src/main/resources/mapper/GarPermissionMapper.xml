@@ -14,13 +14,16 @@
             and name LIKE CONCAT('%',#{searchName},'%')
         </if>
         <if test="name != null and name != ''">
-            and name = name
+            and name = #{name}
         </if>
         <if test="permission != null and permission != ''">
-            and permission = permission
+            and permission = #{permission}
         </if>
         <if test="applicationId != null">
             and application_id = #{applicationId}
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId}
         </if>
     </sql>
 
@@ -127,6 +130,7 @@
             #{item}
         </foreach>
     </select>
+
     <select id="getPermissionByPermission" resultType="com.richstonedt.garnet.model.GarPermission">
         SELECT *
         FROM gar_permissions

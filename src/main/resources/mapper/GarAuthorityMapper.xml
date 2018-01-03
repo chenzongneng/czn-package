@@ -14,6 +14,7 @@
         (
             name,
             application_id,
+            wildcard,
             description,
             status
         )
@@ -21,6 +22,7 @@
             (
                 #{name},
                 #{applicationId},
+                #{wildcard},
                 #{description},
                 #{status}
             );
@@ -70,6 +72,9 @@
         <set>
             <if test="name != null and name != ''">
                 name = #{name},
+            </if>
+            <if test="wildcard != null and wildcard != ''">
+                wildcard = #{wildcard},
             </if>
             <if test="description != null and description != ''">
                 description = #{description},
