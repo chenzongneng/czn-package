@@ -30,14 +30,13 @@ public class GarUserMenuServiceImpl implements GarUserMenuService {
     private GarUserMenuDao userMenuDao;
 
     @Override
-    public List<GarUserMenu> getUserMenuList(Long userId, Long appId) {
-        List<GarUserMenu> parentMenuList = userMenuDao.getUserMenuByUserIdAndAppIdAndParentCode(userId, appId,"root");
+    public List<GarUserMenu> getUserMenuList(Long userId, Long appId,String applicationName) {
+        List<GarUserMenu> parentMenuList = userMenuDao.getUserMenuByUserIdAndAppIdAndParentCode(userId, appId,applicationName);
         return getMenuTreeList(userId,appId, parentMenuList);
     }
 
     @Override
     public Map<String, Boolean> getButtonCodeMapListByUserId(Long userId, Long appId) {
-        List<Map> buttonMaps = new ArrayList<>();
         List<String> buttons = userMenuDao.getButtonCodeByUserId(userId,appId);
         Map<String, Boolean> buttonMap = new HashMap<>();
         for (String button : buttons) {

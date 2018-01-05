@@ -88,6 +88,7 @@ var menuTreeSetting = {
     },
     callback:{
         beforeClick:function (treeId, treeNode, clickFlag) {
+            alert(treeNode.path);
             vm.authority.wildcard = treeNode.path + "%";
         }
     }
@@ -134,6 +135,7 @@ var vm = new Vue({
                 authorityId: null,
                 applicationId: 1,
                 name: null,
+                wildcard: null,
                 description: null,
                 menuIds: null,
                 status: 1

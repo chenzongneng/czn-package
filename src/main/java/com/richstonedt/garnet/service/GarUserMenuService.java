@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public interface GarUserMenuService {
 
-    List<GarUserMenu> getUserMenuList(Long userId, Long appId);
+    List<GarUserMenu> getUserMenuList(Long userId, Long appId,String applicationName);
 
     Map<String, Boolean> getButtonCodeMapListByUserId(Long userId, Long appId);
 

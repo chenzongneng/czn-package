@@ -8,6 +8,7 @@ package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.config.GarnetServiceException;
+import com.richstonedt.garnet.dao.GarUserApplicationDao;
 import com.richstonedt.garnet.dao.GarUserDao;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.GarUserDept;
@@ -22,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -86,6 +88,9 @@ public class GarUserServiceImpl implements GarUserService {
      */
     @Autowired
     private GarTokenService tokenService;
+
+    @Autowired
+    private GarUserApplicationDao userApplicationDao;
 
     /**
      * Save.
@@ -228,7 +233,9 @@ public class GarUserServiceImpl implements GarUserService {
         if (garVMUser.getUserId() == null) {
             garVMUser.setUserId(IdGeneratorUtil.generateId());
         }
+        garVMUser.setCreateTime(new Date());
         saveUserDept(garVMUser);
+        saveUserApplication(garVMUser);
         save(garVMUser);
     }
 
@@ -245,12 +252,9 @@ public class GarUserServiceImpl implements GarUserService {
         }
         userDeptService.deleteById(garVMUser.getUserId());
         saveUserDept(garVMUser);
-
-        try {
-            update(garVMUser);
-        } catch (Exception e) {
-            throw new GarnetServiceException("该用户已存在！");
-        }
+        userApplicationDao.deleteByUserId(garVMUser.getUserId());
+        saveUserApplication(garVMUser);
+        update(garVMUser);
     }
 
     /**
@@ -303,6 +307,7 @@ public class GarUserServiceImpl implements GarUserService {
                 deptNameList.add(deptService.queryObject(userDept.getDeptId()).getName());
             }
         }
+        vmUser.setApplicationIdList(userApplicationDao.getApplicationIdByUserId(user.getUserId()));
         vmUser.setDeptIdList(deptIdList);
         vmUser.setDeptNameList(deptNameList);
 
@@ -334,6 +339,20 @@ public class GarUserServiceImpl implements GarUserService {
                 userDept.setUserId(vmUser.getUserId());
                 userDept.setDeptId(deptId);
                 userDeptService.save(userDept);
+            }
+        }
+    }
+    /**
+     * Save user application.
+     *
+     * @param vmUser the vm user
+     * @since garnet-core-be-fe 0.1.0
+     */
+    private void saveUserApplication(GarVMUser vmUser) {
+        List<Long> applicationIdList = GarnetRsUtil.parseStringToList(vmUser.getApplicationIds());
+        if (!CollectionUtils.isEmpty(applicationIdList)) {
+            for (Long applicationId : applicationIdList) {
+                userApplicationDao.save(vmUser.getUserId(),applicationId);
             }
         }
     }

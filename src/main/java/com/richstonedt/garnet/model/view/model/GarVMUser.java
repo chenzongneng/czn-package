@@ -68,6 +68,22 @@ public class GarVMUser extends GarUser implements Serializable {
     private String deptIds;
 
     /**
+     * The Application id list.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "应用ID列表")
+    private List<Long> applicationIdList;
+
+    /**
+     * The Application ids.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "前端传来的应用ID列表，用‘，’隔开")
+    private String applicationIds;
+
+    /**
      * Gets tenant name.
      *
      * @return the tenant name
@@ -165,6 +181,22 @@ public class GarVMUser extends GarUser implements Serializable {
      */
     public void setDeptIds(String deptIds) {
         this.deptIds = deptIds;
+    }
+
+    public List<Long> getApplicationIdList() {
+        return applicationIdList;
+    }
+
+    public void setApplicationIdList(List<Long> applicationIdList) {
+        this.applicationIdList = applicationIdList;
+    }
+
+    public String getApplicationIds() {
+        return applicationIds;
+    }
+
+    public void setApplicationIds(String applicationIds) {
+        this.applicationIds = applicationIds;
     }
 
     /**

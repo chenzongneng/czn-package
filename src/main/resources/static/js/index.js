@@ -45,7 +45,7 @@ var vm = new Vue({
     methods: {
         /** 查询菜单列表 */
         getMenuList: function () {
-            $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1", function (r) {
+            $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1/appName/garnet", function (r) {
                 vm.menuList = r;
                 //路由
                 var router = new Router();

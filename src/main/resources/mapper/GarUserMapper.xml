@@ -115,12 +115,12 @@
     <update id="update" parameterType="com.richstonedt.garnet.model.GarUser">
         UPDATE gar_users
         <set>
-            <if test="tenantId != null">
-                tenant_id = #{tenantId},
-            </if>
-            <if test="appId != null">
-                app_id = #{appId},
-            </if>
+            <!--<if test="tenantId != null">-->
+                <!--tenant_id = #{tenantId},-->
+            <!--</if>-->
+            <!--<if test="appId != null">-->
+                <!--app_id = #{appId},-->
+            <!--</if>-->
             <if test="userName != null and userName != ''">
                 username = #{userName},
             </if>

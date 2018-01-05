@@ -59,10 +59,31 @@ $(function () {
         }
     });
 });
+
+/** 应用树 */
+var applicationTree;
+/** ztree 配置*/
+var applicationTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "appId"
+        },
+        key: {
+            url: "nourl"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
 /** 部门树 */
 var deptTree;
 /** ztree 配置*/
-var setting = {
+var deptTreeSetting = {
     data: {
         simpleData: {
             enable: true,
@@ -136,7 +157,7 @@ var vm = new Vue({
                 status: 1,
                 deptIds: null
             };
-            vm.initDeptTreeToAdd();
+            vm.initTreeToAdd();
             vm.getTenantList();
             vm.getAppList();
         },
@@ -150,8 +171,9 @@ var vm = new Vue({
             vm.title = "修改";
             vm.tenantList.options = [];
             vm.appList.options = [];
+            vm.user.applicationIdList = [];
             vm.user.deptIdList = [];
-            vm.initDeptTreeToUpdate(userId);
+            vm.initTreeToUpdate(userId);
             vm.getTenantList();
             vm.getAppList();
         },
@@ -193,6 +215,13 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+            // 获取应用树选择的部门
+            var nodes = applicationTree.getCheckedNodes(true);
+            var applicationIdList = [];
+            for (var i = 0; i < nodes.length; i++) {
+                applicationIdList.push(nodes[i].appId);
+            }
+            vm.user.applicationIds = applicationIdList.join(",");
             // 获取部门树选择的部门
             var nodes = deptTree.getCheckedNodes(true);
             var deptIdList = [];
@@ -220,18 +249,28 @@ var vm = new Vue({
             });
         },
         /** 添加按钮初始化数据 */
-        initDeptTreeToAdd: function () {
+        initTreeToAdd: function () {
+            //加载应用树
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+                applicationTree.expandAll(true);
+            })
             //加载部门树
             $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), setting, response);
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
                 deptTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
-        initDeptTreeToUpdate: function (userId) {
+        initTreeToUpdate: function (userId) {
+            //加载应用树
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+                applicationTree.expandAll(true);
+            })
             //加载部门树
             $.get(baseURL + "depts/add/" + currentUser.userId, function (r) {
-                deptTree = $.fn.zTree.init($("#deptTree"), setting, r);
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, r);
                 deptTree.expandAll(true);
                 vm.getUser(userId);
             })
@@ -249,6 +288,10 @@ var vm = new Vue({
                 vm.user.status = response.status;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
+                $.each(response.applicationIdList, function (index, item) {
+                    var node = applicationTree.getNodeByParam("appId", item);
+                    applicationTree.checkNode(node, true, false);
+                });
                 $.each(response.deptIdList, function (index, item) {
                     var node = deptTree.getNodeByParam("deptId", item);
                     deptTree.checkNode(node, true, false);

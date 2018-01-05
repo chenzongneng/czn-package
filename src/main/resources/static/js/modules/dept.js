@@ -13,18 +13,18 @@ var Dept = {
 /**
  * 初始化表格的列
  */
-Dept.initColumn = function () {
-    return [
-        {field: 'selectItem', radio: true},
-        {title: '部门ID', field: 'deptId', CanHide: 0, Visible: 0, align: 'center', valign: 'middle', width: '70px'},
-        {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
-        {title: '所属租户', field: 'tenantName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '所属应用', field: 'appName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '用户列表', field: 'userNameList', align: 'center', valign: 'middle', sortable: true, width: '150px'},
-        {title: '角色列表', field: 'roleNameList', align: 'center', valign: 'middle', sortable: true, width: '150px'},
-        {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '60px'}];
-};
+// Dept.initColumn = function () {
+//     return [
+//         {field: 'selectItem', radio: true},
+//         {title: '部门ID', field: 'deptId', CanHide: 0, Visible: 0, align: 'center', valign: 'middle', width: '70px'},
+//         {title: '部门名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+//         {title: '所属租户', field: 'tenantName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+//         {title: '所属应用', field: 'appName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+//         {title: '上级部门', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+//         {title: '用户列表', field: 'userNameList', align: 'center', valign: 'middle', sortable: true, width: '150px'},
+//         {title: '角色列表', field: 'roleNameList', align: 'center', valign: 'middle', sortable: true, width: '150px'},
+//         {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '60px'}];
+// };
 $(function () {
     /** 初始化角色列表 */
     $("#jqGrid").jqGrid({
@@ -193,7 +193,7 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
-            var deptId = getDeptId();
+            var deptId = getSelectedRow();
             if (!deptId) {
                 return;
             }
@@ -210,7 +210,7 @@ var vm = new Vue({
         },
         /**  删除按钮点击事件 */
         del: function () {
-            var deptId = getDeptId();
+            var deptId = getSelectedRow();
             if (!deptId) {
                 return;
             }
@@ -407,14 +407,3 @@ var vm = new Vue({
         this.initDeptInfo();
     }
 });
-
-/**  获取选择的部门ID */
-function getDeptId() {
-    var selected = $('#deptTable').bootstrapTreeTable('getSelections');
-    if (selected.length === 0) {
-        swal("请选择一条记录!", "", "warning");
-        return false;
-    } else {
-        return selected[0].id;
-    }
-}

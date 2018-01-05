@@ -260,6 +260,7 @@ var vm = new Vue({
                 vm.role.tenantId = response.tenantId;
                 vm.role.name = response.name;
                 vm.role.remark = response.remark;
+                vm.role.deptIdList = response.deptIdList;
                 vm.role.authorityIdList = response.authorityIdList;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
@@ -267,6 +268,7 @@ var vm = new Vue({
                 $.get(baseURL + "depts/" + currentUser.userId, function (response) {
                     deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
                     deptTree.expandAll(true);
+                    console.log(JSON.stringify(vm.role.deptIdList));
                     $.each(vm.role.deptIdList, function (index, item) {
                         var node = deptTree.getNodeByParam("deptId", item);
                         deptTree.checkNode(node, true, false);

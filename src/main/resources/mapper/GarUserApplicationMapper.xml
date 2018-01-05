@@ -7,31 +7,31 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.richstonedt.garnet.dao.GarAuthorityMenuDao">
+<mapper namespace="com.richstonedt.garnet.dao.GarUserApplicationDao">
 
     <insert id="save">
-        INSERT INTO gar_authority_menu
+        INSERT INTO gar_user_application
         (
-          authority_id,
-          menu_id
+          user_id,
+          app_id
         )
         VALUES
         (
-          #{authorityId},
-          #{menuId}
+          #{userId},
+          #{applicationId}
         );
     </insert>
 
-    <delete id="deleteByAuthorityId">
+    <delete id="deleteByUserId">
     DELETE
-    FROM gar_authority_menu
-    WHERE authority_id = #{authorityId}
+    FROM gar_user_application
+    WHERE user_id = #{userId}
     </delete>
 
-    <select id="getMenuIdByAuthorityId" resultType="java.lang.Long">
-        SELECT menu_id
-        FROM gar_authority_menu
-        WHERE authority_id = #{authorityId}
+    <select id="getApplicationIdByUserId" resultType="java.lang.Long">
+        SELECT app_id
+        FROM gar_user_application
+        WHERE user_id = #{userId}
     </select>
 
 </mapper>

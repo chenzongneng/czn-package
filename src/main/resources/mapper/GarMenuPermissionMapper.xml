@@ -7,31 +7,48 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.richstonedt.garnet.dao.GarAuthorityMenuDao">
+<mapper namespace="com.richstonedt.garnet.dao.GarMenuPermissionDao">
 
     <insert id="save">
-        INSERT INTO gar_authority_menu
+        INSERT INTO gar_menu_permission
         (
-          authority_id,
-          menu_id
+            menu_id,
+            permission_id
         )
         VALUES
-        (
-          #{authorityId},
-          #{menuId}
-        );
+            (
+                #{menuId},
+                #{permissionId}
+            );
     </insert>
 
-    <delete id="deleteByAuthorityId">
-    DELETE
-    FROM gar_authority_menu
-    WHERE authority_id = #{authorityId}
+    <delete id="deleteByMenuId">
+        DELETE
+        FROM gar_menu_permission mp
+        WHERE mp.menu_id = #{menuId}
     </delete>
 
-    <select id="getMenuIdByAuthorityId" resultType="java.lang.Long">
-        SELECT menu_id
-        FROM gar_authority_menu
-        WHERE authority_id = #{authorityId}
+    <select id="getPermissionIdByMenuId" resultType="java.lang.Long">
+        SELECT mp.permission_id
+        FROM gar_menu_permission mp
+        WHERE mp.menu_id = #{menuId}
     </select>
+
+    <select id="getPermissionByMenuId" resultType="com.richstonedt.garnet.model.GarPermission">
+        SELECT
+           vmp.permission_id AS permission_id,
+           vmp.application_id AS application_id,
+           vmp.parent_id AS parent_id,
+           vmp.name AS name,
+           vmp.permission AS permission,
+           vmp.description AS description,
+           vmp.url AS url,
+           vmp.method AS method,
+           vmp.status AS status
+        FROM gar_v_menu_permission vmp
+        WHERE
+          menu_id = #{menuId};
+    </select>
+
 
 </mapper>
