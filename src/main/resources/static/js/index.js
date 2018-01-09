@@ -10,21 +10,26 @@ var menuItem = Vue.extend({
     props: {item: {}, index: 0},
     template: [
         '<li :class="{active: (item.type===0 && index === 0)}">',
-        '<a v-if="item.type === 0" href="javascript:void(0);">',
+        '<a v-if="(item.type === 0 && setButtons(item.code))" href="javascript:void(0);">',
         '<i v-if="item.icon != null" :class="item.icon"></i>',
         '<span>{{item.name}}</span>',
         '<i class="fa fa-angle-left pull-right"></i>',
         '</a>',
-        '<ul v-if="item.type === 0" class="treeview-menu">',
-        '<menu-item :item="item" :index="index" v-for="(item, index) in item.menuList"></menu-item>',
+        '<ul v-if="(item.type === 0 && setButtons(item.code))" class="treeview-menu">',
+        '<menu-item :item="item" :index="index" v-for="(item, index) in item.list"></menu-item>',
         '</ul>',
-        '<a v-if="item.type === 1" :href="\'#\'+item.url">',
+        '<a v-if="(item.type === 1 && setButtons(item.code))" :href="\'#\'+item.url">',
         '<i v-if="item.icon != null" :class="item.icon"></i>',
         '<i v-else class="fa fa-circle-o"></i>',
         '<span>{{item.name}}</span>',
         '</a>',
         '</li>'
-    ].join('')
+    ].join(''),
+    methods: {
+        setButtons: function (code) {
+            return buttons[code];
+        }
+    }
 });
 /** 注册菜单组件 */
 Vue.component('menuItem', menuItem);
@@ -45,13 +50,14 @@ var vm = new Vue({
     methods: {
         /** 查询菜单列表 */
         getMenuList: function () {
+            var that = this;
             // $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1/appName/garnet", function (r) {
+            $.ajaxSettings.async = false;
             $.getJSON(baseURL + "/sysMenu", function (r) {
-                vm.menuList = r;
+                that.menuList = r;
                 //路由
-                console.log(JSON.stringify(vm.menuList));
                 var router = new Router();
-                routerList(router, vm.menuList);
+                routerList(router, that.menuList,that);
                 router.start();
             });
         },
@@ -60,7 +66,9 @@ var vm = new Vue({
             $.ajaxSettings.async = false;
             $.getJSON(baseURL + "button/userId/" + userId + "/appId/1", function (r) {
                 buttons = r;
+                console.log(JSON.stringify(buttons));
             });
+            this.getMenuList();
         },
         /** 查询用户信息 */
         getUser: function () {
@@ -106,6 +114,7 @@ var vm = new Vue({
                     });
                 }
             });
+
         },
         /** 退出登录 */
         logout: function () {
@@ -115,7 +124,7 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getMenuList();
+        // this.getMenuList();
         this.getUser();
         this.getButtonList();
     }
@@ -123,11 +132,11 @@ var vm = new Vue({
 
 
 /** 菜单路由 */
-function routerList(router, menuList) {
+function routerList(router, menuList,vm) {
     for (var key in menuList) {
         var menu = menuList[key];
         if (menu.type == 0) {
-            routerList(router, menu.menuList);
+            routerList(router, menu.list,vm);
         } else if (menu.type == 1) {
             router.add('#' + menu.url, function () {
                 var url = window.location.hash;

@@ -44,11 +44,11 @@
                     </option>
                 </select>
             </div>
-            <a class="btn btn-primary" @click="add" v-if="buttons.garnetDevelopmentMenuAdd">
+            <a class="btn btn-primary" @click="add" v-if="buttons.garnetDevelopmentResourceAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="buttons.garnetDevelopmentMenuUpdate">
+            <a class="btn btn-primary" @click="update" v-if="buttons.garnetDevelopmentResourceUpdate">
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del" v-if="buttons.garnetDevelopmentMenuDelete">
+            <a class="btn btn-primary" @click="del" v-if="buttons.garnetDevelopmentResourceDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="jqGrid"></table>
@@ -81,18 +81,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">类型</div>
-                <label class="radio-inline">
-                    <input type="radio" name="type" @change="typeChange" value="0" v-model="resource.type"/> 目录
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="type" @change="typeChange" value="1" v-model="resource.type"/> 资源
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="type" @change="typeChange" value="2" v-model="resource.type"/> 按钮
-                </label>
-            </div>
-            <div class="form-group">
                 <div class="col-sm-2 control-label">上级资源</div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" style="cursor:pointer;" v-model="resource.parentName"
@@ -115,24 +103,6 @@
                 <div class="col-sm-2 control-label">路径标识</div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="resource.path" placeholder="路径标识"/>
-                </div>
-            </div>
-            <div class="form-group" v-if="isNotButton">
-                <div class="col-sm-2 control-label">图标</div>
-                <div class="col-sm-10">
-                    <input class="form-control" v-model="resource.icon" placeholder="图标"/>
-                </div>
-            </div>
-            <div class="form-group" v-if="isNotButton">
-                <div class="col-sm-2 control-label">url</div>
-                <div class="col-sm-10">
-                    <input class="form-control" v-model="resource.url" placeholder="url"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">排序</div>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" v-model="resource.orderNum" placeholder="排序"/>
                 </div>
             </div>
             <div class="form-group">

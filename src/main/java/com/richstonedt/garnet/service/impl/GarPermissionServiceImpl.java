@@ -5,31 +5,28 @@
  */
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.common.utils.ClassUtil;
+import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.dao.GarPermissionDao;
+import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.GarPermission;
-import com.richstonedt.garnet.model.view.model.GarPermissionForImport;
-import com.richstonedt.garnet.model.view.model.GarVmPermission;
+import com.richstonedt.garnet.model.view.model.GarVMPermission;
 import com.richstonedt.garnet.service.GarPermissionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarPermissionServiceImpl</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b>2017/12/6 11:24
+ * <b>Create Time:</b>2017/12/6 11:44
  *
  * @author PanXin
  * @version 1.0.0
@@ -38,11 +35,20 @@ import java.util.*;
 @Service
 public class GarPermissionServiceImpl implements GarPermissionService {
 
-    private BeanCopier entityToVMCopier = BeanCopier.create(GarPermission.class, GarVmPermission.class,
-            false);
-
     @Autowired
     private GarPermissionDao permissionDao;
+
+//    @Autowired
+//    private GarPermissionResourceDao permissionResourceDao;
+
+    @Autowired
+    private GarApplicationDao applicationDao;
+
+    // 应用名称的map，缓存起来避免从实体转换为vm的时候都要去数据库查找应用名称
+    private Map<Long,String> applicationNameMap = new HashMap<>();
+
+    private BeanCopier entityToVMCopier = BeanCopier.create(GarPermission.class, GarVMPermission.class,
+            false);
 
     @Override
     public void save(GarPermission garPermission) {
@@ -80,155 +86,68 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public List<GarVmPermission> queryPermissionList(Map<String,Object> params) {
-        List<GarVmPermission> vmPermissions = new ArrayList<>();
-        List<GarPermission> permissions = permissionDao.getPermissionsByParams(params);
-        for (GarPermission permission : permissions) {
-            vmPermissions.add(convertPermissionToVMPermission(permission));
+    public List<GarVMPermission> queryPermissionList(String searchName, Integer page, Integer limit) {
+        Integer offset = (page - 1) * limit;
+        List<GarPermission> authorities = permissionDao.queryObjects(searchName,limit,offset);
+        List<GarVMPermission> result = new ArrayList<>();
+        for (GarPermission permission : authorities) {
+            result.add(convertPermissionToVmPermission(permission));
         }
-        return vmPermissions;
+        // 使用几等将缓存清除，不然会存在内存中，如果有变动将可能无法同步。
+        applicationNameMap.clear();
+        return result;
     }
 
-    private GarVmPermission convertPermissionToVMPermission(GarPermission permission) {
-        GarVmPermission vmPermission = new GarVmPermission();
-        entityToVMCopier.copy(permission, vmPermission, null);
+    @Override
+    public void savePermission(GarVMPermission garVMPermission) {
+        permissionDao.save(garVMPermission);
+//        savePermissionResource(garVMPermission);
+    }
+
+    @Override
+    public GarVMPermission searchPermission(Long permissionId) {
+        GarPermission permission = permissionDao.queryObject(permissionId);
+        return convertPermissionToVmPermission(permission);
+    }
+
+    @Override
+    public void updatePermission(GarVMPermission garVMPermission) {
+        update(garVMPermission);
+//        permissionResourceDao.deleteByPermissionId(garVMPermission.getPermissionId());
+//        savePermissionResource(garVMPermission);
+    }
+
+    @Override
+    public List<GarVMPermission> queryPermissionListByApplicationId(Long applicationId) {
+        List<GarPermission> permissionList = permissionDao.getPermissionListByApplicationId(applicationId);
+        List<GarVMPermission> result = new ArrayList<>();
+        for (GarPermission permission : permissionList) {
+            result.add(convertPermissionToVmPermission(permission));
+        }
+        return result;
+    }
+
+    private GarVMPermission convertPermissionToVmPermission(GarPermission garPermission) {
+        GarVMPermission vmPermission = new GarVMPermission();
+        entityToVMCopier.copy(garPermission,vmPermission,null);
+        String applicationName = applicationNameMap.get(garPermission.getApplicationId());
+        if (StringUtils.isEmpty(applicationName)) {
+            GarApplication application = applicationDao.queryObject(garPermission.getApplicationId());
+            applicationNameMap.put(garPermission.getApplicationId(), application.getName());
+            vmPermission.setApplicationName(application.getName());
+        } else {
+            vmPermission.setApplicationName(applicationName);
+        }
+//        List<Long> menuId = permissionResourceDao.getResourceIdByPermissionId(garPermission.getPermissionId());
+//        vmPermission.setResourceIdList(menuId);
+
         return vmPermission;
     }
 
-    @Override
-    public Set<String> getPermissionsByIds(Set<Long> ids) {
-        return permissionDao.getPermissionsByIds(ids);
-    }
-
-    @Override
-    public void importPermissionFromAnnotation(List<GarPermissionForImport> permissionList, Long applicationId) {
-        importPermission(permissionList,applicationId);
-    }
-
-    @Override
-    public List<GarVmPermission> queryPermissionListByApplicationId(Long applicationId) {
-        List<GarPermission> permissionList = permissionDao.getPermissionByApplicationIdAndStatus(applicationId, 1);
-        List<GarVmPermission> vmPermissionList = new ArrayList<>();
-        for (GarPermission garPermission : permissionList) {
-            GarVmPermission vmPermission = convertPermissionToVMPermission(garPermission);
-            vmPermissionList.add(vmPermission);
-        }
-        return vmPermissionList;
-    }
-
-    @Override
-    public List<GarPermissionForImport> getImportPermissionFromAnnotation(Class controllerClass, Long applicationId) {
-
-        List<GarPermissionForImport> importPermissionList = new ArrayList<>();
-        List<Class<?>> classList = ClassUtil.getClassListFromPackage(controllerClass);
-        if (!CollectionUtils.isEmpty(classList)) {
-            for (Class<?> clazz : classList) {
-                importPermissionList.add(this.getPermissionsByAnnotation(clazz, applicationId));
-            }
-        }
-        return importPermissionList;
-    }
-
-    @Override
-    public int queryTotalPermission(Map<String,Object> params) {
-        return permissionDao.queryTotalPermission(params);
-    }
-
-    @Override
-    public GarVmPermission getPermissionById(Long permissionsId) {
-        GarPermission permission = permissionDao.queryObject(permissionsId);
-        return convertPermissionToVMPermission(permission);
-    }
-
-    private GarPermissionForImport getPermissionsByAnnotation(Class<?> clazz, Long applicationId) {
-        List<GarPermission> permissions = new ArrayList<>();
-        Method[] methods = clazz.getMethods();
-        String baseUrl = "";
-        String api = "";
-        RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
-        if (!ObjectUtils.isEmpty(requestMapping)) {
-            baseUrl = requestMapping.value()[0];
-        }
-        Api apiAnnotation = clazz.getAnnotation(Api.class);
-        if (!ObjectUtils.isEmpty(apiAnnotation) && !ObjectUtils.isEmpty(apiAnnotation.tags())) {
-            api = apiAnnotation.tags()[0];
-        }
-
-        GarPermissionForImport permissionForImport = new GarPermissionForImport();
-
-        GarPermission parentPermission = new GarPermission();
-        parentPermission.setApplicationId(1L);
-        parentPermission.setName(api);
-        parentPermission.setStatus(1);
-        parentPermission.setParentId(0L);
-//        saveOrUpdatePermission(parentPermission, true);
-        permissionForImport.setPermission(parentPermission);
-        if (!ObjectUtils.isEmpty(methods)) {
-            for (Method method : methods) {
-                RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
-                if (!ObjectUtils.isEmpty(requiresPermissions)) {
-                    GarPermission permission = new GarPermission();
-                    ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
-                    RequestMapping methodMapping = method.getAnnotation(RequestMapping.class);
-                    permission.setApplicationId(applicationId);
-                    permission.setParentId(parentPermission.getPermissionId());
-                    permission.setPermission(requiresPermissions.value()[0]);
-                    permission.setName(apiOperation.value());
-                    permission.setDescription(apiOperation.notes());
-                    permission.setUrl(baseUrl + methodMapping.value()[0]);
-                    permission.setMethod(methodMapping.method()[0].toString());
-                    permission.setStatus(1);
-                    permissions.add(permission);
-                }
-            }
-//            updatePermissions(permissions);
-            permissionForImport.setPermissionList(permissions);
-        }
-        return permissionForImport;
-    }
-
-    private void updatePermissions(List<GarPermission> permissions) {
-        for (GarPermission permission : permissions) {
-            saveOrUpdatePermission(permission, false);
-        }
-    }
-
-    private void saveOrUpdatePermission(GarPermission permission, boolean isParent) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("applicationId", permission.getApplicationId());
-        // 如果是父级,根据名称和应用id获取，子级则通过权限和应用id获取
-        if (isParent) {
-            params.put("name", permission.getName());
-        } else {
-            params.put("permission", permission.getPermission());
-        }
-        List<GarPermission> dbPermissions = permissionDao.getPermissionsByParams(params);
-        // 如果访问权限不存在就新增，否则进行修改
-        if (CollectionUtils.isEmpty(dbPermissions)) {
-            permissionDao.save(permission);
-        } else {
-            permission.setPermissionId(dbPermissions.get(0).getPermissionId());
-            permissionDao.update(permission);
-        }
-    }
-
-    private void importPermission(List<GarPermissionForImport> importPermissionList,Long applicationId) {
-        // 遍历需要导入的对象
-        for (GarPermissionForImport importPermission : importPermissionList) {
-            GarPermission parentPermission = importPermission.getPermission();
-            if (!ObjectUtils.isEmpty(parentPermission)) {
-                parentPermission.setApplicationId(applicationId);
-                saveOrUpdatePermission(parentPermission, true);
-                // 获取并保存子权限
-                if (!CollectionUtils.isEmpty(importPermission.getPermissionList())) {
-                    for (GarPermission permission : importPermission.getPermissionList()) {
-                        parentPermission.setApplicationId(applicationId);
-                        permission.setParentId(parentPermission.getPermissionId());
-                        saveOrUpdatePermission(permission, false);
-                    }
-                }
-            }
-        }
-    }
-
+//    private void savePermissionResource(GarVMPermission vmPermission) {
+//        List<Long> menuIds = GarnetRsUtil.parseStringToList(vmPermission.getResourceIds());
+//        for (Long menuId : menuIds) {
+//            permissionResourceDao.save(vmPermission.getPermissionId(), menuId);
+//        }
+//    }
 }

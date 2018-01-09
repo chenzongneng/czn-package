@@ -7,55 +7,36 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.richstonedt.garnet.dao.GarUserMenuDao">
+<mapper namespace="com.richstonedt.garnet.dao.GarUserResourceDao">
 
     <sql id="subQuery">
             SELECT DISTINCT
                 u.user_id AS user_id,
                 ap.app_id AS app_id,
-                m.menu_id AS menu_id,
+                m.resource_id AS resource_id,
                 m.application_id AS application_id,
-                m.type AS type,
                 m.name AS name,
                 m.description AS description,
                 m.code AS code,
                 m.parent_code AS parent_code,
-                m.icon AS icon,
-                m.url AS url,
-                m.order_num AS order_num,
                 m.status AS status
             FROM gar_users u
                 LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
                 LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
                 LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
                 LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
---                 LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
---                 LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+--                 LEFT JOIN gar_authority_resource am ON am.authority_id = ra.authority_id
+--                 LEFT JOIN gar_resources m ON m.resource_id = am.resource_id
                 LEFT JOIN gar_authorities a ON a.authority_id = ra.authority_id
-                LEFT JOIN gar_menus m ON m.path LIKE a.wildcard
+                LEFT JOIN gar_resources m ON m.path LIKE a.wildcard
             WHERE m.status = 1
     </sql>
 
-    <select id="getUserMenuByUserIdAndType" resultType="com.richstonedt.garnet.model.GarUserMenu">
-        SELECT um.*
+    <select id="getCodeByUserId" resultType="java.lang.String">
+        SELECT ur.code
         FROM
-        (<include refid="subQuery"/>) AS um
-        WHERE um.user_id =#{userId} AND um.type = #{type}
-    </select>
-
-    <select id="getUserMenuByUserIdAndAppIdAndParentCode" resultType="com.richstonedt.garnet.model.GarUserMenu">
-        SELECT um.*
-        FROM
-        (<include refid="subQuery"/>) AS um
-        WHERE um.user_id = #{userId} AND app_id = #{appId} AND parent_code = #{parentCode}
-        ORDER BY order_num ASC
-    </select>
-
-    <select id="getButtonCodeByUserId" resultType="java.lang.String">
-        SELECT um.code
-        FROM
-        (<include refid="subQuery"/>) AS um
-        WHERE um.user_id = #{userId} AND um.app_id = #{appId} AND um.type = 2
+        (<include refid="subQuery"/>) AS ur
+        WHERE ur.user_id = #{userId} AND ur.app_id = #{appId}
     </select>
 
 

@@ -10,16 +10,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 
 /**
  * <b><code>GarPermissionDao</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b>2017/12/4 18:58
+ * <b>Create Time:</b>2017/12/6 11:39
  *
  * @author PanXin
  * @version 1.0.0
@@ -28,15 +25,6 @@ import java.util.Set;
 @Mapper
 public interface GarPermissionDao extends BaseDao<GarPermission> {
 
-    Set<String> getPermissionsByIds(@Param("ids") Set<Long> ids);
+    List<GarPermission> getPermissionListByApplicationId(@Param("applicationId") Long applicationId);
 
-    List<GarPermission> getPermissionByPermission(@Param("permission") String permission);
-
-    List<GarPermission> getPermissionByApplicationIdAndStatus(@Param("applicationId")Long applicationId, @Param("status")int status);
-
-    List<GarPermission> getPermissionByName(@Param("name") String name);
-
-    List<GarPermission> getPermissionsByParams(Map<String,Object> params);
-
-    int queryTotalPermission(Map<String,Object> params);
 }

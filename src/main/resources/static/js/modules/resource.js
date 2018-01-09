@@ -12,32 +12,11 @@ $(function () {
         colModel: [
             {label: '资源ID', name: 'resourceId', align: 'center', hidden: true, index: "resource_id", width: 20, key: true},
             {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
-            {
-                label: '类型', align: 'center', name: 'type', width: 20, formatter: function (value, options, row) {
-                switch (value) {
-                    case 0:
-                        return '<span class="label label-primary">目录</span>';
-                    case 1:
-                        return '<span class="label label-success">资源</span>';
-                    case 2:
-                        return '<span class="label label-info">按钮</span>';
-                    default:
-                        return "";
-                }
-            }
-            },
             {label: '资源名称', name: 'name', align: 'center', width: 40},
             {label: '说明', name: 'description', align: 'center', width: 70},
             {label: '父资源标识', name: 'parentCode', align: 'center', width: 70},
             {label: '资源标识', name: 'code', align: 'center', width: 70},
             {label: '路径标识', name: 'path', align: 'center', width: 70},
-            // {
-            //     label: '资源图标', name: 'icon', align: 'center', width: 70, formatter: function (value) {
-            //     return "<i class=\"" + value + "\">";
-            // }
-            // },
-            // {label: '资源URL', name: 'url', align: 'center', width: 70},
-            {label: '排序', name: 'orderNum', align: 'center', width: 20},
             {
                 label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
                 return value === 0 ?
@@ -137,7 +116,6 @@ var vm = new Vue({
         name: null,
         showList: true,
         showParentCode: false,
-        isNotButton: false,
         title: null,
         resource: {
             resourceId: null,
@@ -167,7 +145,6 @@ var vm = new Vue({
                 applicationId: 1,
                 name: null,
                 parentName: null,
-                type: 2,
                 permissionIds: null,
                 orderNum: 0,
                 status: 1
@@ -272,16 +249,12 @@ var vm = new Vue({
             $.get(baseURL + "resource/" + resourceId, function (response) {
                 vm.resource.resourceId = response.resourceId;
                 vm.resource.applicationId = response.applicationId;
-                vm.resource.type = response.type;
                 vm.resource.name = response.name;
                 vm.resource.description = response.description;
                 vm.resource.code = response.code;
                 vm.resource.parentCode = response.parentCode;
                 vm.resource.parentName = response.parentName;
                 vm.resource.path = response.path;
-                vm.resource.icon = response.icon;
-                vm.resource.url = response.url;
-                vm.resource.orderNum = response.orderNum;
                 vm.resource.status = response.status;
                 applicationList.appList.selectedApp = response.applicationId;
                 $.each(response.permissionIdList, function (index, item) {
@@ -351,13 +324,6 @@ var vm = new Vue({
                     layer.close(index);
                 }
             });
-        },
-        typeChange: function () {
-            if (vm.resource.type === "2") {
-                vm.isNotButton = false;
-            } else {
-                vm.isNotButton = true;
-            }
         }
     },
     /**  初始化页面时执行该方法 */

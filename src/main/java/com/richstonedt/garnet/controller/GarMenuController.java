@@ -49,7 +49,7 @@ public class GarMenuController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMMenu.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"menu:list"})
+    //@RequiresPermissions({"menu:list"})
     public ResponseEntity<?> searchMenus(
             @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
@@ -77,7 +77,7 @@ public class GarMenuController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMMenu.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"application:menu:list"})
+    //@RequiresPermissions({"application:menu:list"})
     public ResponseEntity<?> searchMenusByAppId(
             @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
         try {
@@ -94,7 +94,7 @@ public class GarMenuController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMMenu.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"menu:info"})
+    //@RequiresPermissions({"menu:info"})
     public ResponseEntity<?> searchMenu(@ApiParam(value = "menuId", required = true) @PathVariable(value = "menuId") Long menuId) {
         try {
             return new ResponseEntity<>(menuService.searchMenu(menuId), HttpStatus.OK);
@@ -109,7 +109,7 @@ public class GarMenuController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"menu:create"})
+    //@RequiresPermissions({"menu:create"})
     public ResponseEntity<?> saveMenu(@RequestBody GarVMMenu garVMMenu) {
         try {
             menuService.saveMenu(garVMMenu);
@@ -125,7 +125,7 @@ public class GarMenuController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"menu:update"})
+    //@RequiresPermissions({"menu:update"})
     public ResponseEntity<?> updateMenu(@RequestBody GarVMMenu garVMMenu) {
         try {
             menuService.updateMenu(garVMMenu);
@@ -141,7 +141,7 @@ public class GarMenuController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"menu:delete:batch"})
+    //@RequiresPermissions({"menu:delete:batch"})
     public ResponseEntity<?> deleteMenus(@ApiParam(value = "menuIds,用‘,’隔开", required = true) @RequestParam(value = "menuIds") String menuIds) {
         try {
             menuService.deleteBatch(GarnetRsUtil.parseStringToList(menuIds));

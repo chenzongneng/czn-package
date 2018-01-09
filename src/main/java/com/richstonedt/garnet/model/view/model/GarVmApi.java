@@ -10,7 +10,7 @@ import com.richstonedt.garnet.model.GarApi;
 import java.io.Serializable;
 
 /**
- * <b><code>GarVmPermission</code></b>
+ * <b><code>GarVMPermission</code></b>
  * <p>
  * class_comment
  * </p>

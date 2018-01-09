@@ -5,21 +5,17 @@
  */
 package com.richstonedt.garnet.service;
 
-import com.richstonedt.garnet.controller.GarPermissionController;
 import com.richstonedt.garnet.model.GarPermission;
-import com.richstonedt.garnet.model.view.model.GarPermissionForImport;
-import com.richstonedt.garnet.model.view.model.GarVmPermission;
+import com.richstonedt.garnet.model.view.model.GarVMPermission;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * <b><code>GarPermissionService</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b>2017/12/6 11:24
+ * <b>Create Time:</b>2017/12/6 11:44
  *
  * @author PanXin
  * @version 1.0.0
@@ -27,18 +23,13 @@ import java.util.Set;
  */
 public interface GarPermissionService extends BaseService<GarPermission> {
 
-    List<GarVmPermission> queryPermissionList(Map<String,Object> params);
+    List<GarVMPermission> queryPermissionList(String searchName, Integer page, Integer limit);
 
-    Set<String> getPermissionsByIds(Set<Long> ids);
+    void savePermission(GarVMPermission garVMPermission);
 
-    void importPermissionFromAnnotation(List<GarPermissionForImport> permissionList, Long applicationId);
+    GarVMPermission searchPermission(Long permissionId);
 
-    List<GarVmPermission> queryPermissionListByApplicationId(Long applicationId);
+    void updatePermission(GarVMPermission garVMPermission);
 
-    List<GarPermissionForImport> getImportPermissionFromAnnotation(Class controllerClass, Long applicationId);
-
-    int queryTotalPermission(Map<String,Object> params);
-
-    GarVmPermission getPermissionById(Long permissionsId);
-
+    List<GarVMPermission> queryPermissionListByApplicationId(Long applicationId);
 }

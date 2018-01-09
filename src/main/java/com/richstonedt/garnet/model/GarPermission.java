@@ -7,57 +7,47 @@ package com.richstonedt.garnet.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 
 /**
- * <b><code>GarPermission</code></b>
+ * <b><code>GarAuthority</code></b>
  * <p>
  * class_comment
  * </p>
- * <b>Create Time:</b>2017/12/4 18:50
+ * <b>Create Time:</b>2017/12/6 11:32
  *
  * @author PanXin
  * @version 1.0.0
  * @since garnet-core-be-fe  1.0.0
  */
-@ApiModel(value = "访问权限")
+@ApiModel(value = "权限")
 public class GarPermission implements Serializable {
 
-    @ApiModelProperty(value = "访问权限ID")
-    private Long permissionId;
+    @ApiModelProperty(value = "权限ID")
+    private Long authorityId;
 
     @ApiModelProperty(value = "应用ID")
     private Long applicationId;
 
-    @ApiModelProperty(value = "父访问权限ID")
-    private Long parentId;
-
     @ApiModelProperty(value = "具体名称")
     private String name;
 
-    @ApiModelProperty(value = "访问权限标识符")
-    private String permission;
+    @ApiModelProperty(value = "通配符")
+    private String wildcard;
 
-    @ApiModelProperty(value = "说明")
+    @ApiModelProperty(value = "详细说明")
     private String description;
-
-    @ApiModelProperty(value = "对应的链接")
-    private String url;
-
-    @ApiModelProperty(value = "方法")
-    private String method;
 
     @ApiModelProperty(value = "状态")
     private Integer status;
 
-    public Long getPermissionId() {
-        return permissionId;
+    public Long getAuthorityId() {
+        return authorityId;
     }
 
-    public void setPermissionId(Long permissionId) {
-        this.permissionId = permissionId;
+    public void setAuthorityId(Long authorityId) {
+        this.authorityId = authorityId;
     }
 
     public String getName() {
@@ -66,14 +56,6 @@ public class GarPermission implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
     }
 
     public String getDescription() {
@@ -92,14 +74,6 @@ public class GarPermission implements Serializable {
         this.status = status;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Long getApplicationId() {
         return applicationId;
     }
@@ -108,24 +82,11 @@ public class GarPermission implements Serializable {
         this.applicationId = applicationId;
     }
 
-    public Long getParentId() {
-        return parentId;
+    public String getWildcard() {
+        return wildcard;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+    public void setWildcard(String wildcard) {
+        this.wildcard = wildcard;
     }
 }

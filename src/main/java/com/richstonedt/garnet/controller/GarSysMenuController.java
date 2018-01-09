@@ -9,6 +9,7 @@ package com.richstonedt.garnet.controller;
 import com.richstonedt.garnet.service.GarSysMenuService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.service.GarUserMenuService;
+import com.richstonedt.garnet.service.GarUserResourceService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,9 @@ public class GarSysMenuController {
 
     @Autowired
     private GarUserMenuService userMenuService;
+
+    @Autowired
+    private GarUserResourceService userResourceService;
 
     /**
      * Search sys menu response entity.
@@ -112,7 +116,7 @@ public class GarSysMenuController {
             @ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId,
             @ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
         try {
-            return new ResponseEntity<>(userMenuService.getButtonCodeMapListByUserId(userId,appId), HttpStatus.OK);
+            return new ResponseEntity<>(userResourceService.getCodeMapListByUserId(userId,appId), HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to search system menu", t);
             return GarnetRsUtil.newResponseEntity(t);

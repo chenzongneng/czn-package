@@ -11,8 +11,7 @@ CREATE TABLE "public"."gar_users" (
   create_time TIMESTAMP(6)
 );
 
-ALTER TABLE "public"."gar_users"
-  ADD UNIQUE ("username");
+ALTER TABLE "public"."gar_users" ADD UNIQUE ("username");
 
 COMMENT ON TABLE "public"."gar_users" IS '用户';
 COMMENT ON COLUMN "public"."gar_users"."user_id" IS '用户ID';
@@ -22,6 +21,45 @@ COMMENT ON COLUMN "public"."gar_users"."email" IS '邮箱';
 COMMENT ON COLUMN "public"."gar_users"."mobile" IS '电话';
 COMMENT ON COLUMN "public"."gar_users"."status" IS '状态';
 COMMENT ON COLUMN "public"."gar_users"."create_time" IS '创建时间';
+
+-- 初始账号：admin  密码：admin
+INSERT INTO public.gar_users (user_id, username, password, email, mobile, status, create_time) VALUES (1, 'admin', '$2a$12$rFhdbcz5igsiwi45dt5S.uvg36BIT4Hk1AgV5QWl5NWQ0k0b2SrdO', 'string', 'string', 1, '2017-10-19 17:39:58.848979');
+
+DROP TABLE IF EXISTS "public"."gar_sys_menus";
+CREATE TABLE "public"."gar_sys_menus" (
+  menu_id     INT8 PRIMARY KEY,
+  parent_id    INT8,
+  name    VARCHAR(50),
+  url       VARCHAR(200),
+  type      INT4,
+  icon      VARCHAR(50),
+  code      VARCHAR(50),
+  order_num INT4
+);
+
+ALTER TABLE "public"."gar_sys_menus" ADD UNIQUE ("code");
+
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (1, 0, '系统管理', null, 0, 'fa fa-cog', 0);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (4, 1, '用户管理', 'modules/user.html', 1, 'fa fa fa-user', 3);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (7, 1, '权限管理', 'modules/authority.html', 1, 'fa fa-th-list', 6);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (8, 1, '系统日志', 'modules/log.html', 1, 'fa fa-file-text-o', 7);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (3, 1, '应用管理', 'modules/application.html', 1, 'fa fa-th-large', 2);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (2, 1, '租户管理', 'modules/tenant.html', 1, 'fa fa-address-book', 1);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (5, 1, '部门管理', 'modules/dept.html', 1, 'fa fa-institution', 4);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (6, 1, '角色管理', 'modules/role.html', 1, 'fa  fa-group ', 5);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (9, 0, '开发选项', '', 0, 'fa fa-cog', 0);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (10, 9, '菜单管理', 'modules/resource.html', 1, 'fa fa-th-list', 1);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (11, 9, 'API', 'modules/api.html', 1, 'fa fa-th-list', 1);
+
+COMMENT ON TABLE "public"."gar_sys_menus" IS '系统菜单';
+COMMENT ON COLUMN "public"."gar_sys_menus"."menu_id" IS '菜单ID';
+COMMENT ON COLUMN "public"."gar_sys_menus"."parent_id" IS '父菜单ID';
+COMMENT ON COLUMN "public"."gar_sys_menus"."name" IS '菜单名称';
+COMMENT ON COLUMN "public"."gar_sys_menus"."url" IS '邮箱';
+COMMENT ON COLUMN "public"."gar_sys_menus"."type" IS '类型';
+COMMENT ON COLUMN "public"."gar_sys_menus"."icon" IS '图标';
+COMMENT ON COLUMN "public"."gar_sys_menus"."code" IS '标志';
+COMMENT ON COLUMN "public"."gar_sys_menus"."order_num" IS '排序';
 
 
 DROP TABLE IF EXISTS "public"."gar_authorities";
@@ -39,6 +77,23 @@ COMMENT ON COLUMN "public"."gar_authorities"."name" IS '具体名称';
 COMMENT ON COLUMN "public"."gar_authorities"."wildcard" IS '通配符';
 COMMENT ON COLUMN "public"."gar_authorities"."description" IS '详细说明';
 COMMENT ON COLUMN "public"."gar_authorities"."status" IS '状态';
+
+
+DROP TABLE IF EXISTS "public"."gar_permissions";
+CREATE TABLE "public"."gar_permissions" (
+  authority_id BIGSERIAL PRIMARY KEY,
+  application_id INT8,
+  name         VARCHAR(100) COLLATE "default" NOT NULL,
+  wildcard  VARCHAR(512) COLLATE "default",
+  description  VARCHAR(512) COLLATE "default",
+  status       INT4
+);
+COMMENT ON TABLE "public"."gar_permissions" IS '权限';
+COMMENT ON COLUMN "public"."gar_permissions"."application_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_permissions"."name" IS '具体名称';
+COMMENT ON COLUMN "public"."gar_permissions"."wildcard" IS '通配符';
+COMMENT ON COLUMN "public"."gar_permissions"."description" IS '详细说明';
+COMMENT ON COLUMN "public"."gar_permissions"."status" IS '状态';
 
 
 -- DROP TABLE IF EXISTS "public"."gar_permissions";
@@ -157,25 +212,35 @@ ALTER TABLE "public"."gar_user_application"
 COMMENT ON COLUMN "public"."gar_user_application"."user_id" IS '用户ID';
 COMMENT ON COLUMN "public"."gar_user_application"."app_id" IS '应用ID';
 
-DROP TABLE IF EXISTS "public"."gar_role_authority";
-CREATE TABLE "public"."gar_role_authority" (
-  role_id      INT8,
-  authority_id INT8
-);
-ALTER TABLE "public"."gar_role_authority"
-  ADD PRIMARY KEY ("role_id", "authority_id");
-COMMENT ON COLUMN "public"."gar_role_authority"."role_id" IS '角色ID';
-COMMENT ON COLUMN "public"."gar_role_authority"."authority_id" IS '权限ID';
+-- DROP TABLE IF EXISTS "public"."gar_role_authority";
+-- CREATE TABLE "public"."gar_role_authority" (
+--   role_id      INT8,
+--   authority_id INT8
+-- );
+-- ALTER TABLE "public"."gar_role_authority"
+--   ADD PRIMARY KEY ("role_id", "authority_id");
+-- COMMENT ON COLUMN "public"."gar_role_authority"."role_id" IS '角色ID';
+-- COMMENT ON COLUMN "public"."gar_role_authority"."authority_id" IS '权限ID';
 
-DROP TABLE IF EXISTS "public"."gar_authority_menu";
-CREATE TABLE "public"."gar_authority_menu" (
-  authority_id INT8,
-  menu_id      INT8
+DROP TABLE IF EXISTS "public"."gar_role_permission";
+CREATE TABLE "public"."gar_role_permission" (
+  role_id      INT8,
+  permission_id INT8
 );
-ALTER TABLE "public"."gar_authority_menu"
-  ADD PRIMARY KEY ("authority_id", "menu_id");
-COMMENT ON COLUMN "public"."gar_authority_menu"."authority_id" IS '权限ID';
-COMMENT ON COLUMN "public"."gar_authority_menu"."menu_id" IS '菜单ID';
+ALTER TABLE "public"."gar_role_permission"
+  ADD PRIMARY KEY ("role_id", "permission_id");
+COMMENT ON COLUMN "public"."gar_role_permission"."role_id" IS '角色ID';
+COMMENT ON COLUMN "public"."gar_role_permission"."permission_id" IS '权限ID';
+
+-- DROP TABLE IF EXISTS "public"."gar_authority_menu";
+-- CREATE TABLE "public"."gar_authority_menu" (
+--   authority_id INT8,
+--   menu_id      INT8
+-- );
+-- ALTER TABLE "public"."gar_authority_menu"
+--   ADD PRIMARY KEY ("authority_id", "menu_id");
+-- COMMENT ON COLUMN "public"."gar_authority_menu"."authority_id" IS '权限ID';
+-- COMMENT ON COLUMN "public"."gar_authority_menu"."menu_id" IS '菜单ID';
 
 -- DROP TABLE IF EXISTS "public"."gar_menu_permission";
 -- CREATE TABLE "public"."gar_menu_permission" (

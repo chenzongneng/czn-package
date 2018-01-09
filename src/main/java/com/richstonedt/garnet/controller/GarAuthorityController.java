@@ -47,7 +47,7 @@ public class GarAuthorityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMAuthority.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"authority:list"})
+    ////@RequiresPermissions({"authority:list"})
     public ResponseEntity<?> searchAuthorities(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
                                          @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                          @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
@@ -68,7 +68,7 @@ public class GarAuthorityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMAuthority.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"authority:info"})
+    //@RequiresPermissions({"authority:info"})
     public ResponseEntity<?> searchAuthority(@ApiParam(value = "authorityId", required = true) @PathVariable(value = "authorityId") Long authorityId) {
         try {
             return new ResponseEntity<>(authorityService.searchAuthority(authorityId), HttpStatus.OK);
@@ -83,7 +83,7 @@ public class GarAuthorityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"authority:create"})
+    //@RequiresPermissions({"authority:create"})
     public ResponseEntity<?> saveAuthority(@RequestBody GarVMAuthority garVMAuthority) {
         try {
             authorityService.saveAuthority(garVMAuthority);
@@ -99,7 +99,7 @@ public class GarAuthorityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"authority:update"})
+    //@RequiresPermissions({"authority:update"})
     public ResponseEntity<?> updateAuthority(@RequestBody GarVMAuthority garVMAuthority) {
         try {
             authorityService.updateAuthority(garVMAuthority);
@@ -115,7 +115,7 @@ public class GarAuthorityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"authority:delete:batch"})
+    //@RequiresPermissions({"authority:delete:batch"})
     public ResponseEntity<?> deleteAuthoritys(@ApiParam(value = "authorityIds,用‘,’隔开", required = true) @RequestParam(value = "authorityIds") String authorityIds) {
         try {
             authorityService.deleteBatch(GarnetRsUtil.parseStringToList(authorityIds));
@@ -131,7 +131,7 @@ public class GarAuthorityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMAuthority.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"application:authority:list"})
+    //@RequiresPermissions({"application:authority:list"})
     public ResponseEntity<?> searchAuthoritiesByApplicationId(
             @ApiParam(value = "authorityId", required = true) @PathVariable(value = "applicationId") Long applicationId) {
         try {

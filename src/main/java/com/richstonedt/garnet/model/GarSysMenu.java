@@ -83,6 +83,9 @@ public class GarSysMenu implements Serializable {
     @ApiModelProperty(value = "菜单图标")
     private String icon;
 
+    @ApiModelProperty(value = "标志")
+    private String code;
+
     /**
      * 排序
      *
@@ -304,5 +307,13 @@ public class GarSysMenu implements Serializable {
      */
     public void setOpen(Boolean open) {
         this.open = open;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
