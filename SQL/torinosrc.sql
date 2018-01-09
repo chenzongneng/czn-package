@@ -41,9 +41,31 @@ COMMENT ON COLUMN "public"."gar_authorities"."description" IS '详细说明';
 COMMENT ON COLUMN "public"."gar_authorities"."status" IS '状态';
 
 
-DROP TABLE IF EXISTS "public"."gar_permissions";
-CREATE TABLE "public"."gar_permissions" (
-  permission_id  BIGSERIAL PRIMARY KEY,
+-- DROP TABLE IF EXISTS "public"."gar_permissions";
+-- CREATE TABLE "public"."gar_permissions" (
+--   permission_id  BIGSERIAL PRIMARY KEY,
+--   application_id INT8,
+--   parent_id      INT8,
+--   name           VARCHAR(100) COLLATE "default",
+--   permission     VARCHAR(100) COLLATE "default",
+--   description    VARCHAR(512) COLLATE "default",
+--   url            VARCHAR(100) COLLATE "default",
+--   method         VARCHAR(32) COLLATE "default",
+--   status         INT4 NOT NULL
+-- );
+-- COMMENT ON TABLE "public"."gar_permissions" IS '访问权限';
+-- COMMENT ON COLUMN "public"."gar_permissions"."application_id" IS '应用ID';
+-- COMMENT ON COLUMN "public"."gar_permissions"."parent_id" IS '父访问权限ID';
+-- COMMENT ON COLUMN "public"."gar_permissions"."name" IS '访问权限名称';
+-- COMMENT ON COLUMN "public"."gar_permissions"."permission" IS '权限标识符';
+-- COMMENT ON COLUMN "public"."gar_permissions"."description" IS '说明';
+-- COMMENT ON COLUMN "public"."gar_permissions"."url" IS '对应的链接';
+-- COMMENT ON COLUMN "public"."gar_permissions"."method" IS '方法';
+-- COMMENT ON COLUMN "public"."gar_permissions"."status" IS '状态';
+
+DROP TABLE IF EXISTS "public"."gar_apis";
+CREATE TABLE "public"."gar_apis" (
+  api_id  BIGSERIAL PRIMARY KEY,
   application_id INT8,
   parent_id      INT8,
   name           VARCHAR(100) COLLATE "default",
@@ -53,49 +75,75 @@ CREATE TABLE "public"."gar_permissions" (
   method         VARCHAR(32) COLLATE "default",
   status         INT4 NOT NULL
 );
-COMMENT ON TABLE "public"."gar_permissions" IS '访问权限';
-COMMENT ON COLUMN "public"."gar_permissions"."application_id" IS '应用ID';
-COMMENT ON COLUMN "public"."gar_permissions"."parent_id" IS '父访问权限ID';
-COMMENT ON COLUMN "public"."gar_permissions"."name" IS '访问权限名称';
-COMMENT ON COLUMN "public"."gar_permissions"."permission" IS '权限标识符';
-COMMENT ON COLUMN "public"."gar_permissions"."description" IS '说明';
-COMMENT ON COLUMN "public"."gar_permissions"."url" IS '对应的链接';
-COMMENT ON COLUMN "public"."gar_permissions"."method" IS '方法';
-COMMENT ON COLUMN "public"."gar_permissions"."status" IS '状态';
+COMMENT ON TABLE "public"."gar_apis" IS 'API';
+COMMENT ON COLUMN "public"."gar_apis"."application_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_apis"."parent_id" IS '父访问权限ID';
+COMMENT ON COLUMN "public"."gar_apis"."name" IS 'API名称';
+COMMENT ON COLUMN "public"."gar_apis"."permission" IS 'Shiro的权限标识符';
+COMMENT ON COLUMN "public"."gar_apis"."description" IS '说明';
+COMMENT ON COLUMN "public"."gar_apis"."url" IS '对应的链接';
+COMMENT ON COLUMN "public"."gar_apis"."method" IS '方法';
+COMMENT ON COLUMN "public"."gar_apis"."status" IS '状态';
 
+-- -- auto-generated definition
+-- DROP TABLE IF EXISTS "public"."gar_menus";
+-- CREATE TABLE "public"."gar_menus" (
+--   menu_id        BIGSERIAL PRIMARY KEY,
+--   application_id INT8,
+--   type           INT4,
+--   name           VARCHAR(255) COLLATE "default",
+--   description    VARCHAR(255) COLLATE "default",
+--   code           VARCHAR(255) COLLATE "default",
+--   parent_code    VARCHAR(255) COLLATE "default",
+--   path           VARCHAR(255) COLLATE "default",
+--   icon           VARCHAR(255) COLLATE "default",
+--   url            VARCHAR(255) COLLATE "default",
+--   order_num      INT4,
+--   status         INT4
+-- );
+--
+-- ALTER TABLE "public"."gar_menus"
+--   ADD UNIQUE ("code");
+-- CREATE INDEX "gar_menus_parent_code_idx" on gar_menus(parent_code);
+--
+-- COMMENT ON TABLE "public"."gar_menus" IS '菜单';
+-- COMMENT ON COLUMN "public"."gar_menus"."application_id" IS '应用ID';
+-- COMMENT ON COLUMN "public"."gar_menus"."type" IS '类型';
+-- COMMENT ON COLUMN "public"."gar_menus"."name" IS '菜单名称';
+-- COMMENT ON COLUMN "public"."gar_menus"."description" IS '说明';
+-- COMMENT ON COLUMN "public"."gar_menus"."code" IS '菜单标识';
+-- COMMENT ON COLUMN "public"."gar_menus"."parent_code" IS '父菜单标识';
+-- COMMENT ON COLUMN "public"."gar_menus"."path" IS '路径标识';
+-- COMMENT ON COLUMN "public"."gar_menus"."icon" IS '菜单图标';
+-- COMMENT ON COLUMN "public"."gar_menus"."url" IS '菜单URL';
+-- COMMENT ON COLUMN "public"."gar_menus"."order_num" IS '排序';
+-- COMMENT ON COLUMN "public"."gar_menus"."status" IS '状态';
 -- auto-generated definition
-DROP TABLE IF EXISTS "public"."gar_menus";
-CREATE TABLE "public"."gar_menus" (
-  menu_id        BIGSERIAL PRIMARY KEY,
+
+DROP TABLE IF EXISTS "public"."gar_resources";
+CREATE TABLE "public"."gar_resources" (
+  resource_id        BIGSERIAL PRIMARY KEY,
   application_id INT8,
-  type           INT4,
   name           VARCHAR(255) COLLATE "default",
   description    VARCHAR(255) COLLATE "default",
   code           VARCHAR(255) COLLATE "default",
   parent_code    VARCHAR(255) COLLATE "default",
   path           VARCHAR(255) COLLATE "default",
-  icon           VARCHAR(255) COLLATE "default",
-  url            VARCHAR(255) COLLATE "default",
-  order_num      INT4,
   status         INT4
 );
 
-ALTER TABLE "public"."gar_menus"
+ALTER TABLE "public"."gar_resources"
   ADD UNIQUE ("code");
-CREATE INDEX "gar_menus_parent_code_idx" on gar_menus(parent_code);
+CREATE INDEX "gar_resource_parent_code_idx" on gar_resources(parent_code);
 
-COMMENT ON TABLE "public"."gar_menus" IS '菜单';
-COMMENT ON COLUMN "public"."gar_menus"."application_id" IS '应用ID';
-COMMENT ON COLUMN "public"."gar_menus"."type" IS '类型';
-COMMENT ON COLUMN "public"."gar_menus"."name" IS '菜单名称';
-COMMENT ON COLUMN "public"."gar_menus"."description" IS '说明';
-COMMENT ON COLUMN "public"."gar_menus"."code" IS '菜单标识';
-COMMENT ON COLUMN "public"."gar_menus"."parent_code" IS '父菜单标识';
-COMMENT ON COLUMN "public"."gar_menus"."path" IS '路径标识';
-COMMENT ON COLUMN "public"."gar_menus"."icon" IS '菜单图标';
-COMMENT ON COLUMN "public"."gar_menus"."url" IS '菜单URL';
-COMMENT ON COLUMN "public"."gar_menus"."order_num" IS '排序';
-COMMENT ON COLUMN "public"."gar_menus"."status" IS '状态';
+COMMENT ON TABLE "public"."gar_resources" IS '资源';
+COMMENT ON COLUMN "public"."gar_resources"."application_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_resources"."name" IS '资源名称';
+COMMENT ON COLUMN "public"."gar_resources"."description" IS '说明';
+COMMENT ON COLUMN "public"."gar_resources"."code" IS '资源标识';
+COMMENT ON COLUMN "public"."gar_resources"."parent_code" IS '父资源标识';
+COMMENT ON COLUMN "public"."gar_resources"."path" IS '路径标识';
+COMMENT ON COLUMN "public"."gar_resources"."status" IS '状态';
 
 --------------------- 关联表 ----------------------
 
@@ -129,15 +177,25 @@ ALTER TABLE "public"."gar_authority_menu"
 COMMENT ON COLUMN "public"."gar_authority_menu"."authority_id" IS '权限ID';
 COMMENT ON COLUMN "public"."gar_authority_menu"."menu_id" IS '菜单ID';
 
-DROP TABLE IF EXISTS "public"."gar_menu_permission";
-CREATE TABLE "public"."gar_menu_permission" (
-  menu_id       INT8,
-  permission_id INT8
+-- DROP TABLE IF EXISTS "public"."gar_menu_permission";
+-- CREATE TABLE "public"."gar_menu_permission" (
+--   menu_id       INT8,
+--   permission_id INT8
+-- );
+-- ALTER TABLE "public"."gar_menu_permission"
+--   ADD PRIMARY KEY ("menu_id", "permission_id");
+-- COMMENT ON COLUMN "public"."gar_menu_permission"."menu_id" IS '菜单ID';
+-- COMMENT ON COLUMN "public"."gar_menu_permission"."permission_id" IS '访问权限ID';
+
+DROP TABLE IF EXISTS "public"."gar_resource_api";
+CREATE TABLE "public"."gar_resource_api" (
+  resource_id       INT8,
+  api_id INT8
 );
-ALTER TABLE "public"."gar_menu_permission"
-  ADD PRIMARY KEY ("menu_id", "permission_id");
-COMMENT ON COLUMN "public"."gar_menu_permission"."menu_id" IS '菜单ID';
-COMMENT ON COLUMN "public"."gar_menu_permission"."permission_id" IS '访问权限ID';
+ALTER TABLE "public"."gar_resource_api"
+  ADD PRIMARY KEY ("resource_id", "api_id");
+COMMENT ON COLUMN "public"."gar_resource_api"."resource_id" IS '资源ID';
+COMMENT ON COLUMN "public"."gar_resource_api"."api_id" IS 'API ID';
 
 --------------------- 视图 ----------------------
 

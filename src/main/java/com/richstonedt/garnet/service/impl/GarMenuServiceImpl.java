@@ -46,13 +46,7 @@ public class GarMenuServiceImpl implements GarMenuService {
     @Autowired
     private GarApplicationDao applicationDao;
 
-    // 应用名称的map，缓存起来避免从实体转换为vm的时候都要去数据库查找应用名称
-    private Map<Long,String> applicationNameMap = new HashMap<>();
-
     private BeanCopier entityToVMCopier = BeanCopier.create(GarMenu.class, GarVMMenu.class,
-            false);
-
-    private BeanCopier vmToEntityCopier = BeanCopier.create(GarVMMenu.class, GarMenu.class,
             false);
 
     @Override
@@ -97,7 +91,6 @@ public class GarMenuServiceImpl implements GarMenuService {
         for (GarMenu menu : authorities) {
             result.add(convertMenuToVmMenu(menu));
         }
-        applicationNameMap.clear();
         return result;
     }
 
@@ -109,7 +102,6 @@ public class GarMenuServiceImpl implements GarMenuService {
             GarVMMenu vmMenu = convertMenuToVmMenu(menu);
             vmMenuList.add(vmMenu);
         }
-        applicationNameMap.clear();
         return vmMenuList;
     }
 
@@ -123,7 +115,6 @@ public class GarMenuServiceImpl implements GarMenuService {
     public GarVMMenu searchMenu(Long menuId) {
         GarMenu menu = menuDao.queryObject(menuId);
         GarVMMenu garVMMenu = convertMenuToVmMenu(menu);
-        applicationNameMap.clear();
         return garVMMenu;
     }
 
@@ -143,14 +134,8 @@ public class GarMenuServiceImpl implements GarMenuService {
         GarVMMenu vmMenu = new GarVMMenu();
         entityToVMCopier.copy(garMenu, vmMenu, null);
         vmMenu.setParentName(menuDao.getMenuNameByCode(garMenu.getParentCode()));
-        String applicationName = applicationNameMap.get(garMenu.getApplicationId());
-        if (StringUtils.isEmpty(applicationName)) {
-            GarApplication application = applicationDao.queryObject(garMenu.getApplicationId());
-            applicationNameMap.put(garMenu.getApplicationId(), application.getName());
-            vmMenu.setApplicationName(application.getName());
-        } else {
-            vmMenu.setApplicationName(applicationName);
-        }
+        GarApplication application = applicationDao.queryObject(garMenu.getApplicationId());
+        vmMenu.setApplicationName(application.getName());
         vmMenu.setPermissionIdList(menuPermissionDao.getPermissionIdByMenuId(vmMenu.getMenuId()));
         return vmMenu;
     }

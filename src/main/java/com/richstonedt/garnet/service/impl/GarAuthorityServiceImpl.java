@@ -52,9 +52,6 @@ public class GarAuthorityServiceImpl implements GarAuthorityService {
     private BeanCopier entityToVMCopier = BeanCopier.create(GarAuthority.class, GarVMAuthority.class,
             false);
 
-    private BeanCopier vmToEntityCopier = BeanCopier.create(GarVMAuthority.class, GarAuthority.class,
-            false);
-
     @Override
     public void save(GarAuthority garAuthority) {
         authorityDao.save(garAuthority);

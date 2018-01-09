@@ -9,15 +9,15 @@ package com.richstonedt.garnet.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * <b><code>GarApplication</code></b>
  * <p>
- * class_comment
+ * class_comment sentence
  * </p>
  * <b>Create Time:</b> 2017/10/16 17:29
  *
@@ -30,7 +30,7 @@ public class GarApplication implements Serializable {
 
     /**
      * The App id.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用ID")
@@ -38,7 +38,7 @@ public class GarApplication implements Serializable {
 
     /**
      * The Name.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用名称")
@@ -46,7 +46,7 @@ public class GarApplication implements Serializable {
 
     /**
      * The Company.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "所属公司")
@@ -54,7 +54,7 @@ public class GarApplication implements Serializable {
 
     /**
      * The Remark.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "备注")
