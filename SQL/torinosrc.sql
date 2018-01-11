@@ -1,5 +1,23 @@
 --------------------- 数据表 ----------------------
 
+-- auto-generated definition
+DROP TABLE IF EXISTS "public"."gar_applications";
+CREATE TABLE "public"."gar_applications"(
+  application_id      BIGSERIAL PRIMARY KEY,
+  name        VARCHAR(50) COLLATE "default" NOT NULL,
+  code        VARCHAR(50) COLLATE "default" NOT NULL,
+  company     VARCHAR(100) COLLATE "default",
+  remark      VARCHAR(100) COLLATE "default"
+);
+
+COMMENT ON TABLE "public"."gar_applications" IS '应用';
+COMMENT ON COLUMN "public"."gar_applications"."application_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_applications"."name" IS '名称';
+COMMENT ON COLUMN "public"."gar_applications"."code" IS '标识';
+COMMENT ON COLUMN "public"."gar_applications"."company" IS '公司';
+COMMENT ON COLUMN "public"."gar_applications"."remark" IS '备注';
+
+
 DROP TABLE IF EXISTS "public"."gar_users";
 CREATE TABLE "public"."gar_users" (
   user_id     BIGSERIAL PRIMARY KEY,
@@ -39,18 +57,6 @@ CREATE TABLE "public"."gar_sys_menus" (
 
 ALTER TABLE "public"."gar_sys_menus" ADD UNIQUE ("code");
 
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (1, 0, '系统管理', null, 0, 'fa fa-cog', 0);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (4, 1, '用户管理', 'modules/user.html', 1, 'fa fa fa-user', 3);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (7, 1, '权限管理', 'modules/authority.html', 1, 'fa fa-th-list', 6);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (8, 1, '系统日志', 'modules/log.html', 1, 'fa fa-file-text-o', 7);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (3, 1, '应用管理', 'modules/application.html', 1, 'fa fa-th-large', 2);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (2, 1, '租户管理', 'modules/tenant.html', 1, 'fa fa-address-book', 1);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (5, 1, '部门管理', 'modules/dept.html', 1, 'fa fa-institution', 4);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (6, 1, '角色管理', 'modules/role.html', 1, 'fa  fa-group ', 5);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (9, 0, '开发选项', '', 0, 'fa fa-cog', 0);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (10, 9, '菜单管理', 'modules/resource.html', 1, 'fa fa-th-list', 1);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, order_num) VALUES (11, 9, 'API', 'modules/api.html', 1, 'fa fa-th-list', 1);
-
 COMMENT ON TABLE "public"."gar_sys_menus" IS '系统菜单';
 COMMENT ON COLUMN "public"."gar_sys_menus"."menu_id" IS '菜单ID';
 COMMENT ON COLUMN "public"."gar_sys_menus"."parent_id" IS '父菜单ID';
@@ -61,27 +67,40 @@ COMMENT ON COLUMN "public"."gar_sys_menus"."icon" IS '图标';
 COMMENT ON COLUMN "public"."gar_sys_menus"."code" IS '标志';
 COMMENT ON COLUMN "public"."gar_sys_menus"."order_num" IS '排序';
 
+-- 初始化系统菜单
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (1, 0, '系统管理', null, 0, 'fa fa-cog', 'garnetSysManagement', 0);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (2, 1, '租户管理', 'modules/tenant.html', 1, 'fa fa-address-book', 'garnetSysManagementTenant', 1);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (3, 1, '应用管理', 'modules/application.html', 1, 'fa fa-th-large', 'garnetSysManagementApplication', 2);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (4, 1, '用户管理', 'modules/user.html', 1, 'fa fa fa-user', 'garnetSysManagementUser', 3);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (5, 1, '部门管理', 'modules/dept.html', 1, 'fa fa-institution', 'garnetSysManagementDept', 4);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (6, 1, '角色管理', 'modules/role.html', 1, 'fa  fa-group ', 'garnetSysManagementRole', 5);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (8, 1, '系统日志', 'modules/log.html', 1, 'fa fa-file-text-o', 'garnetSysManagementLog', 7);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (9, 0, '开发选项', '', 0, 'fa fa-cog', 'garnetDevelopment', 0);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (7, 1, '权限管理', 'modules/permission.html', 1, 'fa fa-th-list', 'garnetSysManagementPermission', 6);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (11, 9, 'API', 'modules/api.html', 1, 'fa fa-th-list', 'garnetDevelopmentApi', 2);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (10, 9, '资源管理', 'modules/resource.html', 1, 'fa fa-th-list', 'garnetDevelopmentResource', 1);
 
-DROP TABLE IF EXISTS "public"."gar_authorities";
-CREATE TABLE "public"."gar_authorities" (
-  authority_id BIGSERIAL PRIMARY KEY,
-  application_id INT8,
-  name         VARCHAR(100) COLLATE "default" NOT NULL,
-  wildcard  VARCHAR(512) COLLATE "default",
-  description  VARCHAR(512) COLLATE "default",
-  status       INT4
-);
-COMMENT ON TABLE "public"."gar_authorities" IS '权限';
-COMMENT ON COLUMN "public"."gar_authorities"."application_id" IS '应用ID';
-COMMENT ON COLUMN "public"."gar_authorities"."name" IS '具体名称';
-COMMENT ON COLUMN "public"."gar_authorities"."wildcard" IS '通配符';
-COMMENT ON COLUMN "public"."gar_authorities"."description" IS '详细说明';
-COMMENT ON COLUMN "public"."gar_authorities"."status" IS '状态';
+
+-- DROP TABLE IF EXISTS "public"."gar_authorities";
+-- CREATE TABLE "public"."gar_authorities" (
+--   authority_id BIGSERIAL PRIMARY KEY,
+--   application_id INT8,
+--   name         VARCHAR(100) COLLATE "default" NOT NULL,
+--   wildcard  VARCHAR(512) COLLATE "default",
+--   description  VARCHAR(512) COLLATE "default",
+--   status       INT4
+-- );
+-- COMMENT ON TABLE "public"."gar_authorities" IS '权限';
+-- COMMENT ON COLUMN "public"."gar_authorities"."application_id" IS '应用ID';
+-- COMMENT ON COLUMN "public"."gar_authorities"."name" IS '具体名称';
+-- COMMENT ON COLUMN "public"."gar_authorities"."wildcard" IS '通配符';
+-- COMMENT ON COLUMN "public"."gar_authorities"."description" IS '详细说明';
+-- COMMENT ON COLUMN "public"."gar_authorities"."status" IS '状态';
 
 
 DROP TABLE IF EXISTS "public"."gar_permissions";
 CREATE TABLE "public"."gar_permissions" (
-  authority_id BIGSERIAL PRIMARY KEY,
+  permission_id BIGSERIAL PRIMARY KEY,
   application_id INT8,
   name         VARCHAR(100) COLLATE "default" NOT NULL,
   wildcard  VARCHAR(512) COLLATE "default",
@@ -89,7 +108,7 @@ CREATE TABLE "public"."gar_permissions" (
   status       INT4
 );
 COMMENT ON TABLE "public"."gar_permissions" IS '权限';
-COMMENT ON COLUMN "public"."gar_permissions"."application_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_permissions"."permission_id" IS '应用ID';
 COMMENT ON COLUMN "public"."gar_permissions"."name" IS '具体名称';
 COMMENT ON COLUMN "public"."gar_permissions"."wildcard" IS '通配符';
 COMMENT ON COLUMN "public"."gar_permissions"."description" IS '详细说明';
@@ -140,41 +159,6 @@ COMMENT ON COLUMN "public"."gar_apis"."url" IS '对应的链接';
 COMMENT ON COLUMN "public"."gar_apis"."method" IS '方法';
 COMMENT ON COLUMN "public"."gar_apis"."status" IS '状态';
 
--- -- auto-generated definition
--- DROP TABLE IF EXISTS "public"."gar_menus";
--- CREATE TABLE "public"."gar_menus" (
---   menu_id        BIGSERIAL PRIMARY KEY,
---   application_id INT8,
---   type           INT4,
---   name           VARCHAR(255) COLLATE "default",
---   description    VARCHAR(255) COLLATE "default",
---   code           VARCHAR(255) COLLATE "default",
---   parent_code    VARCHAR(255) COLLATE "default",
---   path           VARCHAR(255) COLLATE "default",
---   icon           VARCHAR(255) COLLATE "default",
---   url            VARCHAR(255) COLLATE "default",
---   order_num      INT4,
---   status         INT4
--- );
---
--- ALTER TABLE "public"."gar_menus"
---   ADD UNIQUE ("code");
--- CREATE INDEX "gar_menus_parent_code_idx" on gar_menus(parent_code);
---
--- COMMENT ON TABLE "public"."gar_menus" IS '菜单';
--- COMMENT ON COLUMN "public"."gar_menus"."application_id" IS '应用ID';
--- COMMENT ON COLUMN "public"."gar_menus"."type" IS '类型';
--- COMMENT ON COLUMN "public"."gar_menus"."name" IS '菜单名称';
--- COMMENT ON COLUMN "public"."gar_menus"."description" IS '说明';
--- COMMENT ON COLUMN "public"."gar_menus"."code" IS '菜单标识';
--- COMMENT ON COLUMN "public"."gar_menus"."parent_code" IS '父菜单标识';
--- COMMENT ON COLUMN "public"."gar_menus"."path" IS '路径标识';
--- COMMENT ON COLUMN "public"."gar_menus"."icon" IS '菜单图标';
--- COMMENT ON COLUMN "public"."gar_menus"."url" IS '菜单URL';
--- COMMENT ON COLUMN "public"."gar_menus"."order_num" IS '排序';
--- COMMENT ON COLUMN "public"."gar_menus"."status" IS '状态';
--- auto-generated definition
-
 DROP TABLE IF EXISTS "public"."gar_resources";
 CREATE TABLE "public"."gar_resources" (
   resource_id        BIGSERIAL PRIMARY KEY,
@@ -211,16 +195,6 @@ ALTER TABLE "public"."gar_user_application"
   ADD PRIMARY KEY ("user_id", "app_id");
 COMMENT ON COLUMN "public"."gar_user_application"."user_id" IS '用户ID';
 COMMENT ON COLUMN "public"."gar_user_application"."app_id" IS '应用ID';
-
--- DROP TABLE IF EXISTS "public"."gar_role_authority";
--- CREATE TABLE "public"."gar_role_authority" (
---   role_id      INT8,
---   authority_id INT8
--- );
--- ALTER TABLE "public"."gar_role_authority"
---   ADD PRIMARY KEY ("role_id", "authority_id");
--- COMMENT ON COLUMN "public"."gar_role_authority"."role_id" IS '角色ID';
--- COMMENT ON COLUMN "public"."gar_role_authority"."authority_id" IS '权限ID';
 
 DROP TABLE IF EXISTS "public"."gar_role_permission";
 CREATE TABLE "public"."gar_role_permission" (
@@ -284,53 +258,53 @@ CREATE VIEW "public"."gar_v_user_application" AS
     LEFT JOIN gar_applications a ON a.app_id = ua.app_id
   WHERE a.app_id NOTNULL;
 COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-应用视图';
-
-CREATE VIEW "public"."gar_v_user_menu" AS
-  SELECT DISTINCT
-    u.user_id,
-    ap.app_id,
-    m.*
-  FROM gar_users u
-    LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
-    LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
-    LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
-    LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
-    LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
-    LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
-  WHERE m.status = 1;
-COMMENT ON VIEW "public"."gar_v_user_menu" IS '用户-菜单视图';
-
-CREATE VIEW "public"."gar_v_user_permission" AS
-  SELECT DISTINCT
-    u.user_id,
-    ap.app_id,
-    p.permission
-  FROM gar_users u
-    LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
-    LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
-    LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
-    LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
-    LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
-    LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
-    LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
-    LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
-  WHERE m.status = 1 AND p.status = 1;
-COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-访问权限视图';
-
-CREATE VIEW "public"."gar_v_menu_permission" AS
-  SELECT
-    m.menu_id,
-    m.name AS menu_name,
-    p.permission_id,
-    p.application_id,
-    p.parent_id,
-    p.name,
-    p.permission,
-    p.description,
-    p.url,
-    p.method,
-    p.status
-  FROM gar_menus m
-    LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
-    LEFT JOIN gar_permissions p ON p.permission_id = mp.permission_id;
-COMMENT ON VIEW "public"."gar_v_menu_permission" IS '菜单-访问权限视图';
+--
+-- CREATE VIEW "public"."gar_v_user_menu" AS
+--   SELECT DISTINCT
+--     u.user_id,
+--     ap.app_id,
+--     m.*
+--   FROM gar_users u
+--     LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
+--     LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
+--     LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
+--     LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
+--     LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
+--     LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+--   WHERE m.status = 1;
+-- COMMENT ON VIEW "public"."gar_v_user_menu" IS '用户-菜单视图';
+--
+-- CREATE VIEW "public"."gar_v_user_permission" AS
+--   SELECT DISTINCT
+--     u.user_id,
+--     ap.app_id,
+--     p.permission
+--   FROM gar_users u
+--     LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
+--     LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
+--     LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
+--     LEFT JOIN gar_role_authority ra ON ra.role_id = rd.role_id
+--     LEFT JOIN gar_authority_menu am ON am.authority_id = ra.authority_id
+--     LEFT JOIN gar_menus m ON m.menu_id = am.menu_id
+--     LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
+--     LEFT JOIN gar_permissions p ON mp.permission_id = p.permission_id
+--   WHERE m.status = 1 AND p.status = 1;
+-- COMMENT ON VIEW "public"."gar_v_user_application" IS '用户-访问权限视图';
+--
+-- CREATE VIEW "public"."gar_v_menu_permission" AS
+--   SELECT
+--     m.menu_id,
+--     m.name AS menu_name,
+--     p.permission_id,
+--     p.application_id,
+--     p.parent_id,
+--     p.name,
+--     p.permission,
+--     p.description,
+--     p.url,
+--     p.method,
+--     p.status
+--   FROM gar_menus m
+--     LEFT JOIN gar_menu_permission mp ON mp.menu_id = m.menu_id
+--     LEFT JOIN gar_permissions p ON p.permission_id = mp.permission_id;
+-- COMMENT ON VIEW "public"."gar_v_menu_permission" IS '菜单-访问权限视图';

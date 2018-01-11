@@ -44,11 +44,11 @@
                     </option>
                 </select>
             </div>
-            <a class="btn btn-primary" @click="add" v-if="buttons.garnetDevelopmentMenuAdd">
+            <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentMenuAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="buttons.garnetDevelopmentMenuUpdate">
+            <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentMenuUpdate">
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del" v-if="buttons.garnetDevelopmentMenuDelete">
+            <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentMenuDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="jqGrid"></table>

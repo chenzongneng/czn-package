@@ -5,7 +5,7 @@
  */
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.dao.GarUserPermissionDao;
+import com.richstonedt.garnet.dao.GarUserApiDao;
 import com.richstonedt.garnet.model.GarToken;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.service.*;
@@ -33,11 +33,11 @@ public class GarShiroServiceImpl implements GarShiroService {
     @Autowired
     private GarUserService userService;
     @Autowired
-    private GarUserPermissionDao userPermissionDao;
+    private GarUserApiDao userPermissionDao;
 
     @Override
     public Set<String> getUserPermissions(long userId) {
-        return userPermissionDao.getPermissionByUserIdAndAppId(userId,1L);
+        return userPermissionDao.getApiByUserIdAndAppId(userId,1L);
     }
 
     @Override

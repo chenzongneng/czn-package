@@ -9,7 +9,7 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarAuthorityDao">
 
-    <insert id="save" keyProperty="authorityId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarAuthority">
+    <insert id="save" keyProperty="permissionId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarAuthority">
         INSERT INTO gar_authorities
         (
             name,
@@ -84,7 +84,7 @@
             </if>
         </set>
         <where>
-            authority_id = #{authorityId};
+            authority_id = #{permissionId};
         </where>
     </update>
 

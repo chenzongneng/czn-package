@@ -7,7 +7,7 @@
 $(function () {
     /** 初始化角色列表 */
     $("#jqGrid").jqGrid({
-        url: baseURL + 'authorities',
+        url: baseURL + 'permissions',
         datatype: "json",
         colModel: [
             {
@@ -66,8 +66,8 @@ $(function () {
 });
 
 /** 菜单结构树 */
-var menuTree;
-var menuTreeSetting = {
+var resourceTree;
+var resourceTreeSetting = {
     data: {
         simpleData: {
             enable: true,
@@ -88,8 +88,7 @@ var menuTreeSetting = {
     },
     callback:{
         beforeClick:function (treeId, treeNode, clickFlag) {
-            alert(treeNode.path);
-            vm.permission.wildcard = treeNode.path + "%";
+            vm.permission.wildcard = treeNode.path;
         }
     }
 };
@@ -106,11 +105,11 @@ var vm = new Vue({
             name: null,
             wildcard: null,
             description: null,
-            menuIds: null,
+            resourceIds: null,
             status: 1
         },
         // 租户列表数据
-        menuList: {
+        resourceList: {
             selectedMenu: "",
             options: []
         },
@@ -137,7 +136,7 @@ var vm = new Vue({
                 name: null,
                 wildcard: null,
                 description: null,
-                menuIds: null,
+                resourceIds: null,
                 status: 1
             };
             vm.getAppList();
@@ -188,12 +187,12 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             // 获取菜单树选择的菜单
-            var nodes = menuTree.getCheckedNodes(true);
+            var nodes = resourceTree.getCheckedNodes(true);
             var permissionIdList = [];
             for (var i = 0; i < nodes.length; i++) {
-                permissionIdList.push(nodes[i].menuId);
+                permissionIdList.push(nodes[i].resourceId);
             }
-            vm.permission.menuIds = permissionIdList.join(",");
+            vm.permission.resourceIds = permissionIdList.join(",");
             console.log(JSON.stringify(vm.permission));
             $.ajax({
                 type: vm.permission.permissionId === null ? "POST" : "PUT",
@@ -213,17 +212,17 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载菜单树
-            $.get(baseURL + "/menus/applicationId/" + vm.permission.applicationId, function (response) {
-                menuTree = $.fn.zTree.init($("#menuTree"), menuTreeSetting, response);
-                menuTree.expandAll(true);
+            $.get(baseURL + "/resources/applicationId/" + vm.permission.applicationId, function (response) {
+                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
+                resourceTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (permissionId) {
             //加载访问权限树
-            $.get(baseURL + "menus/applicationId/" + vm.permission.applicationId, function (response) {
-                menuTree = $.fn.zTree.init($("#menuTree"), menuTreeSetting, response);
-                menuTree.expandAll(true);
+            $.get(baseURL + "resources/applicationId/" + vm.permission.applicationId, function (response) {
+                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
+                resourceTree.expandAll(true);
                 vm.getPermissionById(permissionId);
             })
         },
@@ -235,10 +234,10 @@ var vm = new Vue({
                 vm.permission.wildcard = response.wildcard;
                 vm.permission.description = response.description;
                 vm.permission.status = response.status;
-                $.each(response.menuIdList, function (index, item) {
-                    var node = menuTree.getNodeByParam("menuId", item);
+                $.each(response.resourceIdList, function (index, item) {
+                    var node = resourceTree.getNodeByParam("resourceId", item);
                     console.log(JSON.stringify(node));
-                    menuTree.checkNode(node, true, false);
+                    resourceTree.checkNode(node, true, false);
                 });
             });
         },

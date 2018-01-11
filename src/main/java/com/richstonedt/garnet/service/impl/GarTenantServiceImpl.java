@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarTenantDao;
+import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.GarApplicationTenant;
 import com.richstonedt.garnet.model.GarTenant;
 import com.richstonedt.garnet.model.view.model.GarVMTenant;
@@ -18,6 +19,7 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -210,7 +212,10 @@ public class GarTenantServiceImpl implements GarTenantService {
         if (!CollectionUtils.isEmpty(appTenantList)) {
             for (GarApplicationTenant appTenant : appTenantList) {
                 appIdList.add(appTenant.getAppId());
-                appNameList.add(applicationService.queryObject(appTenant.getAppId()).getName());
+                GarApplication garApplication = applicationService.queryObject(appTenant.getAppId());
+                if (!ObjectUtils.isEmpty(garApplication)) {
+                    appNameList.add(garApplication.getName());
+                }
             }
         }
         vmTenant.setAppIdList(appIdList);

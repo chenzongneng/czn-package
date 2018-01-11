@@ -17,6 +17,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
 import java.util.Set;
 
 /**
@@ -60,7 +61,7 @@ public class OAuth2Realm extends AuthorizingRealm {
 
         //用户权限列表
         Set<String> permsSet = shiroService.getUserPermissions(userId);
-        System.out.println("TEST:permsSet:  "+permsSet);
+        System.out.println(LocalTime.now() + " TEST:permsSet:  " + permsSet);
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.setStringPermissions(permsSet);
         return info;

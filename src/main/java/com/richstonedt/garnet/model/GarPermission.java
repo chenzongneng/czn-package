@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class GarPermission implements Serializable {
 
     @ApiModelProperty(value = "权限ID")
-    private Long authorityId;
+    private Long permissionId;
 
     @ApiModelProperty(value = "应用ID")
     private Long applicationId;
@@ -42,12 +42,12 @@ public class GarPermission implements Serializable {
     @ApiModelProperty(value = "状态")
     private Integer status;
 
-    public Long getAuthorityId() {
-        return authorityId;
+    public Long getPermissionId() {
+        return permissionId;
     }
 
-    public void setAuthorityId(Long authorityId) {
-        this.authorityId = authorityId;
+    public void setPermissionId(Long permissionId) {
+        this.permissionId = permissionId;
     }
 
     public String getName() {

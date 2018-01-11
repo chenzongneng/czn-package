@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarUserApiDao">
+
+    <sql id="subQuery">
+        SELECT DISTINCT
+            u.user_id    AS user_id,
+            ap.app_id    AS app_id,
+            a.permission AS permission
+        FROM gar_users u
+            LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
+            LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
+            LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
+            LEFT JOIN gar_role_permission rp ON rp.role_id = rd.role_id
+            LEFT JOIN gar_permissions p ON p.permission_id = rp.permission_id
+            LEFT JOIN gar_resources m ON m.path LIKE p.wildcard
+            LEFT JOIN gar_resource_api mp ON mp.resource_id = m.resource_id
+            LEFT JOIN gar_apis a ON mp.api_id = a.api_id
+        WHERE m.status = 1 AND a.status = 1 AND a.permission NOTNULL
+    </sql>
+
+    <select id="getApiByUserIdAndAppId" resultType="java.lang.String">
+        SELECT up.permission
+        FROM (<include refid="subQuery"/>) AS up
+        WHERE user_id = #{userId} AND app_id = #{appId}
+    </select>
+
+</mapper>

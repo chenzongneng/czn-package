@@ -76,12 +76,12 @@ var resourceTreeSetting = {
 };
 
 /** 访问权限结构树 */
-var permissionTree;
-var permissionTreeSetting = {
+var apiTree;
+var apiTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "permissionId",
+            idKey: "apiId",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -122,11 +122,11 @@ var vm = new Vue({
             name: null,
             parentName: null,
             applicationId: 1,
-            permissionIds: null,
+            apiIds: null,
             orderNum: 0
         },
         option: {
-            appId: 1,
+            applicationId: 1,
             appSearchId: ""
         }
     },
@@ -145,7 +145,7 @@ var vm = new Vue({
                 applicationId: 1,
                 name: null,
                 parentName: null,
-                permissionIds: null,
+                apiIds: null,
                 orderNum: 0,
                 status: 1
             };
@@ -160,7 +160,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-            vm.resource.permissionIdList = [];
+            vm.resource.apiIdList = [];
             vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);
             vm.loadResourceTree();
@@ -203,14 +203,14 @@ var vm = new Vue({
                 swal("父子标志不能相同", "", "error");
                 return;
             }
-            var nodes = permissionTree.getCheckedNodes(true);
-            var permissionIdList = [];
+            var nodes = apiTree.getCheckedNodes(true);
+            var apiIdList = [];
             for (var i = 0; i < nodes.length; i++) {
                 if (!nodes[i].isParent) {
-                    permissionIdList.push(nodes[i].permissionId);
+                    apiIdList.push(nodes[i].apiId);
                 }
             }
-            vm.resource.permissionIds = permissionIdList.join(",");
+            vm.resource.apiIds = apiIdList.join(",");
             console.log(JSON.stringify(vm.resource));
             $.ajax({
                 type: vm.resource.resourceId === null ? "POST" : "PUT",
@@ -230,17 +230,17 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载访问权限树
-            $.get(baseURL + "/permissions/applicationId/" + vm.resource.applicationId, function (response) {
-                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
-                permissionTree.expandAll(true);
+            $.get(baseURL + "/apis/applicationId/" + vm.resource.applicationId, function (response) {
+                apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
+                apiTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (resourceId) {
             //加载访问权限树
-            $.get(baseURL + "permissions/applicationId/" + vm.resource.applicationId, function (response) {
-                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
-                permissionTree.expandAll(true);
+            $.get(baseURL + "apis/applicationId/" + vm.resource.applicationId, function (response) {
+                apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
+                apiTree.expandAll(true);
                 vm.getResourceById(resourceId);
             })
         },
@@ -257,9 +257,9 @@ var vm = new Vue({
                 vm.resource.path = response.path;
                 vm.resource.status = response.status;
                 applicationList.appList.selectedApp = response.applicationId;
-                $.each(response.permissionIdList, function (index, item) {
-                    var node = permissionTree.getNodeByParam("permissionId", item);
-                    permissionTree.checkNode(node, true, false);
+                $.each(response.apiIdList, function (index, item) {
+                    var node = apiTree.getNodeByParam("apiId", item);
+                    apiTree.checkNode(node, true, false);
                 });
                 vm.typeChange();
             });

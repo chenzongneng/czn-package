@@ -36,11 +36,11 @@
                 <input class="form-control" v-model="searchName" @keyup.enter="query" placeholder="用户名">
             </div>
             <a class="btn btn-default" @click="query">查询</a>
-            <a class="btn btn-primary" @click="add" v-if="buttons.garnetSysManagementUsernAdd">
+            <a class="btn btn-primary" @click="add" v-if="resources.garnetSysManagementUsernAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="buttons.garnetSysManagementUserUpdate">
+            <a class="btn btn-primary" @click="update" v-if="resources.garnetSysManagementUserUpdate">
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del" v-if="buttons.garnetSysManagementUserDelete">
+            <a class="btn btn-primary" @click="del" v-if="resources.garnetSysManagementUserDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="jqGrid"></table>

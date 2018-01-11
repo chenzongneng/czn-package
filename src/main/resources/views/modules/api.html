@@ -39,16 +39,16 @@
             <div class="form-group col-sm-2">
                 <select class="form-control" v-model="option.appSearchId" @change="reload">
                     <option disabled value=""> 根据应用查询</option>
-                    <option v-for="option in applicationList.appSearchList.options" v-bind:value="option.appId">
+                    <option v-for="option in applicationList.appSearchList.options" v-bind:value="option.applicationId">
                         {{ option.name }}
                     </option>
                 </select>
             </div>
-            <a class="btn btn-primary" @click="add" v-if="buttons.garnetDevelopmentPermissionAdd">
+            <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentApiAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="buttons.garnetDevelopmentPermissionUpdate">
+            <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentApiUpdate">
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del" v-if="buttons.garnetDevelopmentPermissionDelete">
+            <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentApiDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="jqGrid"></table>
@@ -62,7 +62,7 @@
                 <div class="col-sm-2 control-label">所属应用</div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="api.applicationId" @change="selectApp">
-                        <option v-for="option in applicationList.appList.options" v-bind:value="option.appId">
+                        <option v-for="option in applicationList.appList.options" v-bind:value="option.applicationId">
                             {{ option.name }}
                         </option>
                     </select>

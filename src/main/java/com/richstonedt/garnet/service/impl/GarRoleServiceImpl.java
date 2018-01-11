@@ -6,8 +6,8 @@
 
 package com.richstonedt.garnet.service.impl;
 
-import com.richstonedt.garnet.dao.GarRoleAuthorityDao;
 import com.richstonedt.garnet.dao.GarRoleDao;
+import com.richstonedt.garnet.dao.GarRolePermissionDao;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.view.model.GarVMRole;
 import com.richstonedt.garnet.service.*;
@@ -84,10 +84,7 @@ public class GarRoleServiceImpl implements GarRoleService {
     private GarRoleDeptService roleDeptService;
 
     @Autowired
-    private GarRoleAuthorityDao roleAuthorityDao;
-
-    @Autowired
-    private GarAuthorityService authorityService;
+    private GarRolePermissionDao rolePermissionDao;
 
     /**
      * Save.
@@ -134,7 +131,7 @@ public class GarRoleServiceImpl implements GarRoleService {
         roleDeptService.deleteBatch(ids);
 
         // todo 删除与权限关联的角色
-        roleAuthorityDao.deleteBatchByRoleIds(ids);
+        rolePermissionDao.deleteBatchByRoleIds(ids);
 
         roleDao.deleteBatch(ids);
     }
@@ -248,7 +245,7 @@ public class GarRoleServiceImpl implements GarRoleService {
         saveRoleDept(garVMRole);
 
         // todo 先删除与权限的关联，在插入
-        roleAuthorityDao.deleteRoleAuthorityByRoleId(garVMRole.getRoleId());
+        rolePermissionDao.deleteRolePermissionByRoleId(garVMRole.getRoleId());
         saveRoleAuthority(garVMRole);
 
         update(garVMRole);
@@ -281,10 +278,10 @@ public class GarRoleServiceImpl implements GarRoleService {
         vmRole.setDeptNameList(deptNameList);
 
         // todo  获取该角色的权限列表
-        List<String> authorityNameList = roleAuthorityDao.getAuthorityNamesByRoleId(role.getRoleId());
-        vmRole.setAuthorityNameList(authorityNameList);
-        List<Long> authorityIdList = roleAuthorityDao.getAuthorityIdsByRoleId(role.getRoleId());
-        vmRole.setAuthorityIdList(authorityIdList);
+        List<String> authorityNameList = rolePermissionDao.getPermissionNamesByRoleId(role.getRoleId());
+        vmRole.setPermissionNameList(authorityNameList);
+        List<Long> authorityIdList = rolePermissionDao.getPermissionIdsByRoleId(role.getRoleId());
+        vmRole.setPermissionIdList(authorityIdList);
 
         vmRole.setTenantId(role.getTenantId());
         vmRole.setAppId(role.getAppId());
@@ -317,10 +314,10 @@ public class GarRoleServiceImpl implements GarRoleService {
 
 
     private void saveRoleAuthority(GarVMRole garVMRole) {
-        List<Long> authorityIdList = GarnetRsUtil.parseStringToList(garVMRole.getAuthorityIds());
-        if (!CollectionUtils.isEmpty(authorityIdList)) {
-            for (Long authorityId : authorityIdList) {
-                roleAuthorityDao.saveRoleAuthority(garVMRole.getRoleId(), authorityId);
+        List<Long> permissionIdList = GarnetRsUtil.parseStringToList(garVMRole.getPermissionIds());
+        if (!CollectionUtils.isEmpty(permissionIdList)) {
+            for (Long permissionId : permissionIdList) {
+                rolePermissionDao.saveRolePermission(garVMRole.getRoleId(), permissionId);
             }
         }
     }

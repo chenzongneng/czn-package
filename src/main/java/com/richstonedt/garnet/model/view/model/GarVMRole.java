@@ -6,7 +6,6 @@
 
 package com.richstonedt.garnet.model.view.model;
 
-import com.richstonedt.garnet.model.GarAuthority;
 import com.richstonedt.garnet.model.GarRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -71,13 +70,13 @@ public class GarVMRole extends GarRole implements Serializable {
 
     // todo 权限属性
     @ApiModelProperty(value = "权限名称列表")
-    private List<String> authorityNameList;
+    private List<String> permissionNameList;
 
     @ApiModelProperty(value = "权限ID列表")
-    private List<Long> authorityIdList;
+    private List<Long> permissionIdList;
 
     @ApiModelProperty(value = "权限ID,以‘，’隔开")
-    private String authorityIds;
+    private String permissionIds;
 
     /**
      * Return the TenantName
@@ -179,28 +178,28 @@ public class GarVMRole extends GarRole implements Serializable {
         this.deptIds = deptIds;
     }
 
-    public List<String> getAuthorityNameList() {
-        return authorityNameList;
+    public List<String> getPermissionNameList() {
+        return permissionNameList;
     }
 
-    public void setAuthorityNameList(List<String> authorityNameList) {
-        this.authorityNameList = authorityNameList;
+    public void setPermissionNameList(List<String> permissionNameList) {
+        this.permissionNameList = permissionNameList;
     }
 
-    public String getAuthorityIds() {
-        return authorityIds;
+    public String getPermissionIds() {
+        return permissionIds;
     }
 
-    public void setAuthorityIds(String authorityIds) {
-        this.authorityIds = authorityIds;
+    public void setPermissionIds(String permissionIds) {
+        this.permissionIds = permissionIds;
     }
 
-    public List<Long> getAuthorityIdList() {
-        return authorityIdList;
+    public List<Long> getPermissionIdList() {
+        return permissionIdList;
     }
 
-    public void setAuthorityIdList(List<Long> authorityIdList) {
-        this.authorityIdList = authorityIdList;
+    public void setPermissionIdList(List<Long> permissionIdList) {
+        this.permissionIdList = permissionIdList;
     }
 
     /**

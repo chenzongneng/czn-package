@@ -9,18 +9,24 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarApplicationDao">
 
+    <sql id="whereSQL">
+        <if test="searchName != null and searchName != ''">
+            and name LIKE CONCAT('%',#{searchName},'%')
+        </if>
+    </sql>
+
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarApplication">
         INSERT INTO gar_applications
         (
-        app_id,
             name,
+            code,
             company,
             remark
         )
         VALUES
             (
-        #{appId},
                 #{name},
+                #{code},
                 #{company},
                 #{remark}
             );
@@ -29,12 +35,12 @@
     <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM gar_applications
         <where>
-            app_id = #{id};
+            application_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_applications WHERE app_id in
+        delete from gar_applications WHERE application_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -43,25 +49,26 @@
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarApplication">
         select * from gar_applications
         <where>
-            app_id = #{id};
+            application_id = #{id};
         </where>
     </select>
 
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarApplication">
         select * from gar_applications
         <where>
-            <if test="searchName != null and searchName != ''">
-                and name LIKE CONCAT('%',#{searchName},'%')
-            </if>
+            <include refid="whereSQL"/>
         </where>
-        ORDER BY app_id asc
+        ORDER BY application_id asc
         <if test="offset != null and limit != null">
             limit #{limit} offset #{offset};
         </if>
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*) FROM gar_applications;
+        SELECT count(*) FROM gar_applications
+        <where>
+            <include refid="whereSQL"/>
+        </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarApplication">
@@ -69,6 +76,9 @@
         <set>
             <if test="name != null and name != ''">
                 name = #{name},
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code},
             </if>
             <if test="company != null and company != ''">
                 company = #{company},
@@ -78,7 +88,7 @@
             </if>
         </set>
         <where>
-            app_id = #{appId};
+            application_id = #{applicationId};
         </where>
     </update>
 </mapper>

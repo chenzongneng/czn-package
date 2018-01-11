@@ -365,16 +365,6 @@ var vm = new Vue({
             // 获取当前用户信息
             $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
                 currentUser = response;
-                // 初始化表格数据
-                // var columns = Dept.initColumn();
-                var table = new TreeTable(Dept.id, baseURL + "depts/" + response.userId, columns);
-                table.setExpandColumn(2);
-                table.setIdField("deptId");
-                table.setCodeField("deptId");
-                table.setParentCodeField("parentDeptId");
-                table.setExpandAll(false);
-                table.init();
-                Dept.table = table;
             });
         },
         /** 租户列表onchange 事件*/

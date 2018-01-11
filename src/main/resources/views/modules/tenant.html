@@ -33,14 +33,14 @@
     <div v-show="showList">
         <div class="grid-btn">
             <div class="form-group col-sm-2">
-                <input class="form-control" v-bind:readonly="!buttons.garnetSysManagementTenantSearchBox" v-model="searchName" @keyup.enter="query" placeholder="租户名称">
+                <input class="form-control" v-bind:readonly="!resources.garnetSysManagementTenantSearchBox" v-model="searchName" @keyup.enter="query" placeholder="租户名称">
             </div>
             <a class="btn btn-default" @click="query">查询</a>
-            <a class="btn btn-primary" @click="add" v-if="buttons.garnetSysManagementTenantAdd">
+            <a class="btn btn-primary" @click="add" v-if="resources.garnetSysManagementTenantAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="buttons.garnetSysManagementTenantUpdate">
+            <a class="btn btn-primary" @click="update" v-if="resources.garnetSysManagementTenantUpdate">
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del"  v-if="buttons.garnetSysManagementTenantDelete">
+            <a class="btn btn-primary" @click="del"  v-if="resources.garnetSysManagementTenantDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="jqGrid"></table>

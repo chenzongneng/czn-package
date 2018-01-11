@@ -10,12 +10,13 @@ $(function () {
         url: baseURL + 'applications',
         datatype: "json",
         colModel: [
-            {label: '应用ID', name: 'appId', align: 'center', hidden: true, width: 20, key: true},
+            {label: '应用ID', name: 'applicationId', align: 'center', hidden: true, width: 20, key: true},
             {label: '应用名称', name: 'name', align: 'center', width: 80},
+            {label: '应用标识', name: 'code', align: 'center', width: 80},
             {label: '租户列表', name: 'tenantNameList', align: 'center', width: 100},
             {label: '所属公司', name: 'company', align: 'center', width: 80},
             {label: '备注', name: 'remark', align: 'center', width: 80},
-            {label: '创建时间', name: 'createTime', align: 'center', width: 80}
+            // {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -75,6 +76,7 @@ var vm = new Vue({
         title: null,
         application: {
             name: null,
+            code: null,
             company: null,
             remark: null,
             tenantNames: [],
@@ -91,8 +93,9 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.application = {
-                appId: null,
+                applicationId: null,
                 name: null,
+                code: null,
                 company: null,
                 remark: null,
                 tenantNames: [],
@@ -107,8 +110,8 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
-            var appId = getSelectedRow();
-            if (!appId) {
+            var applicationId = getSelectedRow();
+            if (!applicationId) {
                 return;
             }
             vm.showList = false;
@@ -120,13 +123,13 @@ var vm = new Vue({
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
-                vm.getApplication(appId);
+                vm.getApplication(applicationId);
             });
         },
         /**  删除按钮点击事件 */
         del: function () {
-            var appIds = getSelectedRows();
-            if (!appIds) {
+            var applicationIds = getSelectedRows();
+            if (!applicationIds) {
                 return;
             }
             swal({
@@ -141,7 +144,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "application?appIds=" + appIds.toString(),
+                        url: baseURL + "application?applicationIds=" + applicationIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
@@ -157,7 +160,7 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             $.ajax({
-                type: vm.application.appId === null ? "POST" : "PUT",
+                type: vm.application.applicationId === null ? "POST" : "PUT",
                 url: baseURL + "application",
                 contentType: "application/json",
                 data: JSON.stringify(vm.application),
@@ -172,11 +175,12 @@ var vm = new Vue({
             });
         },
         /**  根据ID获取应用信息 */
-        getApplication: function (appId) {
-            $.get(baseURL + "application/" + appId, function (response) {
+        getApplication: function (applicationId) {
+            $.get(baseURL + "application/" + applicationId, function (response) {
                 if (response) {
-                    vm.application.appId = response.appId;
+                    vm.application.applicationId = response.applicationId;
                     vm.application.name = response.name;
+                    vm.application.code = response.code;
                     vm.application.company = response.company;
                     vm.application.remark = response.remark;
 

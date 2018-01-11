@@ -21,6 +21,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalTime;
 
 /**
  * oauth2过滤器
@@ -117,7 +118,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
     private String getRequestToken(HttpServletRequest httpRequest) {
         //从header中获取token
         String token = httpRequest.getHeader("garnetToken");
-        System.out.println("TEST:token:  " + token);
+//        System.out.println(LocalTime.now() + " TEST:token:  " + token);
 
         //如果header中不存在token，则从参数中获取token
         if (StringUtils.isBlank(token)) {

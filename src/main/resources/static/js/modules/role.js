@@ -15,7 +15,7 @@ $(function () {
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
             {label: '所属应用', name: 'appName', align: 'center', width: 70},
             {label: '部门列表', name: 'deptNameList', align: 'center', width: 100},
-            {label: '权限列表', name: 'authorityNameList', align: 'center', width: 100},
+            {label: '权限列表', name: 'permissionNameList', align: 'center', width: 100},
             {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
@@ -74,12 +74,12 @@ var deptTreeSetting = {
 };
 
 /** 部门结构树 */
-var authorityTree;
-var authorityTreeSetting = {
+var permissionTree;
+var permissionTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "authorityId"
+            idKey: "permissionId"
         },
         key: {
             url: "nourl",
@@ -142,7 +142,7 @@ var vm = new Vue({
                 name: null,
                 remark: null,
                 deptIds: null,
-                authorityIdList:null
+                permissionIdList:null
             };
             vm.initTreesToAdd();
             vm.getTenantList();
@@ -205,12 +205,12 @@ var vm = new Vue({
             }
             vm.role.deptIds = deptIdList.join(",");
             // 获取权限树选择的权限
-            var authorities = authorityTree.getCheckedNodes(true);
-            var authorityIdList = [];
-            for (var i = 0; i < authorities.length; i++) {
-                authorityIdList.push(authorities[i].authorityId);
+            var permissions = permissionTree.getCheckedNodes(true);
+            var permissionIdList = [];
+            for (var i = 0; i < permissions.length; i++) {
+                permissionIdList.push(permissions[i].permissionId);
             }
-            vm.role.authorityIds = authorityIdList.join(",");
+            vm.role.permissionIds = permissionIdList.join(",");
             if(vm.role.tenantId === null) {
                 alert("请选择租户");
                 return;
@@ -242,9 +242,9 @@ var vm = new Vue({
                 deptTree.expandAll(f);
             });
             //加载权限树
-            $.get(baseURL + "authorities/applicationId/" + vm.appList.selectedApp, function (response) {
-                authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
-                authorityTree.expandAll(true);
+            $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
+                permissionTree.expandAll(true);
             })
         },
         /** 更新按钮初始化数据 */
@@ -261,7 +261,7 @@ var vm = new Vue({
                 vm.role.name = response.name;
                 vm.role.remark = response.remark;
                 vm.role.deptIdList = response.deptIdList;
-                vm.role.authorityIdList = response.authorityIdList;
+                vm.role.permissionIdList = response.permissionIdList;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
                 //加载部门树
@@ -275,12 +275,12 @@ var vm = new Vue({
                     });
                 });
                 //加载权限树
-                $.get(baseURL + "/authorities/applicationId/" + vm.appList.selectedApp, function (response) {
-                    authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
-                    authorityTree.expandAll(true);
-                    $.each(vm.role.authorityIdList, function (index, item) {
-                        var node = authorityTree.getNodeByParam("authorityId", item);
-                        authorityTree.checkNode(node, true, false);
+                $.get(baseURL + "/permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+                    permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
+                    permissionTree.expandAll(true);
+                    $.each(vm.role.permissionIdList, function (index, item) {
+                        var node = permissionTree.getNodeByParam("permissionId", item);
+                        permissionTree.checkNode(node, true, false);
                     });
                 });
             });
@@ -310,7 +310,7 @@ var vm = new Vue({
         /** 应用列表onchange 事件*/
         selectApp: function () {
             vm.role.appId = vm.appList.selectedApp;
-            vm.roadAuthorityTree();
+            vm.roadPermissionTree();
         },
         /**  获取租户列表 */
         getTenantList: function () {
@@ -329,15 +329,15 @@ var vm = new Vue({
             });
         },
         /** 加载权限树 */
-        roadAuthorityTree:function () {
+        roadPermissionTree:function () {
             //加载权限树
-            $.get(baseURL + "authorities/applicationId/" + vm.appList.selectedApp, function (response) {
-                authorityTree = $.fn.zTree.init($("#authorityTree"), authorityTreeSetting, response);
-                authorityTree.expandAll(true);
+            $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
+                permissionTree.expandAll(true);
             })
-            $.each(vm.role.authorityIdList, function (index, item) {
-                var node = authorityTree.getNodeByParam("authorityId", item);
-                authorityTree.checkNode(node, true, false);
+            $.each(vm.role.permissionIdList, function (index, item) {
+                var node = permissionTree.getNodeByParam("permissionId", item);
+                permissionTree.checkNode(node, true, false);
             });
         }
     },

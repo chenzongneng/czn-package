@@ -61,7 +61,7 @@
     <select id="getUserByNameAndAppId" resultType="com.richstonedt.garnet.model.GarUser">
         select * from (
         SELECT
-        a.app_id AS app_id,
+        a.application_id AS app_id,
         u.user_id AS user_id,
         u.username AS username,
         u.password AS password,
@@ -69,10 +69,8 @@
         u.mobile AS mobile,
         u.status AS status,
         u.create_time AS create_time
-        FROM gar_users u
-        LEFT JOIN gar_user_application ua ON u.user_id = ua.user_id
-        LEFT JOIN gar_applications a ON a.app_id = ua.app_id
-        WHERE a.app_id NOTNULL
+        FROM gar_users u,gar_user_application ua,gar_applications a
+        WHERE u.user_id = ua.user_id AND u.user_id = ua.user_id
         ) AS ua
         <where>
             ua.username = #{userName} AND ua.app_id = #{appId};

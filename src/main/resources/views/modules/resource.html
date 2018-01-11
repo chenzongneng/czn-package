@@ -39,16 +39,16 @@
             <div class="form-group col-sm-2">
                 <select class="form-control" v-model="option.appSearchId" @change="reload">
                     <option disabled value=""> 根据应用查询 </option>
-                    <option v-for="option in applicationList.appSearchList.options" v-bind:value="option.appId">
+                    <option v-for="option in applicationList.appSearchList.options" v-bind:value="option.applicationId">
                         {{ option.name }}
                     </option>
                 </select>
             </div>
-            <a class="btn btn-primary" @click="add" v-if="buttons.garnetDevelopmentResourceAdd">
+            <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentResourceAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="buttons.garnetDevelopmentResourceUpdate">
+            <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentResourceUpdate">
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del" v-if="buttons.garnetDevelopmentResourceDelete">
+            <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentResourceDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
         <table id="jqGrid"></table>
@@ -62,7 +62,7 @@
                 <div class="col-sm-2 control-label">所属应用</div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="resource.applicationId" @change="selectApp">
-                        <option v-for="option in applicationList.appList.options" v-bind:value="option.appId">
+                        <option v-for="option in applicationList.appList.options" v-bind:value="option.applicationId">
                             {{ option.name }}
                         </option>
                     </select>
@@ -118,7 +118,7 @@
                 <div class="form-group col-md-6">
                     <strong class="col-sm-5 control-label">选择访问权限</strong>
                     <div class="col-sm-10">
-                        <ul id="permissionTree" class="ztree"></ul>
+                        <ul id="apiTree" class="ztree"></ul>
                     </div>
                 </div>
             </div>

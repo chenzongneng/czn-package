@@ -8,6 +8,7 @@ package com.richstonedt.garnet.config;
 
 import com.richstonedt.garnet.common.oauth2.OAuth2Filter;
 import com.richstonedt.garnet.common.oauth2.OAuth2Realm;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -32,8 +33,16 @@ import java.util.Map;
  * @date 2017-04-20 18:33
  * @since garnet-core-be-fe 1.0.0
  */
-//@Configuration
+@Configuration
 public class ShiroConfig {
+
+    @Bean
+    public EhCacheManager gatEhCacheManager()
+    {
+        EhCacheManager manager = new EhCacheManager();
+        manager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
+        return manager;
+    }
 
     /**
      * Session manager session manager.
@@ -63,6 +72,7 @@ public class ShiroConfig {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(oAuth2Realm);
         securityManager.setSessionManager(sessionManager);
+        securityManager.setCacheManager(gatEhCacheManager());
         return securityManager;
     }
 

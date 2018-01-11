@@ -105,7 +105,7 @@ var vm = new Vue({
             apiId: null
         },
         option: {
-            appId: 1,
+            applicationId: 1,
             appSearchId: ""
         },
         // 当前用户信息

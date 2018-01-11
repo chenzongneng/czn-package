@@ -17,7 +17,7 @@
         )
         VALUES
         (
-          #{authorityId},
+          #{permissionId},
           #{menuId}
         );
     </insert>
@@ -25,13 +25,13 @@
     <delete id="deleteByAuthorityId">
     DELETE
     FROM gar_authority_menu
-    WHERE authority_id = #{authorityId}
+    WHERE authority_id = #{permissionId}
     </delete>
 
     <select id="getMenuIdByAuthorityId" resultType="java.lang.Long">
         SELECT menu_id
         FROM gar_authority_menu
-        WHERE authority_id = #{authorityId}
+        WHERE authority_id = #{permissionId}
     </select>
 
 </mapper>

@@ -34,7 +34,7 @@ public class GarApplication implements Serializable {
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "应用ID")
-    private Long appId;
+    private Long applicationId;
 
     /**
      * The Name.
@@ -43,6 +43,14 @@ public class GarApplication implements Serializable {
      */
     @ApiModelProperty(value = "应用名称")
     private String name;
+
+    /**
+     * The Code.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "应用标识")
+    private String code;
 
     /**
      * The Company.
@@ -69,23 +77,23 @@ public class GarApplication implements Serializable {
     private Date createTime;
 
     /**
-     * Return the AppId
+     * Return the ApplicationId
      *
-     * @return property value of appId
+     * @return property value of applicationId
      * @since garnet-core-be-fe 0.1.0
      */
-    public Long getAppId() {
-        return appId;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
     /**
-     * Set the AppId
+     * Set the ApplicationId
      *
-     * @param appId value to be assigned to property appId
+     * @param applicationId value to be assigned to property applicationId
      * @since garnet-core-be-fe 0.1.0
      */
-    public void setAppId(Long appId) {
-        this.appId = appId;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     /**
@@ -167,6 +175,14 @@ public class GarApplication implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     /**

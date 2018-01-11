@@ -151,9 +151,9 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void saveApplication(GarVMApplication vmApplication) {
-        if (vmApplication.getAppId() == null) {
-            vmApplication.setAppId(IdGeneratorUtil.generateId());
-        }
+//        if (vmApplication.getApplicationId() == null) {
+//            vmApplication.setApplicationId(IdGeneratorUtil.generateId());
+//        }
         save(vmApplication);
         saveApplicationTenant(vmApplication);
     }
@@ -200,7 +200,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
     @Override
     public void updateVmApplication(GarVMApplication vmApplication) {
         update(vmApplication);
-        appTenantService.deleteById(vmApplication.getAppId());
+        appTenantService.deleteById(vmApplication.getApplicationId());
         saveApplicationTenant(vmApplication);
     }
 
@@ -215,7 +215,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
         GarVMApplication vmApplication = new GarVMApplication();
         List<String> tenantNameList = new ArrayList<>();
         List<Long> tenantIdList = new ArrayList<>();
-        List<GarApplicationTenant> appTenantList = appTenantService.getApplicationTenantByAppId(application.getAppId());
+        List<GarApplicationTenant> appTenantList = appTenantService.getApplicationTenantByAppId(application.getApplicationId());
         if (!CollectionUtils.isEmpty(appTenantList)) {
             for (GarApplicationTenant appTenant : appTenantList) {
                 tenantIdList.add(appTenant.getTenantId());
@@ -224,9 +224,10 @@ public class GarApplicationServiceImpl implements GarApplicationService {
         }
         vmApplication.setTenantIdList(tenantIdList);
         vmApplication.setTenantNameList(tenantNameList);
-        vmApplication.setAppId(application.getAppId());
+        vmApplication.setApplicationId(application.getApplicationId());
         vmApplication.setCompany(application.getCompany());
         vmApplication.setName(application.getName());
+        vmApplication.setCode(application.getCode());
         vmApplication.setRemark(application.getRemark());
         vmApplication.setCreateTime(application.getCreateTime());
         return vmApplication;
@@ -243,7 +244,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
         if (!CollectionUtils.isEmpty(tenantIdList)) {
             for (Long tenantId : tenantIdList) {
                 GarApplicationTenant applicationTenant = new GarApplicationTenant();
-                applicationTenant.setAppId(vmApplication.getAppId());
+                applicationTenant.setAppId(vmApplication.getApplicationId());
                 applicationTenant.setTenantId(tenantId);
                 appTenantService.save(applicationTenant);
             }

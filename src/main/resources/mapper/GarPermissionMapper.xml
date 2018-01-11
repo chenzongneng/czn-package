@@ -9,7 +9,7 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarPermissionDao">
 
-    <insert id="save" keyProperty="authorityId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarPermission">
+    <insert id="save" keyProperty="permissionId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarPermission">
         INSERT INTO gar_permissions
         (
         name,
@@ -31,12 +31,12 @@
     <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM gar_permissions
         <where>
-            authority_id = #{id};
+            permission_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_permissions WHERE authority_id in
+        delete from gar_permissions WHERE permission_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -45,7 +45,7 @@
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarPermission">
         select * from gar_permissions
         <where>
-            authority_id = #{id};
+            permission_id = #{id};
         </where>
     </select>
 
@@ -56,7 +56,7 @@
                 and name LIKE CONCAT('%',#{searchName},'%')
             </if>
         </where>
-        ORDER BY authority_id asc
+        ORDER BY permission_id asc
         <if test="offset != null and limit != null">
             limit #{limit} offset #{offset};
         </if>
@@ -84,7 +84,7 @@
             </if>
         </set>
         <where>
-            authority_id = #{authorityId};
+            permission_id = #{permissionId};
         </where>
     </update>
 

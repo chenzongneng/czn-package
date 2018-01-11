@@ -17,7 +17,7 @@
         )
         VALUES
             (
-                #{authorityId},
+                #{permissionId},
                 #{permissionId}
             );
     </insert>
@@ -44,14 +44,14 @@
             </if>
         </set>
         <where>
-            authority_id = #{authorityId};
+            authority_id = #{permissionId};
         </where>
     </update>
 
     <select id="getAuthorityPermissionByAuthorityId" resultType="com.richstonedt.garnet.model.GarAuthorityPermission">
         SELECT * FROM gar_authority_permission
         <where>
-            authority_id = #{authorityId};
+            authority_id = #{permissionId};
         </where>
     </select>
 

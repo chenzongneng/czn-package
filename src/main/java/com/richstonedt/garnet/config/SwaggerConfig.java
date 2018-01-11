@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package com.richstonedt.garnet;
+package com.richstonedt.garnet.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -27,19 +27,19 @@ var menuItem = Vue.extend({
     ].join(''),
     methods: {
         setButtons: function (code) {
-            return buttons[code];
+            return resources[code];
         }
     }
 });
 /** 注册菜单组件 */
 Vue.component('menuItem', menuItem);
-var buttons;
+var resources;
 var vm = new Vue({
     el: '#garnetIndexApp',
     data: {
         user: {},
         menuList: {},
-        buttonList: {
+        resourceList: {
 
         },
         main: "main.html",
@@ -64,9 +64,9 @@ var vm = new Vue({
         /** 查询按钮列表 */
         getButtonList: function () {
             $.ajaxSettings.async = false;
-            $.getJSON(baseURL + "button/userId/" + userId + "/appId/1", function (r) {
-                buttons = r;
-                console.log(JSON.stringify(buttons));
+            $.getJSON(baseURL + "resource/userId/" + userId + "/appId/1", function (r) {
+                resources = r;
+                console.log(JSON.stringify(resources));
             });
             this.getMenuList();
         },

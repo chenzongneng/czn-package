@@ -99,7 +99,7 @@
                 parent_code = #{parentCode},
             </if>
             <if test="path != null and path != ''">
-                path = #{parentCode},
+                path = #{path},
             </if>
             <if test="status != null">
                 status = #{status}
