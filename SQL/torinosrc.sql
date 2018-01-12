@@ -10,6 +10,8 @@ CREATE TABLE "public"."gar_applications"(
   remark      VARCHAR(100) COLLATE "default"
 );
 
+ALTER TABLE "public"."gar_applications" ADD UNIQUE ("code");
+
 COMMENT ON TABLE "public"."gar_applications" IS '应用';
 COMMENT ON COLUMN "public"."gar_applications"."application_id" IS '应用ID';
 COMMENT ON COLUMN "public"."gar_applications"."name" IS '名称';
@@ -17,12 +19,14 @@ COMMENT ON COLUMN "public"."gar_applications"."code" IS '标识';
 COMMENT ON COLUMN "public"."gar_applications"."company" IS '公司';
 COMMENT ON COLUMN "public"."gar_applications"."remark" IS '备注';
 
+INSERT INTO public.gar_applications (application_id, name, code, company, remark) VALUES (1, 'Garnet', 'garnet', '丰石科技', 'Garnet安全模块');
 
 DROP TABLE IF EXISTS "public"."gar_users";
 CREATE TABLE "public"."gar_users" (
   user_id     BIGSERIAL PRIMARY KEY,
   username    VARCHAR(50) COLLATE "default" NOT NULL,
   password    VARCHAR(200) COLLATE "default",
+  name        VARCHAR(20) COLLATE "default",
   email       VARCHAR(100) COLLATE "default",
   mobile      VARCHAR(100) COLLATE "default",
   status      INT4,
@@ -33,15 +37,17 @@ ALTER TABLE "public"."gar_users" ADD UNIQUE ("username");
 
 COMMENT ON TABLE "public"."gar_users" IS '用户';
 COMMENT ON COLUMN "public"."gar_users"."user_id" IS '用户ID';
-COMMENT ON COLUMN "public"."gar_users"."username" IS '账号';
-COMMENT ON COLUMN "public"."gar_users"."password" IS '密码';
+COMMENT ON COLUMN "public"."gar_users"."username" IS '用户账号';
+COMMENT ON COLUMN "public"."gar_users"."password" IS '用户密码';
+COMMENT ON COLUMN "public"."gar_users"."name" IS '用户姓名';
 COMMENT ON COLUMN "public"."gar_users"."email" IS '邮箱';
 COMMENT ON COLUMN "public"."gar_users"."mobile" IS '电话';
 COMMENT ON COLUMN "public"."gar_users"."status" IS '状态';
 COMMENT ON COLUMN "public"."gar_users"."create_time" IS '创建时间';
 
 -- 初始账号：admin  密码：admin
-INSERT INTO public.gar_users (user_id, username, password, email, mobile, status, create_time) VALUES (1, 'admin', '$2a$12$rFhdbcz5igsiwi45dt5S.uvg36BIT4Hk1AgV5QWl5NWQ0k0b2SrdO', 'string', 'string', 1, '2017-10-19 17:39:58.848979');
+INSERT INTO public.gar_users (user_id, username, password, name, email, mobile, status, create_time)
+VALUES (1, 'admin', '$2a$12$rFhdbcz5igsiwi45dt5S.uvg36BIT4Hk1AgV5QWl5NWQ0k0b2SrdO', '管理员', 'admin@you.xiang', '18812345678', 1, '2017-10-19 17:39:58.848979');
 
 DROP TABLE IF EXISTS "public"."gar_sys_menus";
 CREATE TABLE "public"."gar_sys_menus" (

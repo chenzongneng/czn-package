@@ -9,6 +9,12 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarTenantDao">
 
+    <sql id="whereSQL">
+        <if test="searchName != null and searchName != ''">
+            and name LIKE CONCAT('%',#{searchName},'%')
+        </if>
+    </sql>
+
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarTenant">
         INSERT INTO gar_tenants
         (
@@ -50,9 +56,7 @@
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarTenant">
         select * from gar_tenants
         <where>
-            <if test="searchName != null and searchName != ''">
-                name LIKE CONCAT('%',#{searchName},'%')
-            </if>
+            <include refid="whereSQL"/>
         </where>
         ORDER BY tenant_id asc
         <if test="offset != null and limit != null">
@@ -61,7 +65,11 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*) FROM gar_tenants;
+        SELECT count(1)
+        FROM gar_tenants
+        <where>
+            <include refid="whereSQL"/>
+        </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarTenant">

@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <b><code>GarUserServiceImpl</code></b>
@@ -162,9 +159,8 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarUser> queryObjects(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        return userDao.queryObjects(searchName, limit, offset);
+    public List<GarUser> queryObjects(Map<String,Object> params) {
+        return userDao.queryObjects(params);
     }
 
     /**
@@ -174,8 +170,8 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return userDao.queryTotal();
+    public int queryTotal(Map<String,Object> params) {
+        return userDao.queryTotal(params);
     }
 
     /**
@@ -315,8 +311,7 @@ public class GarUserServiceImpl implements GarUserService {
         vmUser.setTenantId(user.getTenantId());
         vmUser.setAppId(user.getAppId());
         vmUser.setPassword(user.getPassword());
-//        vmUser.setAppName(appName);
-//        vmUser.setTenantName(tenantName);
+        vmUser.setName(user.getName());
         vmUser.setUserName(user.getUserName());
         vmUser.setEmail(user.getEmail());
         vmUser.setMobile(user.getMobile());

@@ -156,16 +156,16 @@ public class GarApiController {
         }
     }
 
-    @RequestMapping(value = "/importApis/{applicationId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/importApis/{appCode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]导入API列表", notes = "import apis ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVmApi.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> importApis(
             @RequestBody List<GarApiForImport> apiList,
-            @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
+            @ApiParam(value = "applicationId", required = true) @PathVariable("appCode") String appCode) {
         try {
-            apiService.importApiFromAnnotation(apiList, applicationId);
+            apiService.importApiByAppCode(apiList, appCode);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user role .", t);

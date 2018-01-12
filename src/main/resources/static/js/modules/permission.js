@@ -19,12 +19,12 @@ $(function () {
                 width: 20,
                 key: true
             },
-            {label: '应用名称', name: 'applicationName', align: 'center', width: 70},
-            {label: '权限名称', name: 'name', align: 'center', width: 70},
-            {label: '通配符', name: 'wildcard', align: 'center', width: 70},
+            {label: '应用名称', name: 'applicationName', align: 'center', width: 30},
+            {label: '权限名称', name: 'name', align: 'center', width: 60},
+            {label: '通配符', name: 'wildcard', align: 'center', width: 80},
             {label: '详细说明', name: 'description', align: 'center', width: 70},
             {
-                label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
+                label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
                 return value === 0 ?
                     '<span class="label label-danger">禁用</span>' :
                     '<span class="label label-success">正常</span>';

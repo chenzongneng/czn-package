@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -143,8 +144,8 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarRoleDept> queryObjects(String searchName, Integer page, Integer limit) {
-        return null;
+    public List<GarRoleDept> queryObjects(Map<String,Object> params) {
+        return roleDeptDao.queryObjects(params);
     }
 
     /**
@@ -154,7 +155,7 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return 0;
+    public int queryTotal(Map<String,Object> params) {
+        return roleDeptDao.queryTotal(params);
     }
 }

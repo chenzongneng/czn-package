@@ -9,12 +9,19 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarUserDao">
 
+    <sql id="whereSQL">
+        <if test="searchName != null and searchName != ''">
+            and username LIKE CONCAT('%',#{searchName},'%')
+        </if>
+    </sql>
+
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarUser">
         INSERT INTO gar_users
         (
             user_id,
             username,
             password,
+            name,
             email,
             mobile,
             status
@@ -24,6 +31,7 @@
         #{userId},
                 #{userName},
                 #{password},
+                #{name},
                 #{email},
                 #{mobile},
         #{status}
@@ -65,6 +73,7 @@
         u.user_id AS user_id,
         u.username AS username,
         u.password AS password,
+        u.name AS name,
         u.email AS email,
         u.mobile AS mobile,
         u.status AS status,
@@ -80,9 +89,7 @@
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarUser">
         select * from gar_users
         <where>
-            <if test="searchName != null and searchName != ''">
-                and username LIKE CONCAT('%',#{searchName},'%')
-            </if>
+            <include refid="whereSQL"/>
         </where>
         ORDER BY user_id asc
         <if test="offset != null and limit != null">
@@ -107,23 +114,24 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*) FROM gar_users;
+        SELECT count(1)
+        FROM gar_users
+        <where>
+            <include refid="whereSQL"/>
+        </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarUser">
         UPDATE gar_users
         <set>
-            <!--<if test="tenantId != null">-->
-                <!--tenant_id = #{tenantId},-->
-            <!--</if>-->
-            <!--<if test="appId != null">-->
-                <!--app_id = #{appId},-->
-            <!--</if>-->
             <if test="userName != null and userName != ''">
                 username = #{userName},
             </if>
             <if test="password != null and password != ''">
                 password = #{password},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
             </if>
             <if test="email != null and email != ''">
                 email = #{email},

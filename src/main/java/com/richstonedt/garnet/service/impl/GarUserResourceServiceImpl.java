@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <b><code>GarUserResourceServiceImpl</code></b>
@@ -33,6 +30,16 @@ public class GarUserResourceServiceImpl implements GarUserResourceService {
         List<String> codeList = userResourceDao.getCodeByUserId(userId,appId);
         Map<String, Boolean> buttonMap = new HashMap<>();
         for (String code : codeList) {
+            buttonMap.put(code, true);
+        }
+        return buttonMap;
+    }
+
+    @Override
+    public Map<String, Boolean> getResourceCodeByUserIdAndAppCode(Long userId, String appCode) {
+        Set<String> codeSet = userResourceDao.getResourceCodeByUserIdAndAppCode(userId,appCode);
+        Map<String, Boolean> buttonMap = new HashMap<>();
+        for (String code : codeSet) {
             buttonMap.put(code, true);
         }
         return buttonMap;

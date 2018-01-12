@@ -10,8 +10,8 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarDeptDao">
 
     <sql id="whereSQL">
-        <if test="name != null and name != ''">
-            and name LIKE CONCAT('%',#{name},'%')
+        <if test="searchName != null and searchName != ''">
+            and name LIKE CONCAT('%',#{searchName},'%')
         </if>
     </sql>
 

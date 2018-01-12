@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarRoleServiceImpl</code></b>
@@ -158,9 +159,8 @@ public class GarRoleServiceImpl implements GarRoleService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarRole> queryObjects(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        return roleDao.queryObjects(searchName, limit, offset);
+    public List<GarRole> queryObjects(Map<String,Object> params) {
+        return roleDao.queryObjects(params);
     }
 
     /**
@@ -170,8 +170,8 @@ public class GarRoleServiceImpl implements GarRoleService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return roleDao.queryTotal();
+    public int queryTotal(Map<String,Object> params) {
+        return roleDao.queryTotal(params);
     }
 
     /**

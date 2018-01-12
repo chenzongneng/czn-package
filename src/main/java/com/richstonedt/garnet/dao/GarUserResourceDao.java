@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <b><code>GarUserResourceDao</code></b>
@@ -20,5 +21,7 @@ import java.util.List;
 public interface GarUserResourceDao {
 
     List<String> getCodeByUserId(@Param("userId") Long userId, @Param("appId") Long appId);
+
+    Set<String> getResourceCodeByUserIdAndAppCode(@Param("userId") Long userId, @Param("appCode") String appCode);
 
 }

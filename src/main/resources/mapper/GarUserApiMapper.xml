@@ -12,24 +12,42 @@
     <sql id="subQuery">
         SELECT DISTINCT
             u.user_id    AS user_id,
-            ap.app_id    AS app_id,
+            ua.app_id    AS app_id,
+            app.code    AS app_code,
             a.permission AS permission
-        FROM gar_users u
-            LEFT JOIN gar_user_application ap ON ap.user_id = u.user_id
-            LEFT JOIN gar_user_dept ud ON ud.user_id = u.user_id
-            LEFT JOIN gar_role_dept rd ON rd.dept_id = ud.dept_id
-            LEFT JOIN gar_role_permission rp ON rp.role_id = rd.role_id
-            LEFT JOIN gar_permissions p ON p.permission_id = rp.permission_id
-            LEFT JOIN gar_resources m ON m.path LIKE p.wildcard
-            LEFT JOIN gar_resource_api mp ON mp.resource_id = m.resource_id
-            LEFT JOIN gar_apis a ON mp.api_id = a.api_id
-        WHERE m.status = 1 AND a.status = 1 AND a.permission NOTNULL
+        FROM gar_users u,
+            gar_applications app,
+            gar_user_application ua,
+            gar_user_dept ud,
+            gar_role_dept rd,
+            gar_role_permission rp,
+            gar_permissions p,
+            gar_resources m,
+            gar_resource_api mp,
+            gar_apis a
+        WHERE m.status = 1
+              AND a.status = 1
+              AND ua.user_id = u.user_id
+              AND app.application_id = ua.app_id
+              AND ud.user_id = u.user_id
+              AND rd.dept_id = ud.dept_id
+              AND rp.role_id = rd.role_id
+              AND p.permission_id = rp.permission_id
+              AND m.path LIKE p.wildcard
+              AND mp.resource_id = m.resource_id
+              AND mp.api_id = a.api_id
     </sql>
 
-    <select id="getApiByUserIdAndAppId" resultType="java.lang.String">
+    <select id="getApiPermissionByUserIdAndAppId" resultType="java.lang.String">
         SELECT up.permission
         FROM (<include refid="subQuery"/>) AS up
         WHERE user_id = #{userId} AND app_id = #{appId}
+    </select>
+
+    <select id="getApiPermissionsByUserIdAndAppCode" resultType="java.lang.String">
+        SELECT up.permission
+        FROM (<include refid="subQuery"/>) AS up
+        WHERE user_id = #{userId} AND app_code = #{appCode}
     </select>
 
 </mapper>

@@ -35,7 +35,7 @@ public interface GarShiroService {
      * @return the sys user token entity
      * @since garnet-core-be-fe 1.0.0
      */
-    GarToken queryByToken(String token);
+    GarToken getByToken(String token);
 
     /**
      * 根据用户ID，查询用户
@@ -43,5 +43,8 @@ public interface GarShiroService {
      * @param userId the User id
      * @since garnet-core-be-fe 1.0.0
      */
-    GarUser queryUser(Long userId);
+    GarUser getUser(Long userId);
+
+    Set<String> getApiPermissionsByUserIdAndAppCode(Long userId, String appCode);
+
 }

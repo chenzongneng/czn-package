@@ -40,4 +40,5 @@ public interface GarApiService extends BaseService<GarApi> {
 
     GarVmApi getApiById(Long permissionsId);
 
+    void importApiByAppCode(List<GarApiForImport> apiList, String appCode);
 }

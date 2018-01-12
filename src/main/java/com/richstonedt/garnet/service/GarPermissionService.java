@@ -9,6 +9,7 @@ import com.richstonedt.garnet.model.GarPermission;
 import com.richstonedt.garnet.model.view.model.GarVMPermission;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarPermissionService</code></b>
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public interface GarPermissionService extends BaseService<GarPermission> {
 
-    List<GarVMPermission> queryPermissionList(String searchName, Integer page, Integer limit);
+    List<GarVMPermission> queryPermissionList(Map<String,Object> params);
 
     void savePermission(GarVMPermission garVMPermission);
 

@@ -64,7 +64,7 @@ var vm = new Vue({
         /** 查询按钮列表 */
         getButtonList: function () {
             $.ajaxSettings.async = false;
-            $.getJSON(baseURL + "resource/userId/" + userId + "/appId/1", function (r) {
+            $.getJSON(baseURL + "resource/userId/" + userId + "/appCode/garnet", function (r) {
                 resources = r;
                 console.log(JSON.stringify(resources));
             });

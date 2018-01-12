@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarTokenServiceImpl</code></b>
@@ -121,8 +122,8 @@ public class GarTokenServiceImpl implements GarTokenService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarToken> queryObjects(String searchName, Integer page, Integer limit) {
-        return null;
+    public List<GarToken> queryObjects(Map<String,Object> params) {
+        return tokenDao.queryObjects(params);
     }
 
     /**
@@ -132,8 +133,8 @@ public class GarTokenServiceImpl implements GarTokenService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return 0;
+    public int queryTotal(Map<String,Object> params) {
+        return tokenDao.queryTotal(params);
     }
 
     /**

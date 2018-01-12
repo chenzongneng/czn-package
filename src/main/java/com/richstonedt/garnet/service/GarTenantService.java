@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.GarTenant;
 import com.richstonedt.garnet.model.view.model.GarVMTenant;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarTenantService</code></b>
@@ -50,7 +51,7 @@ public interface GarTenantService extends BaseService<GarTenant> {
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarVMTenant> queryVmTenants(String searchName, Integer page, Integer limit);
+    List<GarVMTenant> queryVmTenants(Map<String,Object> params);
 
     /**
      * Update vm tenant.

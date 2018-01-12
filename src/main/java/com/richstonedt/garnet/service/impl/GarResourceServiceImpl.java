@@ -73,13 +73,13 @@ public class GarResourceServiceImpl implements GarResourceService {
     }
 
     @Override
-    public List<GarResource> queryObjects(String searchName, Integer page, Integer limit) {
-        return resourceDao.queryObjects(searchName, page, limit);
+    public List<GarResource> queryObjects(Map<String,Object> params) {
+        return resourceDao.queryObjects(params);
     }
 
     @Override
-    public int queryTotal() {
-        return resourceDao.queryTotal();
+    public int queryTotal(Map<String,Object> params) {
+        return resourceDao.queryTotal(params);
     }
 
     @Override

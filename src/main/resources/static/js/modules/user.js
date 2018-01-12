@@ -11,9 +11,8 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '用户ID', name: 'userId', align: 'center', hidden: true, index: "user_id", width: 20, key: true},
-            {label: '用户名', name: 'userName', align: 'center', width: 70},
-            {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
-            {label: '所属应用', name: 'appName', align: 'center', width: 70},
+            {label: '账号', name: 'userName', align: 'center', width: 70},
+            {label: '用户姓名', name: 'name', align: 'center', width: 70},
             {label: '所属部门', name: 'deptNameList', align: 'center', width: 100},
             {label: '邮箱', name: 'email', align: 'center', width: 80},
             {label: '手机号', name: 'mobile', align: 'center', width: 80},
@@ -67,7 +66,7 @@ var applicationTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "appId"
+            idKey: "applicationId"
         },
         key: {
             url: "nourl"
@@ -118,6 +117,7 @@ var vm = new Vue({
             deptIds: null,
             userName: null,
             password: null,
+            name: null,
             email: null,
             mobile: null,
             status: null
@@ -149,9 +149,8 @@ var vm = new Vue({
             vm.user = {
                 userId: null,
                 userName: null,
-                tenantId: null,
-                appId: null,
                 password: null,
+                name: null,
                 email: null,
                 mobile: null,
                 status: 1,
@@ -279,20 +278,20 @@ var vm = new Vue({
         getUser: function (userId) {
             $.get(baseURL + "user/" + userId, function (response) {
                 vm.user.userId = response.userId;
-                vm.user.appId = response.appId;
-                vm.user.tenantId = response.tenantId;
                 vm.user.userName = response.userName;
                 vm.user.password = null;
+                vm.user.name = response.name;
                 vm.user.email = response.email;
                 vm.user.mobile = response.mobile;
                 vm.user.status = response.status;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
                 $.each(response.applicationIdList, function (index, item) {
-                    var node = applicationTree.getNodeByParam("appId", item);
+                    var node = applicationTree.getNodeByParam("applicationId", item);
                     applicationTree.checkNode(node, true, false);
                 });
                 $.each(response.deptIdList, function (index, item) {
+                    alert(item);
                     var node = deptTree.getNodeByParam("deptId", item);
                     deptTree.checkNode(node, true, false);
                 });
@@ -316,10 +315,13 @@ var vm = new Vue({
         checkValue: function () {
             var emailReg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
             var telReg = /^1[34578]\d{9}$/;
-            if (!vm.checkInput(vm.user.userName, '用户名', false)) {
+            if (!vm.checkInput(vm.user.userName, '账号', false)) {
                 return false;
             }
             if (!vm.checkInput(vm.user.password, '密码', true)) {
+                return false;
+            }
+            if (!vm.checkInput(vm.user.name, '用户姓名', true)) {
                 return false;
             }
             if (vm.user.email && !emailReg.test(vm.user.email)) {

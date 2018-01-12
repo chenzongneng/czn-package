@@ -20,8 +20,9 @@ var vm = new Vue({
     },
     methods: {
         refreshCode: function () {
+            var oldTime = nowTime;
             nowTime = $.now();
-            this.src = baseURL + "kaptcha?nowTime=" + nowTime;
+            this.src = baseURL + "kaptcha?nowTime=" + nowTime + "&oldTime=" + oldTime;
         },
         login: function () {
             var data = {

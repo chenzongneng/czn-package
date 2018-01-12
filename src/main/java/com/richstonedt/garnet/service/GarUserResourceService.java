@@ -17,4 +17,6 @@ public interface GarUserResourceService {
 
     Map<String, Boolean> getCodeMapListByUserId(Long userId, Long appId);
 
+    Map<String, Boolean> getResourceCodeByUserIdAndAppCode(Long userId, String appCode);
+
 }

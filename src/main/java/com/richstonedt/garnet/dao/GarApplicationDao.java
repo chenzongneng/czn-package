@@ -8,6 +8,7 @@ package com.richstonedt.garnet.dao;
 
 import com.richstonedt.garnet.model.GarApplication;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <b><code>GarApplicationDao</code></b>
@@ -23,4 +24,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface GarApplicationDao extends BaseDao<GarApplication> {
 
+    Long getApplicationIdByCode(@Param("appCode") String appCode);
 }

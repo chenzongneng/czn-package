@@ -44,9 +44,6 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     @Autowired
     private GarApplicationDao applicationDao;
 
-    // 应用名称的map，缓存起来避免从实体转换为vm的时候都要去数据库查找应用名称
-    private Map<Long,String> applicationNameMap = new HashMap<>();
-
     private BeanCopier entityToVMCopier = BeanCopier.create(GarPermission.class, GarVMPermission.class,
             false);
 
@@ -76,25 +73,22 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     }
 
     @Override
-    public List<GarPermission> queryObjects(String searchName, Integer page, Integer limit) {
-        return permissionDao.queryObjects(searchName, page, limit);
+    public List<GarPermission> queryObjects(Map<String, Object> params) {
+        return permissionDao.queryObjects(params);
     }
 
     @Override
-    public int queryTotal() {
-        return permissionDao.queryTotal();
+    public int queryTotal(Map<String, Object> params) {
+        return permissionDao.queryTotal(params);
     }
 
     @Override
-    public List<GarVMPermission> queryPermissionList(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        List<GarPermission> authorities = permissionDao.queryObjects(searchName,limit,offset);
+    public List<GarVMPermission> queryPermissionList(Map<String, Object> params) {
+        List<GarPermission> authorities = permissionDao.queryObjects(params);
         List<GarVMPermission> result = new ArrayList<>();
         for (GarPermission permission : authorities) {
             result.add(convertPermissionToVmPermission(permission));
         }
-        // 使用几等将缓存清除，不然会存在内存中，如果有变动将可能无法同步。
-        applicationNameMap.clear();
         return result;
     }
 
@@ -129,15 +123,9 @@ public class GarPermissionServiceImpl implements GarPermissionService {
 
     private GarVMPermission convertPermissionToVmPermission(GarPermission garPermission) {
         GarVMPermission vmPermission = new GarVMPermission();
-        entityToVMCopier.copy(garPermission,vmPermission,null);
-        String applicationName = applicationNameMap.get(garPermission.getApplicationId());
-        if (StringUtils.isEmpty(applicationName)) {
-            GarApplication application = applicationDao.queryObject(garPermission.getApplicationId());
-            applicationNameMap.put(garPermission.getApplicationId(), application.getName());
-            vmPermission.setApplicationName(application.getName());
-        } else {
-            vmPermission.setApplicationName(applicationName);
-        }
+        entityToVMCopier.copy(garPermission, vmPermission, null);
+        GarApplication application = applicationDao.queryObject(garPermission.getApplicationId());
+        vmPermission.setApplicationName(application.getName());
 //        List<Long> menuId = permissionResourceDao.getResourceIdByPermissionId(garPermission.getPermissionId());
 //        vmPermission.setResourceIdList(menuId);
 

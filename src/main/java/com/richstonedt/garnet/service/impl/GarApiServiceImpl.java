@@ -7,6 +7,7 @@ package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.common.utils.ClassUtil;
 import com.richstonedt.garnet.dao.GarApiDao;
+import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.model.GarApi;
 import com.richstonedt.garnet.model.view.model.GarApiForImport;
 import com.richstonedt.garnet.model.view.model.GarVmApi;
@@ -44,6 +45,9 @@ public class GarApiServiceImpl implements GarApiService {
     @Autowired
     private GarApiDao apiDao;
 
+    @Autowired
+    private GarApplicationDao applicationDao;
+
     @Override
     public void save(GarApi garApi) {
         apiDao.save(garApi);
@@ -70,13 +74,13 @@ public class GarApiServiceImpl implements GarApiService {
     }
 
     @Override
-    public List<GarApi> queryObjects(String searchName, Integer page, Integer limit) {
-        return apiDao.queryObjects(searchName, page, limit);
+    public List<GarApi> queryObjects(Map<String,Object> params) {
+        return apiDao.queryObjects(params);
     }
 
     @Override
-    public int queryTotal() {
-        return apiDao.queryTotal();
+    public int queryTotal(Map<String,Object> params) {
+        return apiDao.queryTotal(params);
     }
 
     @Override
@@ -138,6 +142,12 @@ public class GarApiServiceImpl implements GarApiService {
     public GarVmApi getApiById(Long apisId) {
         GarApi api = apiDao.queryObject(apisId);
         return convertApiToVMApi(api);
+    }
+
+    @Override
+    public void importApiByAppCode(List<GarApiForImport> apiList, String appCode) {
+        Long applicationId = applicationDao.getApplicationIdByCode(appCode);
+        importApi(apiList,applicationId);
     }
 
     private GarApiForImport getApisByAnnotation(Class<?> clazz, Long applicationId) {

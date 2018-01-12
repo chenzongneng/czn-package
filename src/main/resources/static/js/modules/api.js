@@ -75,6 +75,10 @@ var applicationList = {
     appSearchList: {
         selectedApp: "",
         options: []
+    },
+    appImportList:{
+        selectedApp: "",
+        options: []
     }
 };
 
@@ -84,8 +88,8 @@ var parentTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey:"apiId",
-            pIdKey:"parentId",
+            idKey: "apiId",
+            pIdKey: "parentId",
             rootPId: 0
         },
         key: {
@@ -106,7 +110,8 @@ var vm = new Vue({
         },
         option: {
             applicationId: 1,
-            appSearchId: ""
+            appSearchId: "",
+            appCode:""
         },
         // 当前用户信息
         currentUser: {}
@@ -174,6 +179,47 @@ var vm = new Vue({
                     });
                 });
         },
+        /** 导入按钮点击事件 */
+        importApi: function () {
+            layer.open({
+                type: 1,
+                title: false,
+                area: ['1000px', '600px'],
+                closeBtn: 0,
+                shadeClose: true,
+                anim: 1,
+                content:
+                '<div class="form-group col-sm-2">' +
+                '    <select class="form-control" v-model="option.appCode">' +
+                '        <option disabled value=""> 选择应用 </option>' +
+                '        <option v-for="option in applicationList.appImportList.options" v-bind:value="option.code">' +
+                '            {{ option.name }}' +
+                '        </option>' +
+                '    </select>' +
+                '<div style="padding:50px;">' +
+                '   <textarea id="apiImportTextarea" style="width: 890px; height: 445px"></textarea>' +
+                '</div>',
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var apiImportJson = $("#apiImportTextarea").val();
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + "importApis/" + "garnet",// vm.option.appCode,
+                        contentType: "application/json",
+                        data: apiImportJson,
+                        dataType: '',
+                        success: function () {
+                            vm.reload();
+                            swal("导入成功!", "", "success");
+                        },
+                        error: function () {
+                            swal("导入失败！", "", "error");
+                        }
+                    });
+                    layer.close(index);
+                }
+            })
+        },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             $.ajax({
@@ -234,6 +280,7 @@ var vm = new Vue({
                 $.each(response.list, function (index, item) {
                     applicationList.appList.options.push(item);
                     applicationList.appSearchList.options.push(item);
+                    applicationList.appImportList.options.push(item);
                 })
             });
         },

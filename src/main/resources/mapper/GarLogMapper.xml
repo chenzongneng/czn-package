@@ -9,12 +9,16 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarLogDao">
 
+    <sql id="whereSQL">
+        <if test="searchName != null and searchName != ''">
+            and username LIKE CONCAT('%',#{searchName},'%')
+        </if>
+    </sql>
+
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarLog">
         SELECT * FROM gar_logs
         <where>
-            <if test="searchName != null and searchName != ''">
-                username like CONCAT('%',#{searchName},'%')
-            </if>
+            <include refid="whereSQL"/>
         </where>
         ORDER BY create_time desc
         <if test="offset != null and limit != null">
@@ -24,7 +28,10 @@
 
     <select id="queryTotal" resultType="int">
         SELECT count(1)
-        FROM gar_logs;
+        FROM gar_logs
+        <where>
+            <include refid="whereSQL"/>
+        </where>
     </select>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarLog">

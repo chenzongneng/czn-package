@@ -165,8 +165,8 @@ public class GarDeptServiceImpl implements GarDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarDept> queryObjects(String searchName, Integer page, Integer limit) {
-        return null;
+    public List<GarDept> queryObjects(Map<String,Object> params) {
+        return deptDao.queryObjects(params);
     }
 
     /**
@@ -176,8 +176,8 @@ public class GarDeptServiceImpl implements GarDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return 0;
+    public int queryTotal(Map<String,Object> params) {
+        return deptDao.queryTotal(params);
     }
 
 
@@ -493,6 +493,9 @@ public class GarDeptServiceImpl implements GarDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     private void getDeptLine(Long parentDeptId) {
+        if (ObjectUtils.isEmpty(parentDeptId)) {
+            return;
+        }
         line += "," + parentDeptId.toString();
         if (parentDeptId == 0L) {
             return;

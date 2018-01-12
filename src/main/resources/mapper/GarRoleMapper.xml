@@ -9,6 +9,12 @@
 
 <mapper namespace="com.richstonedt.garnet.dao.GarRoleDao">
 
+    <sql id="whereSQL">
+        <if test="searchName != null and searchName != ''">
+            and name LIKE CONCAT('%',#{searchName},'%')
+        </if>
+    </sql>
+
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarRole">
         INSERT INTO gar_roles
         (
@@ -54,9 +60,7 @@
     <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarRole">
         select * from gar_roles
         <where>
-            <if test="searchName != null and searchName != ''">
-                and name LIKE CONCAT('%',#{searchName},'%')
-            </if>
+            <include refid="whereSQL"/>
         </where>
         ORDER BY app_id asc
         <if test="offset != null and limit != null">
@@ -81,8 +85,11 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-        SELECT count(*)
-        FROM gar_roles;
+        SELECT count(1)
+        FROM gar_roles
+        <where>
+            <include refid="whereSQL"/>
+        </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarRole">

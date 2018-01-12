@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.view.model.GarVMApplication;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarApplicationService</code></b>
@@ -50,7 +51,7 @@ public interface GarApplicationService extends BaseService<GarApplication> {
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarVMApplication> queryVmApplications(String searchName, Integer page, Integer limit);
+    List<GarVMApplication> queryVmApplications(Map<String,Object> params);
 
     /**
      * Update vm application.

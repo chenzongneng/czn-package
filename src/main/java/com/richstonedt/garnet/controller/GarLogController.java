@@ -20,7 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>LogController</code></b>
@@ -73,8 +75,13 @@ public class GarLogController {
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
             @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
-            List<GarLog> list = logService.queryObjects(searchName, page, limit);
-            PageUtil result = new PageUtil(list, logService.queryTotal(), limit, page);
+            Integer offset = (page - 1) * limit;
+            Map<String, Object> params = new HashMap<>();
+            params.put("limit", limit);
+            params.put("offset", offset);
+            params.put("searchName", searchName);
+            List<GarLog> list = logService.queryObjects(params);
+            PageUtil result = new PageUtil(list, logService.queryTotal(params), limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get log list .", t);

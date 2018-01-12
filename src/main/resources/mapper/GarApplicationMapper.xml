@@ -71,6 +71,12 @@
         </where>
     </select>
 
+    <select id="getApplicationIdByCode" resultType="java.lang.Long">
+        SELECT a.application_id
+        FROM gar_applications a
+        WHERE a.code = #{appCode}
+    </select>
+
     <update id="update" parameterType="com.richstonedt.garnet.model.GarApplication">
         UPDATE gar_applications
         <set>

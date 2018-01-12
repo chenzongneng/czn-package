@@ -21,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarApplicationServiceImpl</code></b>
@@ -124,8 +125,8 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return applicationDao.queryTotal();
+    public int queryTotal(Map<String,Object> params) {
+        return applicationDao.queryTotal(params);
     }
 
     /**
@@ -138,9 +139,8 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarApplication> queryObjects(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        return applicationDao.queryObjects(searchName, limit, offset);
+    public List<GarApplication> queryObjects(Map<String,Object> params) {
+        return applicationDao.queryObjects(params);
     }
 
     /**
@@ -180,9 +180,9 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarVMApplication> queryVmApplications(String searchName, Integer page, Integer limit) {
+    public List<GarVMApplication> queryVmApplications(Map<String,Object> params) {
         List<GarVMApplication> vmApplicationList = new ArrayList<>();
-        List<GarApplication> applicationList = queryObjects(searchName, page, limit);
+        List<GarApplication> applicationList = queryObjects(params);
         if (!CollectionUtils.isEmpty(applicationList)) {
             for (GarApplication application : applicationList) {
                 vmApplicationList.add(convertApplicationToVmApp(application));

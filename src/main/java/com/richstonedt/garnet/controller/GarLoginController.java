@@ -22,12 +22,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +85,7 @@ public class GarLoginController {
      *
      * @since garnet-core-be-fe 0.1.0
      */
-    private static Map<String, String> kaptchaMap = new HashMap<>();
+    private static final Map<String, String> kaptchaMap = new HashMap<>();
 
     /**
      * The constant LOGIN_FORM.
@@ -105,14 +107,19 @@ public class GarLoginController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getKaptcha(@ApiParam(value = "nowTime,当前时间毫秒值", required = true) @RequestParam(value = "nowTime") String nowTime) throws IOException {
+    public ResponseEntity<?> getKaptcha(
+            @ApiParam(value = "nowTime,当前时间毫秒值", required = true) @RequestParam(value = "nowTime") String nowTime,
+            @ApiParam(value = "oldTime,上一张验证码的毫秒值", required = false) @RequestParam(value = "oldTime",required = false) String oldTime) throws IOException {
         try {
             //生成文字验证码
             String text = producer.createText();
             //生成图片验证码
             BufferedImage image = producer.createImage(text);
+            if (!StringUtils.isEmpty(oldTime)) {
+                kaptchaMap.remove(oldTime);
+            }
             kaptchaMap.put(nowTime, text);
-
+            System.out.println(LocalTime.now() + " TEST:kaptchaMap:  " + kaptchaMap);
             // transform to byte
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             ImageIO.write(image, "jpg", stream);
@@ -155,7 +162,7 @@ public class GarLoginController {
                 loginResult.setMessage("验证码不正确");
                 return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
-            kaptchaMap.remove("kaptcha");
+            kaptchaMap.remove(userLogin.getNowTime());
             GarUser user = userService.getUserByNameAndAppId(userLogin.getUserName(),appId);
             if (user == null) {
                 loginResult.setLoginStatus("failure");

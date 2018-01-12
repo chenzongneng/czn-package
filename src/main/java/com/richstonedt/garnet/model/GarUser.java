@@ -57,7 +57,7 @@ public class GarUser implements Serializable {
      * 
      * @since garnet-core-be-fe 0.1.0
      */
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "账号")
     private String userName;
 
     /**
@@ -67,6 +67,14 @@ public class GarUser implements Serializable {
      */
     @ApiModelProperty(value = "密码")
     private String password;
+
+    /**
+     * The Username.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+    @ApiModelProperty(value = "用户姓名")
+    private String name;
 
     /**
      * The Email.
@@ -279,6 +287,14 @@ public class GarUser implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

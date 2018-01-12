@@ -19,6 +19,7 @@ import java.util.Set;
 @Mapper
 public interface GarUserApiDao {
 
-    Set<String> getApiByUserIdAndAppId(@Param("userId") Long userId, @Param("appId") Long appId);
+    Set<String> getApiPermissionByUserIdAndAppId(@Param("userId") Long userId, @Param("appId") Long appId);
 
+    Set<String> getApiPermissionsByUserIdAndAppCode(@Param("userId") Long userId, @Param("appCode") String appCode);
 }

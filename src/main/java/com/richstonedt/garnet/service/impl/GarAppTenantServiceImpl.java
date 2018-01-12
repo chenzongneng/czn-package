@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarAppTenantServiceImpl</code></b>
@@ -97,8 +98,8 @@ public class GarAppTenantServiceImpl implements GarAppTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarApplicationTenant> queryObjects(String searchName, Integer page, Integer limit) {
-        return null;
+    public List<GarApplicationTenant> queryObjects(Map<String,Object> params) {
+        return applicationTenantDao.queryObjects(params);
     }
 
     /**
@@ -108,8 +109,8 @@ public class GarAppTenantServiceImpl implements GarAppTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return 0;
+    public int queryTotal(Map<String,Object> params) {
+        return applicationTenantDao.queryTotal(params);
     }
 
     /**

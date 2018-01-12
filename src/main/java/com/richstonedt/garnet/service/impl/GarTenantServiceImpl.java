@@ -24,6 +24,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarTenantServiceImpl</code></b>
@@ -135,9 +136,8 @@ public class GarTenantServiceImpl implements GarTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarTenant> queryObjects(String searchName, Integer page, Integer limit) {
-        Integer offset = (page - 1) * limit;
-        return tenantDao.queryObjects(searchName, limit, offset);
+    public List<GarTenant> queryObjects(Map<String,Object> params) {
+        return tenantDao.queryObjects(params);
     }
 
     /**
@@ -147,8 +147,8 @@ public class GarTenantServiceImpl implements GarTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return tenantDao.queryTotal();
+    public int queryTotal(Map<String,Object> params) {
+        return tenantDao.queryTotal(params);
     }
 
     /**
@@ -237,9 +237,9 @@ public class GarTenantServiceImpl implements GarTenantService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarVMTenant> queryVmTenants(String searchName, Integer page, Integer limit) {
+    public List<GarVMTenant> queryVmTenants(Map<String,Object> params) {
         List<GarVMTenant> vmTenantList = new ArrayList<>();
-        List<GarTenant> tenantList = queryObjects(searchName, page, limit);
+        List<GarTenant> tenantList = queryObjects(params);
         if (!CollectionUtils.isEmpty(tenantList)) {
             for (GarTenant tenant : tenantList) {
                 vmTenantList.add(convertTenantToVmTenant(tenant));

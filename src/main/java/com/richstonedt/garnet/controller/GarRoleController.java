@@ -20,7 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarRoleController</code></b>
@@ -74,8 +76,13 @@ public class GarRoleController {
                                          @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                          @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
+            Integer offset = (page - 1) * limit;
+            Map<String, Object> params = new HashMap<>();
+            params.put("limit", limit);
+            params.put("offset", offset);
+            params.put("searchName", searchName);
             List<GarVMRole> list = roleService.queryRoleList(token, searchName, page, limit);
-            int totalCount = roleService.queryTotal();
+            int totalCount = roleService.queryTotal(params);
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {

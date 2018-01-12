@@ -30,24 +30,31 @@ public class GarShiroServiceImpl implements GarShiroService {
 
     @Autowired
     private GarTokenService tokenService;
+
     @Autowired
     private GarUserService userService;
+
     @Autowired
-    private GarUserApiDao userPermissionDao;
+    private GarUserApiDao userApiDao;
 
     @Override
     public Set<String> getUserPermissions(long userId) {
-        return userPermissionDao.getApiByUserIdAndAppId(userId,1L);
+        return userApiDao.getApiPermissionsByUserIdAndAppCode(userId,"garnet");
     }
 
     @Override
-    public GarToken queryByToken(String token) {
+    public GarToken getByToken(String token) {
         GarToken garToken = tokenService.queryByToken(token);
         return garToken;
     }
 
     @Override
-    public GarUser queryUser(Long userId) {
+    public GarUser getUser(Long userId) {
         return userService.searchUser(userId);
+    }
+
+    @Override
+    public Set<String> getApiPermissionsByUserIdAndAppCode(Long userId, String appCode) {
+        return userApiDao.getApiPermissionsByUserIdAndAppCode(userId, appCode);
     }
 }

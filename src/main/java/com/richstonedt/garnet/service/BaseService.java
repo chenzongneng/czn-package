@@ -7,6 +7,7 @@
 package com.richstonedt.garnet.service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>BaseService</code></b>
@@ -64,19 +65,18 @@ public interface BaseService<T> {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param limit      the limit
-     * @param page       the offset
+     * @param params     the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
-    List<T> queryObjects(String searchName, Integer page, Integer limit);
+    List<T> queryObjects(Map<String,Object> params);
 
     /**
      * Query total int.
      *
+     * @param params     the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */
-    int queryTotal();
+    int queryTotal(Map<String,Object> params);
 }

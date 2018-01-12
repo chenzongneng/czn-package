@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarLogOperationServiceImpl</code></b>
@@ -106,8 +107,8 @@ public class GarLogOperationServiceImpl implements GarLogOperationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarLogOperation> queryObjects(String searchName, Integer page, Integer limit) {
-        return null;
+    public List<GarLogOperation> queryObjects(Map<String,Object> params) {
+        return logOperationDao.queryObjects(params);
     }
 
     /**
@@ -117,8 +118,8 @@ public class GarLogOperationServiceImpl implements GarLogOperationService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal() {
-        return 0;
+    public int queryTotal(Map<String,Object> params) {
+        return logOperationDao.queryTotal(params);
     }
 
     /**

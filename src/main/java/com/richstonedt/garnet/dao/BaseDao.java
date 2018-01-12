@@ -9,6 +9,7 @@ package com.richstonedt.garnet.dao;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>BaseDao</code></b>
@@ -67,19 +68,18 @@ public interface BaseDao<T> {
 	/**
 	 * Query total int.
 	 *
+	 * @param params     the params
 	 * @return the int
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-	int queryTotal();
+	int queryTotal(Map<String,Object> params);
 
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param limit      the limit
-     * @param offset     the offset
+     * @param params     the params
      * @return the list
      * @since garnet-core-be-fe 1.0.0
      */
-    List<T> queryObjects(@Param(value = "searchName") String searchName, @Param(value = "limit") Integer limit, @Param(value = "offset") Integer offset);
+    List<T> queryObjects(Map<String,Object> params);
 }

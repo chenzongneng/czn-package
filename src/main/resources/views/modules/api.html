@@ -50,6 +50,8 @@
                 <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
             <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentApiDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <a class="btn btn-primary" @click="importApi">
+                <i class="fa fa-plus"></i>&nbsp;导入</a>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
@@ -131,6 +133,11 @@
 <!-- 选择父访问权限 -->
 <div id="parentLayer" style="display: none;padding:10px;">
     <ul id="parentTree" class="ztree"></ul>
+</div>
+
+<!-- 导入API -->
+<div id="apiImportLayer" style="display: none;padding:10px;">
+    <ul id="apiImportBox" class="input"></ul>
 </div>
 
 <script src="../libs/router.js"></script>

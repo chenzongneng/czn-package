@@ -19,7 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>GarPermissionController</code></b>
@@ -53,8 +55,13 @@ public class GarPermissionController {
                                                @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                                @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
-            List<GarVMPermission> list = permissionService.queryPermissionList(searchName, page, limit);
-            int totalCount = permissionService.queryTotal();
+            Integer offset = (page - 1) * limit;
+            Map<String, Object> params = new HashMap<>();
+            params.put("limit", limit);
+            params.put("offset", offset);
+            params.put("searchName", searchName);
+            List<GarVMPermission> list = permissionService.queryPermissionList(params);
+            int totalCount = permissionService.queryTotal(params);
             PageUtil result = new PageUtil(list, totalCount, limit, page);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
