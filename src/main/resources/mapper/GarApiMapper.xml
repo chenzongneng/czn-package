@@ -123,7 +123,7 @@
         </where>
     </update>
 
-    <select id="getPermissionsByIds" resultType="string" parameterType="java.util.Set">
+    <select id="queryPermissionsByIds" resultType="string" parameterType="java.util.Set">
         SELECT p.permission
         from gar_apis AS p WHERE api_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
@@ -131,25 +131,25 @@
         </foreach>
     </select>
 
-    <select id="getApiByPermission" resultType="com.richstonedt.garnet.model.GarApi">
+    <select id="queryApiByPermission" resultType="com.richstonedt.garnet.model.GarApi">
         SELECT *
         FROM gar_apis
         WHERE permission=#{permission}
     </select>
 
-    <select id="getApiByApplicationIdAndStatus" resultType="com.richstonedt.garnet.model.GarApi">
+    <select id="queryApiByApplicationIdAndStatus" resultType="com.richstonedt.garnet.model.GarApi">
         SELECT *
         FROM gar_apis p
         WHERE p.application_id=#{applicationId} AND p.status=#{status}
     </select>
 
-    <select id="getApiByName" resultType="com.richstonedt.garnet.model.GarApi">
+    <select id="queryApiByName" resultType="com.richstonedt.garnet.model.GarApi">
         SELECT *
         FROM gar_apis
         WHERE name = #{name}
     </select>
 
-    <select id="getApisByParams" resultType="com.richstonedt.garnet.model.GarApi">
+    <select id="queryApisByParams" resultType="com.richstonedt.garnet.model.GarApi">
         select * from gar_apis
         <where>
             <include refid="whereSQL"/>
@@ -165,6 +165,15 @@
         <where>
             <include refid="whereSQL"/>
         </where>
+    </select>
+
+    <select id="queryApiNameByParentIds" resultType="java.lang.String">
+        SELECT a.name
+        FROM gar_apis a
+        WHERE parent_id IN
+        <foreach collection="apiIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 
 </mapper>

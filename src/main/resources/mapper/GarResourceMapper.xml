@@ -140,4 +140,16 @@
             <include refid="whereSQL"/>
         </where>
     </select>
+    <select id="queryResourceNameByParentIds" resultType="java.lang.String">
+        SELECT r.name
+        FROM (
+            SELECT r.code AS code
+            FROM gar_resources r
+            WHERE resource_id IN
+            <foreach collection="parentIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        ) AS rc,gar_resources r
+        WHERE rc.code = r.parent_code
+    </select>
 </mapper>

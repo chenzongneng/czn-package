@@ -33,4 +33,8 @@ public interface GarRolePermissionDao {
     List<String> getPermissionNamesByRoleId(@Param("roleId") Long roleId);
 
     List<Long> getPermissionIdsByRoleId(@Param("roleId") Long roleId);
+
+    void deleteByPermissionId(@Param("permissionId") Long permissionIds);
+
+    void deleteBatchByPermissionIds(@Param("permissionIds") List<Long> permissionIds);
 }

@@ -112,7 +112,6 @@ var vm = new Vue({
         // 用户信息
         user: {
             userId: null,
-            appId: null,
             tenantId: null,
             deptIds: null,
             userName: null,
@@ -218,7 +217,7 @@ var vm = new Vue({
             var nodes = applicationTree.getCheckedNodes(true);
             var applicationIdList = [];
             for (var i = 0; i < nodes.length; i++) {
-                applicationIdList.push(nodes[i].appId);
+                applicationIdList.push(nodes[i].applicationId);
             }
             vm.user.applicationIds = applicationIdList.join(",");
             // 获取部门树选择的部门
@@ -285,13 +284,11 @@ var vm = new Vue({
                 vm.user.mobile = response.mobile;
                 vm.user.status = response.status;
                 vm.tenantList.selectedTenant = response.tenantId;
-                vm.appList.selectedApp = response.appId;
                 $.each(response.applicationIdList, function (index, item) {
                     var node = applicationTree.getNodeByParam("applicationId", item);
                     applicationTree.checkNode(node, true, false);
                 });
                 $.each(response.deptIdList, function (index, item) {
-                    alert(item);
                     var node = deptTree.getNodeByParam("deptId", item);
                     deptTree.checkNode(node, true, false);
                 });
@@ -319,9 +316,6 @@ var vm = new Vue({
                 return false;
             }
             if (!vm.checkInput(vm.user.password, '密码', true)) {
-                return false;
-            }
-            if (!vm.checkInput(vm.user.name, '用户姓名', true)) {
                 return false;
             }
             if (vm.user.email && !emailReg.test(vm.user.email)) {
@@ -381,10 +375,6 @@ var vm = new Vue({
         /** 租户列表onchange 事件*/
         selectTenant: function () {
             vm.user.tenantId = vm.tenantList.selectedTenant;
-        },
-        /** 应用列表onchange 事件*/
-        selectApp: function () {
-            vm.user.appId = vm.appList.selectedApp;
         },
         /**  获取租户列表 */
         getTenantList: function () {

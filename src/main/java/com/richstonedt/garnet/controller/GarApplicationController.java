@@ -87,10 +87,10 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id批量删除应用", notes = "Delete applications")
-    @RequiresPermissions("application:delete:batch")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("application:delete:batch")
     public ResponseEntity<?> deleteApplications(@ApiParam(value = "appIds,用‘,’隔开", required = true) @RequestParam(value = "appIds") String appIds) {
         try {
             applicationService.deleteBatch(GarnetRsUtil.parseStringToList(appIds));
@@ -110,10 +110,10 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询应用", notes = "Get application by id ")
-    @RequiresPermissions("application:info")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMApplication.class),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("application:info")
     public ResponseEntity<?> searchApplication(@ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
         try {
             return new ResponseEntity<>(applicationService.getVmApplicationByAppId(appId), HttpStatus.OK);
@@ -134,10 +134,10 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/applications", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询应用列表", notes = "Get application list ")
-    @RequiresPermissions("application:list")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMApplication.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("application:list")
     public ResponseEntity<?> searchApplications(@ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                                 @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
                                                 @ApiParam(value = "searchName,搜索名") @RequestParam(value = "searchName", required = false) String searchName) {
@@ -166,10 +166,10 @@ public class GarApplicationController {
      */
     @RequestMapping(value = "/application", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据ID更新应用", notes = "Update application")
-    @RequiresPermissions("application:update")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions("application:update")
     public ResponseEntity<?> updateApplication(@ApiParam(value = "application对象") @RequestBody GarVMApplication application) {
         try {
             applicationService.updateVmApplication(application);

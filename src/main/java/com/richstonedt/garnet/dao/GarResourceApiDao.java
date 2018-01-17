@@ -24,7 +24,11 @@ public interface GarResourceApiDao {
 
     void deleteByResourceId(@Param("resourceId") Long resourceId);
 
+    void deleteByResourceIds(@Param("resourceIds") List<Long> resourceIds);
+
     List<Long> getApiIdsByResourceId(@Param("resourceId") Long resourceId);
+
+    void deleteByApiIds(@Param("apiIds") List<Long> apiIds);
 
 //    List<GarApi> getApiByResourceId(@Param("resourceId") Long resourceId);
 

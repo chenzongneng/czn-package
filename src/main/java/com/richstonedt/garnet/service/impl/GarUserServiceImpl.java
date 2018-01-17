@@ -10,6 +10,7 @@ import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.config.GarnetServiceException;
 import com.richstonedt.garnet.dao.GarUserApplicationDao;
 import com.richstonedt.garnet.dao.GarUserDao;
+import com.richstonedt.garnet.model.GarDept;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
@@ -19,7 +20,9 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -230,9 +233,9 @@ public class GarUserServiceImpl implements GarUserService {
             garVMUser.setUserId(IdGeneratorUtil.generateId());
         }
         garVMUser.setCreateTime(new Date());
+        save(garVMUser);
         saveUserDept(garVMUser);
         saveUserApplication(garVMUser);
-        save(garVMUser);
     }
 
     /**
@@ -300,7 +303,10 @@ public class GarUserServiceImpl implements GarUserService {
         if (!CollectionUtils.isEmpty(userDeptList)) {
             for (GarUserDept userDept : userDeptList) {
                 deptIdList.add(userDept.getDeptId());
-                deptNameList.add(deptService.queryObject(userDept.getDeptId()).getName());
+                GarDept dept = deptService.queryObject(userDept.getDeptId());
+                if (!ObjectUtils.isEmpty(dept)) {
+                    deptNameList.add(dept.getName());
+                }
             }
         }
         vmUser.setApplicationIdList(userApplicationDao.getApplicationIdByUserId(user.getUserId()));

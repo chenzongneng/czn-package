@@ -53,4 +53,17 @@
         WHERE role_id = #{roleId}
     </select>
 
+    <delete id="deleteByPermissionId">
+        DELETE FROM gar_role_permission
+        WHERE permission_id = #{permissionId}
+    </delete>
+
+    <delete id="deleteBatchByPermissionIds">
+        DELETE FROM gar_role_permission
+        WHERE permission_id IN
+        <foreach collection="permissionIds" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

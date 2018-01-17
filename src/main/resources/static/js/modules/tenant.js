@@ -75,7 +75,8 @@ var vm = new Vue({
             name: null,
             remark: null,
             appIds: null,
-            appNames: []
+            appNames: [],
+            appIdList: []
         }
     },
     methods: {
@@ -92,7 +93,8 @@ var vm = new Vue({
                 name: null,
                 remark: null,
                 appIds: null,
-                appNames: []
+                appNames: [],
+                appIdList: []
             };
 
             // 加载应用树
@@ -174,11 +176,7 @@ var vm = new Vue({
                     vm.tenant.tenantId = response.tenantId;
                     vm.tenant.name = response.name;
                     vm.tenant.remark = response.remark;
-                    // 勾选已有应用
-                    $.each(response.appIdList, function (index, item) {
-                        var node = appTree.getNodeByParam("appId", item);
-                        appTree.checkNode(node, true, false);
-                    });
+                    vm.tenant.appIdList = response.appIdList;
                     $.each(response.appNameList, function (index, item) {
                         vm.tenant.appNames.push(item);
                     })
@@ -186,7 +184,12 @@ var vm = new Vue({
             });
         },
         /**  应用树点击事件 */
-        appTree: function () {
+        appTree: function (tenant) {
+            console.log(JSON.stringify(tenant));
+            $.each(tenant.appIdList, function (index, item) {
+                var node = appTree.getNodeByParam("applicationId", item);
+                appTree.checkNode(node, true, false);
+            });
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -198,13 +201,14 @@ var vm = new Vue({
                 content: jQuery("#appLayer"),
                 btn: ['确定', '取消'],
                 btn1: function (index) {
-                    vm.tenant.appNames = [];
-                    vm.tenant.appIds = null;
+                    // 勾选已有应用
                     // 获取应用树选择的应用
                     var appNodes = appTree.getCheckedNodes(true);
                     var appIdList = [];
+                    vm.tenant.appNames = [];
+                    vm.tenant.appIds = null;
                     for (var i = 0; i < appNodes.length; i++) {
-                        appIdList.push(appNodes[i].appId);
+                        appIdList.push(appNodes[i].applicationId);
                         vm.tenant.appNames.push(appNodes[i].name);
                     }
                     vm.tenant.appIds = appIdList.join(",");

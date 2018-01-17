@@ -16,10 +16,9 @@ import com.richstonedt.garnet.service.GarResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <b><code>GarResourceServiceImpl</code></b>
@@ -126,6 +125,21 @@ public class GarResourceServiceImpl implements GarResourceService {
     @Override
     public int queryTotalResourceByParam(Map<String, Object> params) {
         return resourceDao.getTotalResourceByParam(params);
+    }
+
+    @Override
+    public Map<String, String> deleteBatchByResourceIds(List<Long> resourceIds) {
+        Map<String, String> result = new HashMap<>();
+        Set<String> resourceNameList = resourceDao.queryResourceNameByParentIds(resourceIds);
+        if (CollectionUtils.isEmpty(resourceNameList)) {
+            resourceApiDao.deleteByResourceIds(resourceIds);
+            resourceDao.deleteBatch(resourceIds);
+        } else {
+            String message = "删除的资源中存在如下的子资源：" +
+                    String.join("，", resourceNameList);
+            result.put("message", message);
+        }
+        return result;
     }
 
     private GarVMResource convertResourceToVmResource(GarResource garResource) {

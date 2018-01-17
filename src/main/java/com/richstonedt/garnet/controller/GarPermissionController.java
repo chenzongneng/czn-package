@@ -49,7 +49,7 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMPermission.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    ////@RequiresPermissions({"permission:list"})
+    @RequiresPermissions({"permission:list"})
     public ResponseEntity<?> searchAuthorities(@ApiParam(value = "token", required = true) @RequestParam(value = "token") String token,
                                                @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
                                                @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
@@ -75,7 +75,7 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMPermission.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    //@RequiresPermissions({"permission:info"})
+    @RequiresPermissions({"permission:info"})
     public ResponseEntity<?> searchPermission(@ApiParam(value = "permissionId", required = true) @PathVariable(value = "permissionId") Long permissionId) {
         try {
             return new ResponseEntity<>(permissionService.searchPermission(permissionId), HttpStatus.OK);
@@ -90,7 +90,7 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    //@RequiresPermissions({"permission:create"})
+    @RequiresPermissions({"permission:create"})
     public ResponseEntity<?> savePermission(@RequestBody GarVMPermission garVMPermission) {
         try {
             permissionService.savePermission(garVMPermission);
@@ -106,7 +106,7 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    //@RequiresPermissions({"permission:update"})
+    @RequiresPermissions({"permission:update"})
     public ResponseEntity<?> updatePermission(@RequestBody GarVMPermission garVMPermission) {
         try {
             permissionService.updatePermission(garVMPermission);
@@ -122,7 +122,7 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    //@RequiresPermissions({"permission:delete:batch"})
+    @RequiresPermissions({"permission:delete:batch"})
     public ResponseEntity<?> deletePermissions(@ApiParam(value = "permissionIds,用‘,’隔开", required = true) @RequestParam(value = "permissionIds") String permissionIds) {
         try {
             permissionService.deleteBatch(GarnetRsUtil.parseStringToList(permissionIds));
@@ -138,7 +138,7 @@ public class GarPermissionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMPermission.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    //@RequiresPermissions({"application:permission:list"})
+    @RequiresPermissions({"permission:list:application"})
     public ResponseEntity<?> searchAuthoritiesByApplicationId(
             @ApiParam(value = "permissionId", required = true) @PathVariable(value = "applicationId") Long applicationId) {
         try {

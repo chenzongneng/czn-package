@@ -56,7 +56,5 @@ public interface GarDeptDao extends BaseDao<GarDept> {
      */
     GarDept getDeptByParentDeptId(@Param(value = "parentDeptId") Long parentDeptId);
 
-    List<GarDept> getDeptListByParams(Map<String, Object> params);
-
     int getTotalDeptByParam(Map<String, Object> params);
 }

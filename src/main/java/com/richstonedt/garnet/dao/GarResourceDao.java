@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <b><code>GarResourceDao</code></b>
@@ -33,4 +34,6 @@ public interface GarResourceDao extends BaseDao<GarResource> {
     List<GarResource> getResourcesByParams(Map<String, Object> params);
 
     int getTotalResourceByParam(Map<String, Object> params);
+
+    Set<String> queryResourceNameByParentIds(@Param("parentIds")List<Long> resourceIds);
 }

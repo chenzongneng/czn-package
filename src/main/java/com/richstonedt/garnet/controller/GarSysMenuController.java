@@ -75,47 +75,4 @@ public class GarSysMenuController {
         }
     }
 
-//    /**
-//     * Search sys menu response entity.
-//     *
-//     * @return the response entity
-//     * @since garnet-core-be-fe 0.1.0
-//     */
-//    @RequestMapping(value = "/menu/userId/{userId}/appId/{appId}/appName/{appName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    @ApiOperation(value = "[Garnet]查询系统菜单", notes = "Search system menu")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "successful query"),
-//            @ApiResponse(code = 500, message = "internal server error")})
-//    public ResponseEntity<?> searchSysMenu(
-//            @ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId,
-//            @ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId,
-//            @ApiParam(value = "appName",required = true)@PathVariable(value = "appName")String appName) {
-//        try {
-//            return new ResponseEntity<>(userMenuService.getUserMenuList(userId,appId,appName), HttpStatus.OK);
-//        } catch (Throwable t) {
-//            LOG.error("Failed to search system menu", t);
-//            return GarnetRsUtil.newResponseEntity(t);
-//        }
-//    }
-//    /**
-//     * Search sys menu response entity.
-//     *
-//     * @return the response entity
-//     * @since garnet-core-be-fe 0.1.0
-//     */
-//    @RequestMapping(value = "/button/userId/{userId}/appId/{appId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    @ApiOperation(value = "[Garnet]查询系统菜单", notes = "Search system menu")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "successful query"),
-//            @ApiResponse(code = 500, message = "internal server error")})
-//    public ResponseEntity<?> searchButton(
-//            @ApiParam(value = "userId", required = true) @PathVariable(value = "userId") Long userId,
-//            @ApiParam(value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
-//        try {
-//            return new ResponseEntity<>(userResourceService.getCodeMapListByUserId(userId,appId), HttpStatus.OK);
-//        } catch (Throwable t) {
-//            LOG.error("Failed to search system menu", t);
-//            return GarnetRsUtil.newResponseEntity(t);
-//        }
-//    }
 }

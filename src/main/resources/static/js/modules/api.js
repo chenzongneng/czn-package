@@ -68,7 +68,7 @@ $(function () {
 var applicationList = {
     // 应用列表数据
     appList: {
-        selectedApp: "",
+        selectedApp: "1",
         options: []
     },
     // 搜索框应用列表数据
@@ -125,9 +125,10 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            applicationList.appList.selectedApp = "";
+            applicationList.appList.selectedApp = "1";
             vm.api = {
                 apiId: null,
+                applicationId: "1",
                 name: null,
                 parentName: null,
                 parentId: 0,
@@ -169,8 +170,13 @@ var vm = new Vue({
                         url: baseURL + "api?apiIds=" + apiIds.toString(),
                         contentType: "application/json",
                         dataType: "",
-                        success: function () {
-                            swal("删除成功!", "", "success");
+                        success: function (result) {
+                            if (!result.message) {
+                                swal("删除成功!", "", "success");
+                                vm.reload();
+                            } else {
+                                swal("无法删除!", result.message, "error");
+                            }
                             vm.reload();
                         },
                         error: function () {
@@ -181,6 +187,10 @@ var vm = new Vue({
         },
         /** 导入按钮点击事件 */
         importApi: function () {
+            if(vm.option.appCode === null || vm.option.appCode === "") {
+                swal("请选择应用", "", "error");
+                return;
+            }
             layer.open({
                 type: 1,
                 title: false,
@@ -189,34 +199,40 @@ var vm = new Vue({
                 shadeClose: true,
                 anim: 1,
                 content:
-                '<div class="form-group col-sm-2">' +
-                '    <select class="form-control" v-model="option.appCode">' +
-                '        <option disabled value=""> 选择应用 </option>' +
-                '        <option v-for="option in applicationList.appImportList.options" v-bind:value="option.code">' +
-                '            {{ option.name }}' +
-                '        </option>' +
-                '    </select>' +
+                // '<div class="form-group col-sm-2">' +
+                // '    <select class="form-control" v-model="option.appCode">' +
+                // '        <option disabled value=""> 选择应用 </option>' +
+                // '        <option v-for="option in applicationList.appImportList.options" v-bind:value="option.code">' +
+                // '            {{ option.name }}' +
+                // '        </option>' +
+                // '    </select>' +
                 '<div style="padding:50px;">' +
                 '   <textarea id="apiImportTextarea" style="width: 890px; height: 445px"></textarea>' +
                 '</div>',
                 btn: ['确定', '取消'],
                 btn1: function (index) {
-                    var apiImportJson = $("#apiImportTextarea").val();
-                    $.ajax({
-                        type: "POST",
-                        url: baseURL + "importApis/" + "garnet",// vm.option.appCode,
-                        contentType: "application/json",
-                        data: apiImportJson,
-                        dataType: '',
-                        success: function () {
-                            vm.reload();
-                            swal("导入成功!", "", "success");
-                        },
-                        error: function () {
-                            swal("导入失败！", "", "error");
+                    layer.confirm('批量导入将会覆盖原有数据，是否继续？', {icon: 3, title:'提示'}, function(index){
+                        var apiImportJson = $("#apiImportTextarea").val();
+                        if(apiImportJson === null || apiImportJson === ""){
+                            layer.alert('内容不能为空');
+                            return;
                         }
+                        $.ajax({
+                            type: "POST",
+                            url: baseURL + "importApis/" + vm.option.appCode,
+                            contentType: "application/json",
+                            data: apiImportJson,
+                            dataType: '',
+                            success: function () {
+                                swal("导入成功!", "", "success");
+                                vm.reload();
+                            },
+                            error: function () {
+                                swal("导入失败！", "", "error");
+                            }
+                        });
+                        layer.closeAll();
                     });
-                    layer.close(index);
                 }
             })
         },
@@ -274,6 +290,10 @@ var vm = new Vue({
         selectApp: function () {
 
         },
+        /** 选择应用导入API onchange 事件*/
+        selectImportApp: function () {
+
+        },
         /**  获取应用列表 */
         getAppList: function () {
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
@@ -299,7 +319,7 @@ var vm = new Vue({
                 offset: '50px',
                 skin: 'layui-layer-molv',
                 title: "选择访问权限",
-                area: ['300px', '450px'],
+                area: ['300px', '700px'],
                 shade: 0,
                 shadeClose: false,
                 content: jQuery("#parentLayer"),

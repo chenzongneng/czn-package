@@ -28,15 +28,17 @@ import java.util.Set;
 @Mapper
 public interface GarApiDao extends BaseDao<GarApi> {
 
-    Set<String> getPermissionsByIds(@Param("ids") Set<Long> ids);
+    Set<String> queryPermissionsByIds(@Param("ids") Set<Long> ids);
 
-    List<GarApi> getApiByPermission(@Param("permission") String api);
+    List<GarApi> queryApiByPermission(@Param("permission") String api);
 
-    List<GarApi> getApiByApplicationIdAndStatus(@Param("applicationId") Long applicationId, @Param("status") int status);
+    List<GarApi> queryApiByApplicationIdAndStatus(@Param("applicationId") Long applicationId, @Param("status") int status);
 
-    List<GarApi> getApiByName(@Param("name") String name);
+    List<GarApi> queryApiByName(@Param("name") String name);
 
-    List<GarApi> getApisByParams(Map<String, Object> params);
+    List<GarApi> queryApisByParams(Map<String, Object> params);
 
     int queryTotalApi(Map<String, Object> params);
+
+    Set<String> queryApiNameByParentIds(@Param("apiIds")List<Long> apiIds);
 }

@@ -73,17 +73,17 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"dept:info"})
+    @RequiresPermissions("dept:info")
     public ResponseEntity<?> getDeptList(
             @ApiParam(value = "page,当前页", required = true) @RequestParam(value = "page") Integer page,
             @ApiParam(value = "limit,每页数量", required = true) @RequestParam(value = "limit") Integer limit,
-            @ApiParam(value = "名称") @RequestParam(value = "name", required = false) String name) {
+            @ApiParam(value = "名称") @RequestParam(value = "searchName", required = false) String searchName) {
         try {
             Integer offset = (page - 1) * limit;
             Map<String, Object> params = new HashMap<>();
             params.put("limit", limit);
             params.put("offset", offset);
-            params.put("name", name);
+            params.put("searchName", searchName);
             List<GarVMDept> list = deptService.queryDeptListByParams(params);
             int totalCount = deptService.queryTotalMenuByParam(params);
             PageUtil result = new PageUtil(list, totalCount, limit, page);
@@ -106,7 +106,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"user:dept:info"})
+    @RequiresPermissions("dept:list:byUser")
     public ResponseEntity<?> getDeptListByUserId(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             return new ResponseEntity<>(deptService.getUserDeptList(userId), HttpStatus.OK);
@@ -128,7 +128,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"user:dept:list:add"})
+    @RequiresPermissions("dept:list:toAdd:byUser")
     public ResponseEntity<?> getDeptListToAdd(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
         try {
             List<GarVMDept> deptList = deptService.getUserDeptList(userId);
@@ -157,7 +157,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMDept.class),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"dept:info"})
+    @RequiresPermissions("dept:info")
     public ResponseEntity<?> searchDept(@ApiParam(value = "deptId", required = true) @PathVariable("deptId") Long deptId) {
         try {
             return new ResponseEntity<>(deptService.getVMDeptByDeptId(deptId), HttpStatus.OK);
@@ -179,7 +179,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"dept:create"})
+    @RequiresPermissions("dept:create")
     public ResponseEntity<?> saveDept(@RequestBody GarVMDept vmDept) {
         try {
             deptService.saveVMDept(vmDept);
@@ -202,7 +202,7 @@ public class GarDeptController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"dept:update"})
+    @RequiresPermissions("dept:update")
     public ResponseEntity<?> updateDept(@RequestBody GarVMDept vmDept) {
         try {
             deptService.updateVMDept(vmDept);
@@ -216,28 +216,22 @@ public class GarDeptController {
     /**
      * Delete dept response entity.
      *
-     * @param deptId the dept id
      * @return the response entity
      * @since garnet-core-be-fe 0.1.0
      */
-    @RequestMapping(value = "/dept/{deptId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/dept", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id删除部门", notes = "Delete dept")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"dept:dele"})
-    public ResponseEntity<?> deleteDept(@ApiParam(value = "deptId", required = true) @PathVariable(value = "deptId") Long deptId) {
+    @RequiresPermissions("dept:delete:batch")
+    public ResponseEntity<?> deleteDept(
+            @ApiParam(value = "deptIds,用‘,’隔开", required = true) @RequestParam(value = "deptIds") String deptIds) {
         try {
-            List<Long> deptList = deptService.queryDetpIdList(deptId);
-            if (!CollectionUtils.isEmpty(deptList)) {
-                Map<String, String> map = new HashMap<>(4);
-                map.put("message", "请先删除子部门");
-                return new ResponseEntity<>(map, HttpStatus.OK);
-            }
-            deptService.deleteVMDept(deptId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Map<String, String> result = deptService.deleteBatchByDeptIds(GarnetRsUtil.parseStringToList(deptIds));
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
-            LOG.error("Failed to delete applications :" + deptId, t);
+            LOG.error("Failed to delete applications :" + deptIds, t);
             return GarnetRsUtil.newResponseEntity(t);
         }
     }

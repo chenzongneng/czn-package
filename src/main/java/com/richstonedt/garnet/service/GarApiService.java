@@ -34,11 +34,13 @@ public interface GarApiService extends BaseService<GarApi> {
 
     List<GarVmApi> queryApiListByApplicationId(Long applicationId);
 
-    List<GarApiForImport> getImportApiFromAnnotation(Class controllerClass, Long applicationId);
+    List<GarApiForImport> getImportApiFromAnnotation(Class controllerClass);
 
     int queryTotalApi(Map<String, Object> params);
 
     GarVmApi getApiById(Long permissionsId);
 
     void importApiByAppCode(List<GarApiForImport> apiList, String appCode);
+
+    Map<String,String> deleteBatchByApiIds(List<Long> apiIds);
 }

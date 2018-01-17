@@ -81,7 +81,7 @@ public class GarApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVmApi.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions("application:api:list")
+    @RequiresPermissions("api:list:application")
     public ResponseEntity<?> searchApis(
             @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
         try {
@@ -140,15 +140,32 @@ public class GarApiController {
         }
     }
 
-    @RequestMapping(value = "/importApis/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]获取可导入的API列表数据", notes = "get apis which can import to database")
+    @RequestMapping(value = "/api", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]根据id批量删除菜单", notes = "Delete resources")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"api:delete:batch"})
+    public ResponseEntity<?> deleteResources(
+            @ApiParam(value = "apiIds,用‘,’隔开", required = true) @RequestParam(value = "apiIds") String apiIds) {
+        try {
+            Map<String,String> result = apiService.deleteBatchByApiIds(GarnetRsUtil.parseStringToList(apiIds));
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to delete apiIds :" + apiIds, t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    @RequestMapping(value = "/exportApis", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "[Garnet]获取可导入的API列表数据，仅供开发使用", notes = "get apis which can import to database")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVmApi.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    public ResponseEntity<?> getImportApis(
-            @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
+    @RequiresPermissions({"api:export"})
+    public ResponseEntity<?> getExportApis() {
         try {
-            List<GarApiForImport> apiList = apiService.getImportApiFromAnnotation(this.getClass(), applicationId);
+            List<GarApiForImport> apiList = apiService.getImportApiFromAnnotation(this.getClass());
             return new ResponseEntity<>(apiList, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get user role .", t);
@@ -161,6 +178,7 @@ public class GarApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVmApi.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
+    @RequiresPermissions({"api:import"})
     public ResponseEntity<?> importApis(
             @RequestBody List<GarApiForImport> apiList,
             @ApiParam(value = "applicationId", required = true) @PathVariable("appCode") String appCode) {

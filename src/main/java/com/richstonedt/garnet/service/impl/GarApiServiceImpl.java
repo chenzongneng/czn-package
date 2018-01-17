@@ -8,6 +8,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.common.utils.ClassUtil;
 import com.richstonedt.garnet.dao.GarApiDao;
 import com.richstonedt.garnet.dao.GarApplicationDao;
+import com.richstonedt.garnet.dao.GarResourceApiDao;
 import com.richstonedt.garnet.model.GarApi;
 import com.richstonedt.garnet.model.view.model.GarApiForImport;
 import com.richstonedt.garnet.model.view.model.GarVmApi;
@@ -48,6 +49,9 @@ public class GarApiServiceImpl implements GarApiService {
     @Autowired
     private GarApplicationDao applicationDao;
 
+    @Autowired
+    private GarResourceApiDao resourceApiDao;
+
     @Override
     public void save(GarApi garApi) {
         apiDao.save(garApi);
@@ -86,7 +90,7 @@ public class GarApiServiceImpl implements GarApiService {
     @Override
     public List<GarVmApi> queryApiList(Map<String,Object> params) {
         List<GarVmApi> vmApis = new ArrayList<>();
-        List<GarApi> apis = apiDao.getApisByParams(params);
+        List<GarApi> apis = apiDao.queryApisByParams(params);
         for (GarApi api : apis) {
             vmApis.add(convertApiToVMApi(api));
         }
@@ -101,7 +105,7 @@ public class GarApiServiceImpl implements GarApiService {
 
     @Override
     public Set<String> getPermissionsByIds(Set<Long> ids) {
-        return apiDao.getPermissionsByIds(ids);
+        return apiDao.queryPermissionsByIds(ids);
     }
 
     @Override
@@ -111,7 +115,7 @@ public class GarApiServiceImpl implements GarApiService {
 
     @Override
     public List<GarVmApi> queryApiListByApplicationId(Long applicationId) {
-        List<GarApi> apiList = apiDao.getApiByApplicationIdAndStatus(applicationId, 1);
+        List<GarApi> apiList = apiDao.queryApiByApplicationIdAndStatus(applicationId, 1);
         List<GarVmApi> vmApiList = new ArrayList<>();
         for (GarApi garApi : apiList) {
             GarVmApi vmApi = convertApiToVMApi(garApi);
@@ -121,13 +125,13 @@ public class GarApiServiceImpl implements GarApiService {
     }
 
     @Override
-    public List<GarApiForImport> getImportApiFromAnnotation(Class controllerClass, Long applicationId) {
+    public List<GarApiForImport> getImportApiFromAnnotation(Class controllerClass) {
 
         List<GarApiForImport> importApiList = new ArrayList<>();
         List<Class<?>> classList = ClassUtil.getClassListFromPackage(controllerClass);
         if (!CollectionUtils.isEmpty(classList)) {
             for (Class<?> clazz : classList) {
-                importApiList.add(this.getApisByAnnotation(clazz, applicationId));
+                importApiList.add(this.getApisByAnnotation(clazz));
             }
         }
         return importApiList;
@@ -150,7 +154,23 @@ public class GarApiServiceImpl implements GarApiService {
         importApi(apiList,applicationId);
     }
 
-    private GarApiForImport getApisByAnnotation(Class<?> clazz, Long applicationId) {
+    @Override
+    public Map<String, String> deleteBatchByApiIds(List<Long> apiIds) {
+        Map<String, String> result = new HashMap<>();
+        Set<String> apiNames = apiDao.queryApiNameByParentIds(apiIds);
+        if (CollectionUtils.isEmpty(apiNames)) {
+            resourceApiDao.deleteByApiIds(apiIds);
+            apiDao.deleteBatch(apiIds);
+        } else {
+            result.put("status", "500");
+            String message = "删除的API中存在如下的子API：" +
+                    String.join("，", apiNames);
+            result.put("message", message);
+        }
+        return result;
+    }
+
+    private GarApiForImport getApisByAnnotation(Class<?> clazz) {
         List<GarApi> apis = new ArrayList<>();
         Method[] methods = clazz.getMethods();
         String baseUrl = "";
@@ -167,7 +187,7 @@ public class GarApiServiceImpl implements GarApiService {
         GarApiForImport apiForImport = new GarApiForImport();
 
         GarApi parentApi = new GarApi();
-        parentApi.setApplicationId(1L);
+//        parentApi.setApplicationId(applicationId);
         parentApi.setName(apiName);
         parentApi.setStatus(1);
         parentApi.setParentId(0L);
@@ -180,7 +200,7 @@ public class GarApiServiceImpl implements GarApiService {
                     GarApi api = new GarApi();
                     ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
                     RequestMapping methodMapping = method.getAnnotation(RequestMapping.class);
-                    api.setApplicationId(applicationId);
+//                    api.setApplicationId(applicationId);
                     api.setParentId(parentApi.getApiId());
                     api.setPermission(requiresPermissions.value()[0]);
                     api.setName(apiOperation.value());
@@ -212,7 +232,7 @@ public class GarApiServiceImpl implements GarApiService {
         } else {
             params.put("permission", api.getPermission());
         }
-        List<GarApi> dbApiList = apiDao.getApisByParams(params);
+        List<GarApi> dbApiList = apiDao.queryApisByParams(params);
         // 如果访问权限不存在就新增，否则进行修改
         if (CollectionUtils.isEmpty(dbApiList)) {
             apiDao.save(api);
@@ -232,7 +252,7 @@ public class GarApiServiceImpl implements GarApiService {
                 // 获取并保存子权限
                 if (!CollectionUtils.isEmpty(importApi.getApiList())) {
                     for (GarApi api : importApi.getApiList()) {
-                        parentApi.setApplicationId(applicationId);
+                        api.setApplicationId(applicationId);
                         api.setParentId(parentApi.getApiId());
                         saveOrUpdateApi(api, false);
                     }

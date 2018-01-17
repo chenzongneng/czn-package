@@ -79,6 +79,8 @@ public interface GarDeptService extends BaseService<GarDept> {
     List<GarVMDept> queryDeptListByParams(Map<String, Object> params);
 
     int queryTotalMenuByParam(Map<String, Object> params);
+
+    Map<String,String> deleteBatchByDeptIds(List<Long> deptIds);
 }
 
 

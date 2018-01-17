@@ -35,4 +35,6 @@ public interface GarResourceService extends BaseService<GarResource> {
     void updateResource(GarVMResource garVMResource);
 
     int queryTotalResourceByParam(Map<String, Object> params);
+
+    Map<String, String> deleteBatchByResourceIds(List<Long> resourceIds);
 }

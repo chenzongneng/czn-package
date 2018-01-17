@@ -186,8 +186,13 @@ var vm = new Vue({
                         url: baseURL + "resource?resourceIds=" + resourceIds.toString(),
                         contentType: "application/json",
                         dataType: "",
-                        success: function () {
-                            swal("删除成功!", "", "success");
+                        success: function (result) {
+                            if (!result.message) {
+                                swal("删除成功!", "", "success");
+                                vm.reload();
+                            } else {
+                                swal("删除失败!", result.message, "error");
+                            }
                             vm.reload();
                         },
                         error: function () {
@@ -307,7 +312,7 @@ var vm = new Vue({
                 offset: '50px',
                 skin: 'layui-layer-molv',
                 title: "选择资源",
-                area: ['300px', '450px'],
+                area: ['300px', '700px'],
                 shade: 0,
                 shadeClose: false,
                 content: jQuery("#resourceLayer"),

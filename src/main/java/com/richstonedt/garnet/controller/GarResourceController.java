@@ -77,7 +77,7 @@ public class GarResourceController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMResource.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
-    @RequiresPermissions({"application:resource:list"})
+    @RequiresPermissions({"resource:list:application"})
     public ResponseEntity<?> searchResourcesByAppId(
             @ApiParam(value = "applicationId", required = true) @PathVariable("applicationId") Long applicationId) {
         try {
@@ -144,8 +144,8 @@ public class GarResourceController {
     @RequiresPermissions({"resource:delete:batch"})
     public ResponseEntity<?> deleteResources(@ApiParam(value = "resourceIds,用‘,’隔开", required = true) @RequestParam(value = "resourceIds") String resourceIds) {
         try {
-            resourceService.deleteBatch(GarnetRsUtil.parseStringToList(resourceIds));
-            return new ResponseEntity<>(HttpStatus.OK);
+            Map<String, String> result = resourceService.deleteBatchByResourceIds(GarnetRsUtil.parseStringToList(resourceIds));
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to delete resources :" + resourceIds, t);
             return GarnetRsUtil.newResponseEntity(t);

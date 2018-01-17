@@ -13,6 +13,12 @@
         <if test="searchName != null and searchName != ''">
             and name LIKE CONCAT('%',#{searchName},'%')
         </if>
+        <if test="parentDeptIds != null">
+            and parent_dept_id in
+            <foreach collection="parentDeptIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
     </sql>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarDept">
@@ -77,6 +83,13 @@
         WHERE dept_id = #{id};
     </delete>
 
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_apis WHERE api_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
     <select id="queryDetpIdList" resultType="long">
         SELECT dept_id
         FROM gar_depts
@@ -90,7 +103,7 @@
         </where>
     </select>
 
-    <select id="getDeptListByParams" resultType="com.richstonedt.garnet.model.GarDept">
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarDept">
         select * from gar_depts
         <where>
             <include refid="whereSQL"/>

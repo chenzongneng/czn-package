@@ -21,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <b><code>GarDeptServiceImpl</code></b>
@@ -158,14 +156,11 @@ public class GarDeptServiceImpl implements GarDeptService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public List<GarDept> queryObjects(Map<String,Object> params) {
+    public List<GarDept> queryObjects(Map<String, Object> params) {
         return deptDao.queryObjects(params);
     }
 
@@ -176,7 +171,7 @@ public class GarDeptServiceImpl implements GarDeptService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
-    public int queryTotal(Map<String,Object> params) {
+    public int queryTotal(Map<String, Object> params) {
         return deptDao.queryTotal(params);
     }
 
@@ -289,9 +284,9 @@ public class GarDeptServiceImpl implements GarDeptService {
 
     @Override
     public List<GarVMDept> queryDeptListByParams(Map<String, Object> params) {
-        List<GarDept> deptList = deptDao.getDeptListByParams(params);
+        List<GarDept> deptList = deptDao.queryObjects(params);
         List<GarVMDept> vmDeptList = new ArrayList<>(deptList.size());
-        for (GarDept dept: deptList) {
+        for (GarDept dept : deptList) {
             GarVMDept vmDept = convertDeptToVMDept(dept);
             vmDeptList.add(vmDept);
         }
@@ -301,6 +296,23 @@ public class GarDeptServiceImpl implements GarDeptService {
     @Override
     public int queryTotalMenuByParam(Map<String, Object> params) {
         return deptDao.getTotalDeptByParam(params);
+    }
+
+    @Override
+    public Map<String, String> deleteBatchByDeptIds(List<Long> deptIds) {
+        Map<String, String> result = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("parentDeptIds", deptIds);
+        List<GarDept> deptList = deptDao.queryObjects(params);
+        if (CollectionUtils.isEmpty(deptList)) {
+            deptDao.deleteBatch(deptIds);
+        } else {
+            result.put("status", "500");
+            String message = "删除的部门中存在如下的子部门：" +
+                    deptList.parallelStream().map(GarDept::getName).collect(Collectors.joining("，")).toString();
+            result.put("message", message);
+        }
+        return result;
     }
 
     /**
@@ -446,8 +458,8 @@ public class GarDeptServiceImpl implements GarDeptService {
      * 2. 找到每条该部门到顶级部门的这条线
      * 3. 反转这条线，从顶级部门到部门
      * 4. 随便取一条线（默认第一条）找到这些线中最长的相同段
-     *      (如果都在同一部门，那么其中一条线必然包括另外一条线，如果选择长的线，那么将会数组越界，此时上一个点即为该点；
-     *            如果选择短的线，那么程序最终返回该线的最后一个点就是该点。)
+     * (如果都在同一部门，那么其中一条线必然包括另外一条线，如果选择长的线，那么将会数组越界，此时上一个点即为该点；
+     * 如果选择短的线，那么程序最终返回该线的最后一个点就是该点。)
      * 5. 那么那个点就是这些部门的最小父部门
      *
      * @param userId the user id
@@ -462,9 +474,12 @@ public class GarDeptServiceImpl implements GarDeptService {
                 return queryObject(userDeptList.get(0).getDeptId()).getParentDeptId();
             }
             for (GarUserDept userDept : userDeptList) {
-                line = userDept.getDeptId().toString();
-                getDeptLine(queryObject(userDept.getDeptId()).getParentDeptId());
-                deptLines.add(StringUtils.reverse(line));
+                GarDept dept = queryObject(userDept.getDeptId());
+                if (!ObjectUtils.isEmpty(dept)) {
+                    line = userDept.getDeptId().toString();
+                    getDeptLine(dept.getParentDeptId());
+                    deptLines.add(StringUtils.reverse(line));
+                }
             }
         }
         List<String[]> listStr = new ArrayList<>();

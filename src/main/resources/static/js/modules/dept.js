@@ -139,6 +139,7 @@ var vm = new Vue({
     data: {
         showList: true,
         title: null,
+        searchName: null,
         // 当前用户信息
         currentUser: {},
         dept: {
@@ -210,8 +211,8 @@ var vm = new Vue({
         },
         /**  删除按钮点击事件 */
         del: function () {
-            var deptId = getSelectedRow();
-            if (!deptId) {
+            var deptIds = getSelectedRows();
+            if (!deptIds) {
                 return;
             }
             swal({
@@ -226,7 +227,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "dept/" + deptId,
+                        url: baseURL + "dept?deptIds=" + deptIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function (result) {
@@ -293,7 +294,11 @@ var vm = new Vue({
         },
         reload: function () {
             vm.showList = true;
-            Dept.table.refresh();
+            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            $("#jqGrid").jqGrid('setGridParam', {
+                postData: {searchName: vm.searchName},
+                page: page
+            }).trigger("reloadGrid");
         },
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {

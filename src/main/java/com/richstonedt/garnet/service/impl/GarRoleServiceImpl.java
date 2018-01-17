@@ -16,6 +16,7 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -131,7 +132,6 @@ public class GarRoleServiceImpl implements GarRoleService {
         // 删除与部门关联的角色
         roleDeptService.deleteBatch(ids);
 
-        // todo 删除与权限关联的角色
         rolePermissionDao.deleteBatchByRoleIds(ids);
 
         roleDao.deleteBatch(ids);
@@ -261,7 +261,6 @@ public class GarRoleServiceImpl implements GarRoleService {
     private GarVMRole convertRoleToVmRole(GarRole role) {
         GarVMRole vmRole = new GarVMRole();
         String tenantName = tenantService.queryObject(role.getTenantId()).getName();
-        System.out.println("TEST:" + role.getAppId());
         String appName = applicationService.queryObject(role.getAppId()).getName();
 
         // 获取该角色的部门列表
@@ -271,7 +270,10 @@ public class GarRoleServiceImpl implements GarRoleService {
         if (!CollectionUtils.isEmpty(roleDeptList)) {
             for (GarRoleDept roleDept : roleDeptList) {
                 deptIdList.add(roleDept.getDeptId());
-                deptNameList.add(deptService.queryObject(roleDept.getDeptId()).getName());
+                GarDept dept = deptService.queryObject(roleDept.getDeptId());
+                if (!ObjectUtils.isEmpty(dept)) {
+                    deptNameList.add(dept.getName());
+                }
             }
         }
         vmRole.setDeptIdList(deptIdList);

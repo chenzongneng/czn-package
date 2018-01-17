@@ -7,6 +7,7 @@ package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.dao.GarPermissionDao;
+import com.richstonedt.garnet.dao.GarRolePermissionDao;
 import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.GarPermission;
 import com.richstonedt.garnet.model.view.model.GarVMPermission;
@@ -44,6 +45,9 @@ public class GarPermissionServiceImpl implements GarPermissionService {
     @Autowired
     private GarApplicationDao applicationDao;
 
+    @Autowired
+    private GarRolePermissionDao rolePermissionDao;
+
     private BeanCopier entityToVMCopier = BeanCopier.create(GarPermission.class, GarVMPermission.class,
             false);
 
@@ -59,11 +63,13 @@ public class GarPermissionServiceImpl implements GarPermissionService {
 
     @Override
     public void deleteById(Long id) {
+        rolePermissionDao.deleteByPermissionId(id);
         permissionDao.deleteById(id);
     }
 
     @Override
     public void deleteBatch(List<Long> ids) {
+        rolePermissionDao.deleteBatchByPermissionIds(ids);
         permissionDao.deleteBatch(ids);
     }
 

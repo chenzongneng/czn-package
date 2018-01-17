@@ -206,9 +206,9 @@ public class GarTenantServiceImpl implements GarTenantService {
      */
     private GarVMTenant convertTenantToVmTenant(GarTenant tenant) {
         GarVMTenant vmTenant = new GarVMTenant();
+        List<GarApplicationTenant> appTenantList = appTenantService.getApplicationTenantByTenantId(tenant.getTenantId());
         List<String> appNameList = new ArrayList<>();
         List<Long> appIdList = new ArrayList<>();
-        List<GarApplicationTenant> appTenantList = appTenantService.getApplicationTenantByTenantId(tenant.getTenantId());
         if (!CollectionUtils.isEmpty(appTenantList)) {
             for (GarApplicationTenant appTenant : appTenantList) {
                 appIdList.add(appTenant.getAppId());

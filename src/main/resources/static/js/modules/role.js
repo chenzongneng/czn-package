@@ -116,7 +116,7 @@ var vm = new Vue({
         },
         // 应用列表数据
         appList: {
-            selectedApp: "",
+            selectedApp: "1",
             options: []
         },
         // 当前用户信息
@@ -133,7 +133,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
-            vm.appList.selectedApp = "";
+            vm.appList.selectedApp = "1";
             vm.appList.options = [];
             vm.role = {
                 roleId: null,
@@ -239,7 +239,7 @@ var vm = new Vue({
             //加载部门树
             $.get(baseURL + "depts/" + currentUser.userId, function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
-                deptTree.expandAll(f);
+                deptTree.expandAll(false);
             });
             //加载权限树
             $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
