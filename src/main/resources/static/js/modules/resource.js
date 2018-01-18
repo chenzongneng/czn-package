@@ -150,7 +150,7 @@ var vm = new Vue({
                 status: 1
             };
             vm.initTreesToAdd();
-            vm.loadResourceTree();
+            // vm.loadResourceTree();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -163,7 +163,7 @@ var vm = new Vue({
             vm.resource.apiIdList = [];
             vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);
-            vm.loadResourceTree();
+            // vm.loadResourceTree();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -237,7 +237,7 @@ var vm = new Vue({
             //加载访问权限树
             $.get(baseURL + "/apis/applicationId/" + vm.resource.applicationId, function (response) {
                 apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
-                apiTree.expandAll(true);
+                apiTree.expandAll(false);
             })
         },
         /** 更新按钮初始化数据 */
@@ -245,7 +245,7 @@ var vm = new Vue({
             //加载访问权限树
             $.get(baseURL + "apis/applicationId/" + vm.resource.applicationId, function (response) {
                 apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
-                apiTree.expandAll(true);
+                apiTree.expandAll(false);
                 vm.getResourceById(resourceId);
             })
         },
@@ -262,11 +262,12 @@ var vm = new Vue({
                 vm.resource.path = response.path;
                 vm.resource.status = response.status;
                 applicationList.appList.selectedApp = response.applicationId;
+                vm.initTreesToAdd();
                 $.each(response.apiIdList, function (index, item) {
                     var node = apiTree.getNodeByParam("apiId", item);
                     apiTree.checkNode(node, true, false);
                 });
-                vm.typeChange();
+                // vm.typeChange();
             });
         },
         /** 查询当前用户信息 */
@@ -278,7 +279,9 @@ var vm = new Vue({
         /** 重新加载 */
         reload: function () {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            // var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page = 1;
+            console.log(JSON.stringify(page));
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {name: vm.name, applicationId: vm.option.appSearchId},
                 page: page
@@ -307,6 +310,7 @@ var vm = new Vue({
         },
         /**  资源树点击事件 */
         resourceTree: function () {
+            vm.loadResourceTree();
             layer.open({
                 type: 1,
                 offset: '50px',

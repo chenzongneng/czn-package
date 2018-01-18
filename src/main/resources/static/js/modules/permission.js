@@ -78,7 +78,7 @@ var resourceTreeSetting = {
         key: {
             url: "nourl",
             name: "name",
-            title:"path"
+            title: "path"
         }
     },
     check: {
@@ -86,8 +86,8 @@ var resourceTreeSetting = {
         nocheckInherit: true,
         chkboxType: {"Y": "s", "N": "s"}
     },
-    callback:{
-        beforeClick:function (treeId, treeNode, clickFlag) {
+    callback: {
+        beforeClick: function (treeId, treeNode, clickFlag) {
             vm.permission.wildcard = treeNode.path;
         }
     }
@@ -150,7 +150,8 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-            vm.initTreesToUpdate(permissionId);
+            // vm.initTreesToUpdate(permissionId);
+            vm.getPermissionById(permissionId);
             vm.getAppList();
         },
         /**  删除按钮点击事件 */
@@ -217,29 +218,25 @@ var vm = new Vue({
                 resourceTree.expandAll(true);
             })
         },
-        /** 更新按钮初始化数据 */
-        initTreesToUpdate: function (permissionId) {
-            //加载访问权限树
-            $.get(baseURL + "resources/applicationId/" + vm.permission.applicationId, function (response) {
-                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
-                resourceTree.expandAll(true);
-                vm.getPermissionById(permissionId);
-            })
-        },
         /** 通过id 得到一个permission对象 */
         getPermissionById: function (permissionId) {
             $.get(baseURL + "permission/" + permissionId, function (response) {
                 vm.permission.permissionId = response.permissionId;
+                vm.permission.applicationId = response.applicationId;
                 vm.permission.name = response.name;
                 vm.permission.wildcard = response.wildcard;
                 vm.permission.description = response.description;
                 vm.permission.status = response.status;
-                $.each(response.resourceIdList, function (index, item) {
-                    var node = resourceTree.getNodeByParam("resourceId", item);
-                    console.log(JSON.stringify(node));
-                    resourceTree.checkNode(node, true, false);
-                });
+                vm.initTreesToUpdate();
             });
+        },
+        /** 更新按钮初始化数据 */
+        initTreesToUpdate: function () {
+            //加载资源树
+            $.get(baseURL + "resources/applicationId/" + vm.permission.applicationId, function (response) {
+                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
+                resourceTree.expandAll(true);
+            })
         },
         /** 查询当前用户信息 */
         getCurrentUser: function () {
@@ -262,11 +259,13 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
-                $.each(response.list, function (index, item) {
-                    vm.appList.options.push(item);
-                })
-            });
+            if (vm.appList.options.length === 0) {
+                $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                    $.each(response.list, function (index, item) {
+                        vm.appList.options.push(item);
+                    })
+                });
+            }
         }
     },
     /**  初始化页面时执行该方法 */

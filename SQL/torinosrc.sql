@@ -38,12 +38,28 @@ INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, cod
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (10, 9, '资源管理', 'modules/resource.html', 1, 'fa fa-th-list', 'garnetDevelopmentResource', 1);
 
 
+--------------------- token表 ----------------------
+DROP TABLE IF EXISTS "public"."gar_tokens";
+CREATE TABLE "public"."gar_tokens" (
+  user_id     INT8,
+  token       VARCHAR(200) COLLATE "default" NOT NULL,
+  expire_time TIMESTAMP,
+  update_time TIMESTAMP
+);
+
+COMMENT ON TABLE "public"."gar_tokens" IS '用户token';
+COMMENT ON COLUMN "public"."gar_tokens"."user_id" IS '用户ID';
+COMMENT ON COLUMN "public"."gar_tokens"."token" IS 'token';
+COMMENT ON COLUMN "public"."gar_tokens"."expire_time" IS '过期时间';
+COMMENT ON COLUMN "public"."gar_tokens"."update_time" IS '更新时间';
+
+
 --------------------- 租户表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_tenants";
 CREATE TABLE "public"."gar_tenants"(
   tenant_id   INT8   PRIMARY KEY,
-  name        VARCHAR(100) COLLATE "default" NOT NULL,
-  remark        VARCHAR(100) COLLATE "default" NOT NULL,
+  name        VARCHAR(100) COLLATE "default",
+  remark        VARCHAR(100) COLLATE "default",
   create_time     TIMESTAMP(6)
 );
 COMMENT ON TABLE "public"."gar_tenants" IS '租户';
@@ -52,7 +68,7 @@ COMMENT ON COLUMN "public"."gar_tenants"."name" IS '租户名称';
 COMMENT ON COLUMN "public"."gar_tenants"."remark" IS '备注';
 COMMENT ON COLUMN "public"."gar_tenants"."create_time" IS '创建时间';
 
-INSERT INTO public.gar_tenants (tenant_id, name, remark, create_time, ctid) VALUES (1, 'Garnet', 'Garnet安全模块管理', '2017-10-20 16:13:05.152868', '(0,19)');
+INSERT INTO public.gar_tenants (tenant_id, name, remark, create_time) VALUES (1, 'Garnet', 'Garnet安全模块管理', '2017-10-20 16:13:05.152868');
 
 
 --------------------- 应用表 ----------------------
@@ -161,6 +177,29 @@ INSERT INTO public.gar_depts (dept_id, parent_dept_id, tenant_id, app_id, name, 
 INSERT INTO public.gar_depts (dept_id, parent_dept_id, tenant_id, app_id, name, order_num) VALUES (33, 1, 1, 1, 'Garnet', 1);
 
 
+--------------------- 角色表 ----------------------
+DROP TABLE IF EXISTS "public"."gar_roles";
+CREATE TABLE "public"."gar_roles" (
+  role_id     INT8 PRIMARY KEY,
+  tenant_id   INT8,
+  app_id      INT8,
+  name        VARCHAR(100),
+  remark      VARCHAR(100) COLLATE "default",
+  create_time TIMESTAMP
+);
+
+COMMENT ON TABLE "public"."gar_roles" IS '角色';
+COMMENT ON COLUMN "public"."gar_roles"."role_id" IS '角色ID';
+COMMENT ON COLUMN "public"."gar_roles"."tenant_id" IS '租户ID';
+COMMENT ON COLUMN "public"."gar_roles"."app_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_roles"."name" IS '角色名字';
+COMMENT ON COLUMN "public"."gar_roles"."remark" IS '备注';
+COMMENT ON COLUMN "public"."gar_roles"."create_time" IS '创建时间';
+
+INSERT INTO public.gar_roles (role_id, tenant_id, app_id, name, remark, create_time) VALUES (1, 1, 1, '超级管理员', '拥有最高权限', '2018-01-18 13:14:20.656193');
+
+
+
 --------------------- 权限表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_permissions";
 CREATE TABLE "public"."gar_permissions" (
@@ -179,6 +218,47 @@ COMMENT ON COLUMN "public"."gar_permissions"."description" IS '详细说明';
 COMMENT ON COLUMN "public"."gar_permissions"."status" IS '状态';
 
 
+--------------------- 系统LOG信息表 ----------------------
+DROP TABLE IF EXISTS "public"."gar_logs";
+CREATE TABLE gar_logs
+(
+  id          INT8 PRIMARY KEY,
+  username    VARCHAR(50) COLLATE "default",
+  operation   VARCHAR(50) COLLATE "default",
+  method      VARCHAR(50) COLLATE "default",
+  url         VARCHAR(255) COLLATE "default",
+  ip          VARCHAR(255) COLLATE "default",
+  sql         TEXT,
+  create_time TIMESTAMP
+);
+COMMENT ON TABLE "public"."gar_logs" IS '系统LOG信息';
+COMMENT ON COLUMN "public"."gar_logs"."id" IS 'LogID';
+COMMENT ON COLUMN "public"."gar_logs"."username" IS '用户名';
+COMMENT ON COLUMN "public"."gar_logs"."operation" IS '用户操作';
+COMMENT ON COLUMN "public"."gar_logs"."method" IS '请求方法';
+COMMENT ON COLUMN "public"."gar_logs"."url" IS '请求URL';
+COMMENT ON COLUMN "public"."gar_logs"."ip" IS '用户ip';
+COMMENT ON COLUMN "public"."gar_logs"."sql" IS '执行sql';
+COMMENT ON COLUMN "public"."gar_logs"."create_time" IS '创建时间';
+
+
+--------------------- LOG操作信息表 ----------------------
+DROP TABLE IF EXISTS "public"."gar_log_operations";
+CREATE TABLE gar_log_operations
+(
+  id        INT8 PRIMARY KEY,
+  url       VARCHAR(200),
+  method    VARCHAR(50),
+  operation VARCHAR(100)
+);
+COMMENT ON TABLE "public"."gar_log_operations" IS 'LOG操作信息';
+COMMENT ON COLUMN "public"."gar_log_operations"."id" IS 'LogID';
+COMMENT ON COLUMN "public"."gar_log_operations"."operation" IS '用户操作';
+COMMENT ON COLUMN "public"."gar_log_operations"."method" IS '请求方法';
+COMMENT ON COLUMN "public"."gar_log_operations"."url" IS '请求URL';
+
+
+--------------------- 资源表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_resources";
 CREATE TABLE "public"."gar_resources" (
   resource_id        BIGSERIAL PRIMARY KEY,
@@ -204,6 +284,7 @@ COMMENT ON COLUMN "public"."gar_resources"."parent_code" IS '父资源标识';
 COMMENT ON COLUMN "public"."gar_resources"."path" IS '路径标识';
 COMMENT ON COLUMN "public"."gar_resources"."status" IS '状态';
 
+INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, '全部API', '全部API，供开发使用', 'garnetDevelopmentAllApi', 'garnetDevelopment', '/garnet/development/all', 1);
 INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, 'Garnet', 'Garnet项目', 'garnet', NULL, '/garnet', 1);
 INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, '系统管理', 'Garnet系统管理', 'garnetSysManagement', 'garnet', '/garnet/sysManagement', 1);
 INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, '开发选项', 'Garnet开发选项', 'garnetDevelopment', 'garnet', '/garnet/development', 1);
@@ -240,9 +321,10 @@ INSERT INTO public.gar_resources (application_id, name, description, code, paren
 INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, 'API管理新增', 'GarnetAPI管理新增按钮', 'garnetDevelopmentApiAdd', 'garnetDevelopmentApi', '/garnet/development/api/add', 1);
 INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, 'API管理修改', 'GarnetAPI管理修改按钮', 'garnetDevelopmentApiUpdate', 'garnetDevelopmentApi', '/garnet/development/api/update', 1);
 INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, 'API管理删除', 'GarnetAPI管理删除按钮', 'garnetDevelopmentApiDelete', 'garnetDevelopmentApi', '/garnet/development/api/delete', 1);
-INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, '全部API', '全部API，供开发使用', 'garnetDevelopmentAllApi', 'garnetDevelopment', '/garnet/development/all', 1);
+INSERT INTO public.gar_resources (application_id, name, description, code, parent_code, path, status) VALUES (1, '租户管理搜索框', '租户管理上方的搜索框', 'garnetSysManagementTenantSearchBox', 'garnetSysManagementTenant', '/garnet/sysManagement/tenant/searchBox', 1);
 
 
+--------------------- API表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_apis";
 CREATE TABLE "public"."gar_apis" (
   api_id  BIGSERIAL PRIMARY KEY,
@@ -265,8 +347,10 @@ COMMENT ON COLUMN "public"."gar_apis"."url" IS '对应的链接';
 COMMENT ON COLUMN "public"."gar_apis"."method" IS '方法';
 COMMENT ON COLUMN "public"."gar_apis"."status" IS '状态';
 
---------------------- 关联表 ----------------------
+INSERT INTO public.gar_apis (application_id, parent_id, name, permission, description, url, method, status) VALUES (1, 0, '全部访问权限', '*', '全部API的访问权限', NULL, 'GET', 1);
 
+
+--------------------- 应用-租户关联表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_application_tenant";
 CREATE TABLE "public"."gar_application_tenant" (
   app_id INT8,
@@ -279,6 +363,8 @@ COMMENT ON COLUMN "public"."gar_application_tenant"."tenant_id" IS '租户ID';
 
 INSERT INTO public.gar_application_tenant (app_id, tenant_id) VALUES (1, 1);
 
+
+--------------------- 用户-应用关联表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_user_application";
 CREATE TABLE "public"."gar_user_application" (
   user_id INT8,
@@ -289,6 +375,9 @@ ALTER TABLE "public"."gar_user_application"
 COMMENT ON COLUMN "public"."gar_user_application"."user_id" IS '用户ID';
 COMMENT ON COLUMN "public"."gar_user_application"."app_id" IS '应用ID';
 
+INSERT INTO public.gar_user_application (user_id, app_id) VALUES (1, 1);
+
+--------------------- 用户-部门关联表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_user_dept";
 CREATE TABLE "public"."gar_user_dept" (
   user_id INT8,
@@ -297,10 +386,26 @@ CREATE TABLE "public"."gar_user_dept" (
 ALTER TABLE "public"."gar_user_dept"
   ADD PRIMARY KEY ("user_id", "dept_id");
 COMMENT ON COLUMN "public"."gar_user_dept"."user_id" IS '用户ID';
-COMMENT ON COLUMN "public"."gar_user_dept"."dept_id" IS '应用ID';
+COMMENT ON COLUMN "public"."gar_user_dept"."dept_id" IS '部门ID';
 
 INSERT INTO public.gar_user_dept (user_id, dept_id) VALUES (1, 33);
 
+
+--------------------- 角色-部门关联表 ----------------------
+DROP TABLE IF EXISTS "public"."gar_role_dept";
+CREATE TABLE "public"."gar_role_dept" (
+  role_id      INT8,
+  dept_id INT8
+);
+ALTER TABLE "public"."gar_role_dept"
+  ADD PRIMARY KEY ("role_id", "dept_id");
+COMMENT ON COLUMN "public"."gar_role_dept"."role_id" IS '角色ID';
+COMMENT ON COLUMN "public"."gar_role_dept"."dept_id" IS '部门ID';
+
+INSERT INTO public.gar_role_dept (role_id, dept_id) VALUES (1, 33);
+
+
+--------------------- 角色-权限关联表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_role_permission";
 CREATE TABLE "public"."gar_role_permission" (
   role_id      INT8,
@@ -311,7 +416,11 @@ ALTER TABLE "public"."gar_role_permission"
 COMMENT ON COLUMN "public"."gar_role_permission"."role_id" IS '角色ID';
 COMMENT ON COLUMN "public"."gar_role_permission"."permission_id" IS '权限ID';
 
+INSERT INTO public.gar_role_permission (role_id, permission_id) VALUES (1, 1);
 
+INSERT INTO public.gar_permissions (application_id, name, wildcard, description, status) VALUES (1, '最高权限', '/%', 'Garnet最高权限', 1);
+
+--------------------- 资源-API关联表 ----------------------
 DROP TABLE IF EXISTS "public"."gar_resource_api";
 CREATE TABLE "public"."gar_resource_api" (
   resource_id       INT8,
@@ -321,3 +430,7 @@ ALTER TABLE "public"."gar_resource_api"
   ADD PRIMARY KEY ("resource_id", "api_id");
 COMMENT ON COLUMN "public"."gar_resource_api"."resource_id" IS '资源ID';
 COMMENT ON COLUMN "public"."gar_resource_api"."api_id" IS 'API ID';
+
+INSERT INTO public.gar_resource_api (resource_id, api_id) VALUES (1, 1);
+
+

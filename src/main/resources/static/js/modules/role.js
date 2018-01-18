@@ -15,8 +15,8 @@ $(function () {
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
             {label: '所属应用', name: 'appName', align: 'center', width: 70},
             {label: '部门列表', name: 'deptNameList', align: 'center', width: 100},
-            {label: '权限列表', name: 'permissionNameList', align: 'center', width: 100},
-            {label: '创建时间', name: 'createTime', align: 'center', width: 90}
+            {label: '权限列表', name: 'permissionNameList', align: 'center', width: 100}
+            // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
         height: 385,
@@ -104,7 +104,7 @@ var vm = new Vue({
         role: {
             roleId: null,
             tenantId: null,
-            appId: null,
+            appId: 1,
             name: null,
             remark: null,
             deptIds: null
@@ -138,7 +138,7 @@ var vm = new Vue({
             vm.role = {
                 roleId: null,
                 tenantId: null,
-                appId: null,
+                appId: 1,
                 name: null,
                 remark: null,
                 deptIds: null,
@@ -237,8 +237,9 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载部门树
-            $.get(baseURL + "depts/" + currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            // $.get(baseURL + "depts/" + currentUser.userId, function (response) {
+            $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                 deptTree.expandAll(false);
             });
             //加载权限树
@@ -265,8 +266,9 @@ var vm = new Vue({
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.appId;
                 //加载部门树
-                $.get(baseURL + "depts/" + currentUser.userId, function (response) {
-                    deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+                // $.get(baseURL + "depts/" + currentUser.userId, function (response) {
+                $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+                    deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                     deptTree.expandAll(true);
                     console.log(JSON.stringify(vm.role.deptIdList));
                     $.each(vm.role.deptIdList, function (index, item) {

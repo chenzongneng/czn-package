@@ -22,8 +22,8 @@ $(function () {
                     '<span class="label label-danger">禁用</span>' :
                     '<span class="label label-success">正常</span>';
             }
-            },
-            {label: '创建时间', align: 'center', name: 'createTime', width: 90}
+            }
+            // {label: '创建时间', align: 'center', name: 'createTime', width: 90}
         ],
         viewrecords: true,
         height: 385,
@@ -252,12 +252,13 @@ var vm = new Vue({
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
                 applicationTree.expandAll(true);
-            })
+            });
             //加载部门树
-            $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            // $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
+            $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                 deptTree.expandAll(true);
-            })
+            });
         },
         /** 更新按钮初始化数据 */
         initTreeToUpdate: function (userId) {
@@ -265,13 +266,14 @@ var vm = new Vue({
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
                 applicationTree.expandAll(true);
-            })
+            });
             //加载部门树
-            $.get(baseURL + "depts/add/" + currentUser.userId, function (r) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, r);
+            // $.get(baseURL + "depts/add/" + currentUser.userId, function (r) {
+            $.get(baseURL + "depts?page=1&limit=1000" + currentUser.userId, function (r) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, r.list);
                 deptTree.expandAll(true);
                 vm.getUser(userId);
-            })
+            });
         },
         /** 根据用户ID获取用户信息 */
         getUser: function (userId) {

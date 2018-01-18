@@ -199,16 +199,16 @@ public class GarDeptServiceImpl implements GarDeptService {
     @Override
     public List<GarVMDept> getUserDeptList(Long userId) {
         GarUser user = userService.queryObject(userId);
-        GarDept garDept = deptDao.getDeptByParentDeptId(getMinParentDeptId(userId));
+//        GarDept garDept = deptDao.getDeptByParentDeptId(getMinParentDeptId(userId));
+        GarDept garDept = null;
         Long deptId = garDept == null ? 1 : garDept.getDeptId();
         String subDeptList = getSubDeptIdList(deptId);
         List<GarDept> depts = deptDao.queryDeptList(user.getTenantId(), subDeptList);
-        if (CollectionUtils.isEmpty(depts)) {
-            return null;
-        }
         List<GarVMDept> result = new ArrayList<>();
-        for (GarDept dept : depts) {
-            result.add(convertDeptToVMDept(dept));
+        if (!CollectionUtils.isEmpty(depts)) {
+            for (GarDept dept : depts) {
+                result.add(convertDeptToVMDept(dept));
+            }
         }
         return result;
     }

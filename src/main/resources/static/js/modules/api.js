@@ -280,7 +280,8 @@ var vm = new Vue({
         /** 重新加载 */
         reload: function () {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            // var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page = 1;
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {name: vm.name, applicationId: vm.option.appSearchId},
                 page: page

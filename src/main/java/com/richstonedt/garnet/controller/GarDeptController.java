@@ -123,21 +123,38 @@ public class GarDeptController {
      * @return the dept list to add
      * @since garnet-core-be-fe 0.1.0
      */
-    @RequestMapping(value = "/depts/add/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    @RequestMapping(value = "/depts/add/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    @ApiOperation(value = "[Garnet]查询部门列表用于增加部门", notes = "Get dept list to add by user id")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "successful query"),
+//            @ApiResponse(code = 500, message = "internal server error")})
+//    @RequiresPermissions("dept:list:toAdd:byUser")
+//    public ResponseEntity<?> getDeptListToAdd(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
+//        try {
+//            List<GarVMDept> deptList = deptService.getUserDeptList(userId);
+//            GarVMUser vmUser = userService.searchUser(userId);
+//            GarVMDept root = new GarVMDept();
+//            root.setDeptId(0L);
+//            root.setName(vmUser.getTenantName());
+//            root.setParentDeptId(-1L);
+//            deptList.add(root);
+//            return new ResponseEntity<>(deptList, HttpStatus.OK);
+//        } catch (Throwable t) {
+//            LOG.error("Failed to get dept list to add", t);
+//            return GarnetRsUtil.newResponseEntity(t);
+//        }
+//    }
+
+    @RequestMapping(value = "/depts/add", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询部门列表用于增加部门", notes = "Get dept list to add by user id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions("dept:list:toAdd:byUser")
-    public ResponseEntity<?> getDeptListToAdd(@ApiParam(value = "userId,用户ID") @PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<?> getDeptListToAdd() {
         try {
-            List<GarVMDept> deptList = deptService.getUserDeptList(userId);
-            GarVMUser vmUser = userService.searchUser(userId);
-            GarVMDept root = new GarVMDept();
-            root.setDeptId(0L);
-            root.setName(vmUser.getTenantName());
-            root.setParentDeptId(-1L);
-            deptList.add(root);
+            List<GarVMDept> deptList = deptService.queryDeptListByParams(null);
+//            deptList.add(root);
             return new ResponseEntity<>(deptList, HttpStatus.OK);
         } catch (Throwable t) {
             LOG.error("Failed to get dept list to add", t);

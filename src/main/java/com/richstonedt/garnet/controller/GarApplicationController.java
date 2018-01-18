@@ -91,7 +91,7 @@ public class GarApplicationController {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
     @RequiresPermissions("application:delete:batch")
-    public ResponseEntity<?> deleteApplications(@ApiParam(value = "appIds,用‘,’隔开", required = true) @RequestParam(value = "appIds") String appIds) {
+    public ResponseEntity<?> deleteApplications(@ApiParam(value = "applicationIds,用‘,’隔开", required = true) @RequestParam(value = "applicationIds") String appIds) {
         try {
             applicationService.deleteBatch(GarnetRsUtil.parseStringToList(appIds));
             return new ResponseEntity<>(HttpStatus.OK);

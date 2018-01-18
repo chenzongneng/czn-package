@@ -303,8 +303,9 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             // 加载部门树
-            $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            // $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
+            $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
             });
 
             // 加载用户树
@@ -322,8 +323,9 @@ var vm = new Vue({
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (deptId) {
             // 加载部门树  封装ajax 请求，防止数据异步导致页面数据错乱
-            $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response);
+            // $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
+            $.get(baseURL + "depts?page=1&limit=1000" + currentUser.userId, function (response) {
+                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
 
                 // 加载用户树
                 $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {

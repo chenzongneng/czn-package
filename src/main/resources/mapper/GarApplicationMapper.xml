@@ -15,7 +15,7 @@
         </if>
     </sql>
 
-    <insert id="save" parameterType="com.richstonedt.garnet.model.GarApplication">
+    <insert id="save" keyProperty="applicationId" useGeneratedKeys="true" parameterType="com.richstonedt.garnet.model.GarApplication">
         INSERT INTO gar_applications
         (
             name,

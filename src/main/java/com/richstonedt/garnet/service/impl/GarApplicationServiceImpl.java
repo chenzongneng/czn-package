@@ -6,9 +6,11 @@
 
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.config.GarnetServiceException;
 import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.model.GarApplication;
 import com.richstonedt.garnet.model.GarApplicationTenant;
+import com.richstonedt.garnet.model.GarTenant;
 import com.richstonedt.garnet.model.view.model.GarVMApplication;
 import com.richstonedt.garnet.service.GarAppTenantService;
 import com.richstonedt.garnet.service.GarApplicationService;
@@ -18,6 +20,7 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,10 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void save(GarApplication garApplication) {
+        Long applicationId = applicationDao.getApplicationIdByCode(garApplication.getCode());
+        if (!ObjectUtils.isEmpty(applicationId)) {
+            throw new GarnetServiceException("该应用标志已存在");
+        }
         applicationDao.save(garApplication);
     }
 
@@ -80,6 +87,10 @@ public class GarApplicationServiceImpl implements GarApplicationService {
      */
     @Override
     public void update(GarApplication garApplication) {
+        Long applicationId = applicationDao.getApplicationIdByCode(garApplication.getCode());
+        if (!ObjectUtils.isEmpty(applicationId) && !applicationId.equals(garApplication.getApplicationId())) {
+            throw new GarnetServiceException("该应用标志已存在");
+        }
         applicationDao.update(garApplication);
     }
 
@@ -218,8 +229,11 @@ public class GarApplicationServiceImpl implements GarApplicationService {
         List<GarApplicationTenant> appTenantList = appTenantService.getApplicationTenantByAppId(application.getApplicationId());
         if (!CollectionUtils.isEmpty(appTenantList)) {
             for (GarApplicationTenant appTenant : appTenantList) {
-                tenantIdList.add(appTenant.getTenantId());
-                tenantNameList.add(tenantService.queryObject(appTenant.getTenantId()).getName());
+                GarTenant tenant = tenantService.queryObject(appTenant.getTenantId());
+                if (!ObjectUtils.isEmpty(tenant)) {
+                    tenantIdList.add(appTenant.getTenantId());
+                    tenantNameList.add(tenant.getName());
+                }
             }
         }
         vmApplication.setTenantIdList(tenantIdList);
