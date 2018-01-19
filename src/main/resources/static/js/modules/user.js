@@ -135,7 +135,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            vm.reload();
+            vm.reload(true);
         },
         /**  新增按钮点击事件 */
         add: function () {
@@ -202,7 +202,7 @@ var vm = new Vue({
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
-                            vm.reload();
+                            vm.reload(false);
                         },
                         error: function () {
                             swal("删除失败!", "系统错误，请联系系统管理员！", "error");
@@ -238,7 +238,7 @@ var vm = new Vue({
                 data: JSON.stringify(vm.user),
                 dataType: "",
                 success: function () {
-                    vm.reload();
+                    vm.reload(false);
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
@@ -302,9 +302,14 @@ var vm = new Vue({
                 currentUser = response;
             });
         },
-        reload: function () {
+        reload: function (backFirst) {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page;
+            if(backFirst) {
+                page = 1;
+            }else {
+                page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            }
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {searchName: vm.searchName},
                 page: page
@@ -321,11 +326,11 @@ var vm = new Vue({
                 return false;
             }
             if (vm.user.email && !emailReg.test(vm.user.email)) {
-                swal("邮箱格式不正确!", "", "warning");
+                alert("邮箱格式不正确!");
                 return false;
             }
             if (vm.user.mobile && !telReg.test(vm.user.mobile)) {
-                swal("电话号码格式不正确!", "", "warning");
+                alert("电话号码格式不正确!");
                 return false;
             }
             return true;

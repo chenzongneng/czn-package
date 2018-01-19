@@ -29,6 +29,8 @@ public interface GarResourceDao extends BaseDao<GarResource> {
 
     String getResourceNameByCode(@Param("code") String code);
 
+    Long getResourceIdByCode(@Param("code") String code);
+
     List<GarResource> getResourcesByAppId(@Param("appId") Long appId);
 
     List<GarResource> getResourcesByParams(Map<String, Object> params);

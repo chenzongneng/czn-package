@@ -116,6 +116,12 @@
         WHERE m.code = #{code}
     </select>
 
+    <select id="getResourceIdByCode" resultType="java.lang.Long">
+        SELECT m.resource_id
+        FROM gar_resources m
+        WHERE m.code = #{code}
+    </select>
+
     <select id="getResourcesByAppId" resultType="com.richstonedt.garnet.model.GarResource">
         SELECT *
         FROM gar_resources

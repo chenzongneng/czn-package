@@ -227,7 +227,7 @@ public class GarUserServiceImpl implements GarUserService {
     @Override
     public void saveUser(GarVMUser garVMUser) {
         if (userDao.getUserByName(garVMUser.getUserName()) != null) {
-            throw new GarnetServiceException("用户名已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
+            throw new GarnetServiceException("用户账号已存在", GarnetServiceErrorCodes.OBJECT_EXISTS);
         }
         if (garVMUser.getUserId() == null) {
             garVMUser.setUserId(IdGeneratorUtil.generateId());

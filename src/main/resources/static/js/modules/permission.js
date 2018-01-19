@@ -124,7 +124,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            vm.reload();
+            vm.reload(true);
         },
         /**  新增按钮点击事件 */
         add: function () {
@@ -177,7 +177,7 @@ var vm = new Vue({
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
-                            vm.reload();
+                            vm.reload(false);
                         },
                         error: function () {
                             swal("删除失败!", "系统错误，请联系系统管理员！", "error");
@@ -187,6 +187,12 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+
+            if(vm.permission.name === null || vm.permission.name === ""){
+                alert("权限名称不能为空");
+                return;
+            }
+
             // 获取菜单树选择的菜单
             var nodes = resourceTree.getCheckedNodes(true);
             var permissionIdList = [];
@@ -202,7 +208,7 @@ var vm = new Vue({
                 data: JSON.stringify(vm.permission),
                 dataType: '',
                 success: function () {
-                    vm.reload();
+                    vm.reload(false);
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
@@ -245,9 +251,14 @@ var vm = new Vue({
             });
         },
         /** 重新加载 */
-        reload: function () {
+        reload: function (backFirst) {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page;
+            if(backFirst) {
+                page = 1;
+            }else {
+                page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            }
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {searchName: vm.searchName},
                 page: page

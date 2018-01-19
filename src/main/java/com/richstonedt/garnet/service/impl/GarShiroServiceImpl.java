@@ -39,7 +39,7 @@ public class GarShiroServiceImpl implements GarShiroService {
 
     @Override
     public Set<String> getUserPermissions(long userId) {
-        return userApiDao.getApiPermissionsByUserIdAndAppCode(userId,"garnet");
+            return userApiDao.getApiPermissionsByUserIdAndAppCode(userId,"garnet");
     }
 
     @Override

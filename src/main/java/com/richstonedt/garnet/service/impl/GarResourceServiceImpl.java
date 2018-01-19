@@ -6,6 +6,7 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
+import com.richstonedt.garnet.config.GarnetServiceException;
 import com.richstonedt.garnet.dao.GarApplicationDao;
 import com.richstonedt.garnet.dao.GarResourceDao;
 import com.richstonedt.garnet.dao.GarResourceApiDao;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 
@@ -48,11 +50,19 @@ public class GarResourceServiceImpl implements GarResourceService {
 
     @Override
     public void save(GarResource garResource) {
+        Long resourceId = resourceDao.getResourceIdByCode(garResource.getCode());
+        if (!ObjectUtils.isEmpty(resourceId)) {
+            throw new GarnetServiceException("该资源标识已存在");
+        }
         resourceDao.save(garResource);
     }
 
     @Override
     public void update(GarResource garResource) {
+        Long resourceId = resourceDao.getResourceIdByCode(garResource.getCode());
+        if (!ObjectUtils.isEmpty(resourceId) && !resourceId.equals(garResource.getResourceId())) {
+            throw new GarnetServiceException("该资源标识已存在");
+        }
         resourceDao.update(garResource);
     }
 
@@ -104,7 +114,7 @@ public class GarResourceServiceImpl implements GarResourceService {
 
     @Override
     public void saveResource(GarVMResource garVMResource) {
-        resourceDao.save(garVMResource);
+        save(garVMResource);
         saveResourceApi(garVMResource);
     }
 

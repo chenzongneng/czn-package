@@ -70,6 +70,7 @@ public class ShiroConfig {
     @Bean("securityManager")
     public SecurityManager securityManager(OAuth2Realm oAuth2Realm, SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        oAuth2Realm.setCacheManager(gatEhCacheManager());
         securityManager.setRealm(oAuth2Realm);
         securityManager.setSessionManager(sessionManager);
         securityManager.setCacheManager(gatEhCacheManager());
@@ -108,7 +109,7 @@ public class ShiroConfig {
         filterMap.put("/swagger/**", "anon");
         filterMap.put("/favicon.ico", "anon");
         filterMap.put("/v1.0/kaptcha", "anon");
-        filterMap.put("/test/**", "anon");
+        filterMap.put("/v1.0/*/userId/*/appCode/*", "anon");
         filterMap.put("/", "anon");
 //        filterMap.put("/v1.0/**", "anon");
         filterMap.put("/**", "oauth2");

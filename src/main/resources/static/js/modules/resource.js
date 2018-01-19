@@ -133,7 +133,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            vm.reload();
+            vm.reload(true);
         },
         /**  新增按钮点击事件 */
         add: function () {
@@ -189,11 +189,11 @@ var vm = new Vue({
                         success: function (result) {
                             if (!result.message) {
                                 swal("删除成功!", "", "success");
-                                vm.reload();
+                                vm.reload(false);
                             } else {
                                 swal("删除失败!", result.message, "error");
                             }
-                            vm.reload();
+                            vm.reload(false);
                         },
                         error: function () {
                             swal("删除失败!", "系统错误，请联系系统管理员！", "error");
@@ -205,7 +205,7 @@ var vm = new Vue({
         saveOrUpdate: function () {
             // 获取访问权限树选择的访问权限
             if(vm.resource.parentCode == vm.resource.code) {
-                swal("父子标志不能相同", "", "error");
+                alert("父子标志不能相同");
                 return;
             }
             var nodes = apiTree.getCheckedNodes(true);
@@ -224,7 +224,7 @@ var vm = new Vue({
                 data: JSON.stringify(vm.resource),
                 dataType: '',
                 success: function () {
-                    vm.reload();
+                    vm.reload(false);
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
@@ -277,10 +277,14 @@ var vm = new Vue({
             });
         },
         /** 重新加载 */
-        reload: function () {
+        reload: function (backFirst) {
             vm.showList = true;
-            // var page = $("#jqGrid").jqGrid('getGridParam', 'page');
-            var page = 1;
+            var page;
+            if(backFirst) {
+                page = 1;
+            }else {
+                page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            }
             console.log(JSON.stringify(page));
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {name: vm.name, applicationId: vm.option.appSearchId},

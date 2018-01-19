@@ -84,7 +84,7 @@
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_apis WHERE api_id in
+        delete from gar_depts WHERE dept_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>

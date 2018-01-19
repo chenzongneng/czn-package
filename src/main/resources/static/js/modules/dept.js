@@ -167,7 +167,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            vm.reload();
+            vm.reload(true);
         },
         /**  新增按钮点击事件 */
         add: function () {
@@ -233,7 +233,7 @@ var vm = new Vue({
                         success: function (result) {
                             if (!result.message) {
                                 swal("删除成功!", "", "success");
-                                vm.reload();
+                                vm.reload(false);
                             } else {
                                 swal("删除失败!", result.message, "error");
                             }
@@ -243,6 +243,12 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+
+            if(vm.dept.name === null || vm.dept.name === ""){
+                alert("部门名称不能为空");
+                return;
+            }
+
             // 获取用户树选择的用户
             var userNodes = userTree.getCheckedNodes(true);
             var userIdList = [];
@@ -266,7 +272,7 @@ var vm = new Vue({
                 data: JSON.stringify(vm.dept),
                 dataType: "",
                 success: function () {
-                    vm.reload();
+                    vm.reload(false);
                     swal("操作成功!", "", "success");
                 }
             });
@@ -292,9 +298,14 @@ var vm = new Vue({
                 }
             });
         },
-        reload: function () {
+        reload: function (backFirst) {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page;
+            if(backFirst) {
+                page = 1;
+            }else {
+                page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            }
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {searchName: vm.searchName},
                 page: page

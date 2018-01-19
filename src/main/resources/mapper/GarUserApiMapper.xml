@@ -8,6 +8,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.richstonedt.garnet.dao.GarUserApiDao">
+    <!-- 让 mybatis 的二级缓存缓存这个 mapper -->
+    <cache/>
 
     <sql id="subQuery">
         SELECT DISTINCT

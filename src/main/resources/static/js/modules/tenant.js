@@ -82,7 +82,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            vm.reload();
+            vm.reload(true);
         },
         /**  新增按钮点击事件 */
         add: function () {
@@ -143,7 +143,7 @@ var vm = new Vue({
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
-                            vm.reload();
+                            vm.reload(false);
                         },
                         error: function () {
                             swal("删除失败!", "系统错误，请联系系统管理员！", "success");
@@ -154,6 +154,10 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+            if(vm.tenant.name === null || vm.tenant.code === ""){
+                alert("租户名称不能为空");
+                return;
+            }
             $.ajax({
                 type: vm.tenant.tenantId === null ? "POST" : "PUT",
                 url: baseURL + "tenant",
@@ -161,7 +165,7 @@ var vm = new Vue({
                 data: JSON.stringify(vm.tenant),
                 dataType: "",
                 success: function () {
-                    vm.reload();
+                    vm.reload(false);
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
@@ -216,9 +220,14 @@ var vm = new Vue({
                 }
             });
         },
-        reload: function () {
+        reload: function (backFirst) {
             vm.showList = true;
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            var page;
+            if(backFirst) {
+                page = 1;
+            }else {
+                page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            }
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {'searchName': vm.searchName},
                 page: page
