@@ -36,16 +36,36 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/v1.0")
-@Api(tags = "[Garnet]菜单管理接口")
+@Api(tags = "[Garnet]资源管理接口")
 public class GarResourceController {
 
+    /**
+     * The constant LOG.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private static Logger LOG = LoggerFactory.getLogger(GarResourceController.class);
 
+    /**
+     * The Resource service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarResourceService resourceService;
 
+    /**
+     * Search resources response entity.
+     *
+     * @param page          the page
+     * @param limit         the limit
+     * @param name          the name
+     * @param applicationId the application id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/resources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]查询菜单列表", notes = "Get resource list ")
+    @ApiOperation(value = "[Garnet]查询资源列表", notes = "Get resource list ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMResource.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -72,8 +92,15 @@ public class GarResourceController {
         }
     }
 
+    /**
+     * Search resources by app id response entity.
+     *
+     * @param applicationId the application id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/resources/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]通过应用查询应用菜单列表", notes = "Get application resource list by app id")
+    @ApiOperation(value = "[Garnet]通过应用查询应用资源列表", notes = "Get application resource list by app id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMResource.class, responseContainer = "list"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -89,8 +116,15 @@ public class GarResourceController {
         }
     }
 
+    /**
+     * Search resource response entity.
+     *
+     * @param resourceId the resource id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/resource/{resourceId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据id查询菜单信息", notes = "Get resource info by resourceId ")
+    @ApiOperation(value = "[Garnet]根据id查询资源信息", notes = "Get resource info by resourceId ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query", response = GarVMResource.class),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -104,8 +138,15 @@ public class GarResourceController {
         }
     }
 
+    /**
+     * Save resource response entity.
+     *
+     * @param garVMResource the gar vm resource
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/resource", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]新增菜单", notes = "Create resource")
+    @ApiOperation(value = "[Garnet]新增资源", notes = "Create resource")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -120,8 +161,15 @@ public class GarResourceController {
         }
     }
 
+    /**
+     * Update resource response entity.
+     *
+     * @param garVMResource the gar vm resource
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/resource", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据更新菜单信息", notes = "Update resource info")
+    @ApiOperation(value = "[Garnet]根据更新资源信息", notes = "Update resource info")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -136,8 +184,15 @@ public class GarResourceController {
         }
     }
 
+    /**
+     * Delete resources response entity.
+     *
+     * @param resourceIds the resource ids
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/resource", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据id批量删除菜单", notes = "Delete resources")
+    @ApiOperation(value = "[Garnet]根据id批量删除资源", notes = "Delete resources")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})

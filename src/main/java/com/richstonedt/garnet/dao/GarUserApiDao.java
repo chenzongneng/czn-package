@@ -19,7 +19,23 @@ import java.util.Set;
 @Mapper
 public interface GarUserApiDao {
 
-    Set<String> getApiPermissionByUserIdAndAppId(@Param("userId") Long userId, @Param("appId") Long appId);
+    /**
+     * Gets api permission by user id and app id.
+     *
+     * @param userId the user id
+     * @param appId  the app id
+     * @return the api permission by user id and app id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    Set<String> getApiPermissionByUserIdAndAppId(@Param("userId") Long userId, @Param("applicationId") Long appId);
 
+    /**
+     * Gets api permissions by user id and app code.
+     *
+     * @param userId  the user id
+     * @param appCode the app code
+     * @return the api permissions by user id and app code
+     * @since garnet-core-be-fe 0.1.0
+     */
     Set<String> getApiPermissionsByUserIdAndAppCode(@Param("userId") Long userId, @Param("appCode") String appCode);
 }

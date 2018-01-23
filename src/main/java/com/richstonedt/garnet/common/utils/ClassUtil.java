@@ -27,6 +27,13 @@ import java.util.*;
  */
 public class ClassUtil {
 
+    /**
+     * Gets class list from package.
+     *
+     * @param clazz the clazz
+     * @return the class list from package
+     * @since garnet-core-be-fe 0.1.0
+     */
     public static List<Class<?>> getClassListFromPackage(Class clazz) {
         try {
             List<Class<?>> clazzList = new ArrayList<>();
@@ -64,6 +71,13 @@ public class ClassUtil {
         return null;
     }
 
+    /**
+     * Filter class files file [ ].
+     *
+     * @param pkgPath the pkg path
+     * @return the file [ ]
+     * @since garnet-core-be-fe 0.1.0
+     */
     private static File[] filterClassFiles(String pkgPath) {
         if (pkgPath == null) {
             return null;
@@ -76,6 +90,15 @@ public class ClassUtil {
             }
         });
     }
+
+    /**
+     * Gets class name.
+     *
+     * @param pkgName  the pkg name
+     * @param fileName the file name
+     * @return the class name
+     * @since garnet-core-be-fe 0.1.0
+     */
     private static String getClassName(String pkgName, String fileName) {
         int endIndex = fileName.lastIndexOf(".");
         String clazz = null;

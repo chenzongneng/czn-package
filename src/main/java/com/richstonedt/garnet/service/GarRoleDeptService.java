@@ -50,5 +50,12 @@ public interface GarRoleDeptService extends BaseService<GarRoleDept> {
      */
     void deleteRoleDeptByDeptId(Long deptId);
 
+    /**
+     * Gets role ids by dept ids.
+     *
+     * @param deptIds the dept ids
+     * @return the role ids by dept ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     Set<Long> getRoleIdsByDeptIds(Set<Long> deptIds);
 }

@@ -16,7 +16,6 @@ import com.richstonedt.garnet.service.GarAppTenantService;
 import com.richstonedt.garnet.service.GarApplicationService;
 import com.richstonedt.garnet.service.GarTenantService;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
-import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -132,6 +131,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */
@@ -143,9 +143,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param limit      the limit
-     * @param page       the offset
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -184,9 +182,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
     /**
      * Query vm applications list.
      *
-     * @param searchName the search name
-     * @param page       the page
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -258,7 +254,7 @@ public class GarApplicationServiceImpl implements GarApplicationService {
         if (!CollectionUtils.isEmpty(tenantIdList)) {
             for (Long tenantId : tenantIdList) {
                 GarApplicationTenant applicationTenant = new GarApplicationTenant();
-                applicationTenant.setAppId(vmApplication.getApplicationId());
+                applicationTenant.setApplicationId(vmApplication.getApplicationId());
                 applicationTenant.setTenantId(tenantId);
                 appTenantService.save(applicationTenant);
             }

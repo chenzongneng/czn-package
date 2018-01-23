@@ -75,7 +75,7 @@ public class GarRoleServiceImpl implements GarRoleService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarDeptService deptService;
+    private GarDepartmentService departmentService;
 
     /**
      * The Role dept service.
@@ -85,6 +85,11 @@ public class GarRoleServiceImpl implements GarRoleService {
     @Autowired
     private GarRoleDeptService roleDeptService;
 
+    /**
+     * The Role permission dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarRolePermissionDao rolePermissionDao;
 
@@ -149,12 +154,11 @@ public class GarRoleServiceImpl implements GarRoleService {
         return roleDao.queryObject(id);
     }
 
+
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -166,6 +170,7 @@ public class GarRoleServiceImpl implements GarRoleService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */
@@ -260,8 +265,14 @@ public class GarRoleServiceImpl implements GarRoleService {
      */
     private GarVMRole convertRoleToVmRole(GarRole role) {
         GarVMRole vmRole = new GarVMRole();
-        String tenantName = tenantService.queryObject(role.getTenantId()).getName();
-        String appName = applicationService.queryObject(role.getAppId()).getName();
+        GarTenant tenant = tenantService.queryObject(role.getTenantId());
+        if (tenant != null) {
+            vmRole.setTenantName(tenant.getName());
+        }
+        GarApplication application = applicationService.queryObject(role.getApplicationId());
+        if (application != null) {
+            vmRole.setAppName(application.getName());
+        }
 
         // 获取该角色的部门列表
         List<String> deptNameList = new ArrayList<>();
@@ -269,8 +280,8 @@ public class GarRoleServiceImpl implements GarRoleService {
         List<GarRoleDept> roleDeptList = roleDeptService.getRoleDeptByRoleId(role.getRoleId());
         if (!CollectionUtils.isEmpty(roleDeptList)) {
             for (GarRoleDept roleDept : roleDeptList) {
-                deptIdList.add(roleDept.getDeptId());
-                GarDept dept = deptService.queryObject(roleDept.getDeptId());
+                deptIdList.add(roleDept.getDepartmentId());
+                GarDepartment dept = departmentService.queryObject(roleDept.getDepartmentId());
                 if (!ObjectUtils.isEmpty(dept)) {
                     deptNameList.add(dept.getName());
                 }
@@ -286,9 +297,7 @@ public class GarRoleServiceImpl implements GarRoleService {
         vmRole.setPermissionIdList(authorityIdList);
 
         vmRole.setTenantId(role.getTenantId());
-        vmRole.setAppId(role.getAppId());
-        vmRole.setTenantName(tenantName);
-        vmRole.setAppName(appName);
+        vmRole.setApplicationId(role.getApplicationId());
         vmRole.setRoleId(role.getRoleId());
         vmRole.setName(role.getName());
         vmRole.setRemark(role.getRemark());
@@ -307,7 +316,7 @@ public class GarRoleServiceImpl implements GarRoleService {
         if (!CollectionUtils.isEmpty(deptIdList)) {
             for (Long deptId : deptIdList) {
                 GarRoleDept roleDept = new GarRoleDept();
-                roleDept.setDeptId(deptId);
+                roleDept.setDepartmentId(deptId);
                 roleDept.setRoleId(garVMRole.getRoleId());
                 roleDeptService.save(roleDept);
             }
@@ -315,6 +324,12 @@ public class GarRoleServiceImpl implements GarRoleService {
     }
 
 
+    /**
+     * Save role authority.
+     *
+     * @param garVMRole the gar vm role
+     * @since garnet-core-be-fe 0.1.0
+     */
     private void saveRoleAuthority(GarVMRole garVMRole) {
         List<Long> permissionIdList = GarnetRsUtil.parseStringToList(garVMRole.getPermissionIds());
         if (!CollectionUtils.isEmpty(permissionIdList)) {

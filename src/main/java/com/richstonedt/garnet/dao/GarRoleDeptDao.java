@@ -43,7 +43,7 @@ public interface GarRoleDeptDao extends BaseDao<GarRoleDept> {
      * @return the role dept by dept id
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarRoleDept> getRoleDeptByDeptId(@Param(value = "deptId") Long deptId);
+    List<GarRoleDept> getRoleDeptByDeptId(@Param(value = "departmentId") Long deptId);
 
     /**
      * Delete role dept by dept id.
@@ -51,7 +51,14 @@ public interface GarRoleDeptDao extends BaseDao<GarRoleDept> {
      * @param deptId the dept id
      * @since garnet-core-be-fe 0.1.0
      */
-    void deleteRoleDeptByDeptId(@Param(value = "deptId") Long deptId);
+    void deleteRoleDeptByDeptId(@Param(value = "departmentId") Long deptId);
 
-    Set<Long> getRoleIdsByDeptIds(@Param(value = "deptIds")Set<Long> deptIds);
+    /**
+     * Gets role ids by dept ids.
+     *
+     * @param deptIds the dept ids
+     * @return the role ids by dept ids
+     * @since garnet-core-be-fe 0.1.0
+     */
+    Set<Long> getRoleIdsByDeptIds(@Param(value = "departmentIds")Set<Long> deptIds);
 }

@@ -12,12 +12,12 @@
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarApplicationTenant">
         INSERT INTO gar_application_tenant
         (
-            app_id,
+            application_id,
             tenant_id
         )
         VALUES
             (
-                #{appId},
+                #{applicationId},
                 #{tenantId}
             );
     </insert>
@@ -25,12 +25,12 @@
     <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM gar_application_tenant
         <where>
-            app_id = #{id};
+            application_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_application_tenant WHERE app_id in
+        delete from gar_application_tenant WHERE application_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -46,7 +46,7 @@
     <select id="getApplicationTenantByAppId" resultType="com.richstonedt.garnet.model.GarApplicationTenant">
         SELECT * FROM gar_application_tenant
         <where>
-            app_id = #{appId};
+            application_id = #{applicationId};
         </where>
     </select>
 

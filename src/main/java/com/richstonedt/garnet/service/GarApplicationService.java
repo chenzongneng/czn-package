@@ -45,9 +45,7 @@ public interface GarApplicationService extends BaseService<GarApplication> {
     /**
      * Query vm applications list.
      *
-     * @param searchName the search name
-     * @param page       the page
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */

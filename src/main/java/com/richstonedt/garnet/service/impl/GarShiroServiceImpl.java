@@ -28,31 +28,75 @@ import java.util.Set;
 @Service
 public class GarShiroServiceImpl implements GarShiroService {
 
+    /**
+     * The Token service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarTokenService tokenService;
 
+    /**
+     * The User service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserService userService;
 
+    /**
+     * The User api dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserApiDao userApiDao;
 
+    /**
+     * Gets user permissions.
+     *
+     * @param userId the user id
+     * @return the user permissions
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Set<String> getUserPermissions(long userId) {
             return userApiDao.getApiPermissionsByUserIdAndAppCode(userId,"garnet");
     }
 
+    /**
+     * Gets by token.
+     *
+     * @param token the token
+     * @return the by token
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarToken getByToken(String token) {
         GarToken garToken = tokenService.queryByToken(token);
         return garToken;
     }
 
+    /**
+     * Gets user.
+     *
+     * @param userId the user id
+     * @return the user
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarUser getUser(Long userId) {
         return userService.searchUser(userId);
     }
 
+    /**
+     * Gets api permissions by user id and app code.
+     *
+     * @param userId  the user id
+     * @param appCode the app code
+     * @return the api permissions by user id and app code
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Set<String> getApiPermissionsByUserIdAndAppCode(Long userId, String appCode) {
         return userApiDao.getApiPermissionsByUserIdAndAppCode(userId, appCode);

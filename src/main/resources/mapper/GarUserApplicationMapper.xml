@@ -13,7 +13,7 @@
         INSERT INTO gar_user_application
         (
           user_id,
-          app_id
+          application_id
         )
         VALUES
         (
@@ -29,7 +29,7 @@
     </delete>
 
     <select id="getApplicationIdByUserId" resultType="java.lang.Long">
-        SELECT app_id
+        SELECT application_id
         FROM gar_user_application
         WHERE user_id = #{userId}
     </select>

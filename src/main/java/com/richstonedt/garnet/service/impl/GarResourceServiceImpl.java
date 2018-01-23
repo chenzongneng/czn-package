@@ -36,18 +36,44 @@ import java.util.*;
 @Service
 public class GarResourceServiceImpl implements GarResourceService {
 
+    /**
+     * The Resource dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarResourceDao resourceDao;
 
+    /**
+     * The Resource api dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarResourceApiDao resourceApiDao;
 
+    /**
+     * The Application dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarApplicationDao applicationDao;
 
+    /**
+     * The Entity to vm copier.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private BeanCopier entityToVMCopier = BeanCopier.create(GarResource.class, GarVMResource.class,
             false);
 
+    /**
+     * Save.
+     *
+     * @param garResource the gar resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void save(GarResource garResource) {
         Long resourceId = resourceDao.getResourceIdByCode(garResource.getCode());
@@ -57,6 +83,12 @@ public class GarResourceServiceImpl implements GarResourceService {
         resourceDao.save(garResource);
     }
 
+    /**
+     * Update.
+     *
+     * @param garResource the gar resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void update(GarResource garResource) {
         Long resourceId = resourceDao.getResourceIdByCode(garResource.getCode());
@@ -66,31 +98,71 @@ public class GarResourceServiceImpl implements GarResourceService {
         resourceDao.update(garResource);
     }
 
+    /**
+     * Delete by id.
+     *
+     * @param id the id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void deleteById(Long id) {
         resourceDao.deleteById(id);
     }
 
+    /**
+     * Delete batch.
+     *
+     * @param ids the ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void deleteBatch(List<Long> ids) {
         resourceDao.deleteBatch(ids);
     }
 
+    /**
+     * Query object gar resource.
+     *
+     * @param id the id
+     * @return the gar resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarResource queryObject(Long id) {
         return resourceDao.queryObject(id);
     }
 
+    /**
+     * Query objects list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarResource> queryObjects(Map<String,Object> params) {
         return resourceDao.queryObjects(params);
     }
 
+    /**
+     * Query total int.
+     *
+     * @param params the params
+     * @return the int
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public int queryTotal(Map<String,Object> params) {
         return resourceDao.queryTotal(params);
     }
 
+    /**
+     * Query resource list by params list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVMResource> queryResourceListByParams(Map<String, Object> params) {
         List<GarResource> authorities = resourceDao.getResourcesByParams(params);
@@ -101,6 +173,13 @@ public class GarResourceServiceImpl implements GarResourceService {
         return result;
     }
 
+    /**
+     * Query resource list by app id list.
+     *
+     * @param appId the app id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVMResource> queryResourceListByAppId(Long appId) {
         List<GarResource> resourceList = resourceDao.getResourcesByAppId(appId);
@@ -112,12 +191,25 @@ public class GarResourceServiceImpl implements GarResourceService {
         return vmResourceList;
     }
 
+    /**
+     * Save resource.
+     *
+     * @param garVMResource the gar vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void saveResource(GarVMResource garVMResource) {
         save(garVMResource);
         saveResourceApi(garVMResource);
     }
 
+    /**
+     * Search resource gar vm resource.
+     *
+     * @param resourceId the resource id
+     * @return the gar vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarVMResource searchResource(Long resourceId) {
         GarResource resource = resourceDao.queryObject(resourceId);
@@ -125,6 +217,12 @@ public class GarResourceServiceImpl implements GarResourceService {
         return garVMResource;
     }
 
+    /**
+     * Update resource.
+     *
+     * @param vmResource the vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void updateResource(GarVMResource vmResource) {
         update(vmResource);
@@ -132,11 +230,25 @@ public class GarResourceServiceImpl implements GarResourceService {
         saveResourceApi(vmResource);
     }
 
+    /**
+     * Query total resource by param int.
+     *
+     * @param params the params
+     * @return the int
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public int queryTotalResourceByParam(Map<String, Object> params) {
         return resourceDao.getTotalResourceByParam(params);
     }
 
+    /**
+     * Delete batch by resource ids map.
+     *
+     * @param resourceIds the resource ids
+     * @return the map
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Map<String, String> deleteBatchByResourceIds(List<Long> resourceIds) {
         Map<String, String> result = new HashMap<>();
@@ -152,6 +264,13 @@ public class GarResourceServiceImpl implements GarResourceService {
         return result;
     }
 
+    /**
+     * Convert resource to vm resource gar vm resource.
+     *
+     * @param garResource the gar resource
+     * @return the gar vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     private GarVMResource convertResourceToVmResource(GarResource garResource) {
         GarVMResource vmResource = new GarVMResource();
         entityToVMCopier.copy(garResource, vmResource, null);
@@ -162,6 +281,12 @@ public class GarResourceServiceImpl implements GarResourceService {
         return vmResource;
     }
 
+    /**
+     * Save resource api.
+     *
+     * @param vmResource the vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     private void saveResourceApi(GarVMResource vmResource) {
         List<Long> permissionIdList = GarnetRsUtil.parseStringToList(vmResource.getApiIds());
         for (Long permissionId : permissionIdList) {

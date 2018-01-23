@@ -29,6 +29,11 @@ import java.util.Map;
 @Service
 public class GarAppTenantServiceImpl implements GarAppTenantService {
 
+    /**
+     * The Application tenant dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarApplicationTenantDao applicationTenantDao;
 
@@ -91,9 +96,7 @@ public class GarAppTenantServiceImpl implements GarAppTenantService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -105,6 +108,7 @@ public class GarAppTenantServiceImpl implements GarAppTenantService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */

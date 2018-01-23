@@ -1,6 +1,6 @@
 /*
- * 广州都灵源链信息科技公司有限公司拥有本软件版权2017并保留所有权利。
- * Copyright 2017, Guangzhou Torino Source Information Technologies Company Limited,
+ * 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+ * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
 package com.richstonedt.garnet.controller;
@@ -93,6 +93,12 @@ public class GarApiController {
         }
     }
 
+    /**
+     * Search api response entity.
+     *
+     * @param apiId the api id
+     * @return the response entity
+     */
     @RequestMapping(value = "/api/{apiId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询API信息", notes = "Get api info by api Id ")
     @ApiResponses(value = {
@@ -108,6 +114,12 @@ public class GarApiController {
         }
     }
 
+    /**
+     * Save api response entity.
+     *
+     * @param garVMApi the gar vm api
+     * @return the response entity
+     */
     @RequestMapping(value = "/api", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]新增API", notes = "Create api")
     @ApiResponses(value = {
@@ -124,6 +136,12 @@ public class GarApiController {
         }
     }
 
+    /**
+     * Update api response entity.
+     *
+     * @param garVMApi the gar vm api
+     * @return the response entity
+     */
     @RequestMapping(value = "/api", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据ID更新API信息", notes = "Update api info")
     @ApiResponses(value = {
@@ -140,8 +158,14 @@ public class GarApiController {
         }
     }
 
+    /**
+     * Delete resources response entity.
+     *
+     * @param apiIds the api ids
+     * @return the response entity
+     */
     @RequestMapping(value = "/api", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "[Garnet]根据id批量删除菜单", notes = "Delete resources")
+    @ApiOperation(value = "[Garnet]根据id批量删除API", notes = "Delete api")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -157,6 +181,11 @@ public class GarApiController {
         }
     }
 
+    /**
+     * Gets export apis.
+     *
+     * @return the export apis
+     */
     @RequestMapping(value = "/exportApis", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]获取可导入的API列表数据，仅供开发使用", notes = "get apis which can import to database")
     @ApiResponses(value = {
@@ -173,6 +202,13 @@ public class GarApiController {
         }
     }
 
+    /**
+     * Import apis response entity.
+     *
+     * @param apiList the api list
+     * @param appCode the app code
+     * @return the response entity
+     */
     @RequestMapping(value = "/importApis/{appCode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]导入API列表", notes = "import apis ")
     @ApiResponses(value = {

@@ -83,6 +83,11 @@ public class GarSysMenu implements Serializable {
     @ApiModelProperty(value = "菜单图标")
     private String icon;
 
+    /**
+     * The Code.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "标志")
     private String code;
 
@@ -143,7 +148,7 @@ public class GarSysMenu implements Serializable {
     /**
      * 获取：父菜单ID，一级菜单为0
      *
-     * @return Long
+     * @return Long parent id
      * @since garnet-core-be-fe 1.0.0
      */
     public Long getParentId() {
@@ -163,7 +168,7 @@ public class GarSysMenu implements Serializable {
     /**
      * 获取：菜单名称
      *
-     * @return String
+     * @return String name
      * @since garnet-core-be-fe 1.0.0
      */
     public String getName() {
@@ -183,7 +188,8 @@ public class GarSysMenu implements Serializable {
     /**
      * 获取：菜单URL
      *
-     * @return String
+     * @return String url
+     * @since garnet-core-be-fe 0.1.0
      */
     public String getUrl() {
         return url;
@@ -222,7 +228,7 @@ public class GarSysMenu implements Serializable {
     /**
      * 获取：菜单图标
      *
-     * @return String
+     * @return String icon
      * @since garnet-core-be-fe 1.0.0
      */
     public String getIcon() {
@@ -242,7 +248,7 @@ public class GarSysMenu implements Serializable {
     /**
      * 获取：排序
      *
-     * @return Integer
+     * @return Integer order num
      * @since garnet-core-be-fe 1.0.0
      */
     public Integer getOrderNum() {
@@ -309,10 +315,22 @@ public class GarSysMenu implements Serializable {
         this.open = open;
     }
 
+    /**
+     * Gets code.
+     *
+     * @return the code
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * Sets code.
+     *
+     * @param code the code
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setCode(String code) {
         this.code = code;
     }

@@ -113,6 +113,8 @@ public class OAuth2Filter extends AuthenticatingFilter {
     /**
      * 获取请求的token
      *
+     * @param httpRequest the http request
+     * @return the request token
      * @since garnet-core-be-fe 1.0.0
      */
     private String getRequestToken(HttpServletRequest httpRequest) {

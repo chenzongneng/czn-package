@@ -129,9 +129,7 @@ public class GarTenantServiceImpl implements GarTenantService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -143,6 +141,7 @@ public class GarTenantServiceImpl implements GarTenantService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */
@@ -179,7 +178,7 @@ public class GarTenantServiceImpl implements GarTenantService {
             for (Long appId : appIds) {
                 GarApplicationTenant applicationTenant = new GarApplicationTenant();
                 applicationTenant.setTenantId(vmTenant.getTenantId());
-                applicationTenant.setAppId(appId);
+                applicationTenant.setApplicationId(appId);
                 appTenantService.save(applicationTenant);
             }
         }
@@ -211,8 +210,8 @@ public class GarTenantServiceImpl implements GarTenantService {
         List<Long> appIdList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(appTenantList)) {
             for (GarApplicationTenant appTenant : appTenantList) {
-                appIdList.add(appTenant.getAppId());
-                GarApplication garApplication = applicationService.queryObject(appTenant.getAppId());
+                appIdList.add(appTenant.getApplicationId());
+                GarApplication garApplication = applicationService.queryObject(appTenant.getApplicationId());
                 if (!ObjectUtils.isEmpty(garApplication)) {
                     appNameList.add(garApplication.getName());
                 }
@@ -230,9 +229,7 @@ public class GarTenantServiceImpl implements GarTenantService {
     /**
      * Query vm tenants list.
      *
-     * @param searchName the search name
-     * @param page       the page
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */

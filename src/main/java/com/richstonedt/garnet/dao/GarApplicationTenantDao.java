@@ -33,7 +33,7 @@ public interface GarApplicationTenantDao extends BaseDao<GarApplicationTenant> {
      * @return the application tenant by app id
      * @since garnet-core-be-fe 0.1.0
      */
-    List<GarApplicationTenant> getApplicationTenantByAppId(@Param(value = "appId") Long appId);
+    List<GarApplicationTenant> getApplicationTenantByAppId(@Param(value = "applicationId") Long appId);
 
     /**
      * Gets application tenant by tenant id.

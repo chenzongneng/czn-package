@@ -80,6 +80,9 @@
             <if test="name != null and name != ''">
                 name = #{name},
             </if>
+            <if test="applicationId != null">
+                application_id = #{applicationId},
+            </if>
             <if test="wildcard != null and wildcard != ''">
                 wildcard = #{wildcard},
             </if>

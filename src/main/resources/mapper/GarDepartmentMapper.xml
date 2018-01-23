@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.richstonedt.garnet.dao.GarDepartmentDao">
+
+    <sql id="whereSQL">
+        <if test="searchName != null and searchName != ''">
+            and name LIKE CONCAT('%',#{searchName},'%')
+        </if>
+        <if test="parentDepartmentIds != null">
+            and parent_department_id in
+            <foreach collection="parentDepartmentIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="queryObject" resultType="com.richstonedt.garnet.model.GarDepartment">
+        SELECT *
+        FROM gar_departments
+        WHERE department_id = #{id};
+    </select>
+
+    <select id="queryDepartmentList" resultType="com.richstonedt.garnet.model.GarDepartment">
+        select d.*,(select p.name from gar_departments p where p.department_id = d.parent_department_id) as parentName
+        from gar_departments d
+        <where>
+            <if test="tenantId != null ">
+                tenant_id = #{tenantId}
+            </if>
+            <if test="subList != null and subList != ''">
+                and d.department_id in (${subList})
+            </if>
+        </where>
+        order by d.order_num asc
+    </select>
+
+    <insert id="save" parameterType="com.richstonedt.garnet.model.GarDepartment">
+        INSERT INTO gar_departments
+        (
+            department_id,
+            parent_department_id,
+        tenant_id,
+        application_id,
+            name,
+            order_num
+        )
+        VALUES
+            (
+                #{departmentId},
+                #{parentDepartmentId},
+        1,
+        1,
+                #{name},
+                #{orderNum}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.richstonedt.garnet.model.GarDepartment">
+        update gar_departments
+        <set>
+            <if test="parentDepartmentId != null">
+                parent_department_id = #{parentDepartmentId},
+            </if>
+            <if test="tenantId != null">
+                tenant_id = #{tenantId},
+            </if>
+            <if test="applicationId != null">
+                application_id = #{applicationId},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum}
+            </if>
+        </set>
+        where department_id = #{departmentId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM gar_departments
+        WHERE department_id = #{id};
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from gar_departments WHERE department_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="queryDepartmentIdList" resultType="long">
+        SELECT department_id
+        FROM gar_departments
+        WHERE parent_department_id = #{parentDepartmentId}
+    </select>
+
+    <select id="getDepartmentByParentDepartmentId" resultType="com.richstonedt.garnet.model.GarDepartment">
+        SELECT * FROM gar_departments
+        <where>
+            department_id = #{parentDepartmentId}
+        </where>
+    </select>
+
+    <select id="queryObjects" resultType="com.richstonedt.garnet.model.GarDepartment">
+        select * from gar_departments
+        <where>
+            <include refid="whereSQL"/>
+        </where>
+        ORDER BY department_id asc
+        <if test="offset != null and limit != null">
+            limit #{limit} offset #{offset};
+        </if>
+    </select>
+
+    <select id="getTotalDepartmentByParam" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM gar_departments
+        <where>
+            <include refid="whereSQL"/>
+        </where>
+    </select>
+
+</mapper>

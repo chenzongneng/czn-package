@@ -35,7 +35,15 @@ public interface GarUserDao extends BaseDao<GarUser> {
      */
     GarUser getUserByName(@Param(value = "userName") String userName);
 
-    GarUser getUserByNameAndAppId(@Param(value = "userName") String userName, @Param("appId") Long appId);
+    /**
+     * Gets user by name and app id.
+     *
+     * @param userName the user name
+     * @param appId    the app id
+     * @return the user by name and app id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    GarUser getUserByNameAndAppId(@Param(value = "userName") String userName, @Param("applicationId") Long appId);
 
     /**
      * Query user list list.

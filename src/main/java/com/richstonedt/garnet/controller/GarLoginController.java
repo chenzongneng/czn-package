@@ -98,6 +98,7 @@ public class GarLoginController {
      * Gets kaptcha.
      *
      * @param nowTime the now time
+     * @param oldTime the old time
      * @return the kaptcha
      * @throws IOException the io exception
      * @since garnet-core-be-fe 0.1.0
@@ -139,6 +140,7 @@ public class GarLoginController {
     /**
      * Login response entity.
      *
+     * @param appId     the app id
      * @param loginFrom the login from
      * @param userLogin the user login
      * @return the response entity

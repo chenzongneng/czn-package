@@ -58,6 +58,7 @@ public class GarUserController {
     /**
      * Search users response entity.
      *
+     * @param token      the token
      * @param page       the page
      * @param limit      the limit
      * @param searchName the search name

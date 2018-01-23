@@ -125,7 +125,7 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            applicationList.appList.selectedApp = "1";
+            // applicationList.appList.selectedApp = "1";
             vm.api = {
                 apiId: null,
                 applicationId: "1",
@@ -138,6 +138,10 @@ var vm = new Vue({
                 method: "GET",
                 status: 1
             };
+            if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
+                applicationList.appList.selectedApp = vm.option.appSearchId;
+                vm.api.applicationId = vm.option.appSearchId;
+            }
         },
         /**  更新按钮点击事件 */
         update: function () {

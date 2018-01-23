@@ -86,8 +86,8 @@ var deptTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
-            pIdKey: "parentDeptId",
+            idKey: "departmentId",
+            pIdKey: "parentDepartmentId",
             rootPId: -1
         },
         key: {
@@ -224,7 +224,7 @@ var vm = new Vue({
             var nodes = deptTree.getCheckedNodes(true);
             var deptIdList = [];
             for (var i = 0; i < nodes.length; i++) {
-                deptIdList.push(nodes[i].deptId);
+                deptIdList.push(nodes[i].departmentId);
             }
             vm.user.deptIds = deptIdList.join(",");
             // 校验字段
@@ -255,7 +255,7 @@ var vm = new Vue({
             });
             //加载部门树
             // $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
-            $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+            $.get(baseURL + "departments?page=1&limit=1000", function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                 deptTree.expandAll(true);
             });
@@ -269,7 +269,7 @@ var vm = new Vue({
             });
             //加载部门树
             // $.get(baseURL + "depts/add/" + currentUser.userId, function (r) {
-            $.get(baseURL + "depts?page=1&limit=1000" + currentUser.userId, function (r) {
+            $.get(baseURL + "departments?page=1&limit=1000" + currentUser.userId, function (r) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, r.list);
                 deptTree.expandAll(true);
                 vm.getUser(userId);
@@ -291,7 +291,7 @@ var vm = new Vue({
                     applicationTree.checkNode(node, true, false);
                 });
                 $.each(response.deptIdList, function (index, item) {
-                    var node = deptTree.getNodeByParam("deptId", item);
+                    var node = deptTree.getNodeByParam("departmentId", item);
                     deptTree.checkNode(node, true, false);
                 });
             });

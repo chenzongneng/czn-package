@@ -120,6 +120,8 @@ var vm = new Vue({
         resource: {
             resourceId: null,
             name: null,
+            code: null,
+            parentCode: null,
             parentName: null,
             applicationId: 1,
             apiIds: null,
@@ -144,11 +146,16 @@ var vm = new Vue({
                 resourceId: null,
                 applicationId: 1,
                 name: null,
+                code: null,
+                parentCode: null,
                 parentName: null,
                 apiIds: null,
                 orderNum: 0,
                 status: 1
             };
+            if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
+                vm.resource.applicationId = vm.option.appSearchId;
+            }
             vm.initTreesToAdd();
             // vm.loadResourceTree();
         },
@@ -204,7 +211,17 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             // 获取访问权限树选择的访问权限
-            if(vm.resource.parentCode == vm.resource.code) {
+
+            if(vm.resource.name === null ||  vm.resource.name === ""){
+                alert("资源名称不能为空");
+                return;
+            }
+            if(vm.resource.code === null ||  vm.resource.code === ""){
+                alert("资源标识不能为空");
+                return;
+            }
+
+            if(vm.resource.parentCode === vm.resource.code) {
                 alert("父子标志不能相同");
                 return;
             }

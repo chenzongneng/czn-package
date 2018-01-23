@@ -40,53 +40,125 @@ import java.util.*;
 @Service
 public class GarApiServiceImpl implements GarApiService {
 
+    /**
+     * The Entity to vm copier.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private BeanCopier entityToVMCopier = BeanCopier.create(GarApi.class, GarVmApi.class,
             false);
 
+    /**
+     * The Api dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarApiDao apiDao;
 
+    /**
+     * The Application dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarApplicationDao applicationDao;
 
+    /**
+     * The Resource api dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarResourceApiDao resourceApiDao;
 
+    /**
+     * Save.
+     *
+     * @param garApi the gar api
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void save(GarApi garApi) {
         apiDao.save(garApi);
     }
 
+    /**
+     * Update.
+     *
+     * @param garApi the gar api
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void update(GarApi garApi) {
         apiDao.update(garApi);
     }
 
+    /**
+     * Delete by id.
+     *
+     * @param id the id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void deleteById(Long id) {
         apiDao.deleteById(id);
     }
 
+    /**
+     * Delete batch.
+     *
+     * @param ids the ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void deleteBatch(List<Long> ids) {
         apiDao.deleteBatch(ids);
     }
 
+    /**
+     * Query object gar api.
+     *
+     * @param id the id
+     * @return the gar api
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarApi queryObject(Long id) {
         return apiDao.queryObject(id);
     }
 
+    /**
+     * Query objects list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarApi> queryObjects(Map<String,Object> params) {
         return apiDao.queryObjects(params);
     }
 
+    /**
+     * Query total int.
+     *
+     * @param params the params
+     * @return the int
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public int queryTotal(Map<String,Object> params) {
         return apiDao.queryTotal(params);
     }
 
+    /**
+     * Query api list list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVmApi> queryApiList(Map<String,Object> params) {
         List<GarVmApi> vmApis = new ArrayList<>();
@@ -97,22 +169,50 @@ public class GarApiServiceImpl implements GarApiService {
         return vmApis;
     }
 
+    /**
+     * Convert api to vm api gar vm api.
+     *
+     * @param api the api
+     * @return the gar vm api
+     * @since garnet-core-be-fe 0.1.0
+     */
     private GarVmApi convertApiToVMApi(GarApi api) {
         GarVmApi vmApi = new GarVmApi();
         entityToVMCopier.copy(api, vmApi, null);
         return vmApi;
     }
 
+    /**
+     * Gets permissions by ids.
+     *
+     * @param ids the ids
+     * @return the permissions by ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Set<String> getPermissionsByIds(Set<Long> ids) {
         return apiDao.queryPermissionsByIds(ids);
     }
 
+    /**
+     * Import api from annotation.
+     *
+     * @param apiList       the api list
+     * @param applicationId the application id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void importApiFromAnnotation(List<GarApiForImport> apiList, Long applicationId) {
         importApi(apiList,applicationId);
     }
 
+    /**
+     * Query api list by application id list.
+     *
+     * @param applicationId the application id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVmApi> queryApiListByApplicationId(Long applicationId) {
         List<GarApi> apiList = apiDao.queryApiByApplicationIdAndStatus(applicationId, 1);
@@ -124,6 +224,13 @@ public class GarApiServiceImpl implements GarApiService {
         return vmApiList;
     }
 
+    /**
+     * Gets import api from annotation.
+     *
+     * @param controllerClass the controller class
+     * @return the import api from annotation
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarApiForImport> getImportApiFromAnnotation(Class controllerClass) {
 
@@ -137,23 +244,51 @@ public class GarApiServiceImpl implements GarApiService {
         return importApiList;
     }
 
+    /**
+     * Query total api int.
+     *
+     * @param params the params
+     * @return the int
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public int queryTotalApi(Map<String,Object> params) {
         return apiDao.queryTotalApi(params);
     }
 
+    /**
+     * Gets api by id.
+     *
+     * @param apisId the apis id
+     * @return the api by id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarVmApi getApiById(Long apisId) {
         GarApi api = apiDao.queryObject(apisId);
         return convertApiToVMApi(api);
     }
 
+    /**
+     * Import api by app code.
+     *
+     * @param apiList the api list
+     * @param appCode the app code
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void importApiByAppCode(List<GarApiForImport> apiList, String appCode) {
         Long applicationId = applicationDao.getApplicationIdByCode(appCode);
         importApi(apiList,applicationId);
     }
 
+    /**
+     * Delete batch by api ids map.
+     *
+     * @param apiIds the api ids
+     * @return the map
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Map<String, String> deleteBatchByApiIds(List<Long> apiIds) {
         Map<String, String> result = new HashMap<>();
@@ -170,6 +305,13 @@ public class GarApiServiceImpl implements GarApiService {
         return result;
     }
 
+    /**
+     * Gets apis by annotation.
+     *
+     * @param clazz the clazz
+     * @return the apis by annotation
+     * @since garnet-core-be-fe 0.1.0
+     */
     private GarApiForImport getApisByAnnotation(Class<?> clazz) {
         List<GarApi> apis = new ArrayList<>();
         Method[] methods = clazz.getMethods();
@@ -217,12 +359,25 @@ public class GarApiServiceImpl implements GarApiService {
         return apiForImport;
     }
 
+    /**
+     * Update apis.
+     *
+     * @param apis the apis
+     * @since garnet-core-be-fe 0.1.0
+     */
     private void updateApis(List<GarApi> apis) {
         for (GarApi api : apis) {
             saveOrUpdateApi(api, false);
         }
     }
 
+    /**
+     * Save or update api.
+     *
+     * @param api      the api
+     * @param isParent the is parent
+     * @since garnet-core-be-fe 0.1.0
+     */
     private void saveOrUpdateApi(GarApi api, boolean isParent) {
         Map<String, Object> params = new HashMap<>();
         params.put("applicationId", api.getApplicationId());
@@ -242,6 +397,13 @@ public class GarApiServiceImpl implements GarApiService {
         }
     }
 
+    /**
+     * Import api.
+     *
+     * @param importApiList the import api list
+     * @param applicationId the application id
+     * @since garnet-core-be-fe 0.1.0
+     */
     private void importApi(List<GarApiForImport> importApiList,Long applicationId) {
         // 遍历需要导入的对象
         for (GarApiForImport importApi : importApiList) {

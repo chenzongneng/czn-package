@@ -10,7 +10,7 @@ import com.richstonedt.garnet.config.GarnetServiceErrorCodes;
 import com.richstonedt.garnet.config.GarnetServiceException;
 import com.richstonedt.garnet.dao.GarUserApplicationDao;
 import com.richstonedt.garnet.dao.GarUserDao;
-import com.richstonedt.garnet.model.GarDept;
+import com.richstonedt.garnet.model.GarDepartment;
 import com.richstonedt.garnet.model.GarUser;
 import com.richstonedt.garnet.model.GarUserDept;
 import com.richstonedt.garnet.model.view.model.GarVMUser;
@@ -20,9 +20,7 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -79,7 +77,7 @@ public class GarUserServiceImpl implements GarUserService {
      * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
-    private GarDeptService deptService;
+    private GarDepartmentService departmentService;
 
     /**
      * The Token service.
@@ -89,6 +87,11 @@ public class GarUserServiceImpl implements GarUserService {
     @Autowired
     private GarTokenService tokenService;
 
+    /**
+     * The User application dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserApplicationDao userApplicationDao;
 
@@ -152,12 +155,11 @@ public class GarUserServiceImpl implements GarUserService {
         return userDao.queryObject(id);
     }
 
+
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -169,6 +171,7 @@ public class GarUserServiceImpl implements GarUserService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */
@@ -189,6 +192,14 @@ public class GarUserServiceImpl implements GarUserService {
         return userDao.getUserByName(userName);
     }
 
+    /**
+     * Gets user by name and app id.
+     *
+     * @param userName the user name
+     * @param appId    the app id
+     * @return the user by name and app id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarUser getUserByNameAndAppId(String userName, Long appId) {
         return userDao.getUserByNameAndAppId(userName,appId);
@@ -197,6 +208,7 @@ public class GarUserServiceImpl implements GarUserService {
     /**
      * Query user list list.
      *
+     * @param token      the token
      * @param searchName the search name
      * @param page       the page
      * @param limit      the limit
@@ -260,6 +272,7 @@ public class GarUserServiceImpl implements GarUserService {
      * Search user.
      *
      * @param userId the user id
+     * @return the gar vm user
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
@@ -294,7 +307,7 @@ public class GarUserServiceImpl implements GarUserService {
     private GarVMUser convertUserToVmUser(GarUser user) {
         GarVMUser vmUser = new GarVMUser();
 //        String tenantName = tenantService.queryObject(user.getTenantId()).getName();
-//        String appName = applicationService.queryObject(user.getAppId()).getName();
+//        String appName = applicationService.queryObject(user.getApplicationId()).getName();
 
         // 获取该用户的部门列表
         List<String> deptNameList = new ArrayList<>();
@@ -302,9 +315,9 @@ public class GarUserServiceImpl implements GarUserService {
         List<GarUserDept> userDeptList = userDeptService.getUserDeptByUserId(user.getUserId());
         if (!CollectionUtils.isEmpty(userDeptList)) {
             for (GarUserDept userDept : userDeptList) {
-                deptIdList.add(userDept.getDeptId());
-                GarDept dept = deptService.queryObject(userDept.getDeptId());
-                if (!ObjectUtils.isEmpty(dept)) {
+                deptIdList.add(userDept.getDepartmentId());
+                GarDepartment dept = departmentService.queryObject(userDept.getDepartmentId());
+                if (dept != null) {
                     deptNameList.add(dept.getName());
                 }
             }
@@ -338,11 +351,12 @@ public class GarUserServiceImpl implements GarUserService {
             for (Long deptId : deptIdList) {
                 GarUserDept userDept = new GarUserDept();
                 userDept.setUserId(vmUser.getUserId());
-                userDept.setDeptId(deptId);
+                userDept.setDepartmentId(deptId);
                 userDeptService.save(userDept);
             }
         }
     }
+
     /**
      * Save user application.
      *

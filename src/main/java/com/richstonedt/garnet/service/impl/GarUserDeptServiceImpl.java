@@ -41,6 +41,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
      * Query Object By Dept Id.
      *
      * @param deptId the deptId
+     * @return the user dept by dept id
      * @since garnet-core-be-fe 0.1.0
      */
     @Override
@@ -71,6 +72,13 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
         return userDeptDao.getUserDeptByUserId(userId);
     }
 
+    /**
+     * Gets dept ids by user id.
+     *
+     * @param userId the user id
+     * @return the dept ids by user id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Set<Long> getDeptIdsByUserId(Long userId) {
         return userDeptDao.getDeptIdsByUserId(userId);
@@ -135,9 +143,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param limit      the limit
-     * @param page       the offset
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -149,6 +155,7 @@ public class GarUserDeptServiceImpl implements GarUserDeptService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */

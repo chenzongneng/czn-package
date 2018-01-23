@@ -49,14 +49,6 @@ public class GarTokenServiceImpl implements GarTokenService {
     private GarUserService userService;
 
     /**
-     * The User dept service.
-     *
-     * @since garnet-core-be-fe 0.1.0
-     */
-    @Autowired
-    private GarUserDeptService userDeptService;
-
-    /**
      * Save.
      *
      * @param garToken the t
@@ -115,9 +107,7 @@ public class GarTokenServiceImpl implements GarTokenService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -129,6 +119,7 @@ public class GarTokenServiceImpl implements GarTokenService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */

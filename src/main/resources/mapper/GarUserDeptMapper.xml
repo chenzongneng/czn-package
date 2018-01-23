@@ -10,65 +10,65 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarUserDeptDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarUserDept">
-        INSERT INTO gar_user_dept
+        INSERT INTO gar_user_department
         (
             user_id,
-            dept_id
+            department_id
         )
         VALUES
             (
                 #{userId},
-                #{deptId}
+                #{departmentId}
             );
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_user_dept
+        DELETE FROM gar_user_department
         <where>
             user_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_user_dept WHERE user_id in
+        delete from gar_user_department WHERE user_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <delete id="deleteUserDeptByDeptId" parameterType="java.lang.Long">
-        DELETE FROM gar_user_dept
+        DELETE FROM gar_user_department
         <where>
-            dept_id = #{deptId}
+            department_id = #{departmentId}
         </where>
     </delete>
 
     <select id="queryObject" resultType="com.richstonedt.garnet.model.GarUserDept">
-        select * from gar_user_dept
+        select * from gar_user_department
         <where>
             user_id = #{id};
         </where>
     </select>
 
     <select id="getUserDeptByDeptId" resultType="com.richstonedt.garnet.model.GarUserDept">
-        select * from gar_user_dept
+        select * from gar_user_department
         <where>
-            dept_id = #{deptId};
+            department_id = #{departmentId};
         </where>
     </select>
 
     <select id="getUserDeptByUserId" resultType="com.richstonedt.garnet.model.GarUserDept">
-        select * from gar_user_dept
+        select * from gar_user_department
         <where>
             user_id = #{userId};
         </where>
     </select>
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarUserDept">
-        UPDATE gar_user_dept
+        UPDATE gar_user_department
         <set>
-            <if test="deptId != null">
-                dept_id = #{deptId}
+            <if test="departmentId != null">
+                department_id = #{departmentId}
             </if>
         </set>
         <where>
@@ -76,8 +76,8 @@
         </where>
     </update>
     <select id="getDeptIdsByUserId" resultType="_long">
-        SELECT ud.dept_id
-        FROM gar_user_dept AS ud
+        SELECT ud.department_id
+        FROM gar_user_department AS ud
         <where>
             user_id = #{userId}
         </where>

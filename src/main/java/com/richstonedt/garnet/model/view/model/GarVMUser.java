@@ -183,18 +183,42 @@ public class GarVMUser extends GarUser implements Serializable {
         this.deptIds = deptIds;
     }
 
+    /**
+     * Gets application id list.
+     *
+     * @return the application id list
+     * @since garnet-core-be-fe 0.1.0
+     */
     public List<Long> getApplicationIdList() {
         return applicationIdList;
     }
 
+    /**
+     * Sets application id list.
+     *
+     * @param applicationIdList the application id list
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setApplicationIdList(List<Long> applicationIdList) {
         this.applicationIdList = applicationIdList;
     }
 
+    /**
+     * Gets application ids.
+     *
+     * @return the application ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getApplicationIds() {
         return applicationIds;
     }
 
+    /**
+     * Sets application ids.
+     *
+     * @param applicationIds the application ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setApplicationIds(String applicationIds) {
         this.applicationIds = applicationIds;
     }

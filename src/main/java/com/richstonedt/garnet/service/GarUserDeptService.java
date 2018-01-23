@@ -50,5 +50,12 @@ public interface GarUserDeptService extends BaseService<GarUserDept> {
      */
     List<GarUserDept> getUserDeptByUserId(Long userId);
 
+    /**
+     * Gets dept ids by user id.
+     *
+     * @param userId the user id
+     * @return the dept ids by user id
+     * @since garnet-core-be-fe 0.1.0
+     */
     Set<Long> getDeptIdsByUserId(Long userId);
 }

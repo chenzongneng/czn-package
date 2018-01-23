@@ -22,12 +22,29 @@ import java.io.Serializable;
  */
 public class GarVmApi extends GarApi implements Serializable {
 
+    /**
+     * The Parent name.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private String parentName;
 
+    /**
+     * Gets parent name.
+     *
+     * @return the parent name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getParentName() {
         return parentName;
     }
 
+    /**
+     * Sets parent name.
+     *
+     * @param parentName the parent name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setParentName(String parentName) {
         this.parentName = parentName;
     }

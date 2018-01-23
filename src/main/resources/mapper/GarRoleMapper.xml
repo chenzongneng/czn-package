@@ -20,7 +20,7 @@
         (
             role_id,
             tenant_id,
-            app_id,
+            application_id,
             name,
             remark,
             create_time
@@ -29,7 +29,7 @@
             (
                 #{roleId},
                 #{tenantId},
-                #{appId},
+                #{applicationId},
                 #{name},
                 #{remark},
                 #{createTime}
@@ -62,7 +62,7 @@
         <where>
             <include refid="whereSQL"/>
         </where>
-        ORDER BY app_id asc
+        ORDER BY role_id asc
         <if test="offset != null and limit != null">
             limit #{limit} offset #{offset};
         </if>
@@ -78,7 +78,7 @@
                 and name LIKE CONCAT('%',#{searchName},'%')
             </if>
         </where>
-        ORDER BY app_id asc
+        ORDER BY application_id asc
         <if test="offset != null and limit != null">
             limit #{limit} offset #{offset};
         </if>
@@ -98,8 +98,8 @@
             <if test="tenantId != null ">
                 tenant_id = #{tenantId},
             </if>
-            <if test="appId != null">
-                app_id = #{appId},
+            <if test="applicationId != null">
+                application_id = #{applicationId},
             </if>
             <if test="name != null and name != ''">
                 name = #{name},

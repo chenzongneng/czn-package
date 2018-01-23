@@ -58,6 +58,11 @@ public class GarLoginResult implements Serializable {
     @ApiModelProperty(value = "用户信息token")
     private String userToken;
 
+    /**
+     * The User id.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private Long userId;
 
     /**
@@ -140,10 +145,22 @@ public class GarLoginResult implements Serializable {
         this.userToken = userToken;
     }
 
+    /**
+     * Gets user id.
+     *
+     * @return the user id
+     * @since garnet-core-be-fe 0.1.0
+     */
     public Long getUserId() {
         return userId;
     }
 
+    /**
+     * Sets user id.
+     *
+     * @param userId the user id
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setUserId(Long userId) {
         this.userId = userId;
     }

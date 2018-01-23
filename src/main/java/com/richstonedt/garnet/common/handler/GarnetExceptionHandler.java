@@ -34,6 +34,8 @@ public class GarnetExceptionHandler implements HandlerExceptionResolver {
 
     /**
      * The Constant LOG.
+     *
+     * @since garnet-core-be-fe 0.1.0
      */
     private static final Logger LOG = LoggerFactory
             .getLogger(GarnetExceptionHandler.class);

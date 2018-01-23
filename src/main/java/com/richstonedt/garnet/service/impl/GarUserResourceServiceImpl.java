@@ -22,9 +22,22 @@ import java.util.*;
 @Service
 public class GarUserResourceServiceImpl implements GarUserResourceService {
 
+    /**
+     * The User resource dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserResourceDao userResourceDao;
 
+    /**
+     * Gets code map list by user id.
+     *
+     * @param userId the user id
+     * @param appId  the app id
+     * @return the code map list by user id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Map<String, Boolean> getCodeMapListByUserId(Long userId, Long appId) {
         List<String> codeList = userResourceDao.getCodeByUserId(userId,appId);
@@ -35,6 +48,14 @@ public class GarUserResourceServiceImpl implements GarUserResourceService {
         return buttonMap;
     }
 
+    /**
+     * Gets resource code by user id and app code.
+     *
+     * @param userId  the user id
+     * @param appCode the app code
+     * @return the resource code by user id and app code
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Map<String, Boolean> getResourceCodeByUserIdAndAppCode(Long userId, String appCode) {
         Set<String> codeSet = userResourceDao.getResourceCodeByUserIdAndAppCode(userId,appCode);

@@ -177,10 +177,22 @@ public class GarApplication implements Serializable {
         this.createTime = createTime;
     }
 
+    /**
+     * Gets code.
+     *
+     * @return the code
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * Sets code.
+     *
+     * @param code the code
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setCode(String code) {
         this.code = code;
     }

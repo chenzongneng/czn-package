@@ -25,6 +25,13 @@ import java.util.List;
 @Mapper
 public interface GarPermissionDao extends BaseDao<GarPermission> {
 
+    /**
+     * Gets permission list by application id.
+     *
+     * @param applicationId the application id
+     * @return the permission list by application id
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarPermission> getPermissionListByApplicationId(@Param("applicationId") Long applicationId);
 
 }

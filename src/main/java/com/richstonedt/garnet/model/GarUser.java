@@ -30,7 +30,7 @@ public class GarUser implements Serializable {
 
     /**
      * The User id.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户ID")
@@ -54,7 +54,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Username.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "账号")
@@ -62,7 +62,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Password.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "密码")
@@ -78,7 +78,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Email.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "邮箱")
@@ -86,7 +86,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Mobile.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "手机号")
@@ -94,7 +94,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Status.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "状态  0：禁用   1：正常")
@@ -102,7 +102,7 @@ public class GarUser implements Serializable {
 
     /**
      * The Create time.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "创建时间")
@@ -289,10 +289,22 @@ public class GarUser implements Serializable {
         this.createTime = createTime;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setName(String name) {
         this.name = name;
     }

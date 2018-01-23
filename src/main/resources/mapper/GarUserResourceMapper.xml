@@ -12,34 +12,34 @@
     <sql id="subQuery">
         SELECT DISTINCT
             u.user_id        AS user_id,
-            ap.app_id        AS app_id,
+            ap.application_id        AS application_id,
             a.code           AS app_code,
             m.code           AS res_code
         FROM gar_users u,
             gar_applications a,
             gar_user_application ap,
-            gar_user_dept ud,
-            gar_role_dept rd,
+            gar_user_department ud,
+            gar_role_department rd,
             gar_role_permission rp,
             gar_permissions p,
             gar_resources m
         WHERE m.status = 1
               AND p.status = 1
-              AND a.application_id = ap.app_id
+              AND a.application_id = ap.application_id
               AND ap.user_id = u.user_id
               AND ud.user_id = u.user_id
-              AND rd.dept_id = ud.dept_id
+              AND rd.department_id = ud.department_id
               AND rp.role_id = rd.role_id
               AND p.permission_id = rp.permission_id
+              AND m.application_id = p.application_id
               AND m.path LIKE p.wildcard
-
     </sql>
 
     <select id="getCodeByUserId" resultType="java.lang.String">
         SELECT ur.res_code
         FROM
         (<include refid="subQuery"/>) AS ur
-        WHERE ur.user_id = #{userId} AND ur.app_id = #{appId}
+        WHERE ur.user_id = #{userId} AND ur.application_id = #{applicationId}
     </select>
 
     <select id="getResourceCodeByUserIdAndAppCode" resultType="java.lang.String">

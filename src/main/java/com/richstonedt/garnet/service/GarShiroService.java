@@ -24,6 +24,8 @@ public interface GarShiroService {
     /**
      * 获取用户权限列表
      *
+     * @param userId the user id
+     * @return the user permissions
      * @since garnet-core-be-fe 1.0.0
      */
     Set<String> getUserPermissions(long userId);
@@ -41,10 +43,19 @@ public interface GarShiroService {
      * 根据用户ID，查询用户
      *
      * @param userId the User id
+     * @return the user
      * @since garnet-core-be-fe 1.0.0
      */
     GarUser getUser(Long userId);
 
+    /**
+     * Gets api permissions by user id and app code.
+     *
+     * @param userId  the user id
+     * @param appCode the app code
+     * @return the api permissions by user id and app code
+     * @since garnet-core-be-fe 0.1.0
+     */
     Set<String> getApiPermissionsByUserIdAndAppCode(Long userId, String appCode);
 
 }

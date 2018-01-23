@@ -24,13 +24,46 @@ import java.util.Map;
  */
 public interface GarPermissionService extends BaseService<GarPermission> {
 
+    /**
+     * Query permission list list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarVMPermission> queryPermissionList(Map<String,Object> params);
 
+    /**
+     * Save permission.
+     *
+     * @param garVMPermission the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     void savePermission(GarVMPermission garVMPermission);
 
+    /**
+     * Search permission gar vm permission.
+     *
+     * @param permissionId the permission id
+     * @return the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     GarVMPermission searchPermission(Long permissionId);
 
+    /**
+     * Update permission.
+     *
+     * @param garVMPermission the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     void updatePermission(GarVMPermission garVMPermission);
 
+    /**
+     * Query permission list by application id list.
+     *
+     * @param applicationId the application id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarVMPermission> queryPermissionListByApplicationId(Long applicationId);
 }

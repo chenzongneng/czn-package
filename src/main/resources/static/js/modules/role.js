@@ -57,8 +57,8 @@ var deptTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
-            pIdKey: "parentDeptId",
+            idKey: "departmentId",
+            pIdKey: "parentDepartmentId",
             rootPId: -1
         },
         key: {
@@ -104,7 +104,7 @@ var vm = new Vue({
         role: {
             roleId: null,
             tenantId: null,
-            appId: 1,
+            applicationId: 1,
             name: null,
             remark: null,
             deptIds: null
@@ -138,7 +138,7 @@ var vm = new Vue({
             vm.role = {
                 roleId: null,
                 tenantId: null,
-                appId: 1,
+                applicationId: 1,
                 name: null,
                 remark: null,
                 deptIds: null,
@@ -201,7 +201,7 @@ var vm = new Vue({
             var depts = deptTree.getCheckedNodes(true);
             var deptIdList = [];
             for (var i = 0; i < depts.length; i++) {
-                deptIdList.push(depts[i].deptId);
+                deptIdList.push(depts[i].departmentId);
             }
             vm.role.deptIds = deptIdList.join(",");
             // 获取权限树选择的权限
@@ -219,7 +219,7 @@ var vm = new Vue({
                 alert("请选择租户");
                 return;
             }
-            if(vm.role.appId === null) {
+            if(vm.role.applicationId === null) {
                 alert("请选择应用");
                 return;
             }
@@ -242,7 +242,7 @@ var vm = new Vue({
         initTreesToAdd: function () {
             //加载部门树
             // $.get(baseURL + "depts/" + currentUser.userId, function (response) {
-            $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+            $.get(baseURL + "departments?page=1&limit=1000", function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                 deptTree.expandAll(false);
             });
@@ -261,27 +261,27 @@ var vm = new Vue({
         getRoleById: function (roleId) {
             $.get(baseURL + "role/" + roleId, function (response) {
                 vm.role.roleId = response.roleId;
-                vm.role.appId = response.appId;
+                vm.role.applicationId = response.applicationId;
                 vm.role.tenantId = response.tenantId;
                 vm.role.name = response.name;
                 vm.role.remark = response.remark;
                 vm.role.deptIdList = response.deptIdList;
                 vm.role.permissionIdList = response.permissionIdList;
                 vm.tenantList.selectedTenant = response.tenantId;
-                vm.appList.selectedApp = response.appId;
+                vm.appList.selectedApp = response.applicationId;
                 //加载部门树
                 // $.get(baseURL + "depts/" + currentUser.userId, function (response) {
-                $.get(baseURL + "depts?page=1&limit=1000", function (response) {
+                $.get(baseURL + "departments?page=1&limit=1000", function (response) {
                     deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                     deptTree.expandAll(true);
                     console.log(JSON.stringify(vm.role.deptIdList));
                     $.each(vm.role.deptIdList, function (index, item) {
-                        var node = deptTree.getNodeByParam("deptId", item);
+                        var node = deptTree.getNodeByParam("departmentId", item);
                         deptTree.checkNode(node, true, false);
                     });
                 });
                 //加载权限树
-                $.get(baseURL + "/permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+                $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
                     permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                     permissionTree.expandAll(true);
                     $.each(vm.role.permissionIdList, function (index, item) {
@@ -320,7 +320,7 @@ var vm = new Vue({
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
-            vm.role.appId = vm.appList.selectedApp;
+            vm.role.applicationId = vm.appList.selectedApp;
             vm.roadPermissionTree();
         },
         /**  获取租户列表 */

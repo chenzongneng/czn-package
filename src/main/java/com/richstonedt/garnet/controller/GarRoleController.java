@@ -96,6 +96,7 @@ public class GarRoleController {
      *
      * @param roleId the role id
      * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
      */
     @RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询角色信息", notes = "Get role info by roleId ")

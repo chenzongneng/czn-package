@@ -100,9 +100,7 @@ public class GarLogOperationServiceImpl implements GarLogOperationService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -114,6 +112,7 @@ public class GarLogOperationServiceImpl implements GarLogOperationService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */

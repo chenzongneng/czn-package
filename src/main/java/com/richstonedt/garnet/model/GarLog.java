@@ -48,8 +48,6 @@ public class GarLog implements Serializable {
      * The Operation.
      *
      * @since garnet-core-be-fe 0.1.0
-     *
-     * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "用户操作")
     private String operation;
@@ -238,7 +236,7 @@ public class GarLog implements Serializable {
      * Return the CreateTime
      *
      * @return property value of createTime
-     * @since gempile-model 0.1.0
+     * @since gempile -model 0.1.0
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Date getCreateTime() {
@@ -249,7 +247,7 @@ public class GarLog implements Serializable {
      * Set the CreateTime
      *
      * @param createTime value to be assigned to property createTime
-     * @since gempile-model 0.1.0
+     * @since gempile -model 0.1.0
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;

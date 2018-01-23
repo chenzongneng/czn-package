@@ -28,33 +28,33 @@ public interface BaseDao<T> {
 	 * Save.
 	 *
 	 * @param t the t
-     * @since garnet-core-be-fe 0.1.0
-     */
+	 * @since garnet-core-be-fe 0.1.0
+	 */
 	void save(T t);
 
 	/**
 	 * Update int.
 	 *
-     * @param t the T
-     * @since garnet-core-be-fe 1.0.0
+	 * @param t the T
+	 * @since garnet-core-be-fe 1.0.0
 	 */
 	void update(T t);
 
-    /**
-     * Delete by id.
-     *
-     * @param id the id
-     * @since garnet-core-be-fe 1.0.0
-     */
-    void deleteById(@Param(value = "id") Long id);
+	/**
+	 * Delete by id.
+	 *
+	 * @param id the id
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	void deleteById(@Param(value = "id") Long id);
 
 	/**
 	 * Delete batch int.
 	 *
-     * @param ids the id
-     * @since garnet-core-be-fe 1.0.0
+	 * @param ids the id
+	 * @since garnet-core-be-fe 1.0.0
 	 */
-    void deleteBatch(@Param(value = "ids") List<Long> ids);
+	void deleteBatch(@Param(value = "ids") List<Long> ids);
 
 	/**
 	 * Query object t.
@@ -63,23 +63,23 @@ public interface BaseDao<T> {
 	 * @return the t
 	 * @since garnet-core-be-fe 1.0.0
 	 */
-    T queryObject(@Param(value = "id") Long id);
+	T queryObject(@Param(value = "id") Long id);
 
 	/**
 	 * Query total int.
 	 *
-	 * @param params     the params
+	 * @param params the params
 	 * @return the int
 	 * @since garnet-core-be-fe 1.0.0
 	 */
 	int queryTotal(Map<String,Object> params);
 
-    /**
-     * Query objects list.
-     *
-     * @param params     the params
-     * @return the list
-     * @since garnet-core-be-fe 1.0.0
-     */
-    List<T> queryObjects(Map<String,Object> params);
+	/**
+	 * Query objects list.
+	 *
+	 * @param params the params
+	 * @return the list
+	 * @since garnet-core-be-fe 1.0.0
+	 */
+	List<T> queryObjects(Map<String,Object> params);
 }

@@ -24,17 +24,64 @@ import java.util.Map;
  */
 public interface GarResourceService extends BaseService<GarResource> {
 
+    /**
+     * Query resource list by params list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarVMResource> queryResourceListByParams(Map<String, Object> params);
 
+    /**
+     * Query resource list by app id list.
+     *
+     * @param appId the app id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarVMResource> queryResourceListByAppId(Long appId);
 
+    /**
+     * Save resource.
+     *
+     * @param garVMResource the gar vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     void saveResource(GarVMResource garVMResource);
 
+    /**
+     * Search resource gar vm resource.
+     *
+     * @param resourceId the resource id
+     * @return the gar vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     GarVMResource searchResource(Long resourceId);
 
+    /**
+     * Update resource.
+     *
+     * @param garVMResource the gar vm resource
+     * @since garnet-core-be-fe 0.1.0
+     */
     void updateResource(GarVMResource garVMResource);
 
+    /**
+     * Query total resource by param int.
+     *
+     * @param params the params
+     * @return the int
+     * @since garnet-core-be-fe 0.1.0
+     */
     int queryTotalResourceByParam(Map<String, Object> params);
 
+    /**
+     * Delete batch by resource ids map.
+     *
+     * @param resourceIds the resource ids
+     * @return the map
+     * @since garnet-core-be-fe 0.1.0
+     */
     Map<String, String> deleteBatchByResourceIds(List<Long> resourceIds);
 }

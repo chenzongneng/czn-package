@@ -31,6 +31,8 @@ public class GarSysMenuServiceImpl implements GarSysMenuService {
 
     /**
      * The Sys menu dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
      */
     @Autowired
     private GarSysMenuDao sysMenuDao;

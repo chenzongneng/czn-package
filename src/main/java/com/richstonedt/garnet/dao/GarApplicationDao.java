@@ -24,5 +24,12 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface GarApplicationDao extends BaseDao<GarApplication> {
 
+    /**
+     * Gets application id by code.
+     *
+     * @param appCode the app code
+     * @return the application id by code
+     * @since garnet-core-be-fe 0.1.0
+     */
     Long getApplicationIdByCode(@Param("appCode") String appCode);
 }

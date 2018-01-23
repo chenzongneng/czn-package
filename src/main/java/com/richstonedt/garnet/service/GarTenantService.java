@@ -45,9 +45,7 @@ public interface GarTenantService extends BaseService<GarTenant> {
     /**
      * Query vm tenants list.
      *
-     * @param searchName the search name
-     * @param page       the page
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */

@@ -27,15 +27,57 @@ import java.util.Set;
 @Mapper
 public interface GarResourceDao extends BaseDao<GarResource> {
 
+    /**
+     * Gets resource name by code.
+     *
+     * @param code the code
+     * @return the resource name by code
+     * @since garnet-core-be-fe 0.1.0
+     */
     String getResourceNameByCode(@Param("code") String code);
 
+    /**
+     * Gets resource id by code.
+     *
+     * @param code the code
+     * @return the resource id by code
+     * @since garnet-core-be-fe 0.1.0
+     */
     Long getResourceIdByCode(@Param("code") String code);
 
-    List<GarResource> getResourcesByAppId(@Param("appId") Long appId);
+    /**
+     * Gets resources by app id.
+     *
+     * @param appId the app id
+     * @return the resources by app id
+     * @since garnet-core-be-fe 0.1.0
+     */
+    List<GarResource> getResourcesByAppId(@Param("applicationId") Long appId);
 
+    /**
+     * Gets resources by params.
+     *
+     * @param params the params
+     * @return the resources by params
+     * @since garnet-core-be-fe 0.1.0
+     */
     List<GarResource> getResourcesByParams(Map<String, Object> params);
 
+    /**
+     * Gets total resource by param.
+     *
+     * @param params the params
+     * @return the total resource by param
+     * @since garnet-core-be-fe 0.1.0
+     */
     int getTotalResourceByParam(Map<String, Object> params);
 
+    /**
+     * Query resource name by parent ids set.
+     *
+     * @param resourceIds the resource ids
+     * @return the set
+     * @since garnet-core-be-fe 0.1.0
+     */
     Set<String> queryResourceNameByParentIds(@Param("parentIds")List<Long> resourceIds);
 }

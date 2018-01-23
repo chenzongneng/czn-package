@@ -38,15 +38,27 @@ public class GarPublicApiController {
      */
     private static Logger LOG = LoggerFactory.getLogger(GarSysMenuController.class);
 
+    /**
+     * The User resource service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserResourceService userResourceService;
 
+    /**
+     * The Shiro service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarShiroService shiroService;
 
     /**
      * Search sys menu response entity.
      *
+     * @param userId  the user id
+     * @param appCode the app code
      * @return the response entity
      * @since garnet-core-be-fe 0.1.0
      */
@@ -69,6 +81,8 @@ public class GarPublicApiController {
     /**
      * Search sys menu response entity.
      *
+     * @param userId  the user id
+     * @param appCode the app code
      * @return the response entity
      * @since garnet-core-be-fe 0.1.0
      */

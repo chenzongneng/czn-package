@@ -68,13 +68,28 @@ public class GarVMRole extends GarRole implements Serializable {
     @ApiModelProperty(value = "部门ID,以‘，’隔开")
     private String deptIds;
 
-    // todo 权限属性
+    /**
+     * The Permission name list.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
+// todo 权限属性
     @ApiModelProperty(value = "权限名称列表")
     private List<String> permissionNameList;
 
+    /**
+     * The Permission id list.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "权限ID列表")
     private List<Long> permissionIdList;
 
+    /**
+     * The Permission ids.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @ApiModelProperty(value = "权限ID,以‘，’隔开")
     private String permissionIds;
 
@@ -178,26 +193,62 @@ public class GarVMRole extends GarRole implements Serializable {
         this.deptIds = deptIds;
     }
 
+    /**
+     * Gets permission name list.
+     *
+     * @return the permission name list
+     * @since garnet-core-be-fe 0.1.0
+     */
     public List<String> getPermissionNameList() {
         return permissionNameList;
     }
 
+    /**
+     * Sets permission name list.
+     *
+     * @param permissionNameList the permission name list
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setPermissionNameList(List<String> permissionNameList) {
         this.permissionNameList = permissionNameList;
     }
 
+    /**
+     * Gets permission ids.
+     *
+     * @return the permission ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     public String getPermissionIds() {
         return permissionIds;
     }
 
+    /**
+     * Sets permission ids.
+     *
+     * @param permissionIds the permission ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setPermissionIds(String permissionIds) {
         this.permissionIds = permissionIds;
     }
 
+    /**
+     * Gets permission id list.
+     *
+     * @return the permission id list
+     * @since garnet-core-be-fe 0.1.0
+     */
     public List<Long> getPermissionIdList() {
         return permissionIdList;
     }
 
+    /**
+     * Sets permission id list.
+     *
+     * @param permissionIdList the permission id list
+     * @since garnet-core-be-fe 0.1.0
+     */
     public void setPermissionIdList(List<Long> permissionIdList) {
         this.permissionIdList = permissionIdList;
     }

@@ -36,58 +36,127 @@ import java.util.Map;
 @Service
 public class GarPermissionServiceImpl implements GarPermissionService {
 
+    /**
+     * The Permission dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarPermissionDao permissionDao;
 
-//    @Autowired
-//    private GarPermissionResourceDao permissionResourceDao;
-
+    /**
+     * The Application dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarApplicationDao applicationDao;
 
+    /**
+     * The Role permission dao.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarRolePermissionDao rolePermissionDao;
 
+    /**
+     * The Entity to vm copier.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private BeanCopier entityToVMCopier = BeanCopier.create(GarPermission.class, GarVMPermission.class,
             false);
 
+    /**
+     * Save.
+     *
+     * @param garPermission the gar permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void save(GarPermission garPermission) {
         permissionDao.save(garPermission);
     }
 
+    /**
+     * Update.
+     *
+     * @param garPermission the gar permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void update(GarPermission garPermission) {
         permissionDao.update(garPermission);
     }
 
+    /**
+     * Delete by id.
+     *
+     * @param id the id
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void deleteById(Long id) {
         rolePermissionDao.deleteByPermissionId(id);
         permissionDao.deleteById(id);
     }
 
+    /**
+     * Delete batch.
+     *
+     * @param ids the ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void deleteBatch(List<Long> ids) {
         rolePermissionDao.deleteBatchByPermissionIds(ids);
         permissionDao.deleteBatch(ids);
     }
 
+    /**
+     * Query object gar permission.
+     *
+     * @param id the id
+     * @return the gar permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarPermission queryObject(Long id) {
         return permissionDao.queryObject(id);
     }
 
+    /**
+     * Query objects list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarPermission> queryObjects(Map<String, Object> params) {
         return permissionDao.queryObjects(params);
     }
 
+    /**
+     * Query total int.
+     *
+     * @param params the params
+     * @return the int
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public int queryTotal(Map<String, Object> params) {
         return permissionDao.queryTotal(params);
     }
 
+    /**
+     * Query permission list list.
+     *
+     * @param params the params
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVMPermission> queryPermissionList(Map<String, Object> params) {
         List<GarPermission> authorities = permissionDao.queryObjects(params);
@@ -98,18 +167,37 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         return result;
     }
 
+    /**
+     * Save permission.
+     *
+     * @param garVMPermission the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void savePermission(GarVMPermission garVMPermission) {
         permissionDao.save(garVMPermission);
 //        savePermissionResource(garVMPermission);
     }
 
+    /**
+     * Search permission gar vm permission.
+     *
+     * @param permissionId the permission id
+     * @return the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public GarVMPermission searchPermission(Long permissionId) {
         GarPermission permission = permissionDao.queryObject(permissionId);
         return convertPermissionToVmPermission(permission);
     }
 
+    /**
+     * Update permission.
+     *
+     * @param garVMPermission the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public void updatePermission(GarVMPermission garVMPermission) {
         update(garVMPermission);
@@ -117,6 +205,13 @@ public class GarPermissionServiceImpl implements GarPermissionService {
 //        savePermissionResource(garVMPermission);
     }
 
+    /**
+     * Query permission list by application id list.
+     *
+     * @param applicationId the application id
+     * @return the list
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public List<GarVMPermission> queryPermissionListByApplicationId(Long applicationId) {
         List<GarPermission> permissionList = permissionDao.getPermissionListByApplicationId(applicationId);
@@ -127,6 +222,13 @@ public class GarPermissionServiceImpl implements GarPermissionService {
         return result;
     }
 
+    /**
+     * Convert permission to vm permission gar vm permission.
+     *
+     * @param garPermission the gar permission
+     * @return the gar vm permission
+     * @since garnet-core-be-fe 0.1.0
+     */
     private GarVMPermission convertPermissionToVmPermission(GarPermission garPermission) {
         GarVMPermission vmPermission = new GarVMPermission();
         entityToVMCopier.copy(garPermission, vmPermission, null);

@@ -10,45 +10,45 @@
 <mapper namespace="com.richstonedt.garnet.dao.GarRoleDeptDao">
 
     <insert id="save" parameterType="com.richstonedt.garnet.model.GarRoleDept">
-        INSERT INTO gar_role_dept
+        INSERT INTO gar_role_department
         (
             role_id,
-            dept_id
+            department_id
         )
         VALUES
             (
                 #{roleId},
-                #{deptId}
+                #{departmentId}
             );
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM gar_role_dept
+        DELETE FROM gar_role_department
         <where>
             role_id = #{id};
         </where>
     </delete>
 
     <delete id="deleteBatch" parameterType="java.util.List">
-        delete from gar_role_dept WHERE role_id in
+        delete from gar_role_department WHERE role_id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </delete>
 
     <delete id="deleteRoleDeptByDeptId" parameterType="java.lang.Long">
-        DELETE FROM gar_role_dept
+        DELETE FROM gar_role_department
         <where>
-            dept_id = #{deptId}
+            department_id = #{departmentId}
         </where>
     </delete>
 
 
     <update id="update" parameterType="com.richstonedt.garnet.model.GarRoleDept">
-        UPDATE gar_role_dept
+        UPDATE gar_role_department
         <set>
-            <if test="deptId != null ">
-                dept_id = #{deptId}
+            <if test="departmentId != null ">
+                department_id = #{departmentId}
             </if>
         </set>
         <where>
@@ -57,22 +57,22 @@
     </update>
 
     <select id="getRoleDeptByRoleId" resultType="com.richstonedt.garnet.model.GarRoleDept">
-        SELECT * FROM gar_role_dept
+        SELECT * FROM gar_role_department
         <where>
             role_id = #{roleId};
         </where>
     </select>
 
     <select id="getRoleDeptByDeptId" resultType="com.richstonedt.garnet.model.GarRoleDept">
-        SELECT * FROM gar_role_dept
+        SELECT * FROM gar_role_department
         <where>
-            dept_id = #{deptId};
+            department_id = #{departmentId};
         </where>
     </select>
     <select id="getRoleIdsByDeptIds" resultType="_long" parameterType="java.util.Set">
         SELECT rd.role_id
-        FROM gar_role_dept AS rd WHERE dept_id in
-        <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+        FROM gar_role_department AS rd WHERE department_id in
+        <foreach collection="departmentIds" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>

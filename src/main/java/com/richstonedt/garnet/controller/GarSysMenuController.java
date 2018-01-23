@@ -52,6 +52,11 @@ public class GarSysMenuController {
     @Autowired
     private GarSysMenuService sysMenuService;
 
+    /**
+     * The User resource service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarUserResourceService userResourceService;
 

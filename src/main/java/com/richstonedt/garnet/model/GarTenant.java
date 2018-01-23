@@ -30,7 +30,7 @@ public class GarTenant implements Serializable {
 
     /**
      * The Tenant id.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "租户ID")
@@ -38,7 +38,7 @@ public class GarTenant implements Serializable {
 
     /**
      * The Name.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "租户名称")
@@ -46,7 +46,7 @@ public class GarTenant implements Serializable {
 
     /**
      * The Remark.
-     * 
+     *
      * @since garnet-core-be-fe 0.1.0
      */
     @ApiModelProperty(value = "备注")

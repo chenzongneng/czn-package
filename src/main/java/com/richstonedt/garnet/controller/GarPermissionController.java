@@ -39,11 +39,31 @@ import java.util.Map;
 @Api(tags = "[Garnet]权限管理接口")
 public class GarPermissionController {
 
+    /**
+     * The constant LOG.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     private static Logger LOG = LoggerFactory.getLogger(GarPermissionController.class);
 
+    /**
+     * The Permission service.
+     *
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Autowired
     private GarPermissionService permissionService;
 
+    /**
+     * Search authorities response entity.
+     *
+     * @param token      the token
+     * @param page       the page
+     * @param limit      the limit
+     * @param searchName the search name
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询权限列表", notes = "Get permission list ")
     @ApiResponses(value = {
@@ -70,6 +90,13 @@ public class GarPermissionController {
         }
     }
 
+    /**
+     * Search permission response entity.
+     *
+     * @param permissionId the permission id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/permission/{permissionId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id查询权限信息", notes = "Get permission info by permissionId ")
     @ApiResponses(value = {
@@ -85,6 +112,13 @@ public class GarPermissionController {
         }
     }
 
+    /**
+     * Save permission response entity.
+     *
+     * @param garVMPermission the gar vm permission
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/permission", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]新增权限", notes = "Create permission")
     @ApiResponses(value = {
@@ -101,6 +135,13 @@ public class GarPermissionController {
         }
     }
 
+    /**
+     * Update permission response entity.
+     *
+     * @param garVMPermission the gar vm permission
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/permission", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据ID更新权限信息", notes = "Update permission info")
     @ApiResponses(value = {
@@ -117,6 +158,13 @@ public class GarPermissionController {
         }
     }
 
+    /**
+     * Delete permissions response entity.
+     *
+     * @param permissionIds the permission ids
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/permission", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]根据id批量删除权限", notes = "Delete permissions")
     @ApiResponses(value = {
@@ -133,6 +181,13 @@ public class GarPermissionController {
         }
     }
 
+    /**
+     * Search authorities by application id response entity.
+     *
+     * @param applicationId the application id
+     * @return the response entity
+     * @since garnet-core-be-fe 0.1.0
+     */
     @RequestMapping(value = "/permissions/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "[Garnet]查询通过应用ID权限列表", notes = "Get permission list by application id")
     @ApiResponses(value = {

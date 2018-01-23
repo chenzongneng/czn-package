@@ -73,6 +73,13 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
         roleDeptDao.deleteRoleDeptByDeptId(deptId);
     }
 
+    /**
+     * Gets role ids by dept ids.
+     *
+     * @param deptIds the dept ids
+     * @return the role ids by dept ids
+     * @since garnet-core-be-fe 0.1.0
+     */
     @Override
     public Set<Long> getRoleIdsByDeptIds(Set<Long> deptIds) {
         return roleDeptDao.getRoleIdsByDeptIds(deptIds);
@@ -137,9 +144,7 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
     /**
      * Query objects list.
      *
-     * @param searchName the search name
-     * @param page       the offset
-     * @param limit      the limit
+     * @param params the params
      * @return the list
      * @since garnet-core-be-fe 0.1.0
      */
@@ -151,6 +156,7 @@ public class GarRoleDeptServiceImpl implements GarRoleDeptService {
     /**
      * Query total int.
      *
+     * @param params the params
      * @return the int
      * @since garnet-core-be-fe 0.1.0
      */

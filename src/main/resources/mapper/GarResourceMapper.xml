@@ -125,7 +125,7 @@
     <select id="getResourcesByAppId" resultType="com.richstonedt.garnet.model.GarResource">
         SELECT *
         FROM gar_resources
-        WHERE application_id = #{appId} AND status = 1
+        WHERE application_id = #{applicationId} AND status = 1
     </select>
 
     <select id="getResourcesByParams" parameterType="java.util.Map" resultType="com.richstonedt.garnet.model.GarResource">
