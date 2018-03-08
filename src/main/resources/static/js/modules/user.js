@@ -10,19 +10,19 @@ $(function () {
         url: baseURL + 'users',
         datatype: "json",
         colModel: [
-            {label: '用户ID', name: 'userId', align: 'center', hidden: true, index: "user_id", width: 20, key: true},
+            {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             {label: '账号', name: 'userName', align: 'center', width: 70},
-            {label: '用户姓名', name: 'name', align: 'center', width: 70},
-            {label: '所属部门', name: 'deptNameList', align: 'center', width: 100},
-            {label: '邮箱', name: 'email', align: 'center', width: 80},
-            {label: '手机号', name: 'mobile', align: 'center', width: 80},
-            {
-                label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
-                return value === 0 ?
-                    '<span class="label label-danger">禁用</span>' :
-                    '<span class="label label-success">正常</span>';
-            }
-            }
+            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70},
+            {label: '邮箱', name: 'email', align: 'center', width: 100},
+            {label: '创建时间', name: 'createdTime', align: 'center', width: 80},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', width: 80}
+            // {
+            //     label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
+            //     return value === 0 ?
+            //         '<span class="label label-danger">禁用</span>' :
+            //         '<span class="label label-success">正常</span>';
+            // }
+            // }
             // {label: '创建时间', align: 'center', name: 'createTime', width: 90}
         ],
         viewrecords: true,
@@ -66,7 +66,7 @@ var applicationTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "applicationId"
+            idKey: "id"
         },
         key: {
             url: "nourl"
@@ -102,25 +102,32 @@ var deptTreeSetting = {
 };
 
 var currentUser;
-
 var vm = new Vue({
     el: '#garnetApp',
     data: {
         searchName: null,
         showList: true,
         title: null,
-        // 用户信息
-        user: {
-            userId: null,
-            tenantId: null,
-            deptIds: null,
-            userName: null,
-            password: null,
-            name: null,
-            email: null,
-            mobile: null,
-            status: null
+
+        multiple: {
+            originOptionsTenant: [],
+            selectedListTenant: []
         },
+        // 用户信息
+        // user: {
+        //     userId: null,
+        //     tenantId: null,
+        //     deptIds: null,
+        //     userName: null,
+        //     password: null,
+        //     name: null,
+        //     email: null,
+        //     mobile: null,
+        //     status: null
+        // },
+
+        user: {},
+
         // 租户列表数据
         tenantList: {
             selectedTenant: "",
@@ -132,7 +139,50 @@ var vm = new Vue({
             options: []
         },
     },
+
+    mounted: function () {
+
+    },
+
     methods: {
+
+        queryData: function (method) {
+
+            var mySelf = this;
+            //do ajax here
+            //获取租户信息
+
+            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+
+                mySelf.multiple.originOptionsTenant = response.list;
+
+            });
+            if (method == "update") {
+                //Todo 租户更新部分
+                // alert(vm.user.id);
+                $.get(baseURL + "tenants?page=1&limit=1000&userId="+vm.user.id, function (response) {
+
+                    mySelf.multiple.selectedListTenant= response.list;
+
+                });
+
+            } else {
+
+                mySelf.multiple.selectedListTenant = [];
+            }
+            // 多选
+            // mySelf.multiple.originOptionsTenant = [{"id":"1","name":"lemon"},{"id":"2","name":"mike"},{"id":"3","name":"lara"},{"id":"4","name":"zoe"},{"id":"5","name":"steve"},{"id":"6","name":"nolan"}];
+            // mySelf.multiple.selectedListTenant = [{"id":"1","name":"lemon"},{"id":"3","name":"lara"}]
+
+
+            this.$nextTick(function () {
+
+            })
+        },
+        multipleCallback: function (data) {
+            this.multiple.selectedListTenant = data;
+            console.log('父级元素调用multipleSelected 选中的是' + JSON.stringify(data))
+        },
         /**  查询按钮点击事件 */
         query: function () {
             vm.reload(true);
@@ -146,22 +196,24 @@ var vm = new Vue({
             vm.appList.selectedApp = "";
             vm.appList.options = [];
             vm.user = {
-                userId: null,
-                userName: null,
-                password: null,
-                name: null,
-                email: null,
-                mobile: null,
-                status: 1,
-                deptIds: null
+                id: null,
+                // userName: null,
+                // password: null,
+                // name: null,
+                // email: null,
+                // mobile: null,
+                // status: 1,
+                // deptIds: null
             };
-            vm.initTreeToAdd();
-            vm.getTenantList();
-            vm.getAppList();
+            this.queryData("add");
+            // vm.initTreeToAdd();
+            // vm.getTenantList();
+            // vm.getAppList();
         },
         /**  更新按钮点击事件 */
         update: function () {
             var userId = getSelectedRow();
+
             if (!userId) {
                 return;
             }
@@ -171,9 +223,13 @@ var vm = new Vue({
             vm.appList.options = [];
             vm.user.applicationIdList = [];
             vm.user.deptIdList = [];
-            vm.initTreeToUpdate(userId);
-            vm.getTenantList();
-            vm.getAppList();
+
+            vm.getUser(userId);
+            this.queryData("update");
+
+            // vm.initTreeToUpdate(userId);
+            // vm.getTenantList();
+            // vm.getAppList();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -181,10 +237,10 @@ var vm = new Vue({
             if (!userIds) {
                 return;
             }
-            if (userIds.includes(currentUser.userId.toString())) {
-                swal("您不能删除自己!", "", "error");
-                return;
-            }
+            // if (userIds.includes(currentUser.userId.toString())) {
+            //     swal("您不能删除自己!", "", "error");
+            //     return;
+            // }
             swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
@@ -197,7 +253,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "user?userIds=" + userIds.toString(),
+                        url: baseURL + "users?ids=" + userIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
@@ -213,29 +269,34 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-            // 获取应用树选择的部门
-            var nodes = applicationTree.getCheckedNodes(true);
-            var applicationIdList = [];
-            for (var i = 0; i < nodes.length; i++) {
-                applicationIdList.push(nodes[i].applicationId);
-            }
-            vm.user.applicationIds = applicationIdList.join(",");
-            // 获取部门树选择的部门
-            var nodes = deptTree.getCheckedNodes(true);
-            var deptIdList = [];
-            for (var i = 0; i < nodes.length; i++) {
-                deptIdList.push(nodes[i].departmentId);
-            }
-            vm.user.deptIds = deptIdList.join(",");
-            // 校验字段
+
+            // alert(JSON.stringify(vm.multiple.selectedListTenant) + "dd" + JSON.stringify(vm.user));
+
+            var obj = new Object();
+
+            obj.user = vm.user;
+            obj.userTenants = [];
+            obj.password = vm.user.password;
             if (!vm.checkValue()) {
                 return;
             }
+
+            //获取选择的租户
+            for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {
+
+                // console.log(vm.multiple.selectedListTenant[i].id);
+                var userTenant = new Object();
+                userTenant.tenantId = vm.multiple.selectedListTenant[i].id;
+                obj.userTenants.push(userTenant);
+
+            }
+            console.log(JSON.stringify(obj));
+            console.log("obj.user.id: " + obj.user.id);
             $.ajax({
-                type: vm.user.userId === null ? "POST" : "PUT",
-                url: baseURL + "user",
+                type: obj.user.id === null ? "POST" : "PUT",
+                url: baseURL + "users",
                 contentType: "application/json",
-                data: JSON.stringify(vm.user),
+                data: JSON.stringify(obj),
                 dataType: "",
                 success: function () {
                     vm.reload(false);
@@ -245,6 +306,39 @@ var vm = new Vue({
                     swal(response.responseJSON.errorMessage, "", "error");
                 }
             });
+
+            // 获取应用树选择的部门
+            // var nodes = applicationTree.getCheckedNodes(true);
+            // var applicationIdList = [];
+            // for (var i = 0; i < nodes.length; i++) {
+            //     applicationIdList.push(nodes[i].applicationId);
+            // }
+            // vm.user.applicationIds = applicationIdList.join(",");
+            // // 获取部门树选择的部门
+            // var nodes = deptTree.getCheckedNodes(true);
+            // var deptIdList = [];
+            // for (var i = 0; i < nodes.length; i++) {
+            //     deptIdList.push(nodes[i].departmentId);
+            // }
+            // vm.user.deptIds = deptIdList.join(",");
+            // // 校验字段
+            // if (!vm.checkValue()) {
+            //     return;
+            // }
+            // $.ajax({
+            //     type: vm.user.userId === null ? "POST" : "PUT",
+            //     url: baseURL + "user",
+            //     contentType: "application/json",
+            //     data: JSON.stringify(vm.user),
+            //     dataType: "",
+            //     success: function () {
+            //         vm.reload(false);
+            //         swal("操作成功!", "", "success");
+            //     },
+            //     error: function (response) {
+            //         swal(response.responseJSON.errorMessage, "", "error");
+            //     }
+            // });
         },
         /** 添加按钮初始化数据 */
         initTreeToAdd: function () {
@@ -277,23 +371,29 @@ var vm = new Vue({
         },
         /** 根据用户ID获取用户信息 */
         getUser: function (userId) {
-            $.get(baseURL + "user/" + userId, function (response) {
-                vm.user.userId = response.userId;
-                vm.user.userName = response.userName;
-                vm.user.password = null;
-                vm.user.name = response.name;
-                vm.user.email = response.email;
-                vm.user.mobile = response.mobile;
-                vm.user.status = response.status;
-                vm.tenantList.selectedTenant = response.tenantId;
-                $.each(response.applicationIdList, function (index, item) {
-                    var node = applicationTree.getNodeByParam("applicationId", item);
-                    applicationTree.checkNode(node, true, false);
-                });
-                $.each(response.deptIdList, function (index, item) {
-                    var node = deptTree.getNodeByParam("departmentId", item);
-                    deptTree.checkNode(node, true, false);
-                });
+            $.get(baseURL + "users/" + userId, function (response) {
+
+                response = response.data;
+
+                // alert(response.password);
+                vm.user = response.user;
+                vm.user.password =response.password;
+                // vm.user.userId = response.userId;
+                // vm.user.userName = response.userName;
+                // vm.user.password = null;
+                // vm.user.name = response.name;
+                // vm.user.email = response.email;
+                // vm.user.mobile = response.mobile;
+                // vm.user.status = response.status;
+                // vm.tenantList.selectedTenant = response.tenantId;
+                // $.each(response.applicationIdList, function (index, item) {
+                //     var node = applicationTree.getNodeByParam("applicationId", item);
+                //     applicationTree.checkNode(node, true, false);
+                // });
+                // $.each(response.deptIdList, function (index, item) {
+                //     var node = deptTree.getNodeByParam("departmentId", item);
+                //     deptTree.checkNode(node, true, false);
+                // });
             });
         },
         /** 查询当前用户信息 */
@@ -305,9 +405,9 @@ var vm = new Vue({
         reload: function (backFirst) {
             vm.showList = true;
             var page;
-            if(backFirst) {
+            if (backFirst) {
                 page = 1;
-            }else {
+            } else {
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
@@ -329,7 +429,7 @@ var vm = new Vue({
                 alert("邮箱格式不正确!");
                 return false;
             }
-            if (vm.user.mobile && !telReg.test(vm.user.mobile)) {
+            if (vm.user.mobile && !telReg.test(vm.user.mobileNumber)) {
                 alert("电话号码格式不正确!");
                 return false;
             }

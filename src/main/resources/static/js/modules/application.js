@@ -10,13 +10,14 @@ $(function () {
         url: baseURL + 'applications',
         datatype: "json",
         colModel: [
-            {label: '应用ID', name: 'applicationId', align: 'center', hidden: true, width: 20, key: true},
+            {label: '应用ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
             {label: '应用名称', name: 'name', align: 'center', width: 80},
-            {label: '应用标识', name: 'code', align: 'center', width: 80},
-            {label: '租户列表', name: 'tenantNameList', align: 'center', width: 100},
+            {label: '应用标识', name: 'appCode', align: 'center', width: 80},
             {label: '所属公司', name: 'company', align: 'center', width: 80},
-            {label: '备注', name: 'remark', align: 'center', width: 80},
-            // {label: '创建时间', name: 'createTime', align: 'center', width: 80}
+            {label: 'refreshResourcesApi', name: 'refreshResourcesApi', align: 'center', width: 80},
+            {label: '主机', name: 'hosts', align: 'center', width: 80},
+            {label: '创建时间', name: 'createdTime', align: 'center', width: 80},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -54,7 +55,7 @@ var tenantTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "tenantId"
+            idKey: "id"
         },
         key: {
             name: "name"
@@ -75,12 +76,18 @@ var vm = new Vue({
         showList: true,
         title: null,
         application: {
+
+            id:null,
             name: null,
             code: null,
+            appCode: null,
             company: null,
-            remark: null,
+            refreshResourcesApi: null,
+            createdTime: null,
+            hosts: null,
+            modifiedTime: null,
             tenantNames: [],
-            tenantIds: null
+            tenantIds: ''
         }
     },
     methods: {
@@ -93,11 +100,15 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.application = {
-                applicationId: null,
+                id:null,
                 name: null,
                 code: null,
+                appCode: null,
                 company: null,
-                remark: null,
+                refreshResourcesApi: null,
+                createdTime: null,
+                hosts: null,
+                modifiedTime: null,
                 tenantNames: [],
                 tenantIds: null
             };
@@ -144,7 +155,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "application?applicationIds=" + applicationIds.toString(),
+                        url: baseURL + "application?ids=" + applicationIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
@@ -159,19 +170,21 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-            if(vm.application.name === null || vm.application.code === ""){
+
+            var obj = new Object();
+            obj.application = vm.application;
+            obj.tenantIds =vm.application.tenantIds;
+            // alert(JSON.stringify(obj));
+            if(vm.application.name === null){
                 alert("应用名称不能为空");
                 return;
             }
-            if(vm.application.code === null || vm.application.code === ""){
-                alert("应用标识不能为空");
-                return;
-            }
+
             $.ajax({
-                type: vm.application.applicationId === null ? "POST" : "PUT",
-                url: baseURL + "application",
+                type: vm.application.id === null ? "POST" : "PUT",
+                url: baseURL + "applications",
                 contentType: "application/json",
-                data: JSON.stringify(vm.application),
+                data:JSON.stringify(obj),
                 dataType: "",
                 success: function () {
                     vm.reload(false);
@@ -184,17 +197,23 @@ var vm = new Vue({
         },
         /**  根据ID获取应用信息 */
         getApplication: function (applicationId) {
-            $.get(baseURL + "application/" + applicationId, function (response) {
-                if (response) {
-                    vm.application.applicationId = response.applicationId;
-                    vm.application.name = response.name;
-                    vm.application.code = response.code;
-                    vm.application.company = response.company;
-                    vm.application.remark = response.remark;
+            $.get(baseURL + "applications/" + applicationId, function (response) {
 
+                response=response.data;
+
+                // alert(JSON.stringify(response));
+
+                if (response) {
+                    vm.application.id = response.application.id;
+                    vm.application.name = response.application.name;
+                    vm.application.appCode = response.application.appCode;
+                    vm.application.company = response.application.company;
+                    vm.application.refreshResourcesApi = response.application.refreshResourcesApi;
+                    vm.application.createdTime = response.application.createdTime;
+                    vm.application.modifiedTime = response.application.modifiedTime;
                     // 勾选已有应用
                     $.each(response.tenantIdList, function (index, item) {
-                        var node = tenantTree.getNodeByParam("tenantId", item);
+                        var node = tenantTree.getNodeByParam("id", item);
                         tenantTree.checkNode(node, true, false);
                     });
                     $.each(response.tenantNameList, function (index, item) {
@@ -222,7 +241,7 @@ var vm = new Vue({
                     var tenantNodes = tenantTree.getCheckedNodes(true);
                     var tenantIdList = [];
                     for (var i = 0; i < tenantNodes.length; i++) {
-                        tenantIdList.push(tenantNodes[i].tenantId);
+                        tenantIdList.push(tenantNodes[i].id);
                         vm.application.tenantNames.push(tenantNodes[i].name);
                     }
                     vm.application.tenantIds = tenantIdList.join(",");

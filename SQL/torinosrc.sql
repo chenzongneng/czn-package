@@ -29,7 +29,7 @@ INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, cod
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (2, 1, '租户管理', 'modules/tenant.html', 1, 'fa fa-address-book', 'garnetSysManagementTenant', 1);
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (3, 1, '应用管理', 'modules/application.html', 1, 'fa fa-th-large', 'garnetSysManagementApplication', 2);
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (4, 1, '用户管理', 'modules/user.html', 1, 'fa fa fa-user', 'garnetSysManagementUser', 3);
-INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (5, 1, '部门管理', 'modules/department.html', 1, 'fa fa-institution', 'garnetSysManagementDepartment', 4);
+INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (5, 1, '部门管理', 'modules/group.html', 1, 'fa fa-institution', 'garnetSysManagementDepartment', 4);
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (6, 1, '角色管理', 'modules/role.html', 1, 'fa  fa-group ', 'garnetSysManagementRole', 5);
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (8, 1, '系统日志', 'modules/log.html', 1, 'fa fa-file-text-o', 'garnetSysManagementLog', 7);
 INSERT INTO public.gar_sys_menus (menu_id, parent_id, name, url, type, icon, code, order_num) VALUES (9, 0, '开发选项', '', 0, 'fa fa-cog', 'garnetDevelopment', 0);

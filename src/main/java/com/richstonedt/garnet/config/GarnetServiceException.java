@@ -33,7 +33,7 @@ public class GarnetServiceException extends RuntimeException {
     private String errorCode = GarnetServiceErrorCodes.OTHER;
 
     /**
-     * Instantiates a new Garnet service exception.
+     * Instantiates a new Garnet service_bk exception.
      *
      * @param message the message
      * @since garnet 1.0.0
@@ -43,7 +43,7 @@ public class GarnetServiceException extends RuntimeException {
     }
 
     /**
-     * Instantiates a new Garnet service exception.
+     * Instantiates a new Garnet service_bk exception.
      *
      * @param message   the message
      * @param errorCode the error code
@@ -55,7 +55,7 @@ public class GarnetServiceException extends RuntimeException {
     }
 
     /**
-     * Instantiates a new Garnet service exception.
+     * Instantiates a new Garnet service_bk exception.
      *
      * @param message the message
      * @param cause   the cause
@@ -66,7 +66,7 @@ public class GarnetServiceException extends RuntimeException {
     }
 
     /**
-     * Instantiates a new Garnet service exception.
+     * Instantiates a new Garnet service_bk exception.
      *
      * @param message   the message
      * @param cause     the cause
@@ -80,7 +80,7 @@ public class GarnetServiceException extends RuntimeException {
     }
 
     /**
-     * Instantiates a new Garnet service exception.
+     * Instantiates a new Garnet service_bk exception.
      *
      * @param cause the cause
      * @since garnet 1.0.0
@@ -90,7 +90,7 @@ public class GarnetServiceException extends RuntimeException {
     }
 
     /**
-     * Instantiates a new Garnet service exception.
+     * Instantiates a new Garnet service_bk exception.
      *
      * @param cause     the cause
      * @param errorCode the error code

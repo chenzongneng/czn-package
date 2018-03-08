@@ -34,6 +34,7 @@ public class IdGeneratorUtil {
         result = (nowMillis - ourEpoch) << 23;
         result = result | (shardId << 10);
         result = result | (seqId);*/
-        return System.currentTimeMillis() / 1000;
+        int i=(int)(Math.random()*100);
+        return System.currentTimeMillis() / 1000 + i;
     }
 }

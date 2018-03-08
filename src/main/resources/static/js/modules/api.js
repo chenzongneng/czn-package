@@ -204,7 +204,7 @@ var vm = new Vue({
                 anim: 1,
                 content:
                 // '<div class="form-group col-sm-2">' +
-                // '    <select class="form-control" v-model="option.appCode">' +
+                // '    <select class="form-control" v-model_bk="option.appCode">' +
                 // '        <option disabled value=""> 选择应用 </option>' +
                 // '        <option v-for="option in applicationList.appImportList.options" v-bind:value="option.code">' +
                 // '            {{ option.name }}' +

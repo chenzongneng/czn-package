@@ -3,7 +3,7 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
-
+localStorage.setItem("userId", "1519893662");
 /** 生成菜单 */
 var menuItem = Vue.extend({
     name: 'menu-item',
@@ -53,7 +53,7 @@ var vm = new Vue({
             var that = this;
             // $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1/appName/garnet", function (r) {
             $.ajaxSettings.async = false;
-            $.getJSON(baseURL + "/sysMenu", function (r) {
+            $.getJSON("http://localhost:12306/garnet/sysMenu.json", function (r) {
                 that.menuList = r;
                 //路由
                 var router = new Router();
@@ -64,7 +64,7 @@ var vm = new Vue({
         /** 查询按钮列表 */
         getButtonList: function () {
             $.ajaxSettings.async = false;
-            $.getJSON(baseURL + "resource/userId/" + userId + "/appCode/garnet", function (r) {
+            $.getJSON("http://localhost:12306/garnet/appCode.json", function (r) {
                 resources = r;
                 console.log(JSON.stringify(resources));
             });
@@ -72,13 +72,13 @@ var vm = new Vue({
         },
         /** 查询用户信息 */
         getUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (r) {
-                if (!r) {
-                    parent.location.href = 'index.html';
-                } else {
-                    vm.user = r;
-                }
-            });
+            // $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (r) {
+            //     if (!r) {
+            //         parent.location.href = 'index.html';
+            //     } else {
+            //         vm.user = r;
+            //     }
+            // });
         },
         /** 修改密码 */
         updatePassword: function () {

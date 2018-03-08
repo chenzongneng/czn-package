@@ -8,12 +8,12 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-var baseURL = "http://localhost:12306/garnet/v1.0/";
+var baseURL = "http://localhost:12306/garnet/api/v1.0/";
 
 /** token */
 var garnetToken = localStorage.getItem("garnetToken");
 if (!garnetToken) {
-    parent.location.href = 'login.html';
+    // parent.location.href = 'login.html';
 }
 var userId = localStorage.getItem("userId");
 
@@ -23,32 +23,32 @@ var userId = localStorage.getItem("userId");
 }*/
 
 /** jquery全局配置 */
-$.ajaxSetup({
-    dataType: "json",
-    cache: false,
-    headers: {
-        // "token": token,
-        // "gempileToken": localStorage.getItem("gempileToken")
-        "garnetToken": localStorage.getItem("garnetToken"),
-        "userToken": localStorage.getItem("userToken")
-    },
-
-    complete: function (xhr) {
-        var response = JSON.parse(xhr.responseText);
-        // token过期，则跳转到登录页面
-        if (response.code == 401) {
-            parent.location.href = 'login.html';
-        } else if (response.code == 403) {
-            swal({
-                    title: "没有权限",
-                    type: "error"
-                },
-                function () {
-                    parent.location.href = '../index.html';
-                });
-        }
-    }
-});
+// $.ajaxSetup({
+//     dataType: "json",
+//     cache: false,
+//     headers: {
+//         // "token": token,
+//         // "gempileToken": localStorage.getItem("gempileToken")
+//         "garnetToken": localStorage.getItem("garnetToken"),
+//         "userToken": localStorage.getItem("userToken")
+//     },
+//
+//     complete: function (xhr) {
+//         var response = JSON.parse(xhr.responseText);
+//         // token过期，则跳转到登录页面
+//         if (response.code == 401) {
+//             parent.location.href = 'login.html';
+//         } else if (response.code == 403) {
+//             swal({
+//                     title: "没有权限",
+//                     type: "error"
+//                 },
+//                 function () {
+//                     parent.location.href = '../index.html';
+//                 });
+//         }
+//     }
+// });
 
 /** jqGrid 配置 */
 $.jgrid.defaults.width = 1000;

@@ -1,0 +1,147 @@
+[
+  {
+    "menuId": 1,
+    "parentId": 0,
+    "parentName": null,
+    "name": "系统管理",
+    "url": null,
+    "type": 0,
+    "icon": "fa fa-cog",
+    "code": "garnetSysManagement",
+    "orderNum": 0,
+    "open": null,
+    "list": [
+      {
+        "menuId": 2,
+        "parentId": 1,
+        "parentName": null,
+        "name": "租户管理",
+        "url": "modules/tenant.html",
+        "type": 1,
+        "icon": "fa fa-address-book",
+        "code": "garnetSysManagementTenant",
+        "orderNum": 1,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 3,
+        "parentId": 1,
+        "parentName": null,
+        "name": "应用管理",
+        "url": "modules/application.html",
+        "type": 1,
+        "icon": "fa fa-th-large",
+        "code": "garnetSysManagementApplication",
+        "orderNum": 2,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 4,
+        "parentId": 1,
+        "parentName": null,
+        "name": "用户管理",
+        "url": "modules/user.html",
+        "type": 1,
+        "icon": "fa fa fa-user",
+        "code": "garnetSysManagementUser",
+        "orderNum": 3,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 5,
+        "parentId": 1,
+        "parentName": null,
+        "name": "组管理",
+        "url": "modules/group.html",
+        "type": 1,
+        "icon": "fa fa-institution",
+        "code": "garnetSysManagementGroup",
+        "orderNum": 4,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 6,
+        "parentId": 1,
+        "parentName": null,
+        "name": "角色管理",
+        "url": "modules/role.html",
+        "type": 1,
+        "icon": "fa  fa-group ",
+        "code": "garnetSysManagementRole",
+        "orderNum": 5,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 7,
+        "parentId": 1,
+        "parentName": null,
+        "name": "权限管理",
+        "url": "modules/permission.html",
+        "type": 1,
+        "icon": "fa fa-th-list",
+        "code": "garnetSysManagementPermission",
+        "orderNum": 6,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 8,
+        "parentId": 1,
+        "parentName": null,
+        "name": "系统日志",
+        "url": "modules/log.html",
+        "type": 1,
+        "icon": "fa fa-file-text-o",
+        "code": "garnetSysManagementLog",
+        "orderNum": 7,
+        "open": null,
+        "list": null
+      }
+    ]
+  },
+  {
+    "menuId": 9,
+    "parentId": 0,
+    "parentName": null,
+    "name": "开发选项",
+    "url": "",
+    "type": 0,
+    "icon": "fa fa-cog",
+    "code": "garnetDevelopment",
+    "orderNum": 0,
+    "open": null,
+    "list": [
+      {
+        "menuId": 10,
+        "parentId": 9,
+        "parentName": null,
+        "name": "资源管理",
+        "url": "modules/resource.html",
+        "type": 1,
+        "icon": "fa fa-th-list",
+        "code": "garnetDevelopmentResource",
+        "orderNum": 1,
+        "open": null,
+        "list": null
+      },
+      {
+        "menuId": 11,
+        "parentId": 9,
+        "parentName": null,
+        "name": "API",
+        "url": "modules/api.html",
+        "type": 1,
+        "icon": "fa fa-th-list",
+        "code": "garnetDevelopmentApi",
+        "orderNum": 2,
+        "open": null,
+        "list": null
+      }
+    ]
+  }
+]

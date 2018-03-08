@@ -9,7 +9,7 @@ package com.richstonedt.garnet.config;
 /**
  * <b><code>GarnetServiceErrorCodes</code></b>
  * <p/>
- * garnet service error codes
+ * garnet service_bk error codes
  * <p/>
  * <b>Creation Time:</b> 2016年11月30日 上午12:19:11
  *

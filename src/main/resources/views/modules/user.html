@@ -26,6 +26,8 @@
     <script src="../plugins/ztree/jquery.ztree.all.min.js"></script>
     <script src="../js/common.js"></script>
     <script src="../libs/sweetalert/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../plugins/component/select-vue-component.css">
+    <script src="../plugins/component/select-vue-component.js"></script>
 </head>
 
 <body>
@@ -50,6 +52,12 @@
     <div v-show="!showList" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
+            <div class="form-group" style="display: none;">
+                <div class="col-sm-2 control-label">id</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="user.id" placeholder="id" value="0"/>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">账号</div>
                 <div class="col-sm-10">
@@ -57,26 +65,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">用户姓名</div>
+                <div class="col-sm-2 control-label">密码</div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="user.name" placeholder="用户姓名"/>
+                    <input type="password" class="form-control" v-model="user.password" placeholder="密码"/>
                 </div>
             </div>
-            <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label">所属租户</div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<select class="form-control" v-model="tenantList.selectedTenant" @change="selectTenant">-->
-                        <!--<option disabled value="">&#45;&#45;请选择&#45;&#45;</option>-->
-                        <!--<option v-for="option in tenantList.options" v-bind:value="option.tenantId">-->
-                            <!--{{ option.name }}-->
-                        <!--</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">所属租户</div>
+                <div class="col-sm-10">
+                    <multiple-select v-bind:optionsdata="multiple.originOptionsTenant" v-bind:selecteddata="multiple.selectedListTenant" v-on:selected="multipleCallback"></multiple-select>
+                </div>
+            </div>
+
             <!--<div class="form-group">-->
                 <!--<div class="col-sm-2 control-label">所属应用</div>-->
                 <!--<div class="col-sm-10">-->
-                    <!--<select class="form-control" v-model="appList.selectedApp" @change="selectApp">-->
+                    <!--<select class="form-control" v-model_bk="appList.selectedApp" @change="selectApp">-->
                         <!--<option disabled value="">&#45;&#45;请选择&#45;&#45;</option>-->
                         <!--<option v-for="option in appList.options" v-bind:value="option.appId">-->
                             <!--{{ option.name }}-->
@@ -84,12 +89,7 @@
                     <!--</select>-->
                 <!--</div>-->
             <!--</div>-->
-            <div class="form-group">
-                <div class="col-sm-2 control-label">密码</div>
-                <div class="col-sm-10">
-                    <input class="form-control" v-model="user.password" placeholder="密码"/>
-                </div>
-            </div>
+
             <div class="form-group">
                 <div class="col-sm-2 control-label">邮箱</div>
                 <div class="col-sm-10">
@@ -99,34 +99,46 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">手机号</div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="user.mobile" placeholder="手机号"/>
+                    <input class="form-control" v-model="user.mobileNumber" placeholder="手机号"/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: none;">
+                <div class="col-sm-2 control-label">创建时间</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="user.createdTime" placeholder="创建时间"/>
+                </div>
+            </div>
+            <div class="form-group" style="display: none;">
+                <div class="col-sm-2 control-label">更新时间</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="user.modifiedTime" placeholder="更新时间"/>
+                </div>
+            </div>
+            <div class="form-group" style="display: none;">
                 <div class="col-sm-2 control-label">状态</div>
                 <label class="radio-inline">
-                    <input type="radio" name="status" value="0" v-model="user.status"/> 禁用
+                    <input type="radio" name="status" value="禁用" v-model="user.status"/> 禁用
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="status" value="1" v-model="user.status"/> 正常
+                    <input type="radio" name="status" value="正常" v-model="user.status"/> 正常
                 </label>
             </div>
-            <div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">
-                <div class="form-group col-md-10">
-                    <strong class="col-sm-5 control-label">选择应用</strong>
-                    <div class="col-sm-10">
-                        <ul id="applicationTree" class="ztree"></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">
-                <div class="form-group col-md-10">
-                    <strong class="col-sm-5 control-label">选择部门</strong>
-                    <div class="col-sm-10">
-                        <ul id="deptTree" class="ztree"></ul>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">-->
+                <!--<div class="form-group col-md-10">-->
+                    <!--<strong class="col-sm-5 control-label">选择应用</strong>-->
+                    <!--<div class="col-sm-10">-->
+                        <!--<ul id="applicationTree" class="ztree"></ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">-->
+                <!--<div class="form-group col-md-10">-->
+                    <!--<strong class="col-sm-5 control-label">选择部门</strong>-->
+                    <!--<div class="col-sm-10">-->
+                        <!--<ul id="deptTree" class="ztree"></ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
