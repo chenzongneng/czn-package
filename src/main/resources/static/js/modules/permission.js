@@ -20,8 +20,8 @@ $(function () {
                 key: true
             },
             {label: '权限名称', name: 'name', align: 'center', width: 60},
-            {label: '应用名称', name: 'applicationName', align: 'center', width: 30},
-            {label: '通配符', name: 'wildcard', align: 'center', width: 80},
+            // {label: '应用名称', name: 'applicationName', align: 'center', width: 30},
+            {label: '通配符', name: 'resourcePathWildcard', align: 'center', width: 80},
             {label: '详细说明', name: 'description', align: 'center', width: 70},
             {
                 label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
@@ -100,13 +100,15 @@ var vm = new Vue({
         showList: true,
         title: null,
         permission: {
-            permissionId: null,
-            applicationId: 1,
+            id: null,
+            applicationId: null,
             name: null,
+            resourcePathWildcard:null,
             wildcard: null,
+            tenantId: null,
             description: null,
             resourceIds: null,
-            status: 1
+            status: null
         },
         // 租户列表数据
         resourceList: {
@@ -116,6 +118,11 @@ var vm = new Vue({
         // 应用列表数据
         appList: {
             selectedApp: "",
+            options: []
+        },
+        // 租户表数据
+        tenantList: {
+            selectedTenant: "",
             options: []
         },
         // 当前用户信息
@@ -131,20 +138,22 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.permission = {
-                permissionId: null,
-                applicationId: 1,
-                name: null,
-                wildcard: null,
-                description: null,
-                resourceIds: null,
+                id: null,
+                applicationId: null,
+                tenantId: null,
+                // name: null,
+                // wildcard: null,
+                // description: null,
+                // resourceIds: null,
                 status: 1
             };
             vm.getAppList();
+            vm.getTenantList();
             vm.initTreesToAdd();
         },
         /**  更新按钮点击事件 */
         update: function () {
-            var permissionId = getSelectedRow();
+            var missionId = getSelectedRow();
             if (!permissionId) {
                 return;
             }
@@ -188,24 +197,29 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
+            // alert($("#applicaitonIdSelected").find("option:selected").val());
+            var obj = new Object();
+            obj.permission = vm.permission;
+
             if(vm.permission.name === null || vm.permission.name === ""){
                 alert("权限名称不能为空");
                 return;
             }
 
             // 获取菜单树选择的菜单
-            var nodes = resourceTree.getCheckedNodes(true);
-            var permissionIdList = [];
-            for (var i = 0; i < nodes.length; i++) {
-                permissionIdList.push(nodes[i].resourceId);
-            }
-            vm.permission.resourceIds = permissionIdList.join(",");
-            console.log(JSON.stringify(vm.permission));
+            // var nodes = resourceTree.getCheckedNodes(true);
+            // var permissionIdList = [];
+            // for (var i = 0; i < nodes.length; i++) {
+            //     permissionIdList.push(nodes[i].resourceId);
+            // }
+            // vm.permission.resourceIds = permissionIdList.join(",");
+            console.log("permission == " + JSON.stringify(obj.permission));
+
             $.ajax({
-                type: vm.permission.permissionId === null ? "POST" : "PUT",
-                url: baseURL + "permission",
+                type: vm.permission.id === null ? "POST" : "PUT",
+                url: baseURL + "permissions",
                 contentType: "application/json",
-                data: JSON.stringify(vm.permission),
+                data: JSON.stringify(obj),
                 dataType: '',
                 success: function () {
                     vm.reload(false);
@@ -219,10 +233,10 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载菜单树
-            $.get(baseURL + "/resources/applicationId/" + vm.permission.applicationId, function (response) {
-                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
-                resourceTree.expandAll(true);
-            })
+            // $.get(baseURL + "/resources/applicationId/" + vm.permission.applicationId, function (response) {
+            //     resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
+            //     resourceTree.expandAll(true);
+            // })
         },
         /** 通过id 得到一个permission对象 */
         getPermissionById: function (permissionId) {
@@ -231,6 +245,7 @@ var vm = new Vue({
                 vm.permission.applicationId = response.applicationId;
                 vm.permission.name = response.name;
                 vm.permission.wildcard = response.wildcard;
+                vm.permission.resourcePathWildcard = response.resourcePathWildcard;
                 vm.permission.description = response.description;
                 vm.permission.status = response.status;
                 vm.initTreesToUpdate();
@@ -270,14 +285,29 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            if (vm.appList.options.length === 0) {
+            if (vm.appList.options.length == 0) {
                 $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                     $.each(response.list, function (index, item) {
                         vm.appList.options.push(item);
                     })
                 });
             }
+        },
+        /** 租户列表onchange 事件*/
+        selectTenant: function () {
+            vm.initTreesToAdd()
+        },
+        /**  获取应用列表 */
+        getTenantList: function () {
+            if (vm.tenantList.options.length == 0) {
+                $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+                    $.each(response.list, function (index, item) {
+                        vm.tenantList.options.push(item);
+                    })
+                });
+            }
         }
+
     },
     /**  初始化页面时执行该方法 */
     created: function () {

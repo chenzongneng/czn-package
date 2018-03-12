@@ -1,7 +1,5 @@
 package com.richstonedt.garnet.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
@@ -11,14 +9,11 @@ import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.model.Application;
 import com.richstonedt.garnet.model.ApplicationTenant;
 import com.richstonedt.garnet.model.Tenant;
-import com.richstonedt.garnet.model.UserTenant;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.criteria.ApplicationTenantCriteria;
-import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
-import com.richstonedt.garnet.model.view.TenantView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.ApplicationTenantService;
 import com.richstonedt.garnet.service.TenantService;
@@ -35,6 +30,7 @@ import java.util.List;
 @Service
 @Transactional
 public class ApplicationServiceImpl extends BaseServiceImpl<Application, ApplicationCriteria, Long> implements ApplicationService {
+
     @Autowired
     private ApplicationMapper applicationMapper;
 
@@ -173,6 +169,9 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationCriteria.createCriteria().andIdIn(applicationTenantIds);
         }
 
+        if (!ObjectUtils.isEmpty(applicationParm.getSearchName())) {
+            applicationCriteria.createCriteria().andNameLike("%" + applicationParm.getSearchName() + "%");
+        }
 
         PageUtil result = new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageNumber(), applicationParm.getPageSize());
 

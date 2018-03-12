@@ -37,6 +37,11 @@ CREATE TABLE gar_applications
 	hosts varchar(256) DEFAULT '' NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
+	status int DEFAULT 1 NOT NULL,
+	-- 属于paas服务还是saas服务
+	service_mode varchar(5) DEFAULT 'paas' NOT NULL,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -58,6 +63,9 @@ CREATE TABLE gar_groups
 	modified_time bigint DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	tenant_id bigint DEFAULT 0 NOT NULL,
+	status int DEFAULT 1 NOT NULL,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -90,6 +98,9 @@ CREATE TABLE gar_permissions
 	modified_time bigint DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	tenant_id bigint DEFAULT 0 NOT NULL,
+	status int DEFAULT 1 NOT NULL,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -154,6 +165,8 @@ CREATE TABLE gar_resources
 	boolean_02 boolean,
 	boolean_03 boolean,
 	boolean_04 boolean,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -178,6 +191,9 @@ CREATE TABLE gar_roles
 	modified_time bigint DEFAULT 0 NOT NULL,
 	tenant_id bigint DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
+	status int DEFAULT 1 NOT NULL,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -198,6 +214,11 @@ CREATE TABLE gar_tenants
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
 	description varchar(250) DEFAULT '' NOT NULL,
+	status int DEFAULT 1 NOT NULL,
+	-- 属于paas服务还是saas服务
+	service_mode varchar(5) DEFAULT 'paas' NOT NULL,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -222,7 +243,9 @@ CREATE TABLE gar_users
 	modified_time bigint DEFAULT 0 NOT NULL,
 	mobile_number varchar(256) DEFAULT '' NOT NULL,
 	email varchar(256) DEFAULT '' NOT NULL,
-	status varchar(10) DEFAULT '' NOT NULL,
+	status int DEFAULT  NOT NULL,
+	-- 更新的人
+	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -254,11 +277,9 @@ CREATE TABLE gar_user_tenant_applications
 	user_id bigint,
 	tenant_id bigint,
 	application_id bigint,
+	status int DEFAULT 1 NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
-
-
-
 
 
 /* Comments */
@@ -267,6 +288,10 @@ COMMENT ON COLUMN gar_applications.app_code IS '调用接口时应用唯一标�
 COMMENT ON COLUMN gar_applications.hosts IS '此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
 
 加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。';
+COMMENT ON COLUMN gar_applications.service_mode IS '属于paas服务还是saas服务';
+COMMENT ON COLUMN gar_applications.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_groups.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_permissions.updated_by_user_name IS '更新的人';
 COMMENT ON COLUMN gar_resources.path IS 'ui - UI组件
 /{page_name}/{element_name}
 
@@ -287,6 +312,11 @@ COMMENT ON COLUMN gar_resources.type IS '资源类型例如，
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等';
+COMMENT ON COLUMN gar_resources.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_roles.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_tenants.service_mode IS '属于paas服务还是saas服务';
+COMMENT ON COLUMN gar_tenants.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_users.updated_by_user_name IS '更新的人';
 
 
 

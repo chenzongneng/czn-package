@@ -7,9 +7,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Mapper
 @Repository
+@Mapper
 public interface ResourceMapper extends BaseMapper<Resource, ResourceCriteria, Long> {
     Resource selectSingleByCriteria(ResourceCriteria criteria);
 

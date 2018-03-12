@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 /**
  *
- * TABLE:gar_roles_permissions
+ * TABLE:gar_role_permissions
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-02-25 14:02
+ * DATE: 2018-03-12 16:08
  */
 public class RolePermission implements Serializable {
     private Long id;
@@ -18,11 +18,11 @@ public class RolePermission implements Serializable {
     private Long permissionId;
 
     /**
-     * TABLE： gar_roles_permissions
+     * TABLE： gar_role_permissions
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     private static final long serialVersionUID = 1L;
 
@@ -53,11 +53,11 @@ public class RolePermission implements Serializable {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public boolean equals(Object that) {
@@ -79,11 +79,11 @@ public class RolePermission implements Serializable {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public int hashCode() {
@@ -98,11 +98,11 @@ public class RolePermission implements Serializable {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public String toString() {

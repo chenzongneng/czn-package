@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-02-25 17:10
+ * DATE: 2018-03-12 16:08
  */
 public class User implements Serializable {
     private Long id;
@@ -23,14 +23,20 @@ public class User implements Serializable {
 
     private String email;
 
-    private String status;
+    private Integer status;
+
+    /**
+     * 更新的人
+     * gar_users.updated_by_user_name
+     */
+    private String updatedByUserName;
 
     /**
      * TABLE： gar_users
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 17:10
+     * DATE: 2018-03-12 16:08
      */
     private static final long serialVersionUID = 1L;
 
@@ -82,12 +88,40 @@ public class User implements Serializable {
         this.email = email == null ? null : email.trim();
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_users.updated_by_user_name<br>
+     * @return updated_by_user_name
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_users.updated_by_user_name<br>
+     * @param updatedByUserName
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
     }
 
     /**
@@ -97,7 +131,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 17:10
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public boolean equals(Object that) {
@@ -117,7 +151,8 @@ public class User implements Serializable {
             && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
             && (this.getMobileNumber() == null ? other.getMobileNumber() == null : this.getMobileNumber().equals(other.getMobileNumber()))
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
     /**
@@ -127,7 +162,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 17:10
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public int hashCode() {
@@ -140,6 +175,7 @@ public class User implements Serializable {
         result = prime * result + ((getMobileNumber() == null) ? 0 : getMobileNumber().hashCode());
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }
 
@@ -150,7 +186,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 17:10
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public String toString() {
@@ -165,6 +201,7 @@ public class User implements Serializable {
         sb.append(", mobileNumber=").append(mobileNumber);
         sb.append(", email=").append(email);
         sb.append(", status=").append(status);
+        sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

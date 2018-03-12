@@ -14,7 +14,7 @@ $(function () {
             {label: '角色名称', name: 'name', align: 'center', width: 70},
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
             {label: '所属应用', name: 'appName', align: 'center', width: 70},
-            {label: '部门列表', name: 'deptNameList', align: 'center', width: 100},
+            {label: '部门列表', name: 'groupNameList', align: 'center', width: 100},
             {label: '权限列表', name: 'permissionNameList', align: 'center', width: 100}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
@@ -52,13 +52,13 @@ $(function () {
 });
 
 /** 部门结构树 */
-var deptTree;
-var deptTreeSetting = {
+var groupTree;
+var groupTreeSetting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "departmentId",
-            pIdKey: "parentDepartmentId",
+            idKey: "groupId",
+            pIdKey: "parentgroupId",
             rootPId: -1
         },
         key: {
@@ -107,7 +107,7 @@ var vm = new Vue({
             applicationId: 1,
             name: null,
             remark: null,
-            deptIds: null
+            groupIds: null
         },
         // 租户列表数据
         tenantList: {
@@ -141,7 +141,7 @@ var vm = new Vue({
                 applicationId: 1,
                 name: null,
                 remark: null,
-                deptIds: null,
+                groupIds: null,
                 permissionIdList:null
             };
             vm.initTreesToAdd();
@@ -159,7 +159,7 @@ var vm = new Vue({
             vm.appList.selectedApp = "";
             vm.tenantList.options = [];
             vm.appList.options = [];
-            vm.role.deptIdList = [];
+            vm.role.groupIdList = [];
             vm.initTreesToUpdate(roleId);
             vm.getTenantList();
             vm.getAppList();
@@ -198,12 +198,12 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             // 获取部门树选择的部门
-            var depts = deptTree.getCheckedNodes(true);
-            var deptIdList = [];
-            for (var i = 0; i < depts.length; i++) {
-                deptIdList.push(depts[i].departmentId);
+            var groups = groupTree.getCheckedNodes(true);
+            var groupIdList = [];
+            for (var i = 0; i < groups.length; i++) {
+                groupIdList.push(groups[i].groupId);
             }
-            vm.role.deptIds = deptIdList.join(",");
+            vm.role.groupIds = groupIdList.join(",");
             // 获取权限树选择的权限
             var permissions = permissionTree.getCheckedNodes(true);
             var permissionIdList = [];
@@ -225,7 +225,7 @@ var vm = new Vue({
             }
             $.ajax({
                 type: vm.role.roleId === null ? "POST" : "PUT",
-                url: baseURL + "role",
+                url: baseURL + "roles",
                 contentType: "application/json",
                 data: JSON.stringify(vm.role),
                 dataType: '',
@@ -241,10 +241,10 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载部门树
-            // $.get(baseURL + "depts/" + currentUser.userId, function (response) {
-            $.get(baseURL + "departments?page=1&limit=1000", function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
-                deptTree.expandAll(false);
+            // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
+            $.get(baseURL + "groups?page=1&limit=1000", function (response) {
+                groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
+                groupTree.expandAll(true);
             });
             //加载权限树
             $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
@@ -265,19 +265,19 @@ var vm = new Vue({
                 vm.role.tenantId = response.tenantId;
                 vm.role.name = response.name;
                 vm.role.remark = response.remark;
-                vm.role.deptIdList = response.deptIdList;
+                vm.role.groupIdList = response.groupIdList;
                 vm.role.permissionIdList = response.permissionIdList;
                 vm.tenantList.selectedTenant = response.tenantId;
                 vm.appList.selectedApp = response.applicationId;
                 //加载部门树
-                // $.get(baseURL + "depts/" + currentUser.userId, function (response) {
+                // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
                 $.get(baseURL + "departments?page=1&limit=1000", function (response) {
-                    deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
-                    deptTree.expandAll(true);
-                    console.log(JSON.stringify(vm.role.deptIdList));
-                    $.each(vm.role.deptIdList, function (index, item) {
-                        var node = deptTree.getNodeByParam("departmentId", item);
-                        deptTree.checkNode(node, true, false);
+                    groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
+                    groupTree.expandAll(true);
+                    console.log(JSON.stringify(vm.role.groupIdList));
+                    $.each(vm.role.groupIdList, function (index, item) {
+                        var node = groupTree.getNodeByParam("groupId", item);
+                        groupTree.checkNode(node, true, false);
                     });
                 });
                 //加载权限树

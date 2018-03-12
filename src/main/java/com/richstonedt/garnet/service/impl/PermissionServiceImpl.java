@@ -4,11 +4,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
+import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.PermissionMapper;
 import com.richstonedt.garnet.model.Permission;
 import com.richstonedt.garnet.model.Resource;
-import com.richstonedt.garnet.model.Role;
 import com.richstonedt.garnet.model.RolePermission;
 import com.richstonedt.garnet.model.criteria.PermissionCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
@@ -19,7 +19,6 @@ import com.richstonedt.garnet.model.view.PermissionView;
 import com.richstonedt.garnet.service.PermissionService;
 import com.richstonedt.garnet.service.ResourceService;
 import com.richstonedt.garnet.service.RolePermissionService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,13 +50,9 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     public Long insertPermission(PermissionView permissionView) {
 
         Permission permission = permissionView.getPermission();
-
         permission.setId(IdGeneratorUtil.generateId());
-
         Long currentTime = new Date().getTime();
-
         permission.setCreatedTime(currentTime);
-
         permission.setModifiedTime(currentTime);
 
         this.insertSelective(permission);
@@ -74,7 +69,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
                 rolePermissionService.insertSelective(rolePermission);
 
             }
-
         }
 
         return permission.getId();
@@ -192,5 +186,29 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         PageInfo<Permission> permissionPageInfo = new PageInfo<Permission>(permissions);
 
         return permissionPageInfo;
+    }
+
+    @Override
+    public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm) {
+        Permission permission = permissionParm.getPermission();
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+
+        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
+
+            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
+
+        }
+        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
+
+            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
+        }
+        PermissionCriteria permissionCriteria1 = new PermissionCriteria();
+
+        System.out.println(permissionParm.getPageNumber() + " == " + permissionParm.getPageSize());
+
+        PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria),permissionParm.getPageNumber() ,permissionParm.getPageSize());
+
+        return result;
     }
 }

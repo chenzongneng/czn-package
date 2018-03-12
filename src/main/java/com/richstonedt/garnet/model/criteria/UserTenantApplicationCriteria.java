@@ -8,7 +8,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public UserTenantApplicationCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -538,6 +538,66 @@ public class UserTenantApplicationCriteria {
             addCriterion("application_id not between", value1, value2, "applicationId");
             return (Criteria) this;
         }
+
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("status <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("status >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("status >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("status <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("status <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("status in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("status not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("status between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -546,7 +606,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -561,7 +621,7 @@ public class UserTenantApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public static class Criterion {
         private String condition;

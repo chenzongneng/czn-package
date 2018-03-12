@@ -8,7 +8,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public TokenCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -686,7 +686,7 @@ public class TokenCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -701,7 +701,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public static class Criterion {
         private String condition;

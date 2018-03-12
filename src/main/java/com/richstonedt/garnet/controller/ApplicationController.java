@@ -1,11 +1,9 @@
 package com.richstonedt.garnet.controller;
 
 
-import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.ApplicationTenant;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
@@ -15,7 +13,6 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -179,6 +176,7 @@ public class ApplicationController {
     public ResponseEntity<?> getApplications(
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户Id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
+            @ApiParam(value = "searchName", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
         try {
@@ -187,6 +185,7 @@ public class ApplicationController {
             applicationParm.setTenantId(tenantId);
             applicationParm.setPageNumber(pageNumber);
             applicationParm.setPageSize(pageSize);
+            applicationParm.setSearchName(searchName);
             PageUtil applications = applicationService.queryApplicationsByParms(applicationParm);
             // 封装返回信息
 //            GarnetMessage<PageInfo<Application>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, applications);

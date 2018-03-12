@@ -12,8 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ApplicationTenantServiceImpl extends BaseServiceImpl<ApplicationTenant, ApplicationTenantCriteria, Long> implements ApplicationTenantService {
+
     @Autowired
     private ApplicationTenantMapper applicationTenantMapper;
+    //private ApplicationTenantMapper applicationTenantMapper;
+
 
     @Override
     public BaseMapper getBaseMapper() {

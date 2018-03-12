@@ -8,7 +8,7 @@ public class RolePermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class RolePermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected boolean distinct;
 
@@ -24,36 +24,36 @@ public class RolePermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected List<Criteria> oredCriteria;
 
     /**
-     * TABLE： gar_roles_permissions
+     * TABLE： gar_role_permissions
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Integer start;
 
     /**
-     * TABLE： gar_roles_permissions
+     * TABLE： gar_role_permissions
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Integer end;
 
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public RolePermissionCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -62,11 +62,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -75,11 +75,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -88,11 +88,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -101,11 +101,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public boolean isDistinct() {
         return distinct;
@@ -114,11 +114,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -127,11 +127,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -140,11 +140,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -155,11 +155,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -172,11 +172,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -186,11 +186,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void clear() {
         oredCriteria.clear();
@@ -201,11 +201,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -214,11 +214,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Integer getStart() {
         return start;
@@ -227,11 +227,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -240,11 +240,11 @@ public class RolePermissionCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_roles_permissions<br>
+     * TABLE： gar_role_permissions<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public Integer getEnd() {
         return end;
@@ -252,11 +252,11 @@ public class RolePermissionCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_roles_permissions
+     * 对应的数据库表为： gar_role_permissions
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -482,11 +482,11 @@ public class RolePermissionCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_roles_permissions
+     * 对应的数据库表为： gar_role_permissions
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -497,11 +497,11 @@ public class RolePermissionCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_roles_permissions
+     * 对应的数据库表为： gar_role_permissions
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     public static class Criterion {
         private String condition;

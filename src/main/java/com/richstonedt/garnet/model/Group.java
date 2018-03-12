@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-02-25 14:02
+ * DATE: 2018-03-12 16:08
  */
 public class Group implements Serializable {
     private Long id;
@@ -23,12 +23,20 @@ public class Group implements Serializable {
 
     private Long tenantId;
 
+    private Integer status;
+
+    /**
+     * 更新的人
+     * gar_groups.updated_by_user_name
+     */
+    private String updatedByUserName;
+
     /**
      * TABLE： gar_groups
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     private static final long serialVersionUID = 1L;
 
@@ -80,6 +88,42 @@ public class Group implements Serializable {
         this.tenantId = tenantId;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_groups.updated_by_user_name<br>
+     * @return updated_by_user_name
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_groups.updated_by_user_name<br>
+     * @param updatedByUserName
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
     /**
      * <br>
      *
@@ -87,7 +131,7 @@ public class Group implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public boolean equals(Object that) {
@@ -106,7 +150,9 @@ public class Group implements Serializable {
             && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
             && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
             && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
-            && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()));
+            && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
     /**
@@ -116,7 +162,7 @@ public class Group implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public int hashCode() {
@@ -128,6 +174,8 @@ public class Group implements Serializable {
         result = prime * result + ((getModifiedTime() == null) ? 0 : getModifiedTime().hashCode());
         result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getTenantId() == null) ? 0 : getTenantId().hashCode());
+        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }
 
@@ -138,7 +186,7 @@ public class Group implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public String toString() {
@@ -152,6 +200,8 @@ public class Group implements Serializable {
         sb.append(", modifiedTime=").append(modifiedTime);
         sb.append(", applicationId=").append(applicationId);
         sb.append(", tenantId=").append(tenantId);
+        sb.append(", status=").append(status);
+        sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

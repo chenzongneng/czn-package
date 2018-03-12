@@ -1,6 +1,5 @@
 package com.richstonedt.garnet.service;
 
-import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Role;
 import com.richstonedt.garnet.model.criteria.RoleCriteria;

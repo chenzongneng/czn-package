@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="application_id" jdbcType="BIGINT" property="applicationId" />
@@ -45,12 +45,13 @@
     <result column="boolean_02" jdbcType="BIT" property="boolean02" />
     <result column="boolean_03" jdbcType="BIT" property="boolean03" />
     <result column="boolean_04" jdbcType="BIT" property="boolean04" />
+    <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -84,7 +85,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -118,19 +119,19 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, 
     varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, 
     varchar_07, varchar_08, varchar_09, varchar_10, varchar_11, varchar_12, varchar_13, 
     varchar_14, varchar_15, varchar_16, varchar_17, varchar_18, varchar_19, int_01, int_02, 
-    int_03, int_04, int_05, boolean_01, boolean_02, boolean_03, boolean_04
+    int_03, int_04, int_05, boolean_01, boolean_02, boolean_03, boolean_04, updated_by_user_name
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select
     <if test="distinct">
@@ -152,7 +153,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select 
     <include refid="Base_Column_List" />
@@ -163,7 +164,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     delete from gar_resources
     where id = #{id,jdbcType=BIGINT}
@@ -172,7 +173,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     delete from gar_resources
     <if test="_parameter != null">
@@ -183,7 +184,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     insert into gar_resources (id, application_id, path, 
       actions, name, created_time, 
@@ -197,7 +198,8 @@
       varchar_18, varchar_19, int_01, 
       int_02, int_03, int_04, 
       int_05, boolean_01, boolean_02, 
-      boolean_03, boolean_04)
+      boolean_03, boolean_04, updated_by_user_name
+      )
     values (#{id,jdbcType=BIGINT}, #{applicationId,jdbcType=BIGINT}, #{path,jdbcType=VARCHAR}, 
       #{actions,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, 
       #{modifiedTime,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
@@ -210,13 +212,14 @@
       #{varchar18,jdbcType=VARCHAR}, #{varchar19,jdbcType=VARCHAR}, #{int01,jdbcType=INTEGER}, 
       #{int02,jdbcType=INTEGER}, #{int03,jdbcType=INTEGER}, #{int04,jdbcType=INTEGER}, 
       #{int05,jdbcType=INTEGER}, #{boolean01,jdbcType=BIT}, #{boolean02,jdbcType=BIT}, 
-      #{boolean03,jdbcType=BIT}, #{boolean04,jdbcType=BIT})
+      #{boolean03,jdbcType=BIT}, #{boolean04,jdbcType=BIT}, #{updatedByUserName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Resource">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     insert into gar_resources
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -333,6 +336,9 @@
       </if>
       <if test="boolean04 != null">
         boolean_04,
+      </if>
+      <if test="updatedByUserName != null">
+        updated_by_user_name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -450,13 +456,16 @@
       <if test="boolean04 != null">
         #{boolean04,jdbcType=BIT},
       </if>
+      <if test="updatedByUserName != null">
+        #{updatedByUserName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select count(*) from gar_resources
     <if test="_parameter != null">
@@ -467,7 +476,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_resources
     <set>
@@ -585,6 +594,9 @@
       <if test="record.boolean04 != null">
         boolean_04 = #{record.boolean04,jdbcType=BIT},
       </if>
+      <if test="record.updatedByUserName != null">
+        updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -594,7 +606,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_resources
     set id = #{record.id,jdbcType=BIGINT},
@@ -634,7 +646,8 @@
       boolean_01 = #{record.boolean01,jdbcType=BIT},
       boolean_02 = #{record.boolean02,jdbcType=BIT},
       boolean_03 = #{record.boolean03,jdbcType=BIT},
-      boolean_04 = #{record.boolean04,jdbcType=BIT}
+      boolean_04 = #{record.boolean04,jdbcType=BIT},
+      updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -643,7 +656,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_resources
     <set>
@@ -758,6 +771,9 @@
       <if test="boolean04 != null">
         boolean_04 = #{boolean04,jdbcType=BIT},
       </if>
+      <if test="updatedByUserName != null">
+        updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -765,7 +781,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_resources
     set application_id = #{applicationId,jdbcType=BIGINT},
@@ -804,14 +820,15 @@
       boolean_01 = #{boolean01,jdbcType=BIT},
       boolean_02 = #{boolean02,jdbcType=BIT},
       boolean_03 = #{boolean03,jdbcType=BIT},
-      boolean_04 = #{boolean04,jdbcType=BIT}
+      boolean_04 = #{boolean04,jdbcType=BIT},
+      updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select
     <if test="distinct">
@@ -830,7 +847,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     insert into gar_resources
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -947,6 +964,9 @@
       </if>
       <if test="list[0].boolean04!=null">
         boolean_04,
+      </if>
+      <if test="list[0].updatedByUserName!=null">
+        updated_by_user_name,
       </if>
     </trim>
      values 
@@ -1066,6 +1086,9 @@
         <if test="item.boolean04!=null">
           #{item.boolean04,jdbcType=BIT},
         </if>
+        <if test="item.updatedByUserName!=null">
+          #{item.updatedByUserName,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -1073,7 +1096,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_resources
@@ -1188,6 +1211,9 @@
         </if>
         <if test="item.boolean04!=null">
           boolean_04=#{item.boolean04,jdbcType=BIT},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          updated_by_user_name=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </set>
       where 

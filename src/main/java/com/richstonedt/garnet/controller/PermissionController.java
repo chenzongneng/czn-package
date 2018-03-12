@@ -1,16 +1,20 @@
 package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.exception.GarnetServiceException;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
-import com.richstonedt.garnet.model.Group;
+import com.richstonedt.garnet.model.Permission;
 import com.richstonedt.garnet.model.message.*;
-import com.richstonedt.garnet.model.parm.GroupParm;
-import com.richstonedt.garnet.model.view.GroupView;
-import com.richstonedt.garnet.service.GroupService;
+import com.richstonedt.garnet.model.parm.PermissionParm;
+import com.richstonedt.garnet.model.parm.RoleParm;
+import com.richstonedt.garnet.model.view.PermissionView;
+import com.richstonedt.garnet.model.view.RoleView;
+import com.richstonedt.garnet.service.PermissionService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,52 +22,55 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * <b><code>GroupController</code></b>
+ * <b><code>PermissionController</code></b>
  * <p/>
- * Group的具体实现
+ * Permission的具体实现
  * <p/>
- * <b>Creation Time:</b> Thu Mar 01 14:57:45 CST 2018.
+ * <b>Creation Time:</b> Mon Mar 12 17:32:17 CST 2018.
  *
- * @author ming
+ * @author maxuepeng
  * @version 1.0.0
  * @since torinosrc-rs 1.0.0
  */
-@Api(value = "[Garnet]用户组接口")
+@Api(value = "[Torino Source]权限接口")
 @RestController
 @RequestMapping(value = "/api/v1.0")
-public class GroupController {
+public class PermissionController {
 
     /** The Constant LOG. */
     private static final Logger LOG = LoggerFactory
-            .getLogger(GroupController.class);
+            .getLogger(PermissionController.class);
 
     /** The service. */
     @Autowired
-    private GroupService groupService;
+    private PermissionService permissionService;
 
-    @ApiOperation(value = "[Garnet]创建用户组", notes = "创建一个用户组")
+    @ApiOperation(value = "[Torino Source]创建权限", notes = "创建一个权限")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/groups", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> createGroup(
-            @ApiParam(value = "用户组", required = true) @RequestBody GroupView groupView,
+    @RequestMapping(value = "/permissions", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> createPermission(
+            @ApiParam(value = "权限", required = true) @RequestBody PermissionView permissionView,
             UriComponentsBuilder ucBuilder) {
         try {
             // 保存实体
-            Long id = groupService.insertGroup(groupView);
+            Long id = permissionService.insertPermission(permissionView);
             // 获取刚刚保存的实体
-            Group group = groupService.selectByPrimaryKey(id);
-            GroupView groupView1 = new GroupView();
-            groupView1.setGroup(group);
+            Permission permission = permissionService.selectByPrimaryKey(id);
+            PermissionView permissionView1 = new PermissionView();
+            permissionView1.setPermission(permission);
             // 设置http的headers
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/v1/groups/{id}")
+            headers.setLocation(ucBuilder.path("/api/v1/permissions/{id}")
                     .buildAndExpand(id).toUri());
             // 封装返回信息
-            GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_INSERT_SUCCESS, groupView1);
+            GarnetMessage<PermissionView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_INSERT_SUCCESS, permissionView1);
             return new ResponseEntity<>(torinoSrcMessage, headers, HttpStatus.CREATED);
         } catch (Throwable t) {
             String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
@@ -73,17 +80,17 @@ public class GroupController {
         }
     }
 
-    @ApiOperation(value = "[Garnet]删除用户组", notes = "通过id删除用户组")
+    @ApiOperation(value = "[Torino Source]删除权限", notes = "通过id删除权限")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/groups/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> deleteGroup(
-            @ApiParam(value = "用户组id", required = true) @PathVariable(value = "id") long id) {
+    @RequestMapping(value = "/permissions/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> deletePermission(
+            @ApiParam(value = "权限id", required = true) @PathVariable(value = "id") Long id) {
         try {
-            groupService.deleteByPrimaryKey(id);
+            permissionService.deleteByPrimaryKey(id);
             // 封装返回信息
-            GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
+            GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to delete entity! " + MessageDescription.OPERATION_DELETE_FAILURE;
@@ -93,30 +100,21 @@ public class GroupController {
         }
     }
 
-    @ApiOperation(value = "[Garnet]删除用户组", notes = "批量删除用户组")
+    @ApiOperation(value = "[Torino Source]删除权限", notes = "批量删除权限")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> deleteGroups(
-            @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
+    @RequestMapping(value = "/permissions", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> deletePermissions(
+            @ApiParam(value = "权限ids，样例 - 1,2,3", required = true) @RequestBody String ids) {
         try {
-            /*List<Long> idslist = new ArrayList<>();
+            List<Long> idslist = new ArrayList<>();
             for (String id:
                     ids.split(",")) {
                 idslist.add(Long.parseLong(id));
             }
-            GroupCriteria groupCriteria = new GroupCriteria();
-            groupCriteria.createCriteria().andIdIn(idslist);
-            groupService.deleteByCriteria(groupCriteria);*/
-
-            for (String id : ids.split(",")) {
-                groupService.deleteGroup(Long.parseLong(id));
-            }
-
-
             // 封装返回信息
-            GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
+            GarnetMessage<PermissionView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to delete entities! " + MessageDescription.OPERATION_DELETE_FAILURE;
@@ -126,20 +124,20 @@ public class GroupController {
         }
     }
 
-    @ApiOperation(value = "[Garnet]更新用户组", notes = "更新用户组信息")
+    @ApiOperation(value = "[Torino Source]更新权限", notes = "更新权限信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal Server Error") })
-    @RequestMapping(value = "/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> updateGroups(
-            //@ApiParam(value = "用户组id", required = true) @PathVariable(value = "id") long id,
-            @ApiParam(value = "用户组信息", required = true) @RequestBody GroupView groupView) {
+    @RequestMapping(value = "/permissions/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> updatePermissions(
+            @ApiParam(value = "权限id", required = true) @PathVariable(value = "id") Long id,
+            @ApiParam(value = "权限信息", required = true) @RequestBody PermissionView permissionView) {
         try {
-            //groupView.getGroup().setId(id);
-            groupService.updateGroup(groupView);
+            permissionView.getPermission().setId(id);
+            permissionService.updatePerssion(permissionView);
             // 封装返回信息
-            GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, groupView);
+            GarnetMessage<PermissionView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, permissionView);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to update entity! " + MessageDescription.OPERATION_UPDATE_FAILURE;
@@ -149,22 +147,19 @@ public class GroupController {
         }
     }
 
-    @ApiOperation(value = "[Garnet]获取单个用户组", notes = "通过id获取用户组")
+    @ApiOperation(value = "[Torino Source]获取单个权限", notes = "通过id获取权限")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/groups/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getGroup(
-            @ApiParam(value = "用户组id", required = true) @PathVariable(value = "id") long id) {
+    @RequestMapping(value = "/permissions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getPermission(
+            @ApiParam(value = "权限id", required = true) @PathVariable(value = "id") Long id) {
         try {
-//            Group group = groupService.selectByPrimaryKey(id);
-//            GroupView groupView = new GroupView();
-//            groupView.setGroup(group);
-
-            GroupView groupView = groupService.selectGroupWithUserAndRole(id);
-
+            final Permission permission = permissionService.selectByPrimaryKey(id);
+            PermissionView permissionView = new PermissionView();
+            permissionView.setPermission(permission);
             // 封装返回信息
-            GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, groupView);
+            GarnetMessage<PermissionView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, permissionView);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
@@ -174,28 +169,24 @@ public class GroupController {
         }
     }
 
-    @ApiOperation(value = "[Garnet]获取用户组列表", notes = "通过查询条件获取用户组列表")
+    @ApiOperation(value = "[Torino Source]获取权限列表", notes = "通过查询条件获取权限列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getGroups(
-            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
-            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
-            @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
-            @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
-            @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
+    @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getPermissions(
+            //@ApiParam(value = "用户名", defaultValue = "", required = false) @RequestParam(value = "userName", defaultValue = "", required = false) String userName,
+            @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
+            @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize) {
         try {
-            GroupParm groupParm = new GroupParm();
-            groupParm.setUserId(userId);
-            groupParm.setTenantId(tenantId);
-            groupParm.setPageSize(pageSize);
-            groupParm.setPageNumber(pageNumber);
-            groupParm.setSearchName(searchName);
-            PageUtil pageInfo = groupService.queryGroupsByParms(groupParm);
-            // 封装返回信息
-//            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
-            return new ResponseEntity<>(pageInfo, HttpStatus.OK);
+
+            PermissionParm permissionParm = new PermissionParm();
+            permissionParm.setPageNumber(pageNumber);
+            permissionParm.setPageSize(pageSize);
+            PageUtil permissionPageInfo = permissionService.queryPermissionsByParms(permissionParm);
+
+            return new ResponseEntity<>(permissionPageInfo, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);

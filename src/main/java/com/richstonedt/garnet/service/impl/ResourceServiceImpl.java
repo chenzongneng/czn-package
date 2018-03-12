@@ -7,7 +7,6 @@ import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceMapper;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
-import com.richstonedt.garnet.model.Role;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.parm.ResourceParm;

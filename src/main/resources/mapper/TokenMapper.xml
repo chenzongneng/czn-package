@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="token" jdbcType="VARCHAR" property="token" />
@@ -18,7 +18,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -52,7 +52,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -86,7 +86,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     id, token, user_name, created_time, modified_time, expired_time
   </sql>
@@ -94,7 +94,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select
     <if test="distinct">
@@ -116,7 +116,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select 
     <include refid="Base_Column_List" />
@@ -127,7 +127,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     delete from gar_token
     where id = #{id,jdbcType=BIGINT}
@@ -136,7 +136,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     delete from gar_token
     <if test="_parameter != null">
@@ -147,7 +147,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     insert into gar_token (id, token, user_name, 
       created_time, modified_time, expired_time
@@ -160,7 +160,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     insert into gar_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -208,7 +208,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select count(*) from gar_token
     <if test="_parameter != null">
@@ -219,7 +219,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_token
     <set>
@@ -250,7 +250,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_token
     set id = #{record.id,jdbcType=BIGINT},
@@ -267,7 +267,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_token
     <set>
@@ -293,7 +293,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     update gar_token
     set token = #{token,jdbcType=VARCHAR},
@@ -307,7 +307,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     select
     <if test="distinct">
@@ -326,7 +326,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     insert into gar_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -377,7 +377,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-02-26 18:31
+      DATE: 2018-03-12 16:08
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_token

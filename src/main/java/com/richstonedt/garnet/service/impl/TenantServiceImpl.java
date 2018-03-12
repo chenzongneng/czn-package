@@ -1,12 +1,9 @@
 package com.richstonedt.garnet.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
-import com.richstonedt.garnet.mapper.ApplicationMapper;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.TenantMapper;
 import com.richstonedt.garnet.model.*;
@@ -15,9 +12,7 @@ import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
-import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.model.view.TenantView;
-import com.richstonedt.garnet.model.view.UserView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.ApplicationTenantService;
 import com.richstonedt.garnet.service.TenantService;

@@ -8,13 +8,32 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-02-25 14:02
+ * DATE: 2018-03-12 16:08
  */
 public class Resource implements Serializable {
     private Long id;
 
     private Long applicationId;
 
+    /**
+     * ui - UI组件
+/{page_name}/{element_name}
+
+openApi - open api，对外开放的api，并非内部使用的api;
+
+/api/v1/users
+此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
+
+function - function opint,对应的是功能项，例如用户查询；
+例如
+一个具体的页面：
+/{page_name}
+
+某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
+
+/{page_name}/{function_name}
+     * gar_resources.path
+     */
     private String path;
 
     private String actions;
@@ -25,6 +44,13 @@ public class Resource implements Serializable {
 
     private Long modifiedTime;
 
+    /**
+     * 资源类型例如，
+ui-UI组件，如button, input, textarea, table, drop down list等
+openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
+function-功能项，如页面，菜单模块等
+     * gar_resources.type
+     */
     private String type;
 
     private Long tenantId;
@@ -88,11 +114,17 @@ public class Resource implements Serializable {
     private Integer boolean04;
 
     /**
+     * 更新的人
+     * gar_resources.updated_by_user_name
+     */
+    private String updatedByUserName;
+
+    /**
      * TABLE： gar_resources
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     private static final long serialVersionUID = 1L;
 
@@ -112,10 +144,60 @@ public class Resource implements Serializable {
         this.applicationId = applicationId;
     }
 
+    /**
+     * ui - UI组件
+/{page_name}/{element_name}
+
+openApi - open api，对外开放的api，并非内部使用的api;
+
+/api/v1/users
+此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
+
+function - function opint,对应的是功能项，例如用户查询；
+例如
+一个具体的页面：
+/{page_name}
+
+某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
+
+/{page_name}/{function_name}<br>
+     *
+     * column：gar_resources.path<br>
+     * @return path
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * ui - UI组件
+/{page_name}/{element_name}
+
+openApi - open api，对外开放的api，并非内部使用的api;
+
+/api/v1/users
+此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
+
+function - function opint,对应的是功能项，例如用户查询；
+例如
+一个具体的页面：
+/{page_name}
+
+某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
+
+/{page_name}/{function_name}<br>
+     *
+     * column：gar_resources.path<br>
+     * @param path
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
     public void setPath(String path) {
         this.path = path == null ? null : path.trim();
     }
@@ -152,10 +234,36 @@ public class Resource implements Serializable {
         this.modifiedTime = modifiedTime;
     }
 
+    /**
+     * 资源类型例如，
+ui-UI组件，如button, input, textarea, table, drop down list等
+openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
+function-功能项，如页面，菜单模块等<br>
+     *
+     * column：gar_resources.type<br>
+     * @return type
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * 资源类型例如，
+ui-UI组件，如button, input, textarea, table, drop down list等
+openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
+function-功能项，如页面，菜单模块等<br>
+     *
+     * column：gar_resources.type<br>
+     * @param type
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
     }
@@ -401,13 +509,41 @@ public class Resource implements Serializable {
     }
 
     /**
+     * 更新的人<br>
+     *
+     * column：gar_resources.updated_by_user_name<br>
+     * @return updated_by_user_name
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_resources.updated_by_user_name<br>
+     * @param updatedByUserName
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
+    /**
      * <br>
      *
      * TABLE： gar_resources<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public boolean equals(Object that) {
@@ -458,7 +594,8 @@ public class Resource implements Serializable {
             && (this.getBoolean01() == null ? other.getBoolean01() == null : this.getBoolean01().equals(other.getBoolean01()))
             && (this.getBoolean02() == null ? other.getBoolean02() == null : this.getBoolean02().equals(other.getBoolean02()))
             && (this.getBoolean03() == null ? other.getBoolean03() == null : this.getBoolean03().equals(other.getBoolean03()))
-            && (this.getBoolean04() == null ? other.getBoolean04() == null : this.getBoolean04().equals(other.getBoolean04()));
+            && (this.getBoolean04() == null ? other.getBoolean04() == null : this.getBoolean04().equals(other.getBoolean04()))
+            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
     /**
@@ -468,7 +605,7 @@ public class Resource implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public int hashCode() {
@@ -512,6 +649,7 @@ public class Resource implements Serializable {
         result = prime * result + ((getBoolean02() == null) ? 0 : getBoolean02().hashCode());
         result = prime * result + ((getBoolean03() == null) ? 0 : getBoolean03().hashCode());
         result = prime * result + ((getBoolean04() == null) ? 0 : getBoolean04().hashCode());
+        result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }
 
@@ -522,7 +660,7 @@ public class Resource implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public String toString() {
@@ -568,6 +706,7 @@ public class Resource implements Serializable {
         sb.append(", boolean02=").append(boolean02);
         sb.append(", boolean03=").append(boolean03);
         sb.append(", boolean04=").append(boolean04);
+        sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

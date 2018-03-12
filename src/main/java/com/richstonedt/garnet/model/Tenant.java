@@ -8,10 +8,9 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-02-25 14:02
+ * DATE: 2018-03-12 16:08
  */
 public class Tenant implements Serializable {
-
     private Long id;
 
     private String name;
@@ -22,12 +21,26 @@ public class Tenant implements Serializable {
 
     private String description;
 
+    private Integer status;
+
+    /**
+     * 属于paas服务还是saas服务
+     * gar_tenants.service_mode
+     */
+    private String serviceMode;
+
+    /**
+     * 更新的人
+     * gar_tenants.updated_by_user_name
+     */
+    private String updatedByUserName;
+
     /**
      * TABLE： gar_tenants
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     private static final long serialVersionUID = 1L;
 
@@ -71,6 +84,70 @@ public class Tenant implements Serializable {
         this.description = description == null ? null : description.trim();
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * 属于paas服务还是saas服务<br>
+     *
+     * column：gar_tenants.service_mode<br>
+     * @return service_mode
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public String getServiceMode() {
+        return serviceMode;
+    }
+
+    /**
+     * 属于paas服务还是saas服务<br>
+     *
+     * column：gar_tenants.service_mode<br>
+     * @param serviceMode
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public void setServiceMode(String serviceMode) {
+        this.serviceMode = serviceMode == null ? null : serviceMode.trim();
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_tenants.updated_by_user_name<br>
+     * @return updated_by_user_name
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    /**
+     * 更新的人<br>
+     *
+     * column：gar_tenants.updated_by_user_name<br>
+     * @param updatedByUserName
+     *
+     * @mbg.generated
+     *
+     * DATE: 2018-03-12 16:08
+     */
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
     /**
      * <br>
      *
@@ -78,7 +155,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public boolean equals(Object that) {
@@ -96,7 +173,10 @@ public class Tenant implements Serializable {
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
             && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()));
+            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getServiceMode() == null ? other.getServiceMode() == null : this.getServiceMode().equals(other.getServiceMode()))
+            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
     /**
@@ -106,7 +186,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public int hashCode() {
@@ -117,6 +197,9 @@ public class Tenant implements Serializable {
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         result = prime * result + ((getModifiedTime() == null) ? 0 : getModifiedTime().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
+        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getServiceMode() == null) ? 0 : getServiceMode().hashCode());
+        result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }
 
@@ -127,7 +210,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public String toString() {
@@ -140,6 +223,9 @@ public class Tenant implements Serializable {
         sb.append(", createdTime=").append(createdTime);
         sb.append(", modifiedTime=").append(modifiedTime);
         sb.append(", description=").append(description);
+        sb.append(", status=").append(status);
+        sb.append(", serviceMode=").append(serviceMode);
+        sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

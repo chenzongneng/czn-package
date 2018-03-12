@@ -198,12 +198,14 @@ var vm = new Vue({
             if (!groupId) {
                 return;
             }
+
             vm.showList = false;
             vm.title = "修改";
             vm.tenantList.options = [];
             vm.appList.options = [];
             vm.group.userIdList = [];
             vm.group.roleIdList = [];
+            vm.group.id = groupId;
             vm.getTenantList();
             vm.getAppList();
             vm.initTreesToUpdate(groupId);
@@ -212,6 +214,7 @@ var vm = new Vue({
         /**  删除按钮点击事件 */
         del: function () {
             var groupIds = getSelectedRows();
+
             if (!groupIds) {
                 return;
             }
@@ -227,7 +230,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "group?groupIds=" + groupIds.toString(),
+                        url: baseURL + "groups?ids=" + groupIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function (result) {
@@ -244,6 +247,9 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
+            var obj = new Object();
+            obj.group = vm.group;
+
             if(vm.group.name === null || vm.group.name === ""){
                 alert("部门名称不能为空");
                 return;
@@ -253,7 +259,7 @@ var vm = new Vue({
             var userNodes = userTree.getCheckedNodes(true);
             var userIdList = [];
             for (var i = 0; i < userNodes.length; i++) {
-                userIdList.push(userNodes[i].userId);
+                userIdList.push(userNodes[i].id);
             }
             vm.group.userIds = userIdList.join(",");
 
@@ -261,15 +267,18 @@ var vm = new Vue({
             var roleNodes = roleTree.getCheckedNodes(true);
             var roleIdList = [];
             for (var k = 0; k < roleNodes.length; k++) {
-                roleIdList.push(roleNodes[k].roleId);
+                roleIdList.push(roleNodes[k].id);
             }
             vm.group.roleIds = roleIdList.join(",");
 
+            obj.userIds = userIdList;
+            obj.roleIds = roleIdList;
+
             $.ajax({
                 type: vm.group.groupId === null ? "POST" : "PUT",
-                url: baseURL + "group",
+                url: baseURL + "groups",
                 contentType: "application/json",
-                data: JSON.stringify(vm.group),
+                data: JSON.stringify(obj),
                 dataType: "",
                 success: function () {
                     vm.reload(false);
@@ -313,13 +322,16 @@ var vm = new Vue({
         },
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
-
+            //加载用户树
             $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
                 userTree.expandAll(true);
             });
-
-
+            // 加载角色树
+            $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
+                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
+                roleTree.expandAll(true);
+            });
 
             // 加载部门树
             // $.get(baseURL + "groups/add/" + currentUser.userId, function (response) {
@@ -343,9 +355,8 @@ var vm = new Vue({
         initTreesToUpdate: function (groupId) {
             // 加载部门树  封装ajax 请求，防止数据异步导致页面数据错乱
             // $.get(baseURL + "groups/add/" + currentUser.userId, function (response) {
-
-            $.get(baseURL + "groups?page=1&limit=1000" + currentUser.userId, function (response) {
-                groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
+            // $.get(baseURL + "groups?page=1&limit=1000" + currentUser.userId, function (response) {
+            //     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
 
                 // 加载用户树
                 $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
@@ -361,28 +372,29 @@ var vm = new Vue({
                         vm.getGroupInfo(groupId);
                     });
                 });
-            });
+            //});
         },
         /** 根据ID获取部门信息 */
         getGroupInfo: function (groupId) {
-            $.get(baseURL + "group/" + groupId, function (response) {
-                vm.group.groupId = response.groupId;
-                vm.group.applicationId = response.applicationId;
-                vm.group.tenantId = response.tenantId;
-                vm.group.name = response.name;
-                vm.tenantList.selectedTenant = response.tenantId;
-                vm.appList.selectedApp = response.applicationId;
-                vm.group.parentName = response.parentName;
-                vm.group.parentGroupId = response.parentGroupId;
-                vm.group.orderNum = response.orderNum;
+            $.get(baseURL + "groups/" + groupId, function (response) {
+
+                vm.group.groupId = response.data.group.groupId;
+                vm.group.applicationId = response.data.group.applicationId;
+                vm.group.tenantId = response.data.group.tenantId;
+                vm.group.name = response.data.group.name;
+                vm.tenantList.selectedTenant = response.data.group.tenantId;
+                vm.appList.selectedApp = response.data.group.applicationId;
+                vm.group.parentName = response.data.group.parentName;
+                vm.group.parentGroupId = response.data.group.parentGroupId;
+                vm.group.orderNum = response.data.group.orderNum;
                 // 勾选已有用户
-                $.each(response.userIdLList, function (index, item) {
-                    var node = userTree.getNodeByParam("userId", item);
+                $.each(response.data.userIds, function (index, item) {
+                    var node = userTree.getNodeByParam("id", item);
                     userTree.checkNode(node, true, false);
                 });
                 // 勾选已有角色
-                $.each(response.roleIdLList, function (index, item) {
-                    var node = roleTree.getNodeByParam("roleId", item);
+                $.each(response.data.roleIds, function (index, item) {
+                    var node = roleTree.getNodeByParam("id", item);
                     roleTree.checkNode(node, true, false);
                 });
             });

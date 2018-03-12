@@ -61,7 +61,7 @@ public class TestData {
         Long tenantId = 1519893064L;
 
         //创建应用的时候，并且关联了租户
-        Application application = new Application();
+        com.richstonedt.garnet.model.Application application = new Application();
         application.setCompany("广州丰石科技");
         application.setName("garnet权限系统-应用");
         application.setAppCode("123456789");

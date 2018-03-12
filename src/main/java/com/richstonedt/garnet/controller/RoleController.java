@@ -1,10 +1,8 @@
 package com.richstonedt.garnet.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.model.Role;
-import com.richstonedt.garnet.model.RolePermission;
 import com.richstonedt.garnet.model.criteria.RoleCriteria;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.RoleParm;
@@ -14,7 +12,6 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,7 +35,7 @@ import java.util.List;
  */
 @Api(value = "[Garnet]角色接口")
 @RestController
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "/api/v1.0")
 public class RoleController {
 
     /** The Constant LOG. */
@@ -180,14 +177,14 @@ public class RoleController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoles(
-            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
-            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long tenantId,
+            @ApiParam(value = "用户id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
+            @ApiParam(value = "租户id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         try {
             RoleParm roleParm = new RoleParm();
-            roleParm.setUserId(userId);
-            roleParm.setTenantId(tenantId);
+           // roleParm.setUserId(userId);
+            //roleParm.setTenantId(tenantId);
             roleParm.setPageNumber(pageNumber);
             roleParm.setPageSize(pageSize);
             PageUtil rolePageInfo = roleService.queryRolesByParms(roleParm);

@@ -1,6 +1,5 @@
 package com.richstonedt.garnet.model.parm;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.richstonedt.garnet.model.User;
 
 /**

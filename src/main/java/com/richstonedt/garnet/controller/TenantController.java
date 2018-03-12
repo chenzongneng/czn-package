@@ -1,11 +1,9 @@
 package com.richstonedt.garnet.controller;
 
 
-import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.model.Tenant;
-import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.TenantView;
@@ -14,16 +12,12 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <b><code>TenantController</code></b>

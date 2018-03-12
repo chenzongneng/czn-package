@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-02-25 14:02
+ * DATE: 2018-03-12 16:08
  */
 public class UserTenantApplication implements Serializable {
     private Long id;
@@ -19,12 +19,14 @@ public class UserTenantApplication implements Serializable {
 
     private Long applicationId;
 
+    private Integer status;
+
     /**
      * TABLE： gar_user_tenant_applications
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     private static final long serialVersionUID = 1L;
 
@@ -60,6 +62,14 @@ public class UserTenantApplication implements Serializable {
         this.applicationId = applicationId;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     /**
      * <br>
      *
@@ -67,7 +77,7 @@ public class UserTenantApplication implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public boolean equals(Object that) {
@@ -84,7 +94,8 @@ public class UserTenantApplication implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
             && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
-            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()));
+            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
     }
 
     /**
@@ -94,7 +105,7 @@ public class UserTenantApplication implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public int hashCode() {
@@ -104,6 +115,7 @@ public class UserTenantApplication implements Serializable {
         result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
         result = prime * result + ((getTenantId() == null) ? 0 : getTenantId().hashCode());
         result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
+        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         return result;
     }
 
@@ -114,7 +126,7 @@ public class UserTenantApplication implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-02-25 14:02
+     * DATE: 2018-03-12 16:08
      */
     @Override
     public String toString() {
@@ -126,6 +138,7 @@ public class UserTenantApplication implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", tenantId=").append(tenantId);
         sb.append(", applicationId=").append(applicationId);
+        sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

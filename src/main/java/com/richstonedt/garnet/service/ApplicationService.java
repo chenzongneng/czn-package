@@ -1,14 +1,10 @@
 package com.richstonedt.garnet.service;
 
-import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
-
-import java.util.List;
 
 /**
  * The interface Application service.
