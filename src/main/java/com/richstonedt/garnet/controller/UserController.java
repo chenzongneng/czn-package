@@ -114,13 +114,19 @@ public class UserController {
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
 
-            for (String userId:
-                    ids.split(",")) {
-                UserView userView = new UserView();
-                User user  = new User();
-                user.setId(Long.parseLong(userId));
-                userView.setUser(user);
-                userService.deleteUser(userView);
+//            for (String userId:
+//                    ids.split(",")) {
+//                UserView userView = new UserView();
+//                User user  = new User();
+//                user.setId(Long.parseLong(userId));
+//                userView.setUser(user);
+//                userService.deleteUser(userView);
+//            }
+
+            for (String id : ids.split(",")) {
+                User user = new User();
+                user.setId(Long.parseLong(id));
+                userService.updateStatusById(user);
             }
 
             // 封装返回信息

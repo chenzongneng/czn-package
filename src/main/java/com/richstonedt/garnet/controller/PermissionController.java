@@ -106,12 +106,17 @@ public class PermissionController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/permissions", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deletePermissions(
-            @ApiParam(value = "权限ids，样例 - 1,2,3", required = true) @RequestBody String ids) {
+            @ApiParam(value = "权限ids，样例 - 1,2,3", required = true) @RequestParam(value = "ids") String ids) {
         try {
-            List<Long> idslist = new ArrayList<>();
-            for (String id:
-                    ids.split(",")) {
-                idslist.add(Long.parseLong(id));
+//            List<Long> idslist = new ArrayList<>();
+//            for (String id:
+//                    ids.split(",")) {
+//                idslist.add(Long.parseLong(id));
+//            }
+            for (String id : ids.split(",")) {
+                Permission permission = new Permission();
+                permission.setId(Long.parseLong(id));
+                permissionService.updateStatusById(permission);
             }
             // 封装返回信息
             GarnetMessage<PermissionView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
@@ -129,12 +134,10 @@ public class PermissionController {
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal Server Error") })
-    @RequestMapping(value = "/permissions/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/permissions", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updatePermissions(
-            @ApiParam(value = "权限id", required = true) @PathVariable(value = "id") Long id,
             @ApiParam(value = "权限信息", required = true) @RequestBody PermissionView permissionView) {
         try {
-            permissionView.getPermission().setId(id);
             permissionService.updatePerssion(permissionView);
             // 封装返回信息
             GarnetMessage<PermissionView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, permissionView);
@@ -175,14 +178,14 @@ public class PermissionController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getPermissions(
-            //@ApiParam(value = "用户名", defaultValue = "", required = false) @RequestParam(value = "userName", defaultValue = "", required = false) String userName,
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
-            @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-            @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize) {
+            @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
+            @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) Integer pageSize) {
         try {
 
             PermissionParm permissionParm = new PermissionParm();
-            permissionParm.setPageNumber(pageNumber);
+            permissionParm.setPageNumber(page);
             permissionParm.setPageSize(pageSize);
             PageUtil permissionPageInfo = permissionService.queryPermissionsByParms(permissionParm);
 

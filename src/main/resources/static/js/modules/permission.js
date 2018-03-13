@@ -19,6 +19,7 @@ $(function () {
                 width: 20,
                 key: true
             },
+            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             {label: '权限名称', name: 'name', align: 'center', width: 60},
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 30},
             {label: '通配符', name: 'resourcePathWildcard', align: 'center', width: 80},
@@ -153,15 +154,17 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
-            var missionId = getSelectedRow();
-            if (!permissionId) {
+            // var missionId = getSelectedRow();
+            var id = getSelectedRow()
+            if (!id) {
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
             // vm.initTreesToUpdate(permissionId);
-            vm.getPermissionById(permissionId);
+            vm.getPermissionById(id);
             vm.getAppList();
+            vm.getTenantList();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -181,7 +184,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "permission?permissionIds=" + permissionIds.toString(),
+                        url: baseURL + "permissions?ids=" + permissionIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
@@ -213,7 +216,7 @@ var vm = new Vue({
             //     permissionIdList.push(nodes[i].resourceId);
             // }
             // vm.permission.resourceIds = permissionIdList.join(",");
-            console.log("permission == " + JSON.stringify(obj.permission));
+            // console.log("permission == " + JSON.stringify(obj.permission));
 
             $.ajax({
                 type: vm.permission.id === null ? "POST" : "PUT",
@@ -239,25 +242,33 @@ var vm = new Vue({
             // })
         },
         /** 通过id 得到一个permission对象 */
-        getPermissionById: function (permissionId) {
-            $.get(baseURL + "permission/" + permissionId, function (response) {
-                vm.permission.permissionId = response.permissionId;
+        getPermissionById: function (id) {
+            $.get(baseURL + "permissions/" + id, function (response) {
+
+                response = response.data.permission;
+
+                vm.permission.id = response.id;
                 vm.permission.applicationId = response.applicationId;
+                vm.permission.tenantId = response.tenantId;
                 vm.permission.name = response.name;
                 vm.permission.wildcard = response.wildcard;
                 vm.permission.resourcePathWildcard = response.resourcePathWildcard;
                 vm.permission.description = response.description;
                 vm.permission.status = response.status;
-                vm.initTreesToUpdate();
+
+                vm.getAppList();
+                vm.getTenantList();
+                //vm.initTreesToUpdate();
             });
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function () {
             //加载资源树
-            $.get(baseURL + "resources/applicationId/" + vm.permission.applicationId, function (response) {
-                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
-                resourceTree.expandAll(true);
-            })
+            // $.get(baseURL + "resources/applicationId/" + vm.permission.applicationId, function (response) {
+            //     resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
+            //     resourceTree.expandAll(true);
+            // })
+            vm.getPermissionById();
         },
         /** 查询当前用户信息 */
         getCurrentUser: function () {
@@ -291,13 +302,16 @@ var vm = new Vue({
                         vm.appList.options.push(item);
                     })
                 });
+
+                console.log("options == " + JSON.stringify(vm.appList.options));
+
             }
         },
         /** 租户列表onchange 事件*/
         selectTenant: function () {
             vm.initTreesToAdd()
         },
-        /**  获取应用列表 */
+        /**  获取租户列表 */
         getTenantList: function () {
             if (vm.tenantList.options.length == 0) {
                 $.get(baseURL + "tenants?page=1&limit=1000", function (response) {

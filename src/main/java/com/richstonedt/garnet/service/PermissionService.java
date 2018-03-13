@@ -55,4 +55,9 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
 
     public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm);
 
+    /**
+     * 当删除时，更新status为0，即禁用
+     */
+    public void updateStatusById(Permission permission);
+
 }

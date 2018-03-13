@@ -2,6 +2,7 @@ package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceException;
+import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
 import com.richstonedt.garnet.model.parm.UserParm;
@@ -52,5 +53,11 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * 通过id获取User
      */
     public UserView getUserById(Long userId);
+
+    /**
+     * 当用户点击删除时，将其状态设为禁用
+     * @param user
+     */
+    public void updateStatusById(User user);
 
 }

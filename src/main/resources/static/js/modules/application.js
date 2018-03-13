@@ -155,7 +155,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "application?ids=" + applicationIds.toString(),
+                        url: baseURL + "applications?ids=" + applicationIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {

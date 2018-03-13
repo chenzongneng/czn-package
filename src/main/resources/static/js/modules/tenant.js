@@ -76,7 +76,7 @@ var vm = new Vue({
         title: null,
         tenant: {
             name: null,
-            remark: null,
+            description: null,
             appIds: null,
             appNames: [],
             appIdList: []
@@ -94,7 +94,7 @@ var vm = new Vue({
             vm.tenant = {
                 id: null,
                 name: null,
-                remark: null,
+                description: null,
                 appIds: null,
                 appNames: [],
                 appIdList: []
@@ -113,11 +113,11 @@ var vm = new Vue({
             var tenantId = getSelectedRow();
 
             if (!tenantId) {
-
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
+            vm.tenant.description = null,
             vm.tenant.appIds = null;
             vm.tenant.appNames = [];
 
@@ -198,6 +198,7 @@ var vm = new Vue({
                 if (response) {
                     vm.tenant.id = response.tenant.id;
                     vm.tenant.name = response.tenant.name;
+                    vm.tenant.description = response.tenant.description;
                     vm.tenant.createdTime = response.tenant.createdTime;
                     vm.tenant.modifiedTime = response.tenant.modifiedTime;
                     vm.tenant.appIdList = response.appIdList;

@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.parm.TenantParm;
@@ -34,5 +35,11 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
      * 获取租户并且带上应用
      */
     public TenantView getTenantWithApplication(Long tenantId);
+
+    /**
+     * 当用户点击删除时，将其状态设为禁用
+     * @param tenant
+     */
+    public void updateStatusById(Tenant tenant);
 
 }

@@ -237,8 +237,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     public PageUtil queryUsersByParms(UserParm userParm) {
 
         UserCriteria userCriteria = new UserCriteria();
-        //获取tenantId,获取统一租户下的所有用户的列表
 
+        userCriteria.createCriteria().andStatusEqualTo(1);
+        //获取tenantId,获取统一租户下的所有用户的列表
         if (!ObjectUtils.isEmpty(userParm.getTenantId())) {
 
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
@@ -247,14 +248,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
             //根据中间表获取User的具体信息并且返回
             List<Long> userTenantIds = new ArrayList<>();
-            for (UserTenant userTenant : userTenants
-                    ) {
-
+            for (UserTenant userTenant : userTenants) {
                 userTenantIds.add(userTenant.getUserId());
             }
 
             if (userTenantIds.size() == 0) {
-
                 userTenantIds.add(GarnetContants.NON_VALUE);
             }
 
@@ -262,8 +260,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         }
 
-
-        PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageNumber(), userParm.getPageSize());
+        PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
 
         return result;
     }
@@ -320,6 +317,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         userView.setExpiredDateTime(userCredential.getExpiredDateTime());
 
         return userView;
+    }
+
+    @Override
+    public void updateStatusById(User user) {
+        Long currentTime = new Date().getTime();
+        user.setModifiedTime(currentTime);
+        user.setStatus(0);
+        this.updateByPrimaryKeySelective(user);
     }
 
 

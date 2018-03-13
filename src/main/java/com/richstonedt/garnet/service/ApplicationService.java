@@ -47,4 +47,10 @@ public interface ApplicationService extends BaseService<Application, Application
      */
     public ApplicationView getApplicationWithTenant(Long applicaitonId);
 
+    /**
+     * 当用户点击删除时，将其状态设为禁用
+     * @param application
+     */
+    public void updateStatusById(Application application);
+
 }

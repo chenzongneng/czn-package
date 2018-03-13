@@ -111,7 +111,9 @@ public class GroupController {
             groupService.deleteByCriteria(groupCriteria);*/
 
             for (String id : ids.split(",")) {
-                groupService.deleteGroup(Long.parseLong(id));
+                Group group = new Group();
+                group.setId(Long.parseLong(id));
+                groupService.updateStatusById(group);
             }
 
 

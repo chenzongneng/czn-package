@@ -234,6 +234,7 @@ var vm = new Vue({
         /**  删除按钮点击事件 */
         del: function () {
             var userIds = getSelectedRows();
+
             if (!userIds) {
                 return;
             }

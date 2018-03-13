@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -193,6 +194,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         Permission permission = permissionParm.getPermission();
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andStatusEqualTo(1);
 
         if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
 
@@ -203,12 +205,19 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
             permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
         }
-        PermissionCriteria permissionCriteria1 = new PermissionCriteria();
 
-        System.out.println(permissionParm.getPageNumber() + " == " + permissionParm.getPageSize());
-
-        PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria),permissionParm.getPageNumber() ,permissionParm.getPageSize());
+        PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
 
         return result;
+    }
+
+    @Override
+    public void updateStatusById(Permission permission) {
+
+        Long currentTime = new Date().getTime();
+        permission.setModifiedTime(currentTime);
+        permission.setStatus(0);
+        this.updateByPrimaryKeySelective(permission);
+
     }
 }

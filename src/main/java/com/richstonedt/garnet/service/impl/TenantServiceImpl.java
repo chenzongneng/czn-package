@@ -225,6 +225,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         Tenant tenant = tenantParm.getTenant();
 
         TenantCriteria tenantCriteria = new TenantCriteria();
+        //查询status为1，即没被删除的
+        tenantCriteria.createCriteria().andStatusEqualTo(1);
 
         //根据userId获取用户所有的租户
         if(!ObjectUtils.isEmpty(tenantParm.getUserId())){
@@ -341,5 +343,13 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
 
         return tenantView;
+    }
+
+    @Override
+    public void updateStatusById(Tenant tenant) {
+        Long currentTime = new Date().getTime();
+        tenant.setModifiedTime(currentTime);
+        tenant.setStatus(0);
+        this.updateByPrimaryKeySelective(tenant);
     }
 }

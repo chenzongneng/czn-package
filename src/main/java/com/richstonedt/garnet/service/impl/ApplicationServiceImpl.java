@@ -145,6 +145,8 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
 
+        applicationCriteria.createCriteria().andStatusEqualTo(1);
+
         //根据tenant id 获取user对应的应用
         if (!ObjectUtils.isEmpty(applicationParm.getTenantId())) {
 
@@ -155,14 +157,11 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationTenants.addAll(applicationTenantService.selectByCriteria(applicationTenantCriteria));
 
             List<Long> applicationTenantIds = new ArrayList<Long>();
-            for (ApplicationTenant applicationTenant :
-                    applicationTenants) {
-
+            for (ApplicationTenant applicationTenant : applicationTenants) {
                 applicationTenantIds.add(applicationTenant.getApplicationId());
             }
 
             if (applicationTenantIds.size() == 0) {
-
                 applicationTenantIds.add(GarnetContants.NON_VALUE);
             }
 
@@ -173,7 +172,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationCriteria.createCriteria().andNameLike("%" + applicationParm.getSearchName() + "%");
         }
 
-        PageUtil result = new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageNumber(), applicationParm.getPageSize());
+        PageUtil result = new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
 
 
         return result;
@@ -212,6 +211,14 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         applicationView.setTenantNameList(tenantNameList);
 
         return applicationView;
+    }
+
+    @Override
+    public void updateStatusById(Application application) {
+        Long currentTime = new Date().getTime();
+        application.setModifiedTime(currentTime);
+        application.setStatus(0);
+        this.updateByPrimaryKeySelective(application);
     }
 
 }

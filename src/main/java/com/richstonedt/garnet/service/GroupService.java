@@ -47,9 +47,9 @@ public interface GroupService extends BaseService<Group, GroupCriteria, Long> {
 
     /**
      * 当用户点击删除时，将其状态设为禁用
-     * @param id
+     * @param group
      */
-    public void updateGroupEnabled(Long id);
+    public void updateStatusById(Group group);
 
 
 }

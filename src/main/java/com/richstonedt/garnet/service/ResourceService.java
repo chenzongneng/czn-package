@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.service;
 
 import com.github.pagehelper.PageInfo;
+import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.parm.ResourceParm;
@@ -14,5 +15,11 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
 
     public void deleteResource(ResourceView resourceView);
 
-    public PageInfo<Resource> queryResourcesByParms(ResourceParm resourceParm);
+    public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm);
+
+    /**
+     * 当用户点击删除时，将其状态设为禁用
+     * @param resource
+     */
+    public void updateStatusById(Resource resource);
 }

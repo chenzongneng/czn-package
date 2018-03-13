@@ -3,6 +3,7 @@ package com.richstonedt.garnet.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
+import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceMapper;
 import com.richstonedt.garnet.model.Resource;
@@ -71,11 +72,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     public void updateResource(ResourceView resourceView) {
 
         Resource resource = resourceView.getResource();
-
         Long currentTime = new Date().getTime();
-
         resource.setModifiedTime(currentTime);
-
         this.updateByPrimaryKeySelective(resource);
 
 
@@ -117,7 +115,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     }
 
     @Override
-    public PageInfo<Resource> queryResourcesByParms(ResourceParm resourceParm) {
+    public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm) {
 
         Resource resource = resourceParm.getResource();
 
@@ -137,10 +135,20 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         List<Resource> resources = this.selectByCriteria(resourceCriteria);
 
-        PageInfo<Resource> resourcePageInfo = new PageInfo<Resource>(resources);
+//        PageInfo<Resource> resourcePageInfo = new PageInfo<Resource>(resources);
+
+        PageUtil result = new PageUtil(this.selectByCriteria(resourceCriteria), (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
 
 
-        return resourcePageInfo;
+        return result;
+    }
+
+    @Override
+    public void updateStatusById(Resource resource) {
+        Long currentTime = new Date().getTime();
+        resource.setModifiedTime(currentTime);
+        resource.setInt05(0);
+        this.updateByPrimaryKeySelective(resource);
     }
 
 

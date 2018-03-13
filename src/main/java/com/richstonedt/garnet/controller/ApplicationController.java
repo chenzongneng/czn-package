@@ -107,13 +107,15 @@ public class ApplicationController {
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
             List<Long> idslist = new ArrayList<>();
-            for (String id:
-                    ids.split(",")) {
-                idslist.add(Long.parseLong(id));
+            for (String id : ids.split(",")) {
+                Application application = new Application();
+                application.setId(Long.parseLong(id));
+                applicationService.updateStatusById(application);
+//                idslist.add(Long.parseLong(id));
             }
-            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-            applicationCriteria.createCriteria().andIdIn(idslist);
-            applicationService.deleteByCriteria(applicationCriteria);
+//            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+//            applicationCriteria.createCriteria().andIdIn(idslist);
+//            applicationService.deleteByCriteria(applicationCriteria);
             // 封装返回信息
             GarnetMessage<ApplicationView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
@@ -197,5 +199,4 @@ public class ApplicationController {
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }
     }
-
 }
