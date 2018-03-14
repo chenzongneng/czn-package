@@ -17,6 +17,26 @@ public class RoleView {
 
     private List<RolePermission> rolePermissions;
 
+    private List<Long> groupIds;
+
+    private List<Long> permissionIds;
+
+    public List<Long> getGroupIds() {
+        return groupIds;
+    }
+
+    public void setGroupIds(List<Long> groupIds) {
+        this.groupIds = groupIds;
+    }
+
+    public List<Long> getPermissionIds() {
+        return permissionIds;
+    }
+
+    public void setPermissionIds(List<Long> permissionIds) {
+        this.permissionIds = permissionIds;
+    }
+
     /**
      * Gets role.
      *

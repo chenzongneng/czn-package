@@ -270,7 +270,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     public PageUtil queryGroupsByParms(GroupParm groupParm) {
 
         Group group = groupParm.getGroup();
-
         GroupCriteria groupCriteria = new GroupCriteria();
         //只查询状态为1，即可见的
         groupCriteria.createCriteria().andStatusEqualTo(1);
@@ -307,13 +306,21 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 //        }
 
         PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria),groupParm.getPageNumber() ,groupParm.getPageSize());
-
-
         return result;
     }
 
     @Override
     public void updateStatusById(Group group) {
+
+        //先删除关联外键
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andGroupIdEqualTo(group.getId());
+        groupRoleService.deleteByCriteria(groupRoleCriteria);
+
+        GroupUserCriteria groupUserCriteria =  new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andGroupIdEqualTo(group.getId());
+        groupUserService.deleteByCriteria(groupUserCriteria);
+
         Long currentTime = new Date().getTime();
         group.setModifiedTime(currentTime);
         group.setStatus(0);

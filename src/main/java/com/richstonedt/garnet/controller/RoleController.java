@@ -103,18 +103,28 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/roles", method = RequestMethod.DELETE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/roles", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteRoles(
-            @ApiParam(value = "角色ids，样例 - 1,2,3", required = true) @RequestBody String ids) {
+            @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
-            List<Long> idslist = new ArrayList<>();
-            for (String id:
-                    ids.split(",")) {
-                idslist.add(Long.parseLong(id));
+            for (String id : ids.split(",")) {
+                Role role = new Role();
+                role.setId(Long.parseLong(id));
+                roleService.updateStatusById(role);
             }
-            RoleCriteria roleCriteria = new RoleCriteria();
-            roleCriteria.createCriteria().andIdIn(idslist);
-            roleService.deleteByCriteria(roleCriteria);
+
+//            List<Long> idslist = new ArrayList<>();
+//            for (String id: ids.split(",")) {
+////                idslist.add(Long.parseLong(id));
+//                RoleView roleView = new RoleView();
+//                Role role = new Role();
+//                role.setId(Long.parseLong(id));
+//                roleView.setRole(role);
+//                roleService.deleteRole(roleView);
+//            }
+//            RoleCriteria roleCriteria = new RoleCriteria();
+//            roleCriteria.createCriteria().andIdIn(idslist);
+//            roleService.deleteByCriteria(roleCriteria);
             // 封装返回信息
             GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
@@ -131,12 +141,12 @@ public class RoleController {
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal Server Error") })
-    @RequestMapping(value = "/roles/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/roles", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateRoles(
-            @ApiParam(value = "角色id", required = true) @PathVariable(value = "id") long id,
+//            @ApiParam(value = "角色id", required = true) @PathVariable(value = "id") long id,
             @ApiParam(value = "角色信息", required = true) @RequestBody RoleView roleView) {
         try {
-            roleView.getRole().setId(id);
+//            roleView.getRole().setId(id);
             roleService.updateRole(roleView);
             // 封装返回信息
             GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, roleView);
@@ -157,9 +167,7 @@ public class RoleController {
     public ResponseEntity<?> getRole(
             @ApiParam(value = "角色id", required = true) @PathVariable(value = "id") long id) {
         try {
-            final Role role = roleService.selectByPrimaryKey(id);
-            RoleView roleView = new RoleView();
-            roleView.setRole(role);
+            final RoleView roleView = roleService.selectRoleWithGroupAndPermission(id);
             // 封装返回信息
             GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, roleView);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);

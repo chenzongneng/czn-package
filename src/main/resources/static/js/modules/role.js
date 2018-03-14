@@ -10,7 +10,7 @@ $(function () {
         url: baseURL + 'roles',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'roleId', align: 'center', hidden: true, index: "role_id", width: 20, key: true},
+            {label: '角色ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             {label: '角色名称', name: 'name', align: 'center', width: 70},
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
             {label: '所属应用', name: 'appName', align: 'center', width: 70},
@@ -102,12 +102,13 @@ var vm = new Vue({
         showList: true,
         title: null,
         role: {
-            roleId: null,
+            id: null,
             tenantId: null,
-            applicationId: 1,
+            applicationId: null,
             name: null,
             remark: null,
-            groupIds: null
+            groupIds: null,
+            permissionIds: null
         },
         // 租户列表数据
         tenantList: {
@@ -136,9 +137,9 @@ var vm = new Vue({
             vm.appList.selectedApp = "1";
             vm.appList.options = [];
             vm.role = {
-                roleId: null,
+                id: null,
                 tenantId: null,
-                applicationId: 1,
+                applicationId: null,
                 name: null,
                 remark: null,
                 groupIds: null,
@@ -167,6 +168,8 @@ var vm = new Vue({
         /**  删除按钮点击事件 */
         del: function () {
             var roleIds = getSelectedRows();
+
+            console.log("roleId == " + roleIds);
             if (!roleIds) {
                 return;
             }
@@ -182,14 +185,15 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "role?roleIds=" + roleIds.toString(),
+                        url: baseURL + "roles?ids=" + roleIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
-                        error: function () {
+                        error: function (result) {
+                            console.log("result == " + JSON.stringify(result));
                             swal("删除失败!", "系统错误，请联系系统管理员！", "error");
                         }
                     });
@@ -197,20 +201,29 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+
+            var obj = new Object();
+            obj.role = vm.role;
+
             // 获取部门树选择的部门
             var groups = groupTree.getCheckedNodes(true);
             var groupIdList = [];
             for (var i = 0; i < groups.length; i++) {
-                groupIdList.push(groups[i].groupId);
+                console.log(i);
+                groupIdList.push(groups[i].id);
             }
             vm.role.groupIds = groupIdList.join(",");
             // 获取权限树选择的权限
             var permissions = permissionTree.getCheckedNodes(true);
             var permissionIdList = [];
             for (var i = 0; i < permissions.length; i++) {
-                permissionIdList.push(permissions[i].permissionId);
+                permissionIdList.push(permissions[i].id);
             }
             vm.role.permissionIds = permissionIdList.join(",");
+
+            obj.groupIds = groupIdList;
+            obj.permissionIds = permissionIdList;
+
             if(vm.role.name === null || vm.role.name === "") {
                 alert("角色名称不能为空");
                 return;
@@ -224,10 +237,10 @@ var vm = new Vue({
                 return;
             }
             $.ajax({
-                type: vm.role.roleId === null ? "POST" : "PUT",
+                type: vm.role.id === null ? "POST" : "PUT",
                 url: baseURL + "roles",
                 contentType: "application/json",
-                data: JSON.stringify(vm.role),
+                data: JSON.stringify(obj),
                 dataType: '',
                 success: function () {
                     vm.reload(false);
@@ -247,10 +260,14 @@ var vm = new Vue({
                 groupTree.expandAll(true);
             });
             //加载权限树
-            $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
-                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
+            $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
+                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response.list);
                 permissionTree.expandAll(true);
             })
+            // $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+            //     permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
+            //     permissionTree.expandAll(true);
+            // })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (roleId) {
@@ -259,33 +276,38 @@ var vm = new Vue({
         },
         /** 通过id 得到一个role对象 */
         getRoleById: function (roleId) {
-            $.get(baseURL + "role/" + roleId, function (response) {
-                vm.role.roleId = response.roleId;
+            $.get(baseURL + "roles/" + roleId, function (response) {
+                response = response.data;
+
+                console.log("response == " + JSON.stringify(response));
+
+                vm.role.id = response.role.id;
                 vm.role.applicationId = response.applicationId;
-                vm.role.tenantId = response.tenantId;
-                vm.role.name = response.name;
-                vm.role.remark = response.remark;
-                vm.role.groupIdList = response.groupIdList;
-                vm.role.permissionIdList = response.permissionIdList;
+                vm.role.tenantId = response.role.tenantId;
+                vm.role.name = response.role.name;
+                vm.role.remark = response.role.remark;
+                vm.role.groupIds = response.groupIds;
+                vm.role.permissionIds = response.permissionIds;
                 vm.tenantList.selectedTenant = response.tenantId;
-                vm.appList.selectedApp = response.applicationId;
+                vm.appList.selectedApp = response.role.applicationId;
                 //加载部门树
                 // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
-                $.get(baseURL + "departments?page=1&limit=1000", function (response) {
+                $.get(baseURL + "groups?page=1&limit=1000", function (response) {
                     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
                     groupTree.expandAll(true);
-                    console.log(JSON.stringify(vm.role.groupIdList));
-                    $.each(vm.role.groupIdList, function (index, item) {
-                        var node = groupTree.getNodeByParam("groupId", item);
+
+                    $.each(vm.role.groupIds, function (index, item) {
+                        var node = groupTree.getNodeByParam("id", item);
                         groupTree.checkNode(node, true, false);
                     });
                 });
                 //加载权限树
-                $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
-                    permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
+                // $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+                $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
+                    permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response.list);
                     permissionTree.expandAll(true);
-                    $.each(vm.role.permissionIdList, function (index, item) {
-                        var node = permissionTree.getNodeByParam("permissionId", item);
+                    $.each(vm.role.permissionIds, function (index, item) {
+                        var node = permissionTree.getNodeByParam("id", item);
                         permissionTree.checkNode(node, true, false);
                     });
                 });

@@ -363,6 +363,8 @@ var vm = new Vue({
                     userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
                     userTree.expandAll(true);
 
+                    console.log("groupResponse == " + JSON.stringify(response));
+
                     // 加载角色树
                     $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
                         roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
