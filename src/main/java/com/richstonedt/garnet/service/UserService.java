@@ -11,6 +11,7 @@ import com.richstonedt.garnet.model.view.UserProfile;
 import com.richstonedt.garnet.model.view.UserView;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * The interface User service.
@@ -59,5 +60,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * @param user
      */
     public void updateStatusById(User user);
+
+    public List<User> queryUserByTenantId(UserParm userParm);
 
 }

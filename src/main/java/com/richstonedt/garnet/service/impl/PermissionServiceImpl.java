@@ -32,6 +32,7 @@ import java.util.List;
 @Service
 @Transactional
 public class PermissionServiceImpl extends BaseServiceImpl<Permission, PermissionCriteria, Long> implements PermissionService {
+
     @Autowired
     private PermissionMapper permissionMapper;
 
@@ -219,5 +220,16 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         permission.setStatus(0);
         this.updateByPrimaryKeySelective(permission);
 
+    }
+
+    @Override
+    public List<Permission> queryPermissionByTenantId(PermissionParm permissionParm) {
+        Long tenantId = permissionParm.getTenantId();
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
+
+        return permissions;
     }
 }

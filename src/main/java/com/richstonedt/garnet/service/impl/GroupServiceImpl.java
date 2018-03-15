@@ -326,4 +326,16 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         group.setStatus(0);
         this.updateByPrimaryKeySelective(group);
     }
+
+    @Override
+    public List<Group> queryGroupsByTenantId(GroupParm groupParm) {
+        Long tenantId = groupParm.getTenantId();
+        GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.createCriteria().andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+        List<Group> groups = this.selectByCriteria(groupCriteria);
+
+
+        return groups;
+
+    }
 }

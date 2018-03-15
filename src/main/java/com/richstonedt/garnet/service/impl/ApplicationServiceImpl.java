@@ -219,6 +219,13 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         application.setModifiedTime(currentTime);
         application.setStatus(0);
         this.updateByPrimaryKeySelective(application);
+
+        //删除关联外键
+        if (!ObjectUtils.isEmpty(application) && !ObjectUtils.isEmpty(application.getId())) {
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
+            applicationTenantService.deleteByCriteria(applicationTenantCriteria);
+        }
     }
 
 }

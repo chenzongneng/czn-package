@@ -21,6 +21,7 @@ public class GroupView {
 
     private List<Long> roleIds;
 
+
     public List<Long> getUserIds() {
         return userIds;
     }

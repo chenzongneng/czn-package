@@ -22,6 +22,7 @@ import com.richstonedt.garnet.service.UserTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.text.ParseException;
@@ -325,6 +326,32 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         user.setModifiedTime(currentTime);
         user.setStatus(0);
         this.updateByPrimaryKeySelective(user);
+
+        //删除关联外键
+        if (!ObjectUtils.isEmpty(user) && !ObjectUtils.isEmpty(user.getId())) {
+            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+            userTenantCriteria.createCriteria().andUserIdEqualTo(user.getId());
+            userTenantService.deleteByCriteria(userTenantCriteria);
+        }
+
+    }
+
+    @Override
+    public List<User> queryUserByTenantId(UserParm userParm) {
+        Long tenantId = userParm.getTenantId();
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        List<User> users = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userTenants)) {
+            for (UserTenant userTenant : userTenants) {
+                Long userId = userTenant.getUserId();
+                User user = this.selectByPrimaryKey(userId);
+                if (!ObjectUtils.isEmpty(user)) users.add(user);
+            }
+        }
+
+        return users;
     }
 
 

@@ -21,6 +21,46 @@ public class RoleView {
 
     private List<Long> permissionIds;
 
+    private List<String> groupNames;
+
+    private List<String> permissionNames;
+
+    private String tenantName;
+
+    private String applicationName;
+
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public List<String> getGroupNames() {
+        return groupNames;
+    }
+
+    public void setGroupNames(List<String> groupNames) {
+        this.groupNames = groupNames;
+    }
+
+    public List<String> getPermissionNames() {
+        return permissionNames;
+    }
+
+    public void setPermissionNames(List<String> permissionNames) {
+        this.permissionNames = permissionNames;
+    }
+
     public List<Long> getGroupIds() {
         return groupIds;
     }

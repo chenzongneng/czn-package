@@ -342,6 +342,9 @@ var vm = new Vue({
         getResourceById: function (resourceId) {
             $.get(baseURL + "resources/" + resourceId, function (response) {
                 response = response.data;
+
+                console.log("reposnse == " + JSON.stringify(response));
+
                 vm.resource.id = response.id;
                 vm.resource.applicationId = response.applicationId;
                 vm.resource.name = response.name;
@@ -379,9 +382,6 @@ var vm = new Vue({
                 vm.resource.boolean02 = response.boolean02;
                 vm.resource.boolean03 = response.boolean03;
                 vm.resource.boolean04 = response.boolean04;
-
-
-                console.log("response.tenantId == " + JSON.stringify(response));
 
                 // vm.initTreesToAdd();
                 // $.each(response.apiIdList, function (index, item) {
@@ -426,7 +426,6 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            console.log("我是获取应用列表，我被调用了");
             $.get(baseURL + "applications?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
                     applicationList.appList.options.push(item);

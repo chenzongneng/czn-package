@@ -3,6 +3,7 @@ package com.richstonedt.garnet.controller;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.model.Role;
+import com.richstonedt.garnet.model.RolePermission;
 import com.richstonedt.garnet.model.criteria.RoleCriteria;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.RoleParm;
@@ -200,6 +201,30 @@ public class RoleController {
             // 封装返回信息
 //            GarnetMessage<PageInfo<Role>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, rolePageInfo);
             return new ResponseEntity<>(rolePageInfo, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]根据租户id获取角色列表", notes = "通过查询条件获取角色列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/roles/tenantId/{tenantId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getGroupsByTenantId(
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
+            @ApiParam(value = "tenantId", required = true) @PathVariable(value = "tenantId") Long tenantId) {
+        try {
+            RoleParm roleParm = new RoleParm();
+            roleParm.setUserId(userId);
+            roleParm.setTenantId(tenantId);
+            List<Role> roles = roleService.queryRolesByTenantId(roleParm);
+            // 封装返回信息
+//            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
+            return new ResponseEntity<>(roles, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);

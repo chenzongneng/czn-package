@@ -6,6 +6,8 @@ import com.richstonedt.garnet.model.criteria.GroupCriteria;
 import com.richstonedt.garnet.model.parm.GroupParm;
 import com.richstonedt.garnet.model.view.GroupView;
 
+import java.util.List;
+
 /**
  * The interface Group service.
  */
@@ -50,6 +52,13 @@ public interface GroupService extends BaseService<Group, GroupCriteria, Long> {
      * @param group
      */
     public void updateStatusById(Group group);
+
+    /**
+     * 通过tenantId查询相对应的组
+     * @param groupParm
+     * @return
+     */
+    public List<Group> queryGroupsByTenantId(GroupParm groupParm);
 
 
 }

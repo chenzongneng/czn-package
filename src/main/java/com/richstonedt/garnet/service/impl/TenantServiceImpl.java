@@ -351,5 +351,12 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         tenant.setModifiedTime(currentTime);
         tenant.setStatus(0);
         this.updateByPrimaryKeySelective(tenant);
+
+        //删除关联外键
+        if (!ObjectUtils.isEmpty(tenant) && !ObjectUtils.isEmpty(tenant.getId())) {
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenant.getId());
+            applicationTenantService.deleteByCriteria(applicationTenantCriteria);
+        }
     }
 }

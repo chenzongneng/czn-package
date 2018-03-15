@@ -358,22 +358,8 @@ var vm = new Vue({
             // $.get(baseURL + "groups?page=1&limit=1000" + currentUser.userId, function (response) {
             //     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
 
-                // 加载用户树
-                $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
-                    userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
-                    userTree.expandAll(true);
-
-                    console.log("groupResponse == " + JSON.stringify(response));
-
-                    // 加载角色树
-                    $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
-                        roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
-                        roleTree.expandAll(true);
-
-                        // 获取部门信息
-                        vm.getGroupInfo(groupId);
-                    });
-                });
+            // 获取部门信息
+            vm.getGroupInfo(groupId);
             //});
         },
         /** 根据ID获取部门信息 */
@@ -389,6 +375,19 @@ var vm = new Vue({
                 vm.group.parentName = response.data.group.parentName;
                 vm.group.parentGroupId = response.data.group.parentGroupId;
                 vm.group.orderNum = response.data.group.orderNum;
+
+                // 加载用户树
+                $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant + "?token=" + garnetToken, function (response) {
+                    userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
+                    userTree.expandAll(true);
+
+                    // 加载角色树
+                    $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant + "?token=" + garnetToken, function (response) {
+                        roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
+                        roleTree.expandAll(true);
+                    });
+                });
+
                 // 勾选已有用户
                 $.each(response.data.userIds, function (index, item) {
                     var node = userTree.getNodeByParam("id", item);
@@ -411,10 +410,26 @@ var vm = new Vue({
         /** 租户列表onchange 事件*/
         selectTenant: function () {
             vm.group.tenantId = vm.tenantList.selectedTenant;
+            vm.reloadUserTree();
+            vm.reloadRoleTree();
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
             vm.group.applicationId = vm.appList.selectedApp;
+        },
+        //根据租户加载用户树
+        reloadUserTree : function() {
+            $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+                userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
+                userTree.expandAll(true);
+            })
+        },
+        //根据租户加载角色树
+        reloadRoleTree : function() {
+            $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
+                roleTree.expandAll(true);
+            })
         },
         /**  获取租户列表 */
         getTenantList: function () {

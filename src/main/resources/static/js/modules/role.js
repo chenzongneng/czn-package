@@ -10,12 +10,12 @@ $(function () {
         url: baseURL + 'roles',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '角色名称', name: 'name', align: 'center', width: 70},
+            {label: '角色ID', name: 'role.id', align: 'center', hidden: true, index: "id", width: 20, key: true},
+            {label: '角色名称', name: 'role.name', align: 'center', width: 70},
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
-            {label: '所属应用', name: 'appName', align: 'center', width: 70},
-            {label: '部门列表', name: 'groupNameList', align: 'center', width: 100},
-            {label: '权限列表', name: 'permissionNameList', align: 'center', width: 100}
+            {label: '所属应用', name: 'applicationName', align: 'center', width: 70},
+            {label: '部门列表', name: 'groupNames', align: 'center', width: 100},
+            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
@@ -117,7 +117,7 @@ var vm = new Vue({
         },
         // 应用列表数据
         appList: {
-            selectedApp: "1",
+            selectedApp: "",
             options: []
         },
         // 当前用户信息
@@ -134,7 +134,7 @@ var vm = new Vue({
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
-            vm.appList.selectedApp = "1";
+            vm.appList.selectedApp = "";
             vm.appList.options = [];
             vm.role = {
                 id: null,
@@ -157,7 +157,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
-            vm.appList.selectedApp = "";
+            // vm.appList.selectedApp = "";
             vm.tenantList.options = [];
             vm.appList.options = [];
             vm.role.groupIdList = [];
@@ -169,7 +169,6 @@ var vm = new Vue({
         del: function () {
             var roleIds = getSelectedRows();
 
-            console.log("roleId == " + roleIds);
             if (!roleIds) {
                 return;
             }
@@ -193,7 +192,6 @@ var vm = new Vue({
                             vm.reload(false);
                         },
                         error: function (result) {
-                            console.log("result == " + JSON.stringify(result));
                             swal("删除失败!", "系统错误，请联系系统管理员！", "error");
                         }
                     });
@@ -209,7 +207,6 @@ var vm = new Vue({
             var groups = groupTree.getCheckedNodes(true);
             var groupIdList = [];
             for (var i = 0; i < groups.length; i++) {
-                console.log(i);
                 groupIdList.push(groups[i].id);
             }
             vm.role.groupIds = groupIdList.join(",");
@@ -278,9 +275,6 @@ var vm = new Vue({
         getRoleById: function (roleId) {
             $.get(baseURL + "roles/" + roleId, function (response) {
                 response = response.data;
-
-                console.log("response == " + JSON.stringify(response));
-
                 vm.role.id = response.role.id;
                 vm.role.applicationId = response.applicationId;
                 vm.role.tenantId = response.role.tenantId;
@@ -288,12 +282,13 @@ var vm = new Vue({
                 vm.role.remark = response.role.remark;
                 vm.role.groupIds = response.groupIds;
                 vm.role.permissionIds = response.permissionIds;
-                vm.tenantList.selectedTenant = response.tenantId;
+                vm.tenantList.selectedTenant = response.role.tenantId;
                 vm.appList.selectedApp = response.role.applicationId;
+
                 //加载部门树
                 // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
-                $.get(baseURL + "groups?page=1&limit=1000", function (response) {
-                    groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
+                $.get(baseURL + "groups/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+                    groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
                     groupTree.expandAll(true);
 
                     $.each(vm.role.groupIds, function (index, item) {
@@ -303,8 +298,8 @@ var vm = new Vue({
                 });
                 //加载权限树
                 // $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
-                $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
-                    permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response.list);
+                $.get(baseURL + "permissions/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+                    permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                     permissionTree.expandAll(true);
                     $.each(vm.role.permissionIds, function (index, item) {
                         var node = permissionTree.getNodeByParam("id", item);
@@ -339,11 +334,12 @@ var vm = new Vue({
         /** 租户列表onchange 事件*/
         selectTenant: function () {
             vm.role.tenantId = vm.tenantList.selectedTenant;
+            vm.roadPermissionTree();
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
             vm.role.applicationId = vm.appList.selectedApp;
-            vm.roadPermissionTree();
+            //vm.roadPermissionTree();
         },
         /**  获取租户列表 */
         getTenantList: function () {
@@ -361,17 +357,30 @@ var vm = new Vue({
                 })
             });
         },
+        /** 加载组 */
+        roadGroupTree:function () {
+            $.get(baseURL + "groups/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+                groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
+                groupTree.expandAll(true);
+            })
+            // $.each(vm.role.groupIds, function (index, item) {
+            //     var node = groupTree.getNodeByParam("id", item);
+            //     groupTree.checkNode(node, true, false);
+            // });
+        },
         /** 加载权限树 */
         roadPermissionTree:function () {
             //加载权限树
-            $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
+            $.get(baseURL + "permissions/tenantId/" + vm.tenantList.selectedTenant, function (response) {
                 permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                 permissionTree.expandAll(true);
+
+                vm.roadGroupTree();
             })
-            $.each(vm.role.permissionIdList, function (index, item) {
-                var node = permissionTree.getNodeByParam("permissionId", item);
-                permissionTree.checkNode(node, true, false);
-            });
+            // $.each(vm.role.permissionIds, function (index, item) {
+            //     var node = permissionTree.getNodeByParam("id", item);
+            //     permissionTree.checkNode(node, true, false);
+            // });
         }
     },
     /**  初始化页面时执行该方法 */

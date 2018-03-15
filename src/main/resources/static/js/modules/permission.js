@@ -246,7 +246,6 @@ var vm = new Vue({
             $.get(baseURL + "permissions/" + id, function (response) {
 
                 response = response.data.permission;
-
                 vm.permission.id = response.id;
                 vm.permission.applicationId = response.applicationId;
                 vm.permission.tenantId = response.tenantId;
@@ -302,9 +301,6 @@ var vm = new Vue({
                         vm.appList.options.push(item);
                     })
                 });
-
-                console.log("options == " + JSON.stringify(vm.appList.options));
-
             }
         },
         /** 租户列表onchange 事件*/

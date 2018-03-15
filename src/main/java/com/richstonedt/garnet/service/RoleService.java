@@ -6,6 +6,8 @@ import com.richstonedt.garnet.model.criteria.RoleCriteria;
 import com.richstonedt.garnet.model.parm.RoleParm;
 import com.richstonedt.garnet.model.view.RoleView;
 
+import java.util.List;
+
 public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
 
     public Long insertRole(RoleView roleView);
@@ -23,5 +25,7 @@ public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
     public void updateStatusById(Role role);
 
     public RoleView selectRoleWithGroupAndPermission(Long id);
+
+    public List<Role> queryRolesByTenantId(RoleParm roleParm);
 
 }

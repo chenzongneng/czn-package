@@ -60,4 +60,6 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      */
     public void updateStatusById(Permission permission);
 
+    public List<Permission> queryPermissionByTenantId(PermissionParm permissionParm);
+
 }
