@@ -17,7 +17,7 @@
   "garnetDevelopmentApiUpdate": true,
   "garnetSysManagementGroupUpdate": true,
   "garnetSysManagementApplicationAdd": true,
-  "garnetSysManagementLog": true,
+  "garnetSysManagementLog": false,
   "garnetSysManagementTenantDelete": true,
   "garnetSysManagementPermissionAdd": true,
   "garnetDevelopmentApiAdd": true,
@@ -28,7 +28,7 @@
   "garnetDevelopmentAllApi": true,
   "garnetSysManagementPermissionDelete": true,
   "garnetSysManagementPermissionUpdate": true,
-  "garnetDevelopmentApi": true,
+  "garnetDevelopmentApi": false,
   "garnetDevelopment": true,
   "garnetSysManagementUserUpdate": true,
   "garnetSysManagementTenantAdd": true,
@@ -36,5 +36,9 @@
   "garnetSysManagementApplication": true,
   "garnetSysManagementTenantUpdate": true,
   "garnetSysManagementPermission": true,
-  "garnetSysManagementUsernAdd": true
+  "garnetSysManagementUsernAdd": true,
+  "garnetDevelopmentresourceDynamicProperty": true,
+  "garnetDevelopmentresourceDynamicPropertyAdd": true,
+  "garnetDevelopmentresourceDynamicPropertyUpdate": true,
+  "garnetDevelopmentresourceDynamicPropertyDelete": true
 }

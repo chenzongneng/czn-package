@@ -12,6 +12,16 @@ public class ResourceView {
 
     private Resource resource;
 
+    private Long typeId;
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
     private List<ResourceDynamicProperty> resourceDynamicProperties;
 
 

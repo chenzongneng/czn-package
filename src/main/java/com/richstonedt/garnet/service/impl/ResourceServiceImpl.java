@@ -57,7 +57,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                  resourceView.getResourceDynamicProperties()) {
 
                 resourceDynamicProperty.setId(IdGeneratorUtil.generateId());
-                resourceDynamicProperty.setResourceId(resource.getId());
+                //resourceDynamicProperty.setType(resource.getType());
                 resourceDynamicPropertyService.insertSelective(resourceDynamicProperty);
 
             }
@@ -76,18 +76,16 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         resource.setModifiedTime(currentTime);
         this.updateByPrimaryKeySelective(resource);
 
-
         if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){
-
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andResourceIdEqualTo(resource.getId());
+            //resourceDynamicPropertyCriteria.createCriteria().andResourceIdEqualTo(resource.getId());
             resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
 
             for (ResourceDynamicProperty resourceDynamicProperty:
                     resourceView.getResourceDynamicProperties()) {
 
                 resourceDynamicProperty.setId(IdGeneratorUtil.generateId());
-                resourceDynamicProperty.setResourceId(resource.getId());
+                //resourceDynamicProperty.setResourceId(resource.getId());
                 resourceDynamicPropertyService.insertSelective(resourceDynamicProperty);
 
             }
@@ -105,7 +103,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){
 
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andResourceIdEqualTo(resource.getId());
+            //resourceDynamicPropertyCriteria.createCriteria().andResourceIdEqualTo(resource.getId());
             resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
 
         }

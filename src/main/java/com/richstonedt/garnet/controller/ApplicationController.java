@@ -105,6 +105,7 @@ public class ApplicationController {
     @RequestMapping(value = "/applications", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteApplications(
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
+        String error = "Failed to delete entities! " + MessageDescription.OPERATION_DELETE_FAILURE;
         try {
             List<Long> idslist = new ArrayList<>();
             for (String id : ids.split(",")) {
@@ -113,6 +114,7 @@ public class ApplicationController {
                 applicationService.updateStatusById(application);
 //                idslist.add(Long.parseLong(id));
             }
+
 //            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
 //            applicationCriteria.createCriteria().andIdIn(idslist);
 //            applicationService.deleteByCriteria(applicationCriteria);
@@ -120,7 +122,7 @@ public class ApplicationController {
             GarnetMessage<ApplicationView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
-            String error = "Failed to delete entities! " + MessageDescription.OPERATION_DELETE_FAILURE;
+
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);

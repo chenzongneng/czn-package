@@ -75,8 +75,7 @@
         "orderNum": 5,
         "open": null,
         "list": null
-      },
-      {
+      }, {
         "menuId": 7,
         "parentId": 1,
         "parentName": null,
@@ -141,7 +140,20 @@
         "orderNum": 2,
         "open": null,
         "list": null
+      }, {
+        "menuId": 12,
+        "parentId": 9,
+        "parentName": null,
+        "name": "动态资源配置",
+        "url": "modules/resourceDynamicProperty.html",
+        "type": 1,
+        "icon": "fa fa-th-list",
+        "code": "garnetDevelopmentresourceDynamicProperty",
+        "orderNum": 3,
+        "open": null,
+        "list": null
       }
+
     ]
   }
 ]

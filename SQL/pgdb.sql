@@ -170,11 +170,10 @@ CREATE TABLE gar_resources
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
-
 CREATE TABLE gar_resource_dynamic_properties
 (
 	id bigint NOT NULL UNIQUE,
-	resource_id bigint DEFAULT 0 NOT NULL,
+	type VARCHAR(50) DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	filed_name varchar(256) DEFAULT '' NOT NULL,
 	description varchar(256) DEFAULT '' NOT NULL,

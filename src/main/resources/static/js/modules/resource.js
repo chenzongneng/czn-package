@@ -10,7 +10,7 @@ $(function () {
         url: baseURL + 'resources',
         datatype: "json",
         colModel: [
-            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "resource_id", width: 20, key: true},
+            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
             {label: '资源名称', name: 'name', align: 'center', width: 40},
             // {label: '说明', name: 'varchar00', align: 'center', width: 70},
@@ -118,8 +118,9 @@ var vm = new Vue({
         showList: true,
         showParentCode: false,
         title: null,
+        resourceDynamicPropertyList : [],
         resource: {
-            resourceId: null,
+            id: null,
             name: null,
             code: null,
             actions: null,
@@ -157,8 +158,6 @@ var vm = new Vue({
             boolean02: null,
             boolean03: null,
             boolean04: null,
-
-
             orderNum: 0
         },
         // 租户表数据
@@ -169,25 +168,39 @@ var vm = new Vue({
         // 类型数据
         typeList: {
             selectedType: "",
-            options: [{
-                selectedType: "",
-                "id" : "1",
-                "name" : "ui-UI组件"
-            },{
-                selectedType: "",
-                "id" : "2",
-                "name" : "openApi"
-            },{
-                selectedType: "",
-                "id" : "3",
-                "name" : "function"
-            }]
+            options: []
         },
         option: {
             applicationId: 1,
             appSearchId: ""
         }
     },
+    // mounted:function () {
+    //
+    //     for(var i=0; i<20;i++){
+    //         var p = new Object();
+    //         p.description = '';
+    //         p.filedName= 'varchar0'+i;
+    //         this.resourceDynamicPropertyList.push(p);
+    //
+    //     }
+    //
+    //     for(var i=1; i<6; i ++) {
+    //         var property = new Object();
+    //         property.description = '';
+    //         property.filedName= 'int0'+i;
+    //         this.resourceDynamicPropertyList.push(property);
+    //     }
+    //
+    //     for(var i=1; i<5; i ++) {
+    //         var property = new Object();
+    //         property.description = '';
+    //         property.filedName= 'boolean0'+i;
+    //         this.resourceDynamicPropertyList.push(property);
+    //     }
+    //
+    //
+    // },
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
@@ -197,31 +210,30 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            applicationList.appList.selectedApp = 1;
+            vm.tenantList.selectedTenant = "";
+            vm.typeList.selectedTenant = "";
+            vm.tenantList.options = [];
+            vm.typeList.options = [];
+            applicationList.appList.selectedApp = "";
+            applicationList.appList.options = [];
             vm.resource = {
                 id: null,
-                applicationId: 1,
+                applicationId: null,
+                tenantId: null,
+                type: null,
                 name: null,
-                code: null,
-                parentCode: null,
-                //说明
-                // varchar00: null,
-                // //资源标识
-                // varchar01: null,
-                // //父资源标识
-                // varchar02: null,
-                parentName: null,
-                apiIds: null,
                 orderNum: 0,
                 status: 1
             };
             if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
                 vm.resource.applicationId = vm.option.appSearchId;
             }
-            //vm.getAppList();
+            vm.getAppList();
             vm.getTenantList();
-            vm.initTreesToAdd();
-            vm.loadResourceTree();
+            vm.getTypeList();
+            getResourceDynamicPropertyById();
+            // vm.initTreesToAdd();
+            // vm.loadResourceTree();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -232,6 +244,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
+            vm.typeList.options = [];
             vm.tenantList.options = [];
             // vm.resource.apiIdList = [];
             // vm.showParentCode = true;
@@ -278,29 +291,13 @@ var vm = new Vue({
         saveOrUpdate: function () {
             // 获取访问权限树选择的访问权限
             var obj = new Object();
+           // obj.typeId = vm.typeList.selectedType;
             obj.resource = vm.resource;
+            obj.resource.type = vm.typeList.selectedType;
+            obj.resource.tenantId = vm.tenantList.selectedTenant;
+            obj.resource.applicationId = applicationList.appList.selectedApp;
 
-            // if(vm.resource.name === null ||  vm.resource.name === ""){
-            //     alert("资源名称不能为空");
-            //     return;
-            // }
-            // if(vm.resource.varchar01 === null ||  vm.resource.varchar01 === ""){
-            //     alert("资源标识不能为空");
-            //     return;
-            // }
-            //
-            // if(vm.resource.varchar02 === vm.resource.varchar01) {
-            //     alert("父子标志不能相同");
-            //     return;
-            // }
-            // var nodes = apiTree.getCheckedNodes(true);
-            // var apiIdList = [];
-            // for (var i = 0; i < nodes.length; i++) {
-            //     if (!nodes[i].isParent) {
-            //         apiIdList.push(nodes[i].apiId);
-            //     }
-            // }
-            // vm.resource.apiIds = apiIdList.join(",");
+            console.log("obj == " + JSON.stringify(obj));
 
             $.ajax({
                 type: vm.resource.id === null ? "POST" : "PUT",
@@ -320,38 +317,34 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载访问权限树
-            $.get(baseURL + "/apis/applicationId/" + vm.resource.applicationId, function (response) {
-                apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
-                apiTree.expandAll(false);
-            })
+            // $.get(baseURL + "/apis/applicationId/" + vm.resource.applicationId, function (response) {
+            //     apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
+            //     apiTree.expandAll(false);
+            // })
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (resourceId) {
-            //加载访问权限树
-            $.get(baseURL + "apis/applicationId/" + vm.resource.applicationId, function (response) {
-                apiTree = $.fn.zTree.init($("#apiTree"), apiTreeSetting, response);
-                apiTree.expandAll(false);
-                // vm.getTenantList();
-                // vm.getResourceById(resourceId);
-            })
-
-            vm.getResourceById(resourceId);
             vm.getTenantList();
+            vm.getTypeList();
+            vm.getResourceById(resourceId);
         },
         /** 通过id 得到一个resource对象 */
         getResourceById: function (resourceId) {
             $.get(baseURL + "resources/" + resourceId, function (response) {
                 response = response.data;
 
-                console.log("reposnse == " + JSON.stringify(response));
+                console.log("response data == " + JSON.stringify(response));
 
                 vm.resource.id = response.id;
                 vm.resource.applicationId = response.applicationId;
                 vm.resource.name = response.name;
                 vm.resource.path = response.path;
+                vm.resource.actions = response.actions;
                 vm.resource.status = response.status;
                 applicationList.appList.selectedApp = response.applicationId;
                 vm.tenantList.selectedTenant = response.tenantId;
+                vm.resource.tenantId = response.tenantId;
+                vm.resource.type = response.type;
                 vm.typeList.selectedType = response.type;
                 vm.resource.varchar00 = response.varchar00;
                 vm.resource.varchar01 = response.varchar01;
@@ -390,7 +383,6 @@ var vm = new Vue({
                 // });
                 // vm.typeChange();
 
-
             });
         },
         /** 查询当前用户信息 */
@@ -408,7 +400,6 @@ var vm = new Vue({
             }else {
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
-            console.log(JSON.stringify(page));
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {name: vm.name, applicationId: vm.option.appSearchId},
                 page: page
@@ -433,7 +424,7 @@ var vm = new Vue({
                 })
             });
 
-            // console.log("aaaa == " + JSON.stringify(applicationList.appList.options));
+           // console.log("aaaa == " + JSON.stringify(applicationList.appList.options));
 
         },
         /**  获取租户列表 */
@@ -443,13 +434,44 @@ var vm = new Vue({
                     vm.tenantList.options.push(item);
                 })
             });
+
+           // console.log("bbbb == " + JSON.stringify(vm.tenantList.options));
+
+        },
+        /**  获取类型列表 */
+        getTypeList: function () {
+            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000", function (response) {
+                console.log('response data : '+JSON.stringify(response));
+                $.each(response.list, function (index, item) {
+                    vm.typeList.options.push(item);
+                })
+
+               // console.log("cccc == " + JSON.stringify(vm.typeList.options));
+
+            });
+        },
+        //获取动态资源列表
+        getResourceDynamicPropertyById: function (resourceDynamicPropertyId) {
+            $.get(baseURL + "resourcedynamicpropertys/" + resourceDynamicPropertyId, function (response) {
+                response = response.data;
+
+                console.log("resourceDynamicProperty reposnse == " + JSON.stringify(response));
+
+                vm.resourceDynamicProperty.id = response.id;
+                vm.resourceDynamicProperty.applicationId = response.applicationId;
+                vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
+                vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
+                applicationList.appList.selectedApp = response.applicationId;
+
+
+            });
         },
         //加载资源树
         loadResourceTree: function () {
-            $.get(baseURL + "/resources/applicationId/" + vm.resource.applicationId, function (response) {
-                resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
-                resourceTree.expandAll(true);
-            })
+            // $.get(baseURL + "/resources/applicationId/" + vm.resource.applicationId, function (response) {
+            //     resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
+            //     resourceTree.expandAll(true);
+            // })
         },
         /**  资源树点击事件 */
         resourceTree: function () {
