@@ -91,10 +91,18 @@ var vm = new Vue({
     },
     mounted:function () {
 
-        for(var i=0; i<20;i++){
+        for(var i=0; i<10;i++){
             var p = new Object();
             p.description = '';
             p.filedName= 'varchar0'+i;
+            this.resourceDynamicPropertyList.push(p);
+
+        }
+
+        for(var i=10; i<20;i++){
+            var p = new Object();
+            p.description = '';
+            p.filedName= 'varchar'+i;
             this.resourceDynamicPropertyList.push(p);
 
         }

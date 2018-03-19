@@ -105,13 +105,13 @@ function-功能项，如页面，菜单模块等
 
     private Integer int05;
 
-    private Integer boolean01;
+    private boolean boolean01;
 
-    private Integer boolean02;
+    private boolean boolean02;
 
-    private Integer boolean03;
+    private boolean boolean03;
 
-    private Integer boolean04;
+    private boolean boolean04;
 
     /**
      * 更新的人
@@ -476,35 +476,35 @@ function-功能项，如页面，菜单模块等<br>
         this.int05 = int05;
     }
 
-    public Integer getBoolean01() {
+    public boolean getBoolean01() {
         return boolean01;
     }
 
-    public void setBoolean01(Integer boolean01) {
+    public void setBoolean01(boolean boolean01) {
         this.boolean01 = boolean01;
     }
 
-    public Integer getBoolean02() {
+    public boolean getBoolean02() {
         return boolean02;
     }
 
-    public void setBoolean02(Integer boolean02) {
+    public void setBoolean02(boolean boolean02) {
         this.boolean02 = boolean02;
     }
 
-    public Integer getBoolean03() {
+    public boolean getBoolean03() {
         return boolean03;
     }
 
-    public void setBoolean03(Integer boolean03) {
+    public void setBoolean03(boolean boolean03) {
         this.boolean03 = boolean03;
     }
 
-    public Integer getBoolean04() {
+    public boolean getBoolean04() {
         return boolean04;
     }
 
-    public void setBoolean04(Integer boolean04) {
+    public void setBoolean04(boolean boolean04) {
         this.boolean04 = boolean04;
     }
 
@@ -591,10 +591,10 @@ function-功能项，如页面，菜单模块等<br>
             && (this.getInt03() == null ? other.getInt03() == null : this.getInt03().equals(other.getInt03()))
             && (this.getInt04() == null ? other.getInt04() == null : this.getInt04().equals(other.getInt04()))
             && (this.getInt05() == null ? other.getInt05() == null : this.getInt05().equals(other.getInt05()))
-            && (this.getBoolean01() == null ? other.getBoolean01() == null : this.getBoolean01().equals(other.getBoolean01()))
-            && (this.getBoolean02() == null ? other.getBoolean02() == null : this.getBoolean02().equals(other.getBoolean02()))
-            && (this.getBoolean03() == null ? other.getBoolean03() == null : this.getBoolean03().equals(other.getBoolean03()))
-            && (this.getBoolean04() == null ? other.getBoolean04() == null : this.getBoolean04().equals(other.getBoolean04()))
+            && (this.getBoolean01() == false ? other.getBoolean01() == false : this.getBoolean01() == other.getBoolean01())
+            && (this.getBoolean02() == false ? other.getBoolean02() == false : this.getBoolean02() == other.getBoolean02())
+            && (this.getBoolean03() == false ? other.getBoolean03() == false : this.getBoolean03() == other.getBoolean03())
+            && (this.getBoolean04() == false ? other.getBoolean04() == false : this.getBoolean04() == other.getBoolean04())
             && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
@@ -645,10 +645,10 @@ function-功能项，如页面，菜单模块等<br>
         result = prime * result + ((getInt03() == null) ? 0 : getInt03().hashCode());
         result = prime * result + ((getInt04() == null) ? 0 : getInt04().hashCode());
         result = prime * result + ((getInt05() == null) ? 0 : getInt05().hashCode());
-        result = prime * result + ((getBoolean01() == null) ? 0 : getBoolean01().hashCode());
-        result = prime * result + ((getBoolean02() == null) ? 0 : getBoolean02().hashCode());
-        result = prime * result + ((getBoolean03() == null) ? 0 : getBoolean03().hashCode());
-        result = prime * result + ((getBoolean04() == null) ? 0 : getBoolean04().hashCode());
+        result = prime * result + ((getBoolean01() == false) ? 0 : Boolean.hashCode(getBoolean01()));
+        result = prime * result + ((getBoolean02() == false) ? 0 : Boolean.hashCode(getBoolean02()));
+        result = prime * result + ((getBoolean03() == false) ? 0 : Boolean.hashCode(getBoolean03()));
+        result = prime * result + ((getBoolean04() == false) ? 0 : Boolean.hashCode(getBoolean04()));
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }

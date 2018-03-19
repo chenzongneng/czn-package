@@ -96,7 +96,6 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
                     resourceDynamicPropertyList.add(resourceDynamicProperty);
                 }
             }
-
         }
 
         PageUtil result = new PageUtil(resourceDynamicPropertyList, (int)this.countByCriteria(resourceDynamicPropertyCriteria) ,resourceDynamicPropertyParm.getPageSize(),resourceDynamicPropertyParm.getPageNumber());
@@ -121,6 +120,18 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         }
 
         String type = resourceDynamicProperty.getType();
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
+        List<ResourceDynamicProperty> resourceDynamicProperties = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        ResourceDynamicPropertyView resourceDynamicPropertyView = new ResourceDynamicPropertyView();
+        resourceDynamicPropertyView.setResourceDynamicProperty(resourceDynamicProperties.get(0));
+        resourceDynamicPropertyView.setResourceDynamicPropertyList(resourceDynamicProperties);
+
+        return resourceDynamicPropertyView;
+    }
+
+    @Override
+    public ResourceDynamicPropertyView selectResourceDynamicPropertyViewByType(String type) {
         ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
         resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
         List<ResourceDynamicProperty> resourceDynamicProperties = this.selectByCriteria(resourceDynamicPropertyCriteria);

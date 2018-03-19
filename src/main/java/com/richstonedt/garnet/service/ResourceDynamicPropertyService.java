@@ -18,4 +18,7 @@ public interface ResourceDynamicPropertyService extends BaseService<ResourceDyna
 
     ResourceDynamicPropertyView selectResourceDynamicPropertyViewById(Long id);
 
+    ResourceDynamicPropertyView selectResourceDynamicPropertyViewByType(String type);
+
+
 }

@@ -158,6 +158,35 @@ var vm = new Vue({
             boolean02: null,
             boolean03: null,
             boolean04: null,
+            varchar00description: null,
+            varchar01description: null,
+            varchar02description: null,
+            varchar03description: null,
+            varchar04description: null,
+            varchar05description: null,
+            varchar06description: null,
+            varchar07description: null,
+            varchar08description: null,
+            varchar09description: null,
+            varchar10description: null,
+            varchar11description: null,
+            varchar12description: null,
+            varchar13description: null,
+            varchar14description: null,
+            varchar15description: null,
+            varchar16description: null,
+            varchar17description: null,
+            varchar18description: null,
+            varchar19description: null,
+            int01description: null,
+            int02description: null,
+            int03description: null,
+            int04description: null,
+            int05description: null,
+            boolean01description: null,
+            boolean02description: null,
+            boolean03description: null,
+            boolean04description: null,
             orderNum: 0
         },
         // 租户表数据
@@ -175,32 +204,30 @@ var vm = new Vue({
             appSearchId: ""
         }
     },
-    // mounted:function () {
-    //
-    //     for(var i=0; i<20;i++){
-    //         var p = new Object();
-    //         p.description = '';
-    //         p.filedName= 'varchar0'+i;
-    //         this.resourceDynamicPropertyList.push(p);
-    //
-    //     }
-    //
-    //     for(var i=1; i<6; i ++) {
-    //         var property = new Object();
-    //         property.description = '';
-    //         property.filedName= 'int0'+i;
-    //         this.resourceDynamicPropertyList.push(property);
-    //     }
-    //
-    //     for(var i=1; i<5; i ++) {
-    //         var property = new Object();
-    //         property.description = '';
-    //         property.filedName= 'boolean0'+i;
-    //         this.resourceDynamicPropertyList.push(property);
-    //     }
-    //
-    //
-    // },
+    mounted:function () {
+
+        for(var i=0; i<20;i++){
+            var p = new Object();
+            p.description = '';
+            p.filedName= 'varchar0'+i;
+            this.resourceDynamicPropertyList.push(p);
+
+        }
+
+        for(var i=1; i<6; i ++) {
+            var property = new Object();
+            property.description = '';
+            property.filedName= 'int0'+i;
+            this.resourceDynamicPropertyList.push(property);
+        }
+
+        for(var i=1; i<5; i ++) {
+            var property = new Object();
+            property.description = '';
+            property.filedName= 'boolean0'+i;
+            this.resourceDynamicPropertyList.push(property);
+        }
+    },
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
@@ -333,8 +360,6 @@ var vm = new Vue({
             $.get(baseURL + "resources/" + resourceId, function (response) {
                 response = response.data;
 
-                console.log("response data == " + JSON.stringify(response));
-
                 vm.resource.id = response.id;
                 vm.resource.applicationId = response.applicationId;
                 vm.resource.name = response.name;
@@ -382,6 +407,7 @@ var vm = new Vue({
                 //     apiTree.checkNode(node, true, false);
                 // });
                 // vm.typeChange();
+                vm.getResourceDynamicPropertyByType();
 
             });
         },
@@ -413,7 +439,9 @@ var vm = new Vue({
             vm.initTreesToAdd()
         },
         selectType: function () {
-            vm.initTreesToAdd()
+            var type = vm.typeList.selectedType;
+            console.log("type == " + type);
+            vm.getResourceDynamicPropertyByType(type);
         },
         /**  获取应用列表 */
         getAppList: function () {
@@ -441,37 +469,65 @@ var vm = new Vue({
         /**  获取类型列表 */
         getTypeList: function () {
             $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000", function (response) {
-                console.log('response data : '+JSON.stringify(response));
                 $.each(response.list, function (index, item) {
                     vm.typeList.options.push(item);
                 })
-
                // console.log("cccc == " + JSON.stringify(vm.typeList.options));
-
             });
         },
         //获取动态资源列表
         getResourceDynamicPropertyById: function (resourceDynamicPropertyId) {
             $.get(baseURL + "resourcedynamicpropertys/" + resourceDynamicPropertyId, function (response) {
                 response = response.data;
-
-                console.log("resourceDynamicProperty reposnse == " + JSON.stringify(response));
-
                 vm.resourceDynamicProperty.id = response.id;
                 vm.resourceDynamicProperty.applicationId = response.applicationId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
                 applicationList.appList.selectedApp = response.applicationId;
+            });
+        },
+        //通过type获取动态资源列表的description
+        getResourceDynamicPropertyByType: function () {
+            $.get(baseURL + "resourcedynamicpropertys/type/" + vm.typeList.selectedType, function (response) {
+                response = response.data;
+                vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
 
-
+                $.each(response.resourceDynamicPropertyList, function (index, item) {
+                    if (""+ item.filedName == "varchar00") {vm.resource.varchar00description = item.description;}
+                    if (""+ item.filedName == "varchar01") {vm.resource.varchar01description = item.description;}
+                    if (""+ item.filedName == "varchar02") {vm.resource.varchar02description = item.description;}
+                    if (""+ item.filedName == "varchar03") {vm.resource.varchar03description = item.description;}
+                    if (""+ item.filedName == "varchar04") {vm.resource.varchar04description = item.description;}
+                    if (""+ item.filedName == "varchar05") {vm.resource.varchar05description = item.description;}
+                    if (""+ item.filedName == "varchar06") {vm.resource.varchar06description = item.description;}
+                    if (""+ item.filedName == "varchar07") {vm.resource.varchar07description = item.description;}
+                    if (""+ item.filedName == "varchar08") {vm.resource.varchar08description = item.description;}
+                    if (""+ item.filedName == "varchar09") {vm.resource.varchar09description = item.description;}
+                    if (""+ item.filedName == "varchar10") {vm.resource.varchar10description = item.description;}
+                    if (""+ item.filedName == "varchar11") {vm.resource.varchar11description = item.description;}
+                    if (""+ item.filedName == "varchar12") {vm.resource.varchar12description = item.description;}
+                    if (""+ item.filedName == "varchar13") {vm.resource.varchar13description = item.description;}
+                    if (""+ item.filedName == "varchar14") {vm.resource.varchar14description = item.description;}
+                    if (""+ item.filedName == "varchar15") {vm.resource.varchar15description = item.description;}
+                    if (""+ item.filedName == "varchar16") {vm.resource.varchar16description = item.description;}
+                    if (""+ item.filedName == "varchar17") {vm.resource.varchar17description = item.description;}
+                    if (""+ item.filedName == "varchar18") {vm.resource.varchar18description = item.description;}
+                    if (""+ item.filedName == "varchar19") {vm.resource.varchar19description = item.description;}
+                    if (""+ item.filedName == "int01") {vm.resource.int01description = item.description;}
+                    if (""+ item.filedName == "int02") {vm.resource.int02description = item.description;}
+                    if (""+ item.filedName == "int03") {vm.resource.int03description = item.description;}
+                    if (""+ item.filedName == "int04") {vm.resource.int04description = item.description;}
+                    if (""+ item.filedName == "int05") {vm.resource.int05description = item.description;}
+                    if (""+ item.filedName == "boolean01") {vm.resource.boolean01description = item.description;}
+                    if (""+ item.filedName == "boolean02") {vm.resource.boolean02description = item.description;}
+                    if (""+ item.filedName == "boolean03") {vm.resource.boolean03description = item.description;}
+                    if (""+ item.filedName == "boolean04") {vm.resource.boolean04description = item.description;}
+                });
             });
         },
         //加载资源树
         loadResourceTree: function () {
-            // $.get(baseURL + "/resources/applicationId/" + vm.resource.applicationId, function (response) {
-            //     resourceTree = $.fn.zTree.init($("#resourceTree"), resourceTreeSetting, response);
-            //     resourceTree.expandAll(true);
-            // })
+
         },
         /**  资源树点击事件 */
         resourceTree: function () {
