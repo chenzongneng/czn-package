@@ -151,19 +151,15 @@ var vm = new Vue({
             var mySelf = this;
             //do ajax here
             //获取租户信息
-
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
-
                 mySelf.multiple.originOptionsTenant = response.list;
-
+                console.log("originOptionsTenant" + JSON.stringify(vm.multiple.originOptionsTenant))
             });
             if (method == "update") {
                 //Todo 租户更新部分
                 // alert(vm.user.id);
                 $.get(baseURL + "tenants?page=1&limit=1000&userId="+vm.user.id, function (response) {
-
                     mySelf.multiple.selectedListTenant= response.list;
-
                 });
 
             } else {
@@ -175,11 +171,12 @@ var vm = new Vue({
             // mySelf.multiple.selectedListTenant = [{"id":"1","name":"lemon"},{"id":"3","name":"lara"}]
 
 
-            this.$nextTick(function () {
-
-            })
+            // this.$nextTick(function () {
+            //
+            // })
         },
         multipleCallback: function (data) {
+            console.log("multipleCallbace");
             this.multiple.selectedListTenant = data;
             console.log('父级元素调用multipleSelected 选中的是' + JSON.stringify(data))
         },

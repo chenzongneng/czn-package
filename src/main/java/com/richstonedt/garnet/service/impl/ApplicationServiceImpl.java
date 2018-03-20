@@ -126,7 +126,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     public void deleteApplication(Long applicationId) {
 
         Application application = this.selectByPrimaryKey(applicationId);
-
         Long deleteId = application.getId();
 
         //删除对应的租户外键
@@ -135,7 +134,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
         this.deleteByPrimaryKey(applicationId);
-
     }
 
     @Override
@@ -226,6 +224,9 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
         }
+
+
+
     }
 
 }

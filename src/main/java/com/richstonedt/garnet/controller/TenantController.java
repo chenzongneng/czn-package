@@ -52,6 +52,7 @@ public class TenantController {
     public ResponseEntity<?> createTenant(
             @ApiParam(value = "租户", required = true) @RequestBody TenantView tenantView,
             UriComponentsBuilder ucBuilder) {
+        String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
         try {
             // 保存实体
             Long id = tenantService.insertTenant(tenantView);
@@ -69,7 +70,7 @@ public class TenantController {
             GarnetMessage<TenantView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_INSERT_SUCCESS, tenantView1);
             return new ResponseEntity<>(torinoSrcMessage, headers, HttpStatus.CREATED);
         } catch (Throwable t) {
-            String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
+            error = t.getMessage();
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);

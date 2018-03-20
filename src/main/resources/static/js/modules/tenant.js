@@ -74,6 +74,7 @@ var vm = new Vue({
         searchName: null,
         showList: true,
         title: null,
+        userName:null,
         tenant: {
             name: null,
             description: null,
@@ -106,15 +107,12 @@ var vm = new Vue({
                 appTree.expandAll(true);
 
             });
+
         },
         /**  更新按钮点击事件 */
         update: function () {
-
             var tenantId = getSelectedRow();
-
-            if (!tenantId) {
-                return;
-            }
+            if (!tenantId) {return;}
             vm.showList = false;
             vm.title = "修改";
             vm.tenant.description = null,
@@ -164,10 +162,12 @@ var vm = new Vue({
         saveOrUpdate: function () {
 
             // alert(JSON.stringify(vm.tenant));
-
             var obj = new Object();
+            var userName = vm.userName;
             obj.tenant = vm.tenant;
             obj.appIds =vm.tenant.appIds;
+            obj.userTenants = [];
+            obj.userName = userName;
 
             // alert(JSON.stringify(obj));
             if(vm.tenant.name === null){
@@ -186,7 +186,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal(response.responseJSON.data.errorResponseMessage, "",  "error");
                 }
             });
         },
@@ -202,6 +202,7 @@ var vm = new Vue({
                     vm.tenant.createdTime = response.tenant.createdTime;
                     vm.tenant.modifiedTime = response.tenant.modifiedTime;
                     vm.tenant.appIdList = response.appIdList;
+                    vm.userName = response.userName;
                     $.each(response.appNameList, function (index, item) {
                         vm.tenant.appNames.push(item);
                     })

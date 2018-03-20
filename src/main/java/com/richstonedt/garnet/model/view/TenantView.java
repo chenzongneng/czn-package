@@ -16,6 +16,16 @@ public class TenantView {
 
     private List<UserTenant> userTenants;
 
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     /**
      * The App name list.
      *

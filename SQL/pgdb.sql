@@ -232,6 +232,7 @@ CREATE TABLE gar_token
 	expired_time bigint DEFAULT 0 NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
+ALTER TABLE gar_token RENAME COLUMN user_name TO router_group_name;
 
 
 CREATE TABLE gar_users
@@ -277,6 +278,15 @@ CREATE TABLE gar_user_tenant_applications
 	tenant_id bigint,
 	application_id bigint,
 	status int DEFAULT 1 NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+DROP TABLE IF EXISTS gar_router_group;
+CREATE TABLE gar_router_group
+(
+	id bigint DEFAULT 0 NOT NULL UNIQUE,
+	group_name VARCHAR(256) NOT NULL,
+	app_code VARCHAR(256) NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
