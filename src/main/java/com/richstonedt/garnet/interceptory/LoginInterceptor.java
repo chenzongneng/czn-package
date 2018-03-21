@@ -15,7 +15,6 @@ import java.lang.annotation.Annotation;
  * 登录拦截器,样例 https://www.jianshu.com/p/97362fdf039e 可以按照此博客进行改造
  */
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {

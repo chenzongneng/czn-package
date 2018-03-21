@@ -11,6 +11,7 @@ import com.richstonedt.garnet.model.ApplicationTenant;
 import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.criteria.ApplicationTenantCriteria;
+import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
@@ -21,6 +22,7 @@ import com.richstonedt.garnet.service.UserTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -199,11 +201,26 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         PageUtil<Tenant> tenantPageInfo = tenantService.queryTenantssByParms(tenantParm);
 
-        for (Tenant tenant : tenantPageInfo.getList()) {
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicaitonId);
 
-            tenantIdList.add(tenant.getId());
-            tenantNameList.add(tenant.getName());
+        //返回已勾选的租户
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+        if (!CollectionUtils.isEmpty(applicationTenants)) {
+            for (ApplicationTenant applicationTenant : applicationTenants) {
+                Long tenantId = applicationTenant.getTenantId();
+                tenantIdList.add(tenantId);
+                Tenant tenant = tenantService.selectByPrimaryKey(tenantId);
+                if (!ObjectUtils.isEmpty(tenant)) {
+                    tenantNameList.add(tenant.getName());
+                }
+            }
         }
+
+//        for (Tenant tenant : tenantPageInfo.getList()) {
+////            tenantIdList.add(tenant.getId());
+//            tenantNameList.add(tenant.getName());
+//        }
 
         applicationView.setTenantIdList(tenantIdList);
         applicationView.setTenantNameList(tenantNameList);
@@ -218,15 +235,42 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         application.setStatus(0);
         this.updateByPrimaryKeySelective(application);
 
-        //删除关联外键
+
         if (!ObjectUtils.isEmpty(application) && !ObjectUtils.isEmpty(application.getId())) {
+            //删除关联外键
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
+            List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
+
+            //删除关联着此应用的租户
+            if (!CollectionUtils.isEmpty(applicationTenants)) {
+                for (ApplicationTenant applicationTenant : applicationTenants) {
+                    Long tenantId = applicationTenant.getTenantId();
+                    Tenant tenant = new Tenant();
+                    tenant.setId(tenantId);
+                    tenantService.updateStatusById(tenant);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean hasRelated(String ids) {
+        List<Long> idList = new ArrayList<>();
+        for (String id : ids.split(",")) {
+            idList.add(Long.parseLong(id));
         }
 
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andApplicationIdIn(idList);
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+        //如果应用有关联的租户，返回true
+        if (!CollectionUtils.isEmpty(applicationTenants)) {
+            return true;
+        }
 
-
+        return false;
     }
 
 }

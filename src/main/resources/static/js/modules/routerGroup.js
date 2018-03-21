@@ -7,17 +7,13 @@
 $(function () {
     /**  初始化应用列表  */
     $("#jqGrid").jqGrid({
-        url: baseURL + 'applications',
+        url: baseURL + 'routergroups',
         datatype: "json",
         colModel: [
-            {label: '应用ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
-            {label: '应用名称', name: 'name', align: 'center', width: 80},
-            {label: '应用标识', name: 'appCode', align: 'center', width: 80},
-            {label: '所属公司', name: 'company', align: 'center', width: 80},
-            {label: 'refreshResourcesApi', name: 'refreshResourcesApi', align: 'center', width: 80},
-            {label: '主机', name: 'hosts', align: 'center', width: 80},
-            {label: '创建时间', name: 'createdTime', align: 'center', width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', width: 80}
+            {label: 'ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
+            {label: '名称', name: 'groupName', align: 'center', width: 80},
+            // TODO routerGroup 应用列表显示
+            // {label: '应用列表', name: 'appCodeList', align: 'center', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -50,8 +46,8 @@ $(function () {
 });
 
 /** 用户树 */
-var tenantTree;
-var tenantTreeSetting = {
+var applicationTree;
+var applicationTreeSetting = {
     data: {
         simpleData: {
             enable: true,
@@ -75,20 +71,14 @@ var vm = new Vue({
         searchName: null,
         showList: true,
         title: null,
-        application: {
-
+        routerGroup: {
             id:null,
-            name: null,
-            code: null,
-            appCode: null,
-            company: null,
-            refreshResourcesApi: null,
-            createdTime: null,
-            hosts: null,
-            modifiedTime: null,
-            tenantNames: [],
-            tenantIds: ''
-        }
+            groupName: null,
+            appCode: null
+        },
+        applicationNames: [],
+        appCodeList: [],
+        applicationIds: ''
     },
     methods: {
         /**  查询按钮点击事件 */
@@ -99,64 +89,46 @@ var vm = new Vue({
         add: function () {
             vm.showList = false;
             vm.title = "新增";
-            vm.application = {
+            vm.appCodeList = [];
+            vm.routerGroup = {
                 id:null,
-                name: null,
-                code: null,
-                appCode: null,
-                company: null,
-                refreshResourcesApi: null,
-                createdTime: null,
-                hosts: null,
-                modifiedTime: null,
-                tenantNames: [],
-                tenantIds: null
+                groupName: null,
+                appCode: null
             };
 
-            // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
-                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
-                tenantTree.expandAll(true);
+            // 加载应用树
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+                applicationTree.expandAll(true);
             });
         },
         /**  更新按钮点击事件 */
         update: function () {
-            var applicationId = getSelectedRow();
-            if (!applicationId) {
+            var routerGroupId = getSelectedRow();
+
+            if (!routerGroupId) {
                 return;
             }
             vm.showList = false;
             vm.title = "修改";
-
-            vm.application.tenantIds = null;
-            vm.application.tenantNames = [];
+            vm.applicationIds = null;
+            vm.applicationNames = [];
+            vm.appCodeList = [];
             // 加载应用树
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
-                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
-                tenantTree.expandAll(true);
-                vm.getApplication(applicationId);
+            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+                applicationTree.expandAll(true);
+                vm.getrouterGroup(routerGroupId);
             });
         },
         /**  删除按钮点击事件 */
         del: function () {
-            var applicationIds = getSelectedRows();
-            var title;
-            if (!applicationIds) {
+            var routerGroupIds = getSelectedRows();
+            if (!routerGroupIds) {
                 return;
             }
-            $.get(baseURL + "applications/relate?ids=" + applicationIds, function (response) {
-
-                console.log(Boolean(response));
-                if (response == Boolean(true)) {
-                    title = "应用仍被其他租户关联，若确定则将关联租户一并删除，是否确定删除？";
-
-                } else {
-                    title = "确定要删除选中的记录";
-                }
-            });
-
             swal({
-                    title: title,
+                    title: "确定要删除选中的记录",
                     type: "warning",
                     showCancelButton: true,
                     closeOnConfirm: false,
@@ -167,8 +139,8 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "applications?ids=" + applicationIds.toString(),
-                        contentType: "application/json",
+                        url: baseURL + "routergroups?ids=" + routerGroupIds.toString(),
+                        contentType: "routerGroup/json",
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
@@ -182,22 +154,23 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-
             var obj = new Object();
-            obj.application = vm.application;
-            obj.tenantIds =vm.application.tenantIds;
+            obj.routerGroup = vm.routerGroup;
+            obj.applicationIds = vm.applicationIds;
+            obj.appCodeList = vm.appCodeList;
             // alert(JSON.stringify(obj));
-            if(vm.application.name === null){
-                alert("应用名称不能为空");
+            if(vm.routerGroup.groupName === null){
+                alert("名称不能为空");
                 return;
             }
 
             $.ajax({
-                type: vm.application.id === null ? "POST" : "PUT",
-                url: baseURL + "applications",
+                type: vm.routerGroup.id === null ? "POST" : "PUT",
+                url: baseURL + "routergroups",
                 contentType: "application/json",
                 data:JSON.stringify(obj),
                 dataType: "",
+                async: true,
                 success: function () {
                     vm.reload(false);
                     swal("操作成功!", "", "success");
@@ -208,34 +181,29 @@ var vm = new Vue({
             });
         },
         /**  根据ID获取应用信息 */
-        getApplication: function (applicationId) {
-            $.get(baseURL + "applications/" + applicationId, function (response) {
+        getrouterGroup: function (routerGroupId) {
+            $.get(baseURL + "routergroups/" + routerGroupId, function (response) {
 
                 response=response.data;
 
-                // alert(JSON.stringify(response));
-
                 if (response) {
-                    vm.application.id = response.application.id;
-                    vm.application.name = response.application.name;
-                    vm.application.appCode = response.application.appCode;
-                    vm.application.company = response.application.company;
-                    vm.application.refreshResourcesApi = response.application.refreshResourcesApi;
-                    vm.application.createdTime = response.application.createdTime;
-                    vm.application.modifiedTime = response.application.modifiedTime;
+                    vm.routerGroup.id = response.routerGroup.id;
+                    vm.routerGroup.groupName = response.routerGroup.groupName;
+                    vm.routerGroup.appCode = response.routerGroup.appCode;
+                    vm.applicationList = response.applicationIdList;
                     // 勾选已有租户
-                    $.each(response.tenantIdList, function (index, item) {
-                        var node = tenantTree.getNodeByParam("id", item);
-                        tenantTree.checkNode(node, true, false);
+                    $.each(response.applicationIdList, function (index, item) {
+                        var node = applicationTree.getNodeByParam("id", item);
+                        applicationTree.checkNode(node, true, false);
                     });
-                    $.each(response.tenantNameList, function (index, item) {
-                        vm.application.tenantNames.push(item);
+                    $.each(response.applicationNames, function (index, item) {
+                        vm.applicationNames.push(item);
                     })
                 }
             });
         },
         /**  租户树点击事件 */
-        tenantTree: function () {
+        applicationTree: function () {
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -244,19 +212,21 @@ var vm = new Vue({
                 area: ['300px', '450px'],
                 shade: 0,
                 shadeClose: false,
-                content: jQuery("#tenantLayer"),
+                content: jQuery("#applicationLayer"),
                 btn: ['确定', '取消'],
                 btn1: function (index) {
-                    vm.application.tenantNames = [];
-                    vm.application.tenantIds = "";
+                    vm.applicationNames = [];
+                    vm.applicationIds = "";
                     // 获取应用树选择的应用
-                    var tenantNodes = tenantTree.getCheckedNodes(true);
-                    var tenantIdList = [];
-                    for (var i = 0; i < tenantNodes.length; i++) {
-                        tenantIdList.push(tenantNodes[i].id);
-                        vm.application.tenantNames.push(tenantNodes[i].name);
+                    var applicationNodes = applicationTree.getCheckedNodes(true);
+                    var applicationIdList = [];
+                    for (var i = 0; i < applicationNodes.length; i++) {
+                        applicationIdList.push(applicationNodes[i].id);
+                        vm.applicationNames.push(applicationNodes[i].name);
+                        vm.appCodeList.push(applicationNodes[i].appCode);
                     }
-                    vm.application.tenantIds = tenantIdList.join(",");
+
+                    vm.applicationIds = applicationIdList.join(",");
                     layer.close(index);
                 }
             });

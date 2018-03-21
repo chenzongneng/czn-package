@@ -3,7 +3,7 @@ package com.richstonedt.garnet.model.criteria;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TokenCriteria {
+public class RouterGroupCriteria {
     /**
      *
      * @mbg.generated
@@ -29,7 +29,7 @@ public class TokenCriteria {
     protected List<Criteria> oredCriteria;
 
     /**
-     * TABLE： gar_token
+     * TABLE： gar_router_group
      *
      * @mbg.generated
      *
@@ -38,7 +38,7 @@ public class TokenCriteria {
     protected Integer start;
 
     /**
-     * TABLE： gar_token
+     * TABLE： gar_router_group
      *
      * @mbg.generated
      *
@@ -49,20 +49,20 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
      * DATE: 2018-03-21 11:54
      */
-    public TokenCriteria() {
+    public RouterGroupCriteria() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -75,7 +75,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -88,7 +88,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -101,7 +101,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -114,7 +114,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -127,7 +127,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -140,7 +140,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -155,7 +155,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -172,7 +172,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -186,7 +186,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -201,7 +201,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -214,7 +214,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -227,7 +227,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -240,7 +240,7 @@ public class TokenCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_router_group<br>
      *
      * @mbg.generated
      *
@@ -252,7 +252,7 @@ public class TokenCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_token
+     * 对应的数据库表为： gar_router_group
      *
      * @mbg.generated
      *
@@ -359,330 +359,150 @@ public class TokenCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andTokenIsNull() {
-            addCriterion("token is null");
+        public Criteria andGroupNameIsNull() {
+            addCriterion("group_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andTokenIsNotNull() {
-            addCriterion("token is not null");
+        public Criteria andGroupNameIsNotNull() {
+            addCriterion("group_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTokenEqualTo(String value) {
-            addCriterion("token =", value, "token");
+        public Criteria andGroupNameEqualTo(String value) {
+            addCriterion("group_name =", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotEqualTo(String value) {
-            addCriterion("token <>", value, "token");
+        public Criteria andGroupNameNotEqualTo(String value) {
+            addCriterion("group_name <>", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenGreaterThan(String value) {
-            addCriterion("token >", value, "token");
+        public Criteria andGroupNameGreaterThan(String value) {
+            addCriterion("group_name >", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenGreaterThanOrEqualTo(String value) {
-            addCriterion("token >=", value, "token");
+        public Criteria andGroupNameGreaterThanOrEqualTo(String value) {
+            addCriterion("group_name >=", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenLessThan(String value) {
-            addCriterion("token <", value, "token");
+        public Criteria andGroupNameLessThan(String value) {
+            addCriterion("group_name <", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenLessThanOrEqualTo(String value) {
-            addCriterion("token <=", value, "token");
+        public Criteria andGroupNameLessThanOrEqualTo(String value) {
+            addCriterion("group_name <=", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenLike(String value) {
-            addCriterion("token like", value, "token");
+        public Criteria andGroupNameLike(String value) {
+            addCriterion("group_name like", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotLike(String value) {
-            addCriterion("token not like", value, "token");
+        public Criteria andGroupNameNotLike(String value) {
+            addCriterion("group_name not like", value, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenIn(List<String> values) {
-            addCriterion("token in", values, "token");
+        public Criteria andGroupNameIn(List<String> values) {
+            addCriterion("group_name in", values, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotIn(List<String> values) {
-            addCriterion("token not in", values, "token");
+        public Criteria andGroupNameNotIn(List<String> values) {
+            addCriterion("group_name not in", values, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenBetween(String value1, String value2) {
-            addCriterion("token between", value1, value2, "token");
+        public Criteria andGroupNameBetween(String value1, String value2) {
+            addCriterion("group_name between", value1, value2, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotBetween(String value1, String value2) {
-            addCriterion("token not between", value1, value2, "token");
+        public Criteria andGroupNameNotBetween(String value1, String value2) {
+            addCriterion("group_name not between", value1, value2, "groupName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameIsNull() {
-            addCriterion("router_group_name is null");
+        public Criteria andAppCodeIsNull() {
+            addCriterion("app_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameIsNotNull() {
-            addCriterion("router_group_name is not null");
+        public Criteria andAppCodeIsNotNull() {
+            addCriterion("app_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameEqualTo(String value) {
-            addCriterion("router_group_name =", value, "routerGroupName");
+        public Criteria andAppCodeEqualTo(String value) {
+            addCriterion("app_code =", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotEqualTo(String value) {
-            addCriterion("router_group_name <>", value, "routerGroupName");
+        public Criteria andAppCodeNotEqualTo(String value) {
+            addCriterion("app_code <>", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameGreaterThan(String value) {
-            addCriterion("router_group_name >", value, "routerGroupName");
+        public Criteria andAppCodeGreaterThan(String value) {
+            addCriterion("app_code >", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameGreaterThanOrEqualTo(String value) {
-            addCriterion("router_group_name >=", value, "routerGroupName");
+        public Criteria andAppCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("app_code >=", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameLessThan(String value) {
-            addCriterion("router_group_name <", value, "routerGroupName");
+        public Criteria andAppCodeLessThan(String value) {
+            addCriterion("app_code <", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameLessThanOrEqualTo(String value) {
-            addCriterion("router_group_name <=", value, "routerGroupName");
+        public Criteria andAppCodeLessThanOrEqualTo(String value) {
+            addCriterion("app_code <=", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameLike(String value) {
-            addCriterion("router_group_name like", value, "routerGroupName");
+        public Criteria andAppCodeLike(String value) {
+            addCriterion("app_code like", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotLike(String value) {
-            addCriterion("router_group_name not like", value, "routerGroupName");
+        public Criteria andAppCodeNotLike(String value) {
+            addCriterion("app_code not like", value, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameIn(List<String> values) {
-            addCriterion("router_group_name in", values, "routerGroupName");
+        public Criteria andAppCodeIn(List<String> values) {
+            addCriterion("app_code in", values, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotIn(List<String> values) {
-            addCriterion("router_group_name not in", values, "routerGroupName");
+        public Criteria andAppCodeNotIn(List<String> values) {
+            addCriterion("app_code not in", values, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameBetween(String value1, String value2) {
-            addCriterion("router_group_name between", value1, value2, "routerGroupName");
+        public Criteria andAppCodeBetween(String value1, String value2) {
+            addCriterion("app_code between", value1, value2, "appCode");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotBetween(String value1, String value2) {
-            addCriterion("router_group_name not between", value1, value2, "routerGroupName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeIsNull() {
-            addCriterion("created_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeIsNotNull() {
-            addCriterion("created_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeEqualTo(Long value) {
-            addCriterion("created_time =", value, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeNotEqualTo(Long value) {
-            addCriterion("created_time <>", value, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeGreaterThan(Long value) {
-            addCriterion("created_time >", value, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeGreaterThanOrEqualTo(Long value) {
-            addCriterion("created_time >=", value, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeLessThan(Long value) {
-            addCriterion("created_time <", value, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeLessThanOrEqualTo(Long value) {
-            addCriterion("created_time <=", value, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeIn(List<Long> values) {
-            addCriterion("created_time in", values, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeNotIn(List<Long> values) {
-            addCriterion("created_time not in", values, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeBetween(Long value1, Long value2) {
-            addCriterion("created_time between", value1, value2, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreatedTimeNotBetween(Long value1, Long value2) {
-            addCriterion("created_time not between", value1, value2, "createdTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeIsNull() {
-            addCriterion("modified_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeIsNotNull() {
-            addCriterion("modified_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeEqualTo(Long value) {
-            addCriterion("modified_time =", value, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeNotEqualTo(Long value) {
-            addCriterion("modified_time <>", value, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeGreaterThan(Long value) {
-            addCriterion("modified_time >", value, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeGreaterThanOrEqualTo(Long value) {
-            addCriterion("modified_time >=", value, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeLessThan(Long value) {
-            addCriterion("modified_time <", value, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeLessThanOrEqualTo(Long value) {
-            addCriterion("modified_time <=", value, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeIn(List<Long> values) {
-            addCriterion("modified_time in", values, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeNotIn(List<Long> values) {
-            addCriterion("modified_time not in", values, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeBetween(Long value1, Long value2) {
-            addCriterion("modified_time between", value1, value2, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andModifiedTimeNotBetween(Long value1, Long value2) {
-            addCriterion("modified_time not between", value1, value2, "modifiedTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeIsNull() {
-            addCriterion("expired_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeIsNotNull() {
-            addCriterion("expired_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeEqualTo(Long value) {
-            addCriterion("expired_time =", value, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeNotEqualTo(Long value) {
-            addCriterion("expired_time <>", value, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeGreaterThan(Long value) {
-            addCriterion("expired_time >", value, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeGreaterThanOrEqualTo(Long value) {
-            addCriterion("expired_time >=", value, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeLessThan(Long value) {
-            addCriterion("expired_time <", value, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeLessThanOrEqualTo(Long value) {
-            addCriterion("expired_time <=", value, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeIn(List<Long> values) {
-            addCriterion("expired_time in", values, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeNotIn(List<Long> values) {
-            addCriterion("expired_time not in", values, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeBetween(Long value1, Long value2) {
-            addCriterion("expired_time between", value1, value2, "expiredTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andExpiredTimeNotBetween(Long value1, Long value2) {
-            addCriterion("expired_time not between", value1, value2, "expiredTime");
+        public Criteria andAppCodeNotBetween(String value1, String value2) {
+            addCriterion("app_code not between", value1, value2, "appCode");
             return (Criteria) this;
         }
     }
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_token
+     * 对应的数据库表为： gar_router_group
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
@@ -697,7 +517,7 @@ public class TokenCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_token
+     * 对应的数据库表为： gar_router_group
      *
      * @mbg.generated
      *

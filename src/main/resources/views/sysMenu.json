@@ -152,6 +152,18 @@
         "orderNum": 3,
         "open": null,
         "list": null
+      }, {
+        "menuId": 13,
+        "parentId": 9,
+        "parentName": null,
+        "name": "RouterGroup管理",
+        "url": "modules/routerGroup.html",
+        "type": 1,
+        "icon": "fa fa-th-list",
+        "code": "garnetDevelopmentRouterGroup",
+        "orderNum": 4,
+        "open": null,
+        "list": null
       }
 
     ]

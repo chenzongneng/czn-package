@@ -40,5 +40,9 @@
   "garnetDevelopmentresourceDynamicProperty": true,
   "garnetDevelopmentresourceDynamicPropertyAdd": true,
   "garnetDevelopmentresourceDynamicPropertyUpdate": true,
-  "garnetDevelopmentresourceDynamicPropertyDelete": true
+  "garnetDevelopmentresourceDynamicPropertyDelete": true,
+  "garnetDevelopmentRouterGroup": true,
+  "garnetDevelopmentRouterGroupAdd": true,
+  "garnetDevelopmentRouterGroupUpdate": true,
+  "garnetDevelopmentRouterGroupDelete": true
 }

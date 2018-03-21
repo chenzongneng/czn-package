@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.richstonedt.garnet.mapper.TokenMapper">
-  <resultMap id="BaseResultMap" type="com.richstonedt.garnet.model.Token">
+<mapper namespace="com.richstonedt.garnet.mapper.RouterGroupMapper">
+  <resultMap id="BaseResultMap" type="com.richstonedt.garnet.model.RouterGroup">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="token" jdbcType="VARCHAR" property="token" />
-    <result column="router_group_name" jdbcType="VARCHAR" property="routerGroupName" />
-    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
-    <result column="modified_time" jdbcType="BIGINT" property="modifiedTime" />
-    <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="app_code" jdbcType="VARCHAR" property="appCode" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -88,9 +85,9 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    id, token, router_group_name, created_time, modified_time, expired_time
+    id, group_name, app_code
   </sql>
-  <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultMap="BaseResultMap">
+  <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.RouterGroupCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
@@ -101,7 +98,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from gar_token
+    from gar_router_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -118,9 +115,9 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    select
+    select 
     <include refid="Base_Column_List" />
-    from gar_token
+    from gar_router_group
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -129,88 +126,68 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    delete from gar_token
+    delete from gar_router_group
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria">
+  <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.RouterGroupCriteria">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    delete from gar_token
+    delete from gar_router_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.richstonedt.garnet.model.Token">
+  <insert id="insert" parameterType="com.richstonedt.garnet.model.RouterGroup">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    insert into gar_token (id, token, router_group_name,
-    created_time, modified_time, expired_time
-    )
-    values (#{id,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{routerGroupName,jdbcType=VARCHAR},
-    #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT}, #{expiredTime,jdbcType=BIGINT}
-    )
+    insert into gar_router_group (id, group_name, app_code
+      )
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{appCode,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Token">
+  <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.RouterGroup">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    insert into gar_token
+    insert into gar_router_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="token != null">
-        token,
+      <if test="groupName != null">
+        group_name,
       </if>
-      <if test="routerGroupName != null">
-        router_group_name,
-      </if>
-      <if test="createdTime != null">
-        created_time,
-      </if>
-      <if test="modifiedTime != null">
-        modified_time,
-      </if>
-      <if test="expiredTime != null">
-        expired_time,
+      <if test="appCode != null">
+        app_code,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="token != null">
-        #{token,jdbcType=VARCHAR},
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="routerGroupName != null">
-        #{routerGroupName,jdbcType=VARCHAR},
-      </if>
-      <if test="createdTime != null">
-        #{createdTime,jdbcType=BIGINT},
-      </if>
-      <if test="modifiedTime != null">
-        #{modifiedTime,jdbcType=BIGINT},
-      </if>
-      <if test="expiredTime != null">
-        #{expiredTime,jdbcType=BIGINT},
+      <if test="appCode != null">
+        #{appCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultType="java.lang.Long">
+  <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.RouterGroupCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    select count(*) from gar_token
+    select count(*) from gar_router_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -221,25 +198,16 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    update gar_token
+    update gar_router_group
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.token != null">
-        token = #{record.token,jdbcType=VARCHAR},
+      <if test="record.groupName != null">
+        group_name = #{record.groupName,jdbcType=VARCHAR},
       </if>
-      <if test="record.routerGroupName != null">
-        router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createdTime != null">
-        created_time = #{record.createdTime,jdbcType=BIGINT},
-      </if>
-      <if test="record.modifiedTime != null">
-        modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-      </if>
-      <if test="record.expiredTime != null">
-        expired_time = #{record.expiredTime,jdbcType=BIGINT},
+      <if test="record.appCode != null">
+        app_code = #{record.appCode,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -252,58 +220,43 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    update gar_token
+    update gar_router_group
     set id = #{record.id,jdbcType=BIGINT},
-    token = #{record.token,jdbcType=VARCHAR},
-    router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
-    created_time = #{record.createdTime,jdbcType=BIGINT},
-    modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-    expired_time = #{record.expiredTime,jdbcType=BIGINT}
+      group_name = #{record.groupName,jdbcType=VARCHAR},
+      app_code = #{record.appCode,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.richstonedt.garnet.model.Token">
+  <update id="updateByPrimaryKeySelective" parameterType="com.richstonedt.garnet.model.RouterGroup">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    update gar_token
+    update gar_router_group
     <set>
-      <if test="token != null">
-        token = #{token,jdbcType=VARCHAR},
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="routerGroupName != null">
-        router_group_name = #{routerGroupName,jdbcType=VARCHAR},
-      </if>
-      <if test="createdTime != null">
-        created_time = #{createdTime,jdbcType=BIGINT},
-      </if>
-      <if test="modifiedTime != null">
-        modified_time = #{modifiedTime,jdbcType=BIGINT},
-      </if>
-      <if test="expiredTime != null">
-        expired_time = #{expiredTime,jdbcType=BIGINT},
+      <if test="appCode != null">
+        app_code = #{appCode,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.Token">
+  <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.RouterGroup">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    update gar_token
-    set token = #{token,jdbcType=VARCHAR},
-    router_group_name = #{routerGroupName,jdbcType=VARCHAR},
-    created_time = #{createdTime,jdbcType=BIGINT},
-    modified_time = #{modifiedTime,jdbcType=BIGINT},
-    expired_time = #{expiredTime,jdbcType=BIGINT}
+    update gar_router_group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      app_code = #{appCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultMap="BaseResultMap">
+  <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.RouterGroupCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
@@ -314,7 +267,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from gar_token
+    from gar_router_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -328,47 +281,29 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-03-21 11:54
     -->
-    insert into gar_token
+    insert into gar_router_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="list[0].id!=null">
         id,
       </if>
-      <if test="list[0].token!=null">
-        token,
+      <if test="list[0].groupName!=null">
+        group_name,
       </if>
-      <if test="list[0].routerGroupName!=null">
-        router_group_name,
-      </if>
-      <if test="list[0].createdTime!=null">
-        created_time,
-      </if>
-      <if test="list[0].modifiedTime!=null">
-        modified_time,
-      </if>
-      <if test="list[0].expiredTime!=null">
-        expired_time,
+      <if test="list[0].appCode!=null">
+        app_code,
       </if>
     </trim>
-    values
+     values 
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
           #{item.id,jdbcType=BIGINT},
         </if>
-        <if test="item.token!=null">
-          #{item.token,jdbcType=VARCHAR},
+        <if test="item.groupName!=null">
+          #{item.groupName,jdbcType=VARCHAR},
         </if>
-        <if test="item.routerGroupName!=null">
-          #{item.routerGroupName,jdbcType=VARCHAR},
-        </if>
-        <if test="item.createdTime!=null">
-          #{item.createdTime,jdbcType=BIGINT},
-        </if>
-        <if test="item.modifiedTime!=null">
-          #{item.modifiedTime,jdbcType=BIGINT},
-        </if>
-        <if test="item.expiredTime!=null">
-          #{item.expiredTime,jdbcType=BIGINT},
+        <if test="item.appCode!=null">
+          #{item.appCode,jdbcType=VARCHAR},
         </if>
       </trim>
     </foreach>
@@ -380,25 +315,16 @@
       DATE: 2018-03-21 11:54
     -->
     <foreach collection="list" index="index" item="item" separator=";">
-      update gar_token
+      update gar_router_group
       <set>
-        <if test="item.token!=null">
-          token=#{item.token,jdbcType=VARCHAR},
+        <if test="item.groupName!=null">
+          group_name=#{item.groupName,jdbcType=VARCHAR},
         </if>
-        <if test="item.routerGroupName!=null">
-          router_group_name=#{item.routerGroupName,jdbcType=VARCHAR},
-        </if>
-        <if test="item.createdTime!=null">
-          created_time=#{item.createdTime,jdbcType=BIGINT},
-        </if>
-        <if test="item.modifiedTime!=null">
-          modified_time=#{item.modifiedTime,jdbcType=BIGINT},
-        </if>
-        <if test="item.expiredTime!=null">
-          expired_time=#{item.expiredTime,jdbcType=BIGINT},
+        <if test="item.appCode!=null">
+          app_code=#{item.appCode,jdbcType=VARCHAR},
         </if>
       </set>
-      where
+      where 
       id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>
