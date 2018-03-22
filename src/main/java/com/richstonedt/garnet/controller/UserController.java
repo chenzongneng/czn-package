@@ -2,6 +2,8 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginMessage;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.UserParm;
@@ -13,13 +15,14 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -53,7 +56,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/users", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createUser(
-            @ApiParam(value = "用户", required = true) @RequestBody UserView userView,
+        @ApiParam(value = "用户", required = true) @RequestBody UserView userView,
             UriComponentsBuilder ucBuilder) {
 
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
@@ -124,6 +127,8 @@ public class UserController {
 //                userView.setUser(user);
 //                userService.deleteUser(userView);
 //            }
+
+            System.out.println(ids);
 
             for (String id : ids.split(",")) {
                 User user = new User();
@@ -213,24 +218,29 @@ public class UserController {
         }
     }
 
+
     @ApiOperation(value = "[Garnet]用户登录", notes = "用户登录")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/userLogin", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> login(
-            @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView,
-            UriComponentsBuilder ucBuilder) {
+    @LoginRequired
+    @RequestMapping(value = "/users/login", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
+            @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
 
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
-
         try {
-
-            UserProfile userProfile = userService.userLogin(loginView);
-
+            LoginMessage loginMessage = userService.userLogin(loginView);
+            if (StringUtils.isEmpty(loginMessage.getToken())) {
+                error = "登录失败，请重新登录";
+            }
+            HttpSession session = request.getSession();
+            session.setAttribute("token", loginMessage.getToken());
+            response.setHeader("token", loginMessage.getToken());
             // 设置http的headers
-            return new ResponseEntity<>(userProfile, HttpStatus.OK);
+            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
         } catch (Throwable t) {
             error = t.getMessage();
             LOG.error(error, t);
@@ -262,5 +272,4 @@ public class UserController {
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }
     }
-
 }

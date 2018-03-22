@@ -111,7 +111,6 @@ public class GsonUtil {
         return list;
     }
 
-
     /**
      * 转成map的
      *

@@ -11,6 +11,16 @@ public class LoginView {
 
     private String vcode;
 
+    private String appCode;
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public void setAppCode(String appCode) {
+        this.appCode = appCode;
+    }
+
     /**
      * Gets user name.
      *

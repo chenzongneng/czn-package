@@ -18,4 +18,6 @@ public interface RouterGroupService extends BaseService<RouterGroup, RouterGroup
     PageUtil queryRouterGroupByParms(RouterGroupParm routerGroupParm);
 
     RouterGroupView selectRouterByIdWithApp(Long id);
+
+    String getGroupNameByAppCode(String appCode);
 }

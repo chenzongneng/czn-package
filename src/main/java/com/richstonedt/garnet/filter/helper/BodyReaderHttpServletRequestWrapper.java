@@ -13,8 +13,7 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 
 
-public class BodyReaderHttpServletRequestWrapper extends
-        HttpServletRequestWrapper {
+public class BodyReaderHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private final byte[] body;
 

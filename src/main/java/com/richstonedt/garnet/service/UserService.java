@@ -2,6 +2,7 @@ package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceException;
+import com.richstonedt.garnet.interceptory.LoginMessage;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
@@ -48,12 +49,19 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
     /**
      * 登录验证
      */
-    public UserProfile userLogin(LoginView loginView) throws GarnetServiceException;
+    public LoginMessage userLogin(LoginView loginView) throws Exception;
 
     /**
      * 通过id获取User
      */
     public UserView getUserById(Long userId);
+
+    /**
+     * 通过账号拿user
+     * @param userName
+     * @return
+     */
+    User getUserByUserName(String userName);
 
     /**
      * 当用户点击删除时，将其状态设为禁用

@@ -258,7 +258,8 @@ var vm = new Vue({
             vm.getAppList();
             vm.getTenantList();
             vm.getTypeList();
-            getResourceDynamicPropertyById();
+            vm.getResourceDynamicPropertyByType();
+            // vm.getResourceDynamicPropertyById();
             // vm.initTreesToAdd();
             // vm.loadResourceTree();
         },
@@ -488,7 +489,12 @@ var vm = new Vue({
         },
         //通过type获取动态资源列表的description
         getResourceDynamicPropertyByType: function () {
-            $.get(baseURL + "resourcedynamicpropertys/type/" + vm.typeList.selectedType, function (response) {
+            var type = vm.typeList.selectedType;
+            if(type == null || type == "") {
+                return;
+            }
+
+            $.get(baseURL + "resourcedynamicpropertys/type/" + type, function (response) {
                 response = response.data;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
 

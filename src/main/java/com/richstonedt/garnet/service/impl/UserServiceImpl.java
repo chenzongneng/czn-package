@@ -4,26 +4,23 @@ import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceException;
+import com.richstonedt.garnet.interceptory.JwtToken;
+import com.richstonedt.garnet.interceptory.LoginMessage;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.UserMapper;
 import com.richstonedt.garnet.model.*;
-import com.richstonedt.garnet.model.criteria.GroupUserCriteria;
-import com.richstonedt.garnet.model.criteria.UserCredentialCriteria;
-import com.richstonedt.garnet.model.criteria.UserCriteria;
-import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
+import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.UserParm;
 import com.richstonedt.garnet.model.view.LoginView;
 import com.richstonedt.garnet.model.view.UserProfile;
 import com.richstonedt.garnet.model.view.UserView;
-import com.richstonedt.garnet.service.GroupUserService;
-import com.richstonedt.garnet.service.UserCredentialService;
-import com.richstonedt.garnet.service.UserService;
-import com.richstonedt.garnet.service.UserTenantService;
+import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -47,6 +44,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RouterGroupService routerGroupService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -242,7 +245,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         userCriteria.createCriteria().andStatusEqualTo(1);
         //获取tenantId,获取统一租户下的所有用户的列表
         if (!ObjectUtils.isEmpty(userParm.getTenantId())) {
-
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
             userTenantCriteria.createCriteria().andTenantIdEqualTo(userParm.getTenantId());
             List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
@@ -267,39 +269,68 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     }
 
     @Override
-    public UserProfile userLogin(LoginView loginView) throws GarnetServiceException {
+    public LoginMessage userLogin(LoginView loginView) throws Exception {
 
         UserCriteria userCriteria = new UserCriteria();
-
-        UserProfile userProfile = new UserProfile();
-
+        LoginMessage loginMessage = new LoginMessage();
         userCriteria.createCriteria().andUserNameEqualTo(loginView.getUserName());
-
         User user = this.selectSingleByCriteria(userCriteria);
-
         if (ObjectUtils.isEmpty(user)) {
-
-            userProfile.setMessage("用户不存在");
-            return userProfile;
+            loginMessage.setMessage("用户不存在");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
         }
 
-        //获取密码
+        //获取密码,验证密码是否正确
         UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
         userCredentialCriteria.createCriteria().andUserIdEqualTo(user.getId());
         UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
-
         if (!userCredential.getCredential().equals(loginView.getPassword())) {
-
-            userProfile.setMessage("密码不正确");
-            return userProfile;
+            loginMessage.setMessage("密码不正确");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
 
         }
-        //todo
-        //需要生成token返回
 
-        userProfile.setUser(user);
-        userProfile.setLoginStatus("success");
-        return userProfile;
+        //生成token返回
+        String token = JwtToken.createToken(user.getUserName(), loginView.getAppCode(),userCredential.getCredential());
+        loginMessage.setToken(token);
+        loginMessage.setUser(user);
+        loginMessage.setLoginStatus("success");
+
+        //将token插入数据库
+        if (StringUtils.isEmpty(loginView.getAppCode())) {
+            loginMessage.setMessage("请选择要登录的应用");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(403);
+            return loginMessage;
+        }
+
+        String routerGroupName = routerGroupService.getGroupNameByAppCode(loginView.getAppCode());
+        TokenCriteria tokenCriteria = new TokenCriteria();
+        tokenCriteria.createCriteria().andRouterGroupNameEqualTo(routerGroupName);
+        Token tokenOld = tokenService.selectSingleByCriteria(tokenCriteria);
+        //如果是第一次登录，将token插入数据库
+        if (ObjectUtils.isEmpty(tokenOld)) {
+            Token token1 = new Token();
+            token1.setCreatedTime(System.currentTimeMillis());
+            token1.setModifiedTime(System.currentTimeMillis());
+            Long expiredTime = token1.getCreatedTime() + 30 * 60000L;
+            token1.setExpiredTime(expiredTime);
+            token1.setId(IdGeneratorUtil.generateId());
+            token1.setRouterGroupName(routerGroupName);
+            token1.setToken(token);
+            tokenService.insertSelective(token1);
+        } else {
+            tokenOld.setToken(token);
+            tokenOld.setModifiedTime(System.currentTimeMillis());
+            Long expiredTime = tokenOld.getModifiedTime() + 30 * 60000L;
+            tokenOld.setExpiredTime(expiredTime);
+            tokenService.insertSelective(tokenOld);
+        }
+        return loginMessage;
     }
 
     @Override
@@ -318,6 +349,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         userView.setExpiredDateTime(userCredential.getExpiredDateTime());
 
         return userView;
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.createCriteria().andUserNameEqualTo(userName);
+        User user = this.selectSingleByCriteria(userCriteria);
+        return user;
     }
 
     @Override

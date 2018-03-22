@@ -164,4 +164,13 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         routerGroupView.setApplicationNames(applicationNames);
         return routerGroupView;
     }
+
+    @Override
+    public String getGroupNameByAppCode(String appCode) {
+        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.createCriteria().andAppCodeEqualTo(appCode);
+        RouterGroup routerGroup = this.selectSingleByCriteria(routerGroupCriteria);
+        String groupName = routerGroup.getGroupName();
+        return groupName;
+    }
 }

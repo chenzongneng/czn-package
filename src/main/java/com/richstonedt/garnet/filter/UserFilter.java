@@ -2,6 +2,8 @@ package com.richstonedt.garnet.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
@@ -20,6 +22,7 @@ public class UserFilter implements Filter {
 //        HttpServletRequest hreq = (HttpServletRequest) servletRequest;
 //
 //        HttpServletResponse hresponse = (HttpServletResponse) servletResponse;
+
 //
 //        //获取uri
 //        String uri = hreq.getRequestURI();
@@ -57,8 +60,8 @@ public class UserFilter implements Filter {
 //                response.setContentType("application/json; charset=utf-8");
 //
 //                ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper(hreq);
-//                String body =  HttpHelper.getBodyString(requestWrapper);
-//
+////                String body =  HttpHelper.getBodyString(requestWrapper);
+////
 //                //如果是POST请求则需要获取 param 参数
 //                String param = URLDecoder.decode(body,"utf-8");
 //                //String param = hreq.getParameter("param");
