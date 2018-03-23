@@ -170,6 +170,11 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
         routerGroupCriteria.createCriteria().andAppCodeEqualTo(appCode);
         RouterGroup routerGroup = this.selectSingleByCriteria(routerGroupCriteria);
+        //返回空给拦截器添加返回信息
+        if (ObjectUtils.isEmpty(routerGroup)) {
+            return null;
+        }
+
         String groupName = routerGroup.getGroupName();
         return groupName;
     }

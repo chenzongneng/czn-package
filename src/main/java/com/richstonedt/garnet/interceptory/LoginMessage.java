@@ -1,6 +1,9 @@
 package com.richstonedt.garnet.interceptory;
 
+import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.User;
+
+import java.util.List;
 
 public class LoginMessage {
 
@@ -13,6 +16,16 @@ public class LoginMessage {
     private String token;
 
     private int code;
+
+    private List<Resource> resourceList;
+
+    public List<Resource> getResourceList() {
+        return resourceList;
+    }
+
+    public void setResourceList(List<Resource> resourceList) {
+        this.resourceList = resourceList;
+    }
 
     public int getCode() {
         return code;

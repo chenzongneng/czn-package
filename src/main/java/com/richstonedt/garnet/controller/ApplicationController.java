@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.service.ApplicationService;
 import io.swagger.annotations.*;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,6 +182,7 @@ public class ApplicationController {
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户Id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
             @ApiParam(value = "searchName", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
+            @ApiParam(value = "modeId", defaultValue = "", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) Integer modeId, //默认搜索PAAS
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
         try {
@@ -190,6 +192,7 @@ public class ApplicationController {
             applicationParm.setPageNumber(pageNumber);
             applicationParm.setPageSize(pageSize);
             applicationParm.setSearchName(searchName);
+            applicationParm.setModeId(modeId);
             PageUtil applications = applicationService.queryApplicationsByParms(applicationParm);
             // 封装返回信息
 //            GarnetMessage<PageInfo<Application>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, applications);

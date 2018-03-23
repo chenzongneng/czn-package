@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +45,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     @Autowired
     private TenantService tenantService;
+
+    private static final String SERVICE_MODE_SAAS = "saas";
+
+    private static final String SERVICE_MODE_PAAS = "paas";
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -145,8 +150,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
 
-        applicationCriteria.createCriteria().andStatusEqualTo(1);
-
         //根据tenant id 获取user对应的应用
         if (!ObjectUtils.isEmpty(applicationParm.getTenantId())) {
 
@@ -164,12 +167,23 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             if (applicationTenantIds.size() == 0) {
                 applicationTenantIds.add(GarnetContants.NON_VALUE);
             }
-
             applicationCriteria.createCriteria().andIdIn(applicationTenantIds);
         }
 
         if (!ObjectUtils.isEmpty(applicationParm.getSearchName())) {
             applicationCriteria.createCriteria().andNameLike("%" + applicationParm.getSearchName() + "%");
+        }
+
+        if (StringUtils.isEmpty(applicationParm.getModeId())) {
+            //查询status为1，即没被删除的
+            applicationCriteria.createCriteria().andStatusEqualTo(1);
+        } else if (applicationParm.getModeId() == 0) {
+            applicationCriteria.createCriteria().andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
+        } else if (applicationParm.getModeId() == 1) {
+            applicationCriteria.createCriteria().andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
+        } else {
+            //查询status为1，即没被删除的
+            applicationCriteria.createCriteria().andStatusEqualTo(1);
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());

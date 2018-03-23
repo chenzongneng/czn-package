@@ -11,6 +11,15 @@ public class TenantParm extends BaseParm {
 
     private Long applicationId;
 
+    private Integer modeId; //0为SAAS 1为PAAS
+
+    public Integer getModeId() {
+        return modeId;
+    }
+
+    public void setModeId(Integer modeId) {
+        this.modeId = modeId;
+    }
 
     /**
      * Gets tenant.

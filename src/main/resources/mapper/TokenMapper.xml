@@ -5,20 +5,21 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="token" jdbcType="VARCHAR" property="token" />
-    <result column="router_group_name" jdbcType="VARCHAR" property="routerGroupName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="created_time" jdbcType="BIGINT" property="createdTime" />
     <result column="modified_time" jdbcType="BIGINT" property="modifiedTime" />
     <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
+    <result column="router_group_name" jdbcType="VARCHAR" property="routerGroupName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -52,7 +53,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -86,15 +87,15 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
-    id, token, router_group_name, created_time, modified_time, expired_time
+    id, token, user_name, created_time, modified_time, expired_time, router_group_name
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     select
     <if test="distinct">
@@ -116,7 +117,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     select
     <include refid="Base_Column_List" />
@@ -127,7 +128,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     delete from gar_token
     where id = #{id,jdbcType=BIGINT}
@@ -136,7 +137,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     delete from gar_token
     <if test="_parameter != null">
@@ -147,20 +148,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
-    insert into gar_token (id, token, router_group_name,
-    created_time, modified_time, expired_time
-    )
-    values (#{id,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{routerGroupName,jdbcType=VARCHAR},
-    #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT}, #{expiredTime,jdbcType=BIGINT}
-    )
+    insert into gar_token (id, token, user_name,
+    created_time, modified_time, expired_time,
+    router_group_name)
+    values (#{id,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+    #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT}, #{expiredTime,jdbcType=BIGINT},
+    #{routerGroupName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Token">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     insert into gar_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -170,8 +171,8 @@
       <if test="token != null">
         token,
       </if>
-      <if test="routerGroupName != null">
-        router_group_name,
+      <if test="userName != null">
+        user_name,
       </if>
       <if test="createdTime != null">
         created_time,
@@ -182,6 +183,9 @@
       <if test="expiredTime != null">
         expired_time,
       </if>
+      <if test="routerGroupName != null">
+        router_group_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -190,8 +194,8 @@
       <if test="token != null">
         #{token,jdbcType=VARCHAR},
       </if>
-      <if test="routerGroupName != null">
-        #{routerGroupName,jdbcType=VARCHAR},
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=BIGINT},
@@ -202,13 +206,16 @@
       <if test="expiredTime != null">
         #{expiredTime,jdbcType=BIGINT},
       </if>
+      <if test="routerGroupName != null">
+        #{routerGroupName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     select count(*) from gar_token
     <if test="_parameter != null">
@@ -219,7 +226,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     update gar_token
     <set>
@@ -229,8 +236,8 @@
       <if test="record.token != null">
         token = #{record.token,jdbcType=VARCHAR},
       </if>
-      <if test="record.routerGroupName != null">
-        router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.createdTime != null">
         created_time = #{record.createdTime,jdbcType=BIGINT},
@@ -241,6 +248,9 @@
       <if test="record.expiredTime != null">
         expired_time = #{record.expiredTime,jdbcType=BIGINT},
       </if>
+      <if test="record.routerGroupName != null">
+        router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -250,15 +260,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     update gar_token
     set id = #{record.id,jdbcType=BIGINT},
     token = #{record.token,jdbcType=VARCHAR},
-    router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
+    user_name = #{record.userName,jdbcType=VARCHAR},
     created_time = #{record.createdTime,jdbcType=BIGINT},
     modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-    expired_time = #{record.expiredTime,jdbcType=BIGINT}
+    expired_time = #{record.expiredTime,jdbcType=BIGINT},
+    router_group_name = #{record.routerGroupName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -267,15 +278,15 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     update gar_token
     <set>
       <if test="token != null">
         token = #{token,jdbcType=VARCHAR},
       </if>
-      <if test="routerGroupName != null">
-        router_group_name = #{routerGroupName,jdbcType=VARCHAR},
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null">
         created_time = #{createdTime,jdbcType=BIGINT},
@@ -286,6 +297,9 @@
       <if test="expiredTime != null">
         expired_time = #{expiredTime,jdbcType=BIGINT},
       </if>
+      <if test="routerGroupName != null">
+        router_group_name = #{routerGroupName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -293,21 +307,22 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     update gar_token
     set token = #{token,jdbcType=VARCHAR},
-    router_group_name = #{routerGroupName,jdbcType=VARCHAR},
+    user_name = #{userName,jdbcType=VARCHAR},
     created_time = #{createdTime,jdbcType=BIGINT},
     modified_time = #{modifiedTime,jdbcType=BIGINT},
-    expired_time = #{expiredTime,jdbcType=BIGINT}
+    expired_time = #{expiredTime,jdbcType=BIGINT},
+    router_group_name = #{routerGroupName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     select
     <if test="distinct">
@@ -326,7 +341,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     insert into gar_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -336,8 +351,8 @@
       <if test="list[0].token!=null">
         token,
       </if>
-      <if test="list[0].routerGroupName!=null">
-        router_group_name,
+      <if test="list[0].userName!=null">
+        user_name,
       </if>
       <if test="list[0].createdTime!=null">
         created_time,
@@ -347,6 +362,9 @@
       </if>
       <if test="list[0].expiredTime!=null">
         expired_time,
+      </if>
+      <if test="list[0].routerGroupName!=null">
+        router_group_name,
       </if>
     </trim>
     values
@@ -358,8 +376,8 @@
         <if test="item.token!=null">
           #{item.token,jdbcType=VARCHAR},
         </if>
-        <if test="item.routerGroupName!=null">
-          #{item.routerGroupName,jdbcType=VARCHAR},
+        <if test="item.userName!=null">
+          #{item.userName,jdbcType=VARCHAR},
         </if>
         <if test="item.createdTime!=null">
           #{item.createdTime,jdbcType=BIGINT},
@@ -370,6 +388,9 @@
         <if test="item.expiredTime!=null">
           #{item.expiredTime,jdbcType=BIGINT},
         </if>
+        <if test="item.routerGroupName!=null">
+          #{item.routerGroupName,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -377,7 +398,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-23 16:01
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_token
@@ -385,8 +406,8 @@
         <if test="item.token!=null">
           token=#{item.token,jdbcType=VARCHAR},
         </if>
-        <if test="item.routerGroupName!=null">
-          router_group_name=#{item.routerGroupName,jdbcType=VARCHAR},
+        <if test="item.userName!=null">
+          user_name=#{item.userName,jdbcType=VARCHAR},
         </if>
         <if test="item.createdTime!=null">
           created_time=#{item.createdTime,jdbcType=BIGINT},
@@ -396,6 +417,9 @@
         </if>
         <if test="item.expiredTime!=null">
           expired_time=#{item.expiredTime,jdbcType=BIGINT},
+        </if>
+        <if test="item.routerGroupName!=null">
+          router_group_name=#{item.routerGroupName,jdbcType=VARCHAR},
         </if>
       </set>
       where

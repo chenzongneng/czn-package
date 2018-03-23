@@ -18,6 +18,16 @@ public class TenantView {
 
     private String userName;
 
+    private Integer modeId;
+
+    public Integer getModeId() {
+        return modeId;
+    }
+
+    public void setModeId(Integer modeId) {
+        this.modeId = modeId;
+    }
+
     public String getUserName() {
         return userName;
     }

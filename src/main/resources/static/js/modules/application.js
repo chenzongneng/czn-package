@@ -75,8 +75,9 @@ var vm = new Vue({
         searchName: null,
         showList: true,
         title: null,
+        modeId: 1,// SAAS为0，PAAS为1
+        modeName: null,
         application: {
-
             id:null,
             name: null,
             code: null,
@@ -87,7 +88,25 @@ var vm = new Vue({
             hosts: null,
             modifiedTime: null,
             tenantNames: [],
-            tenantIds: ''
+            tenantIds: '',
+            serviceMode: null,
+            tenantIdList: []
+        },
+        // 选择模式列表
+        modeList: {
+            selectedMode: 1,
+            options: [
+            //     {
+            //     id : -1,
+            //     name : "ALL"
+            // },
+            {
+                id : 0,
+                name : "SASS"
+            },{
+                id : 1,
+                name : "PASS"
+            }]
         }
     },
     methods: {
@@ -187,8 +206,53 @@ var vm = new Vue({
             obj.application = vm.application;
             obj.tenantIds =vm.application.tenantIds;
             // alert(JSON.stringify(obj));
+            var tenantIdList = vm.application.tenantIdList;
             if(vm.application.name === null){
                 alert("应用名称不能为空");
+                return;
+            }
+
+            if (vm.modeId == null) {
+                vm.modeId = vm.modeList.selectedMode;
+            }
+
+            console.log("modeId == " + vm.modeId);
+
+            if(vm.modeId == 0) {  //saas
+                vm.application.serviceMode = "saas";
+                // console.log("my modeId is : " + vm.modeId);
+            } else if(vm.modeId == 1) {
+                vm.application.serviceMode = "paas"
+                if (tenantIdList.length > 1) {
+                    swal("当前模式不能添加多个租户", "", "error");
+                    return;
+                }
+                // console.log("my modeId is : " + vm.modeId);
+            } else {
+                swal({
+                    title: "当前默认为PAAS模式，是否确认添加",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: "#DD6B55"
+                }, function () {
+                    $.ajax({
+                        type: vm.application.id === null ? "POST" : "PUT",
+                        url: baseURL + "applications",
+                        contentType: "application/json",
+                        data:JSON.stringify(obj),
+                        dataType: "",
+                        success: function () {
+                            vm.reload(false);
+                            swal("操作成功!", "", "success");
+                        },
+                        error: function (response) {
+                            swal(response.responseJSON.errorMessage, "", "error");
+                        }
+                    });
+                });
                 return;
             }
 
@@ -257,9 +321,15 @@ var vm = new Vue({
                         vm.application.tenantNames.push(tenantNodes[i].name);
                     }
                     vm.application.tenantIds = tenantIdList.join(",");
+                    vm.application.tenantIdList = tenantIdList;
                     layer.close(index);
                 }
             });
+        },
+        //模式选择事件
+        selectMode: function () {
+            vm.modeId = vm.modeList.selectedMode;
+            vm.reload(true);
         },
         reload: function (backFirst) {
             vm.showList = true;
@@ -270,7 +340,10 @@ var vm = new Vue({
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'searchName': vm.searchName},
+                postData: {
+                    'searchName': vm.searchName,
+                    'modeId' : vm.modeId
+                },
                 page: page
             }).trigger("reloadGrid");
         }

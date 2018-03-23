@@ -224,10 +224,9 @@ public class UserController {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @LoginRequired
     @RequestMapping(value = "/users/login", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response,
-            @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
+//            @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
             @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
 
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
@@ -236,8 +235,49 @@ public class UserController {
             if (StringUtils.isEmpty(loginMessage.getToken())) {
                 error = "登录失败，请重新登录";
             }
-            HttpSession session = request.getSession();
-            session.setAttribute("token", loginMessage.getToken());
+//            HttpSession session = request.getSession();
+//            session.setAttribute("token", loginMessage.getToken());
+            response.setHeader("token", loginMessage.getToken());
+
+//            if (loginMessage.getCode() == 200) {
+//                //登录成功
+//                request.getRequestDispatcher("url").forward(request, response);
+//
+//            } else if (loginMessage.getCode() == 401) {
+//                //拒绝访问，用户不存在
+//                //重定向
+//                response.sendRedirect("url");
+//            } else if (loginMessage.getCode() == 403) {
+//                //账号或密码错误
+//            }
+
+            // 设置http的headers
+            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            error = t.getMessage();
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]刷新token", notes = "刷新token")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 409, message = "conflict"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @LoginRequired
+    @RequestMapping(value = "/users/refreshtoken", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> refreshToken(
+            HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
+            @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
+        String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
+        try {
+            LoginMessage loginMessage = userService.refreshToken(loginView);
+            if (StringUtils.isEmpty(loginMessage.getToken())) {
+                error = "刷新失败，请重新登录";
+            }
             response.setHeader("token", loginMessage.getToken());
             // 设置http的headers
             return new ResponseEntity<>(loginMessage, HttpStatus.OK);

@@ -176,6 +176,7 @@ public class TenantController {
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "应用Id", defaultValue = "", required = false) @RequestParam(value = "applicaionId", defaultValue = "", required = false) Long applicaionId,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @ApiParam(value = "mode", defaultValue = "0", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) int modeId, //默认搜索PAAS
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int limit) {
         try {
             TenantParm tenantParm = new TenantParm();
@@ -183,6 +184,7 @@ public class TenantController {
             tenantParm.setApplicationId(applicaionId);
             tenantParm.setPageSize(limit);
             tenantParm.setPageNumber(page);
+            tenantParm.setModeId(modeId);
             PageUtil result = tenantService.queryTenantssByParms(tenantParm);
             // 封装返回信息
             return new ResponseEntity<>(result, HttpStatus.OK);

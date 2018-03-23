@@ -232,7 +232,7 @@ CREATE TABLE gar_token
 	expired_time bigint DEFAULT 0 NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
-ALTER TABLE gar_token RENAME COLUMN user_name TO router_group_name;
+ALTER TABLE gar_token ADD COLUMN router_group_name varchar(256) DEFAULT '' NOT NULL;
 
 
 CREATE TABLE gar_users

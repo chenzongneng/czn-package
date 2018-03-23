@@ -8,4 +8,6 @@ public class GarnetContants {
 
     public final static Long NON_VALUE = -1L;
 
+    public final static Long TOKEN_EXPIRED_TIME = 30 * 60000L;
+
 }

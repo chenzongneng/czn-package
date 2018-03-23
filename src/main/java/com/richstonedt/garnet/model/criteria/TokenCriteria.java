@@ -8,7 +8,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public TokenCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -429,73 +429,73 @@ public class TokenCriteria {
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameIsNull() {
-            addCriterion("router_group_name is null");
+        public Criteria andUserNameIsNull() {
+            addCriterion("user_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameIsNotNull() {
-            addCriterion("router_group_name is not null");
+        public Criteria andUserNameIsNotNull() {
+            addCriterion("user_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameEqualTo(String value) {
-            addCriterion("router_group_name =", value, "routerGroupName");
+        public Criteria andUserNameEqualTo(String value) {
+            addCriterion("user_name =", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotEqualTo(String value) {
-            addCriterion("router_group_name <>", value, "routerGroupName");
+        public Criteria andUserNameNotEqualTo(String value) {
+            addCriterion("user_name <>", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameGreaterThan(String value) {
-            addCriterion("router_group_name >", value, "routerGroupName");
+        public Criteria andUserNameGreaterThan(String value) {
+            addCriterion("user_name >", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameGreaterThanOrEqualTo(String value) {
-            addCriterion("router_group_name >=", value, "routerGroupName");
+        public Criteria andUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("user_name >=", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameLessThan(String value) {
-            addCriterion("router_group_name <", value, "routerGroupName");
+        public Criteria andUserNameLessThan(String value) {
+            addCriterion("user_name <", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameLessThanOrEqualTo(String value) {
-            addCriterion("router_group_name <=", value, "routerGroupName");
+        public Criteria andUserNameLessThanOrEqualTo(String value) {
+            addCriterion("user_name <=", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameLike(String value) {
-            addCriterion("router_group_name like", value, "routerGroupName");
+        public Criteria andUserNameLike(String value) {
+            addCriterion("user_name like", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotLike(String value) {
-            addCriterion("router_group_name not like", value, "routerGroupName");
+        public Criteria andUserNameNotLike(String value) {
+            addCriterion("user_name not like", value, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameIn(List<String> values) {
-            addCriterion("router_group_name in", values, "routerGroupName");
+        public Criteria andUserNameIn(List<String> values) {
+            addCriterion("user_name in", values, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotIn(List<String> values) {
-            addCriterion("router_group_name not in", values, "routerGroupName");
+        public Criteria andUserNameNotIn(List<String> values) {
+            addCriterion("user_name not in", values, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameBetween(String value1, String value2) {
-            addCriterion("router_group_name between", value1, value2, "routerGroupName");
+        public Criteria andUserNameBetween(String value1, String value2) {
+            addCriterion("user_name between", value1, value2, "userName");
             return (Criteria) this;
         }
 
-        public Criteria andRouterGroupNameNotBetween(String value1, String value2) {
-            addCriterion("router_group_name not between", value1, value2, "routerGroupName");
+        public Criteria andUserNameNotBetween(String value1, String value2) {
+            addCriterion("user_name not between", value1, value2, "userName");
             return (Criteria) this;
         }
 
@@ -678,6 +678,76 @@ public class TokenCriteria {
             addCriterion("expired_time not between", value1, value2, "expiredTime");
             return (Criteria) this;
         }
+
+        public Criteria andRouterGroupNameIsNull() {
+            addCriterion("router_group_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameIsNotNull() {
+            addCriterion("router_group_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameEqualTo(String value) {
+            addCriterion("router_group_name =", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameNotEqualTo(String value) {
+            addCriterion("router_group_name <>", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameGreaterThan(String value) {
+            addCriterion("router_group_name >", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameGreaterThanOrEqualTo(String value) {
+            addCriterion("router_group_name >=", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameLessThan(String value) {
+            addCriterion("router_group_name <", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameLessThanOrEqualTo(String value) {
+            addCriterion("router_group_name <=", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameLike(String value) {
+            addCriterion("router_group_name like", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameNotLike(String value) {
+            addCriterion("router_group_name not like", value, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameIn(List<String> values) {
+            addCriterion("router_group_name in", values, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameNotIn(List<String> values) {
+            addCriterion("router_group_name not in", values, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameBetween(String value1, String value2) {
+            addCriterion("router_group_name between", value1, value2, "routerGroupName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRouterGroupNameNotBetween(String value1, String value2) {
+            addCriterion("router_group_name not between", value1, value2, "routerGroupName");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -686,7 +756,7 @@ public class TokenCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -701,7 +771,7 @@ public class TokenCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-23 16:01
      */
     public static class Criterion {
         private String condition;

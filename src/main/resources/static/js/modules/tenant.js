@@ -75,12 +75,31 @@ var vm = new Vue({
         showList: true,
         title: null,
         userName:null,
+        modeId: 1,// SAAS为0，PAAS为1
+        modeName: null,
         tenant: {
             name: null,
             description: null,
+            serviceMode: null,
             appIds: null,
             appNames: [],
             appIdList: []
+        },
+        // 选择模式列表
+        modeList: {
+            selectedMode: 1,
+            options: [
+                // {
+                //     id : -1,
+                //     name : "ALL"
+                // },
+                {
+                id : 0,
+                name : "SASS"
+            },{
+                id : 1,
+                name : "PASS"
+            }]
         }
     },
     methods: {
@@ -168,10 +187,53 @@ var vm = new Vue({
             obj.appIds =vm.tenant.appIds;
             obj.userTenants = [];
             obj.userName = userName;
+            var appIdList = vm.tenant.appIdList;
 
             // alert(JSON.stringify(obj));
             if(vm.tenant.name === null){
                 alert("租户名称不能为空");
+                return;
+            }
+
+            if (vm.modeId == null) {
+                vm.modeId = vm.modeList.selectedMode;
+            }
+
+            if(vm.modeId == 0) {  //saas
+                vm.tenant.serviceMode = "saas";
+                if (appIdList.length > 1) {
+                    swal("当前模式不能添加多个应用", "", "error");
+                    return;
+                }
+                // console.log("my modeId is : " + vm.modeId);
+            } else if(vm.modeId == 1) {
+                vm.tenant.serviceMode = "paas"
+                // console.log("my modeId is : " + vm.modeId);
+            } else {
+                swal({
+                    title: "当前默认为PAAS模式，是否确认添加",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "确认",
+                    cancelButtonText: "取消",
+                    confirmButtonColor: "#DD6B55"
+                }, function () {
+                    $.ajax({
+                        type: obj.tenant.id === null ? "POST" : "PUT",
+                        url: baseURL + "tenants",
+                        contentType: "application/json",
+                        data: JSON.stringify(obj),
+                        dataType: "",
+                        success: function () {
+                            vm.reload(false);
+                            swal("操作成功!", "", "success");
+                        },
+                        error: function (response) {
+                            swal(response.responseJSON.data.errorResponseMessage, "",  "error");
+                        }
+                    });
+                });
                 return;
             }
 
@@ -238,9 +300,15 @@ var vm = new Vue({
                         vm.tenant.appNames.push(appNodes[i].name);
                     }
                     vm.tenant.appIds = appIdList.join(",");
+                    vm.tenant.appIdList = appIdList;
                     layer.close(index);
                 }
             });
+        },
+        //模式选择事件
+        selectMode: function () {
+            vm.modeId = vm.modeList.selectedMode;
+            vm.reload(true);
         },
         reload: function (backFirst) {
             vm.showList = true;
@@ -251,8 +319,12 @@ var vm = new Vue({
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'searchName': vm.searchName},
+                postData: {
+                    'searchName': vm.searchName,
+                    'modeId' : vm.modeId
+                },
                 page: page
+
             }).trigger("reloadGrid");
         }
     }
