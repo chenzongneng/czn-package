@@ -12,6 +12,7 @@ import com.richstonedt.garnet.mapper.UserMapper;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.UserParm;
+import com.richstonedt.garnet.model.view.GarLoginView;
 import com.richstonedt.garnet.model.view.LoginView;
 import com.richstonedt.garnet.model.view.UserProfile;
 import com.richstonedt.garnet.model.view.UserView;
@@ -70,6 +71,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private ResourceDynamicPropertyService resourceDynamicPropertyService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -310,7 +314,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         if (StringUtils.isEmpty(loginView.getUserName()) || StringUtils.isEmpty(loginView.getPassword())) {
             loginMessage.setMessage("账号或密码为空");
             loginMessage.setLoginStatus("false");
-            loginMessage.setCode(403);
+            loginMessage.setCode(401);
             return loginMessage;
         }
 
@@ -335,7 +339,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         if (!userCredential.getCredential().equals(loginView.getPassword())) {
             loginMessage.setMessage("密码不正确");
             loginMessage.setLoginStatus("false");
-            loginMessage.setCode(403);
+            loginMessage.setCode(401);
             return loginMessage;
         }
 
@@ -343,12 +347,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String token = JwtToken.createToken(user.getUserName(),userCredential.getCredential(),loginView.getAppCode(), System.currentTimeMillis());
         loginMessage.setMessage("登录成功");
 //        loginMessage.setToken(token);
-        loginMessage.setCode(200);
+        loginMessage.setCode(201);
         loginMessage.setUser(user);
         loginMessage.setLoginStatus("success");
         //拼接返回前端的token
-        String tokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis();
-        loginMessage.setToken(tokenReturn);
+        String accessTokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis() + "#accessToken";
+        String refreshTokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis() + "#refreshToken";
+        loginMessage.setAccessToken(accessTokenReturn);
+        loginMessage.setRefreshToken(refreshTokenReturn);
 
         //将token插入数据库
 //        if (StringUtils.isEmpty(loginView.getAppCode())) {
@@ -372,7 +378,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             token1.setCreatedTime(System.currentTimeMillis());
             token1.setModifiedTime(System.currentTimeMillis());
             Long expiredTime = token1.getCreatedTime() + 30 * 60000L;
-            token1.setExpiredTime(expiredTime);
+            token1.setExpireTime(expiredTime);
             token1.setId(IdGeneratorUtil.generateId());
             token1.setUserName(loginView.getUserName());
 //            token1.setRouterGroupName(routerGroupName);
@@ -383,7 +389,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             tokenOld.setToken(token);
             tokenOld.setModifiedTime(System.currentTimeMillis());
             Long expiredTime = tokenOld.getModifiedTime() + GarnetContants.TOKEN_EXPIRED_TIME;
-            tokenOld.setExpiredTime(expiredTime);
+            tokenOld.setExpireTime(expiredTime);
             tokenOld.setToken(token);
             tokenService.updateByPrimaryKeySelective(tokenOld);
         }
@@ -508,26 +514,33 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //更新token
         Long currentTime = System.currentTimeMillis();
         String tokenNew = JwtToken.createToken(userName, password, appCode, currentTime);
-        String tokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime;
+        String accessTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#accessToken";
+        String refreshTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#refreshToken";
+
         //根据userName拿出token并更新到数据库
         TokenCriteria tokenCriteria = new TokenCriteria();
         tokenCriteria.createCriteria().andUserNameEqualTo(userName);
         Token token1 = tokenService.selectSingleByCriteria(tokenCriteria);
         token1.setToken(tokenNew);
         token1.setModifiedTime(currentTime);
-        token1.setExpiredTime(currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
+        token1.setExpireTime(currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
         tokenService.updateByPrimaryKeySelective(token1);
 
         loginMessage.setMessage("token刷新成功");
         loginMessage.setLoginStatus("success");
         loginMessage.setCode(201);
-        loginMessage.setToken(tokenReturn);
+        loginMessage.setAccessToken(accessTokenReturn);
+        loginMessage.setRefreshToken(refreshTokenReturn);
 
         //获取返回资源
         //根据appCode拿 application
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
         applicationCriteria.createCriteria().andAppCodeEqualTo(appCode);
         Application application = applicationService.selectSingleByCriteria(applicationCriteria);
+        if (ObjectUtils.isEmpty(application)) {
+            return loginMessage;
+        }
+
 
         //根据username 拿 group
         GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
@@ -599,8 +612,97 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             }
         }
 
+        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
+        for (Resource resource : resourceList1) {
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resource.getType());
+            List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
+            resourceDynamicPropertyList.add(resourceDynamicProperties);
+        }
+
+        loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
         loginMessage.setResourceList(resourceList1);
 
+        return loginMessage;
+    }
+
+    @Override
+    public LoginMessage garLogin(GarLoginView garLoginView) throws Exception {
+        UserCriteria userCriteria = new UserCriteria();
+        LoginMessage loginMessage = new LoginMessage();
+        userCriteria.createCriteria().andUserNameEqualTo(garLoginView.getUserName());
+        User user = this.selectSingleByCriteria(userCriteria);
+
+        if (StringUtils.isEmpty(garLoginView.getUserName()) || StringUtils.isEmpty(garLoginView.getPassword())) {
+            loginMessage.setMessage("账号或密码为空");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        if (ObjectUtils.isEmpty(user)) {
+            loginMessage.setMessage("用户不存在");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+//        if (StringUtils.isEmpty(garLoginView.getAppCode())) {
+//            loginMessage.setMessage("AppCode不能为空");
+//            loginMessage.setLoginStatus("false");
+//            loginMessage.setCode(401);
+//            return loginMessage;
+//        }
+
+        //获取密码,验证密码是否正确
+        UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
+        userCredentialCriteria.createCriteria().andUserIdEqualTo(user.getId());
+        UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
+        if (!userCredential.getCredential().equals(garLoginView.getPassword())) {
+            loginMessage.setMessage("密码不正确");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        //生成token返回
+        String token = JwtToken.createToken(user.getUserName(),userCredential.getCredential(),garLoginView.getAppCode(), System.currentTimeMillis());
+        loginMessage.setMessage("登录成功");
+//        loginMessage.setToken(token);
+        loginMessage.setCode(201);
+        loginMessage.setUser(user);
+        loginMessage.setLoginStatus("success");
+        //拼接返回前端的token
+        String accessTokenReturn = token + "#" + garLoginView.getAppCode() + "#" + garLoginView.getUserName() + "#" + System.currentTimeMillis() + "#access_token";
+        String refreshTokenReturn = token + "#" + garLoginView.getAppCode() + "#" + garLoginView.getUserName() + "#" + System.currentTimeMillis() + "#refresh_token";
+        loginMessage.setAccessToken(accessTokenReturn);
+        loginMessage.setRefreshToken(refreshTokenReturn);
+
+        TokenCriteria tokenCriteria = new TokenCriteria();
+        tokenCriteria.createCriteria().andUserNameEqualTo(garLoginView.getUserName());
+        Token tokenOld = tokenService.selectSingleByCriteria(tokenCriteria);
+
+        //如果是第一次登录，将token插入数据库
+        if (ObjectUtils.isEmpty(tokenOld)) {
+            Token token1 = new Token();
+            token1.setCreatedTime(System.currentTimeMillis());
+            token1.setModifiedTime(System.currentTimeMillis());
+            Long expiredTime = token1.getCreatedTime() + 30 * 60000L;
+            token1.setExpireTime(expiredTime);
+            token1.setId(IdGeneratorUtil.generateId());
+            token1.setUserName(garLoginView.getUserName());
+//            token1.setRouterGroupName(routerGroupName);
+            token1.setToken(token);
+            tokenService.insertSelective(token1);
+        } else {
+            //不是第一次登录，更新token
+            tokenOld.setToken(token);
+            tokenOld.setModifiedTime(System.currentTimeMillis());
+            Long expiredTime = tokenOld.getModifiedTime() + GarnetContants.TOKEN_EXPIRED_TIME;
+            tokenOld.setExpireTime(expiredTime);
+            tokenOld.setToken(token);
+            tokenService.updateByPrimaryKeySelective(tokenOld);
+        }
         return loginMessage;
     }
 

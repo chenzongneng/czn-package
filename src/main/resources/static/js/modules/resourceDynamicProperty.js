@@ -240,8 +240,6 @@ var vm = new Vue({
             $.get(baseURL + "resourcedynamicpropertys/" + resourceDynamicPropertyId, function (response) {
                 response = response.data;
 
-                console.log("resourceDynamicProperty reposnse == " + JSON.stringify(response));
-
                 vm.resourceDynamicProperty.id = response.id;
                 vm.resourceDynamicProperty.applicationId = response.applicationId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
@@ -266,7 +264,7 @@ var vm = new Vue({
             }else {
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
-            console.log(JSON.stringify(page));
+
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {type: vm.type, applicationId: vm.option.appSearchId},
                 page: page
@@ -286,8 +284,6 @@ var vm = new Vue({
                     applicationList.appList.options.push(item);
                     applicationList.appSearchList.options.push(item);
                 })
-
-                console.log("app options == " + JSON.stringify(applicationList.appList.options));
 
             });
         }

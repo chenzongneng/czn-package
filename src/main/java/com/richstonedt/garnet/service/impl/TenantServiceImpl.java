@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,8 +79,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 //                userTenantService.insertSelective(userTenant);
 //            }
 //        }
-
-
         return tenant.getId();
     }
 
@@ -103,37 +102,43 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         //把所有勾选的去掉会""
 
         //其余为正常选择
-
         if("".equals(tenantView.getAppIds())){
-
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-
             applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenantView.getTenant().getId());
-
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
         }
 
         if(!StringUtil.isEmpty(tenantView.getAppIds())){
-
+            //先删除该租户绑定的app外键
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-
             applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenantView.getTenant().getId());
-
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
-            for (String appId:tenantView.getAppIds().split(",")
-                    ) {
-                ApplicationTenant applicationTenant = new ApplicationTenant();
+            //如果paas模式，判断应用是否已被绑定
+            Tenant tenant = tenantView.getTenant();
+            if (!ObjectUtils.isEmpty(tenant) && !StringUtils.isEmpty(tenant.getServiceMode()) && "paas".equals(tenant.getServiceMode())) {
+                List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(new ApplicationTenantCriteria());
+                List<Long> applicationIds = new ArrayList<>(); //数据库中已绑定的appId
 
+                for (ApplicationTenant applicationTenant : applicationTenants) {
+                    applicationIds.add(applicationTenant.getApplicationId());
+                }
+                for (String appId : tenantView.getAppIds().split(",")) {
+                    if (applicationIds.contains(Long.parseLong(appId))) {
+                        throw new RuntimeException("此应用已被绑定");
+                    }
+                }
+            }
+            //应用没被绑定，完成update
+            for (String appId:tenantView.getAppIds().split(",")) {
+                ApplicationTenant applicationTenant = new ApplicationTenant();
                 applicationTenant.setId(IdGeneratorUtil.generateId());
                 //设置租户ID
                 applicationTenant.setTenantId(tenantView.getTenant().getId());
                 applicationTenant.setApplicationId(Long.parseLong(appId));
                 applicationTenantService.insertSelective(applicationTenant);
             }
-
         }
-
 
     }
 
@@ -269,8 +274,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 //
 //        }
 
-
-
         return tenantView;
     }
 
@@ -287,6 +290,17 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenant.getId());
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
         }
+    }
+
+    @Override
+    public List<Long> getApplicationIs() {
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+        List<Long> applicationIds = new ArrayList<>();
+        for (ApplicationTenant applicationTenant : applicationTenants) {
+            applicationIds.add(applicationTenant.getApplicationId());
+        }
+        return applicationIds;
     }
 
     //根据userName 处理关联的用户

@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS gar_resource_dynamic_properties;
 DROP TABLE IF EXISTS gar_roles;
 DROP TABLE IF EXISTS gar_user_tenants;
 DROP TABLE IF EXISTS gar_tenants;
-DROP TABLE IF EXISTS gar_token;
+DROP TABLE IF EXISTS gar_tokens;
 DROP TABLE IF EXISTS gar_user_credentials;
 DROP TABLE IF EXISTS gar_users;
 DROP TABLE IF EXISTS gar_user_tenant_applications;
@@ -222,17 +222,17 @@ CREATE TABLE gar_tenants
 ) WITHOUT OIDS;
 
 
-CREATE TABLE gar_token
+CREATE TABLE gar_tokens
 (
 	id bigint NOT NULL UNIQUE,
 	token varchar(256) DEFAULT '' NOT NULL UNIQUE,
 	user_name varchar(256) DEFAULT '' NOT NULL UNIQUE,
+	router_group_name varchar(256) DEFAULT '' NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
-	expired_time bigint DEFAULT 0 NOT NULL,
+	expire_time bigint DEFAULT 0 NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
-ALTER TABLE gar_token ADD COLUMN router_group_name varchar(256) DEFAULT '' NOT NULL;
 
 
 CREATE TABLE gar_users
@@ -288,6 +288,15 @@ CREATE TABLE gar_router_group
 	group_name VARCHAR(256) NOT NULL,
 	app_code VARCHAR(256) NOT NULL,
 	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+DROP TABLE IF EXISTS gar_system_config;
+CREATE TABLE gar_system_config
+(
+  id bigint DEFAULT 0 NOT NULL UNIQUE,
+  parameter VARCHAR(256) NOT NULL,
+  value VARCHAR(256) NOT NULL,
+  PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
 

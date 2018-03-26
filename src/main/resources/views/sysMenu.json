@@ -144,7 +144,7 @@
         "menuId": 12,
         "parentId": 9,
         "parentName": null,
-        "name": "动态资源配置",
+        "name": "资源类型配置",
         "url": "modules/resourceDynamicProperty.html",
         "type": 1,
         "icon": "fa fa-th-list",

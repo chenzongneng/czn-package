@@ -94,18 +94,18 @@ var vm = new Vue({
         },
         // 选择模式列表
         modeList: {
-            selectedMode: 1,
+            selectedMode: "",
             options: [
-            //     {
-            //     id : -1,
-            //     name : "ALL"
-            // },
+                {
+                id : -1,
+                name : "all"
+            },
             {
                 id : 0,
-                name : "SASS"
+                name : "saas"
             },{
                 id : 1,
-                name : "PASS"
+                name : "paas"
             }]
         }
     },
@@ -133,7 +133,7 @@ var vm = new Vue({
             };
 
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000&modeId=" + vm.modeId, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
@@ -149,11 +149,14 @@ var vm = new Vue({
 
             vm.application.tenantIds = null;
             vm.application.tenantNames = [];
-            // 加载应用树
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+
+            //初始化应用信息，及应用模式
+            vm.getApplication(applicationId);
+
+            // 加载租户树
+            $.get(baseURL + "tenants?page=1&limit=1000&modeId=" + vm.modeId, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
-                vm.getApplication(applicationId);
             });
         },
         /**  删除按钮点击事件 */
@@ -164,11 +167,8 @@ var vm = new Vue({
                 return;
             }
             $.get(baseURL + "applications/relate?ids=" + applicationIds, function (response) {
-
-                console.log(Boolean(response));
                 if (response == Boolean(true)) {
                     title = "应用仍被其他租户关联，若确定则将关联租户一并删除，是否确定删除？";
-
                 } else {
                     title = "确定要删除选中的记录";
                 }
@@ -216,18 +216,16 @@ var vm = new Vue({
                 vm.modeId = vm.modeList.selectedMode;
             }
 
-            console.log("modeId == " + vm.modeId);
-
             if(vm.modeId == 0) {  //saas
                 vm.application.serviceMode = "saas";
-                // console.log("my modeId is : " + vm.modeId);
+                //saas模式下，一个租户被一个应用绑定
+
             } else if(vm.modeId == 1) {
                 vm.application.serviceMode = "paas"
                 if (tenantIdList.length > 1) {
                     swal("当前模式不能添加多个租户", "", "error");
                     return;
                 }
-                // console.log("my modeId is : " + vm.modeId);
             } else {
                 swal({
                     title: "当前默认为PAAS模式，是否确认添加",
@@ -267,17 +265,14 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal(response.responseJSON.data.errorResponseMessage, "", "error");
                 }
             });
         },
         /**  根据ID获取应用信息 */
         getApplication: function (applicationId) {
             $.get(baseURL + "applications/" + applicationId, function (response) {
-
                 response=response.data;
-
-                // alert(JSON.stringify(response));
 
                 if (response) {
                     vm.application.id = response.application.id;
@@ -295,6 +290,16 @@ var vm = new Vue({
                     $.each(response.tenantNameList, function (index, item) {
                         vm.application.tenantNames.push(item);
                     })
+
+                    var mode = response.application.serviceMode;
+                    if(mode == "saas") {
+                        vm.modeId = 0;
+                    } else if (mode == "paas") {
+                        vm.modeId = 1;
+                    } else {
+                        vm.modeId = -1;
+                    }
+
                 }
             });
         },

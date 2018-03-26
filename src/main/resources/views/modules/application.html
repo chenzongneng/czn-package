@@ -39,7 +39,7 @@
 
             <div class="form-group col-sm-2">
                 <select class="form-control" v-model="modeList.selectedMode" @change="selectMode">
-                    <option disabled value=""> 模式选择 </option>
+                    <option disabled value="">-----请选择模式-----</option>
                     <option v-for="option in modeList.options" v-bind:value="option.id">
                         {{ option.name }}
                     </option>

@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -97,7 +98,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     }
 
                     //验证token是否过期
-                    Long expiredTime = token1.getExpiredTime();
+                    Long expiredTime = token1.getExpireTime();
                     if (System.currentTimeMillis() > expiredTime) {
                         return tokenExpired(request, response);
                     }
@@ -141,43 +142,51 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    private boolean haveNotToken(HttpServletRequest request, HttpServletResponse response) {
+    private boolean haveNotToken(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("请先登录");
         loginMessage.setLoginStatus("false");
         loginMessage.setCode(401);
         responseOutWithJson(response, loginMessage);
+//        response.sendRedirect("/garnet/login.html");
+//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 
-    private boolean tokenExpired(HttpServletRequest request, HttpServletResponse response) {
+    private boolean tokenExpired(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("登录失效，请重新登录");
         loginMessage.setLoginStatus("false");
         loginMessage.setCode(403);
         responseOutWithJson(response, loginMessage);
+//        response.sendRedirect("/garnet/login.html");
+//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 
-    private boolean tokenError(HttpServletRequest request, HttpServletResponse response) {
+    private boolean tokenError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("TOKEN验证错误，请重新登录");
         loginMessage.setLoginStatus("false");
         loginMessage.setCode(403);
         responseOutWithJson(response, loginMessage);
+//        response.sendRedirect("/garnet/login.html");
+//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 
-    private boolean userNotExist(HttpServletRequest request, HttpServletResponse response) {
+    private boolean userNotExist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("用户不存在，请重新登录");
         loginMessage.setLoginStatus("false");
         loginMessage.setCode(401);
         responseOutWithJson(response, loginMessage);
+//        response.sendRedirect("/garnet/login.html");
+//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 

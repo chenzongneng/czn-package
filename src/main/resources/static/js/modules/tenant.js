@@ -39,6 +39,9 @@ $(function () {
             rows: "limit"
         },
         gridComplete: function () {
+
+            //todo 获取localstorage初始化modeId
+
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
             // 设置表头居中
@@ -87,18 +90,18 @@ var vm = new Vue({
         },
         // 选择模式列表
         modeList: {
-            selectedMode: 1,
+            selectedMode: "",
             options: [
-                // {
-                //     id : -1,
-                //     name : "ALL"
-                // },
+                {
+                    id : -1,
+                    name : "all"
+                },
                 {
                 id : 0,
-                name : "SASS"
+                name : "saas"
             },{
                 id : 1,
-                name : "PASS"
+                name : "paas"
             }]
         }
     },
@@ -120,8 +123,10 @@ var vm = new Vue({
                 appIdList: []
             };
 
+            console.log("yaya == " + vm.modeId);
+
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?page=1&limit=1000&modeId=" + vm.modeId, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
 
@@ -138,11 +143,12 @@ var vm = new Vue({
             vm.tenant.appIds = null;
             vm.tenant.appNames = [];
 
+            vm.getTenant(tenantId);
+
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?page=1&limit=1000&modeId=" + vm.modeId, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
-                vm.getTenant(tenantId);
             });
         },
         /**  删除按钮点击事件 */
@@ -179,7 +185,6 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-
             // alert(JSON.stringify(vm.tenant));
             var obj = new Object();
             var userName = vm.userName;
@@ -195,6 +200,8 @@ var vm = new Vue({
                 return;
             }
 
+
+
             if (vm.modeId == null) {
                 vm.modeId = vm.modeList.selectedMode;
             }
@@ -207,8 +214,7 @@ var vm = new Vue({
                 }
                 // console.log("my modeId is : " + vm.modeId);
             } else if(vm.modeId == 1) {
-                vm.tenant.serviceMode = "paas"
-                // console.log("my modeId is : " + vm.modeId);
+                vm.tenant.serviceMode = "paas";
             } else {
                 swal({
                     title: "当前默认为PAAS模式，是否确认添加",
@@ -264,16 +270,25 @@ var vm = new Vue({
                     vm.tenant.createdTime = response.tenant.createdTime;
                     vm.tenant.modifiedTime = response.tenant.modifiedTime;
                     vm.tenant.appIdList = response.appIdList;
-                    vm.userName = response.userName;
+                    // vm.userName = response.userName;
+
                     $.each(response.appNameList, function (index, item) {
                         vm.tenant.appNames.push(item);
                     })
+
+                    var mode = response.tenant.serviceMode;
+                    if (mode == "saas") {
+                        vm.modeId = 0;
+                    } else if (mode == "paas") {
+                        vm.modeId = 1;
+                    } else {
+                        vm.modeId = -1;
+                    }
                 }
             });
         },
         /**  应用树点击事件 */
         appTree: function (tenant) {
-            console.log(JSON.stringify(tenant));
             $.each(tenant.appIdList, function (index, item) {
                 var node = appTree.getNodeByParam("id", item);
                 appTree.checkNode(node, true, false);
@@ -323,7 +338,7 @@ var vm = new Vue({
                     'searchName': vm.searchName,
                     'modeId' : vm.modeId
                 },
-                page: page
+                page: page,
 
             }).trigger("reloadGrid");
         }

@@ -288,8 +288,7 @@ var vm = new Vue({
                 obj.userTenants.push(userTenant);
 
             }
-            console.log(JSON.stringify(obj));
-            console.log("obj.user.id: " + obj.user.id);
+
             $.ajax({
                 type: obj.user.id === null ? "POST" : "PUT",
                 url: baseURL + "users",

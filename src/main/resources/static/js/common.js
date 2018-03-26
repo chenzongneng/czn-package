@@ -12,7 +12,8 @@ var baseURL = "http://localhost:12306/garnet/api/v1.0/";
 
 /** token */
 var garnetToken = localStorage.getItem("garnetToken");
-if (!garnetToken) {
+var accessToken = localStorage.getItem("accessToken");
+if (!accessToken) {
     // parent.location.href = 'login.html';
 }
 var userId = localStorage.getItem("userId");
@@ -23,32 +24,35 @@ var userId = localStorage.getItem("userId");
 }*/
 
 /** jquery全局配置 */
-// $.ajaxSetup({
-//     dataType: "json",
-//     cache: false,
-//     headers: {
-//         // "token": token,
-//         // "gempileToken": localStorage.getItem("gempileToken")
-//         "garnetToken": localStorage.getItem("garnetToken"),
-//         "userToken": localStorage.getItem("userToken")
-//     },
-//
-//     complete: function (xhr) {
-//         var response = JSON.parse(xhr.responseText);
-//         // token过期，则跳转到登录页面
-//         if (response.code == 401) {
-//             parent.location.href = 'login.html';
-//         } else if (response.code == 403) {
-//             swal({
-//                     title: "没有权限",
-//                     type: "error"
-//                 },
-//                 function () {
-//                     parent.location.href = '../index.html';
-//                 });
-//         }
-//     }
-// });
+$.ajaxSetup({
+    dataType: "json",
+    cache: false,
+    headers: {
+        // "token": token,
+        // "gempileToken": localStorage.getItem("gempileToken")
+        "garnetToken": localStorage.getItem("garnetToken"),
+        // "userToken": localStorage.getItem("userToken")
+        "accessToken": localStorage.getItem("accessToken"),
+        "refreshToken": localStorage.getItem("refreshToken")
+    },
+
+    complete: function (xhr) {
+        // console.log("xhr == " + JSON.stringify(xhr));
+        var response = JSON.parse(xhr.responseText);
+        // token过期，则跳转到登录页面
+        if (response.code == 401) {
+            parent.location.href = '../login.html';
+        } else if (response.code == 403) {
+            swal({
+                    title: "没有权限",
+                    type: "error"
+                },
+                function () {
+                    parent.location.href = '../index.html';
+                });
+        }
+    }
+});
 
 /** jqGrid 配置 */
 $.jgrid.defaults.width = 1000;

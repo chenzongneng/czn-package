@@ -2,26 +2,13 @@ package com.richstonedt.garnet.model.view;
 
 import io.swagger.annotations.ApiModelProperty;
 
-/**
- * The type Login view.
- */
-public class LoginView {
+public class GarLoginView {
 
     private String userName;
 
     private String password;
 
     private String appCode;
-
-    private String token;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public String getAppCode() {
         return appCode;
@@ -31,40 +18,41 @@ public class LoginView {
         this.appCode = appCode;
     }
 
-    /**
-     * Gets user name.
-     *
-     * @return the user name
-     */
+    @ApiModelProperty(value = "获取验证码的时间")
+    private String nowTime;
+
+    @ApiModelProperty(value = "验证码")
+    private String kaptcha;
+
+    public String getKaptcha() {
+        return kaptcha;
+    }
+
+    public void setKaptcha(String kaptcha) {
+        this.kaptcha = kaptcha;
+    }
+
     public String getUserName() {
         return userName;
     }
 
-    /**
-     * Sets user name.
-     *
-     * @param userName the user name
-     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    /**
-     * Gets password.
-     *
-     * @return the password
-     */
     public String getPassword() {
         return password;
     }
 
-    /**
-     * Sets password.
-     *
-     * @param password the password
-     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(String nowTime) {
+        this.nowTime = nowTime;
+    }
 }

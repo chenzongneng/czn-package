@@ -7,6 +7,8 @@ import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.TenantView;
 
+import java.util.List;
+
 public interface TenantService extends BaseService<Tenant, TenantCriteria, Long> {
 
 
@@ -41,5 +43,7 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
      * @param tenant
      */
     public void updateStatusById(Tenant tenant);
+
+    List<Long> getApplicationIs();
 
 }

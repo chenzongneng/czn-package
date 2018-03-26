@@ -7,6 +7,7 @@ import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
 import com.richstonedt.garnet.model.parm.UserParm;
+import com.richstonedt.garnet.model.view.GarLoginView;
 import com.richstonedt.garnet.model.view.LoginView;
 import com.richstonedt.garnet.model.view.UserProfile;
 import com.richstonedt.garnet.model.view.UserView;
@@ -72,5 +73,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
     public List<User> queryUserByTenantId(UserParm userParm);
 
     LoginMessage refreshToken(LoginView loginView) throws Exception;
+
+    LoginMessage garLogin(GarLoginView garLoginView) throws Exception;
 
 }

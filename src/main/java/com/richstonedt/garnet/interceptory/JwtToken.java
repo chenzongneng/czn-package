@@ -56,16 +56,13 @@ public class JwtToken {
         String secret = password;
 
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).build();
-        DecodedJWT jwt = null;
-        try {
-            jwt = verifier.verify(token);
-        } catch (Exception e) {
-            //TODO token验证失败的返回逻辑
-            e.printStackTrace();
-            throw new RuntimeException("登录凭证失效，请重新登录");
-        }
+        DecodedJWT jwt =  verifier.verify(token);
+//        try {
+//            jwt = verifier.verify(token);
+//        } catch (Exception e) {
+//            throw new RuntimeException("登录凭证失效，请重新登录");
+//        }
 
-        //TODO token验证成功的返回逻辑
         return  jwt.getClaims();
     }
 }

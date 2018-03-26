@@ -66,7 +66,7 @@ var vm = new Vue({
             $.ajaxSettings.async = false;
             $.getJSON("http://localhost:12306/garnet/appCode.json", function (r) {
                 resources = r;
-                console.log(JSON.stringify(resources));
+                // console.log(JSON.stringify(resources));
             });
             this.getMenuList();
         },
@@ -79,6 +79,9 @@ var vm = new Vue({
             //         vm.user = r;
             //     }
             // });
+        },
+        getMode : function () {
+
         },
         /** 修改密码 */
         updatePassword: function () {
@@ -125,11 +128,19 @@ var vm = new Vue({
     /**  初始化页面时执行该方法 */
     created: function () {
         // this.getMenuList();
+
+        console.log("index 初始化页面时请求ajax");
+        //todo ajax请求mode,并设置localstorage
+
+
         this.getUser();
         this.getButtonList();
     }
 });
 
+function selectMode() {
+    console.log("selectMode")
+}
 
 /** 菜单路由 */
 function routerList(router, menuList,vm) {

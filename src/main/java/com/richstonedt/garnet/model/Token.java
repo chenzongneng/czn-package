@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 /**
  *
- * TABLE:gar_token
+ * TABLE:gar_tokens
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-23 16:01
+ * DATE: 2018-03-26 18:18
  */
 public class Token implements Serializable {
     private Long id;
@@ -17,20 +17,20 @@ public class Token implements Serializable {
 
     private String userName;
 
+    private String routerGroupName;
+
     private Long createdTime;
 
     private Long modifiedTime;
 
-    private Long expiredTime;
-
-    private String routerGroupName;
+    private Long expireTime;
 
     /**
-     * TABLE： gar_token
+     * TABLE： gar_tokens
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-23 16:01
+     * DATE: 2018-03-26 18:18
      */
     private static final long serialVersionUID = 1L;
 
@@ -58,6 +58,14 @@ public class Token implements Serializable {
         this.userName = userName == null ? null : userName.trim();
     }
 
+    public String getRouterGroupName() {
+        return routerGroupName;
+    }
+
+    public void setRouterGroupName(String routerGroupName) {
+        this.routerGroupName = routerGroupName == null ? null : routerGroupName.trim();
+    }
+
     public Long getCreatedTime() {
         return createdTime;
     }
@@ -74,30 +82,22 @@ public class Token implements Serializable {
         this.modifiedTime = modifiedTime;
     }
 
-    public Long getExpiredTime() {
-        return expiredTime;
+    public Long getExpireTime() {
+        return expireTime;
     }
 
-    public void setExpiredTime(Long expiredTime) {
-        this.expiredTime = expiredTime;
-    }
-
-    public String getRouterGroupName() {
-        return routerGroupName;
-    }
-
-    public void setRouterGroupName(String routerGroupName) {
-        this.routerGroupName = routerGroupName == null ? null : routerGroupName.trim();
+    public void setExpireTime(Long expireTime) {
+        this.expireTime = expireTime;
     }
 
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_tokens<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-23 16:01
+     * DATE: 2018-03-26 18:18
      */
     @Override
     public boolean equals(Object that) {
@@ -114,20 +114,20 @@ public class Token implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
                 && (this.getToken() == null ? other.getToken() == null : this.getToken().equals(other.getToken()))
                 && (this.getUserName() == null ? other.getUserName() == null : this.getUserName().equals(other.getUserName()))
+                && (this.getRouterGroupName() == null ? other.getRouterGroupName() == null : this.getRouterGroupName().equals(other.getRouterGroupName()))
                 && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
                 && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-                && (this.getExpiredTime() == null ? other.getExpiredTime() == null : this.getExpiredTime().equals(other.getExpiredTime()))
-                && (this.getRouterGroupName() == null ? other.getRouterGroupName() == null : this.getRouterGroupName().equals(other.getRouterGroupName()));
+                && (this.getExpireTime() == null ? other.getExpireTime() == null : this.getExpireTime().equals(other.getExpireTime()));
     }
 
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_tokens<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-23 16:01
+     * DATE: 2018-03-26 18:18
      */
     @Override
     public int hashCode() {
@@ -136,21 +136,21 @@ public class Token implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getToken() == null) ? 0 : getToken().hashCode());
         result = prime * result + ((getUserName() == null) ? 0 : getUserName().hashCode());
+        result = prime * result + ((getRouterGroupName() == null) ? 0 : getRouterGroupName().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         result = prime * result + ((getModifiedTime() == null) ? 0 : getModifiedTime().hashCode());
-        result = prime * result + ((getExpiredTime() == null) ? 0 : getExpiredTime().hashCode());
-        result = prime * result + ((getRouterGroupName() == null) ? 0 : getRouterGroupName().hashCode());
+        result = prime * result + ((getExpireTime() == null) ? 0 : getExpireTime().hashCode());
         return result;
     }
 
     /**
      * <br>
      *
-     * TABLE： gar_token<br>
+     * TABLE： gar_tokens<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-23 16:01
+     * DATE: 2018-03-26 18:18
      */
     @Override
     public String toString() {
@@ -161,10 +161,10 @@ public class Token implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", token=").append(token);
         sb.append(", userName=").append(userName);
+        sb.append(", routerGroupName=").append(routerGroupName);
         sb.append(", createdTime=").append(createdTime);
         sb.append(", modifiedTime=").append(modifiedTime);
-        sb.append(", expiredTime=").append(expiredTime);
-        sb.append(", routerGroupName=").append(routerGroupName);
+        sb.append(", expireTime=").append(expireTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

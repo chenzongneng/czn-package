@@ -13,9 +13,10 @@ var nowTime = $.now();
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        username: '',
+        userName: '',
         password: '',
         captcha: '',
+        nowTime:'',
         error: false,
         errorMsg: '',
         src: baseURL + 'kaptcha?nowTime=' + nowTime,
@@ -27,32 +28,33 @@ var vm = new Vue({
             nowTime = $.now();
             this.src = baseURL + "kaptcha?nowTime=" + nowTime + "&oldTime=" + oldTime;
         },submit:function(){
-
-            alert(JSON.stringify(this.inputtext));
-
+            // alert(JSON.stringify(this.inputtext));
         },
         login: function () {
 
-            // var data = {
-            //     userName: vm.username,
-            //     password: vm.password,
-            //     vcode: vm.captcha,
-            // };
+            var data = {
+                userName: vm.userName,
+                password: vm.password,
+                kaptcha: vm.captcha,
+                nowTime: nowTime,
+                appCode: 1
+            };
             // alert(JSON.stringify(this.inputtext));
-
             $.ajax({
                 type: "POST",
-                url: baseURL + "userLogin",
-                data: JSON.stringify(this.inputtext),
+                url: baseURL + "users/garnetlogin",
+                data: JSON.stringify(data),
                 contentType: "application/json",
                 dataType: "",
                 success: function (result) {
 
-                    if (result.loginStatus == "success") {
+                    console.log("result == " + JSON.stringify(result));
 
-                        // alert(result.user.id);
-                        // localStorage.setItem("garnetToken", result.garnetToken);
-                        // localStorage.setItem("userToken", result.userToken);
+                    if (result.loginStatus == "success") {
+                        alert(result.user.id);
+                        localStorage.setItem("garnetToken", result.user.accessToken);
+                        localStorage.setItem("accessToken", result.user.accessToken);
+                        localStorage.setItem("accessToken", result.user.accessToken);
                         localStorage.setItem("userId", result.user.id);
                         parent.location.href = 'index.html';
                     } else {

@@ -1,5 +1,7 @@
 package com.richstonedt.garnet.controller;
 
+import com.google.code.kaptcha.Producer;
+import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.interceptory.LoginMessage;
@@ -7,6 +9,7 @@ import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.UserParm;
+import com.richstonedt.garnet.model.view.GarLoginView;
 import com.richstonedt.garnet.model.view.LoginView;
 import com.richstonedt.garnet.model.view.UserProfile;
 import com.richstonedt.garnet.model.view.UserView;
@@ -20,10 +23,17 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b><code>UserController</code></b>
@@ -42,12 +52,18 @@ import java.util.List;
 public class UserController {
 
     /** The Constant LOG. */
-    private static final Logger LOG = LoggerFactory
-            .getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+
+
+    private static final Map<String, String> kaptchaMap = new HashMap<>();
+
 
     /** The service. */
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private Producer producer;
 
     @ApiOperation(value = "[Garnet]创建用户", notes = "创建一个用户")
     @ApiResponses(value = {
@@ -232,12 +248,14 @@ public class UserController {
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
         try {
             LoginMessage loginMessage = userService.userLogin(loginView);
-            if (StringUtils.isEmpty(loginMessage.getToken())) {
+            if (StringUtils.isEmpty(loginMessage.getAccessToken()) || StringUtils.isEmpty(loginMessage.getRefreshToken())) {
                 error = "登录失败，请重新登录";
             }
 //            HttpSession session = request.getSession();
 //            session.setAttribute("token", loginMessage.getToken());
-            response.setHeader("token", loginMessage.getToken());
+            response.setHeader("accessToken", loginMessage.getAccessToken());
+            response.setHeader("refreshToken", loginMessage.getRefreshToken());
+
 
 //            if (loginMessage.getCode() == 200) {
 //                //登录成功
@@ -275,10 +293,11 @@ public class UserController {
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
         try {
             LoginMessage loginMessage = userService.refreshToken(loginView);
-            if (StringUtils.isEmpty(loginMessage.getToken())) {
+            if (StringUtils.isEmpty(loginMessage.getAccessToken()) || StringUtils.isEmpty(loginMessage.getRefreshToken())) {
                 error = "刷新失败，请重新登录";
             }
-            response.setHeader("token", loginMessage.getToken());
+            response.setHeader("accessToken", loginMessage.getAccessToken());
+            response.setHeader("refreshToken", loginMessage.getRefreshToken());
             // 设置http的headers
             return new ResponseEntity<>(loginMessage, HttpStatus.OK);
         } catch (Throwable t) {
@@ -310,6 +329,110 @@ public class UserController {
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 409, message = "conflict"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/users/garnetlogin", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> garnetLogin(HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(value = "用户", required = true) @RequestBody GarLoginView garLoginView) {
+
+        String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
+        try {
+
+            LoginMessage loginMessage = new LoginMessage();
+            String nowTime = garLoginView.getNowTime();
+            String kaptcha = kaptchaMap.get(nowTime);
+            if (StringUtils.isEmpty(garLoginView.getKaptcha()) || !garLoginView.getKaptcha().equals(kaptcha)) {
+                loginMessage.setMessage("验证码不正确");
+                loginMessage.setLoginStatus("false");
+                loginMessage.setCode(401);
+            } else {
+                loginMessage = userService.garLogin(garLoginView);
+            }
+
+            response.setHeader("accessToken", loginMessage.getAccessToken());
+            response.setHeader("refreshToken", loginMessage.getRefreshToken());
+
+            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            error = t.getMessage();
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]获取验证码", notes = "Get Kaptcha")
+    @RequestMapping(value = "/kaptcha", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> getKaptcha(
+            @ApiParam(value = "nowTime,当前时间毫秒值", required = true) @RequestParam(value = "nowTime") String nowTime,
+            @ApiParam(value = "oldTime,上一张验证码的毫秒值", required = false) @RequestParam(value = "oldTime",required = false) String oldTime) throws IOException {
+        try {
+            //生成文字验证码
+            String text = producer.createText();
+            //生成图片验证码
+            BufferedImage image = producer.createImage(text);
+            if (!StringUtils.isEmpty(oldTime)) {
+                kaptchaMap.remove(oldTime);
+            }
+            kaptchaMap.put(nowTime, text);
+            System.out.println(LocalTime.now() + " TEST:kaptchaMap:  " + kaptchaMap);
+            // transform to byte
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ImageIO.write(image, "jpg", stream);
+            byte[] result = stream.toByteArray();
+
+            // modify header of response
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(MediaType.IMAGE_JPEG);
+            header.setCacheControl("no-store, no-cache");
+            return new ResponseEntity<>(result, header, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get Kaptcha ", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 409, message = "conflict"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/users/mode", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getMode(HttpServletRequest request, HttpServletResponse response,
+                                         @ApiParam(value = "用户", required = true) @RequestBody GarLoginView garLoginView) {
+
+        String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
+        try {
+
+            LoginMessage loginMessage = new LoginMessage();
+            String nowTime = garLoginView.getNowTime();
+            String kaptcha = kaptchaMap.get(nowTime);
+            if (StringUtils.isEmpty(garLoginView.getKaptcha()) || !garLoginView.getKaptcha().equals(kaptcha)) {
+                loginMessage.setMessage("验证码不正确");
+                loginMessage.setLoginStatus("false");
+                loginMessage.setCode(401);
+            } else {
+                loginMessage = userService.garLogin(garLoginView);
+            }
+
+            response.setHeader("accessToken", loginMessage.getAccessToken());
+            response.setHeader("refreshToken", loginMessage.getRefreshToken());
+
+            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            error = t.getMessage();
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
         }
     }
 }

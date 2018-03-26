@@ -98,34 +98,40 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         //其余为正常选择
 
         if ("".equals(applicationView.getTenantIds())) {
-
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicationView.getApplication().getId());
-
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
         } else if (!StringUtil.isEmpty(applicationView.getTenantIds())) {
-
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicationView.getApplication().getId());
-
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
-            for (String tenantId : applicationView.getTenantIds().split(",")
-                    ) {
+            //如果saas模式，判断租户是否已被绑定
+            Application application = applicationView.getApplication();
+            if (!ObjectUtils.isEmpty(application) && !StringUtils.isEmpty(application.getServiceMode()) && "saas".equals(application.getServiceMode())) {
+                List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(new ApplicationTenantCriteria());
+                List<Long> tenantIds = new ArrayList<>(); //数据库中已绑定的tenantId
+
+                for (ApplicationTenant applicationTenant : applicationTenants) {
+                    tenantIds.add(applicationTenant.getTenantId());
+                }
+                for (String tenantId : applicationView.getTenantIds().split(",")) {
+                    if (tenantIds.contains(Long.parseLong(tenantId))) {
+                        throw new RuntimeException("此租户已被绑定");
+                    }
+                }
+            }
+
+            //选择的租户未被绑定，完成更新
+            for (String tenantId : applicationView.getTenantIds().split(",")) {
                 ApplicationTenant applicationTenant = new ApplicationTenant();
-
                 applicationTenant.setId(IdGeneratorUtil.generateId());
-
                 //applicationId
                 applicationTenant.setApplicationId(applicationView.getApplication().getId());
                 applicationTenant.setTenantId(Long.parseLong(tenantId));
                 applicationTenantService.insertSelective(applicationTenant);
             }
-
         }
-
 
     }
 

@@ -1,7 +1,9 @@
 package com.richstonedt.garnet.interceptory;
 
 import com.richstonedt.garnet.model.Resource;
+import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.User;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -13,11 +15,28 @@ public class LoginMessage {
 
     private String loginStatus;
 
-    private String token;
+    @ApiModelProperty(value = "访问token")
+    private String accessToken;
+
+    @ApiModelProperty(value = "刷新token")
+    private String refreshToken;
 
     private int code;
 
     private List<Resource> resourceList;
+
+    @ApiModelProperty(value = "资源类型配置列表")
+
+    private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
+
+
+    public List<List<ResourceDynamicProperty>> getResourceDynamicPropertyList() {
+        return resourceDynamicPropertyList;
+    }
+
+    public void setResourceDynamicPropertyList(List<List<ResourceDynamicProperty>> resourceDynamicPropertyList) {
+        this.resourceDynamicPropertyList = resourceDynamicPropertyList;
+    }
 
     public List<Resource> getResourceList() {
         return resourceList;
@@ -35,12 +54,20 @@ public class LoginMessage {
         this.code = code;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     public User getUser() {
