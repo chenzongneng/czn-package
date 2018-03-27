@@ -11,7 +11,17 @@ public class ApplicationParm extends BaseParm{
 
     private String searchName;
 
+    private String mode;
+
     private Integer modeId;
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
 
     public Integer getModeId() {
         return modeId;

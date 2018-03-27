@@ -28,4 +28,6 @@ public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
 
     public List<Role> queryRolesByTenantId(RoleParm roleParm);
 
+    List<Role> queryRoles();
+
 }

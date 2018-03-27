@@ -38,6 +38,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
     private static final String SERVICE_MODE_PAAS = "paas";
 
+    private static final String SERVICE_MODE_ALL = "all";
+
     @Autowired
     private TenantMapper tenantMapper;
 
@@ -175,6 +177,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
         Tenant tenant = tenantParm.getTenant();
         TenantCriteria tenantCriteria = new TenantCriteria();
+        TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
         //根据userId获取用户所有的租户
         if(!ObjectUtils.isEmpty(tenantParm.getUserId())){
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
@@ -186,10 +189,11 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                 userTenantIds.add(userTenant.getTenantId());
             }
 
-            if(userTenantIds.size()==0){
+            if(userTenantIds.size() == 0){
                 userTenantIds.add(GarnetContants.NON_VALUE);
             }
-            tenantCriteria.createCriteria().andIdIn(userTenantIds);
+//            tenantCriteria.createCriteria().andIdIn(userTenantIds);
+            criteria.andIdIn(userTenantIds);
         }
 
         //根据appclition获取租户
@@ -206,19 +210,20 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             if(applicationTenantIds.size()==0){
                 applicationTenantIds.add(GarnetContants.NON_VALUE);
             }
-            tenantCriteria.createCriteria().andIdIn(applicationTenantIds);
+//            tenantCriteria.createCriteria().andIdIn(applicationTenantIds);
+            criteria.andIdIn(applicationTenantIds);
         }
 
-        if (ObjectUtils.isEmpty(tenantParm.getModeId())) {
-            //查询status为1，即没被删除的
-            tenantCriteria.createCriteria().andStatusEqualTo(1);
-        }else if (tenantParm.getModeId() == 0) {
-            tenantCriteria.createCriteria().andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
-        } else if (tenantParm.getModeId() == 1) {
-            tenantCriteria.createCriteria().andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
+        if (StringUtils.isEmpty(tenantParm.getMode())) {
+            return new PageUtil(null, (int)this.countByCriteria(tenantCriteria),tenantParm.getPageNumber() ,tenantParm.getPageSize());
+        }  else if (SERVICE_MODE_SAAS.equals(tenantParm.getMode())) {
+            criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
+        } else if (SERVICE_MODE_PAAS.equals(tenantParm.getMode())) {
+            criteria.andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
+        } else if (SERVICE_MODE_ALL.equals(tenantParm.getMode())) {
+            criteria.andStatusEqualTo(1);
         } else {
-            //查询status为1，即没被删除的
-            tenantCriteria.createCriteria().andStatusEqualTo(1);
+            return new PageUtil(null, (int)this.countByCriteria(tenantCriteria),tenantParm.getPageNumber() ,tenantParm.getPageSize());
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(tenantCriteria), (int)this.countByCriteria(tenantCriteria),tenantParm.getPageNumber() ,tenantParm.getPageSize());

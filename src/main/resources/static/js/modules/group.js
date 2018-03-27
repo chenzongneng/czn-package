@@ -323,44 +323,21 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载用户树
-            $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
+            $.get(baseURL + "users?token=" + accessToken + "&page=1&limit=1000", function (response) {
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
                 userTree.expandAll(true);
             });
             // 加载角色树
-            $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
-                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
+            $.get(baseURL + "/roletree?token=" + accessToken, function (response) {
+                console.log("group response == " + JSON.stringify(response));
+                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
                 roleTree.expandAll(true);
             });
-
-            // 加载部门树
-            // $.get(baseURL + "groups/add/" + currentUser.userId, function (response) {
-            // $.get(baseURL + "groups?page=1&limit=1000", function (response) {
-            //     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
-            // });
-            //
-            // // 加载用户树
-            // $.get(baseURL + "users?token=" + garnetToken + "&page=1&limit=1000", function (response) {
-            //     userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
-            //     userTree.expandAll(true);
-            // });
-            //
-            // // 加载角色树
-            // $.get(baseURL + "roles?token=" + garnetToken + "&page=1&limit=1000", function (response) {
-            //     roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response.list);
-            //     roleTree.expandAll(true);
-            // });
         },
         /** 更新按钮初始化数据 */
         initTreesToUpdate: function (groupId) {
-            // 加载部门树  封装ajax 请求，防止数据异步导致页面数据错乱
-            // $.get(baseURL + "groups/add/" + currentUser.userId, function (response) {
-            // $.get(baseURL + "groups?page=1&limit=1000" + currentUser.userId, function (response) {
-            //     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
-
             // 获取部门信息
             vm.getGroupInfo(groupId);
-            //});
         },
         /** 根据ID获取部门信息 */
         getGroupInfo: function (groupId) {
@@ -377,12 +354,12 @@ var vm = new Vue({
                 vm.group.orderNum = response.data.group.orderNum;
 
                 // 加载用户树
-                $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant + "?token=" + garnetToken, function (response) {
+                $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
                     userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                     userTree.expandAll(true);
 
                     // 加载角色树
-                    $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant + "?token=" + garnetToken, function (response) {
+                    $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
                         roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
                         roleTree.expandAll(true);
                     });
@@ -403,7 +380,7 @@ var vm = new Vue({
         /** 初始化部门信息 */
         initGroupInfo: function () {
             // 获取当前用户信息
-            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
+            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
                 currentUser = response;
             });
         },

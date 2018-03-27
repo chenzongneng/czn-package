@@ -38,8 +38,8 @@
             <a class="btn btn-default" @click="query">查询</a>
 
             <div class="form-group col-sm-2">
-                <select class="form-control" v-model="modeList.selectedMode" @change="selectMode">
-                    <option disabled value="">-----请选择模式-----</option>
+                <select class="form-control" v-model="modeList.selectedMode" @change="selectMode" id="selectModeId">
+                    <!--<option disabled value="">-&#45;&#45;&#45;&#45;请选择模式-&#45;&#45;&#45;&#45;</option>-->
                     <option v-for="option in modeList.options" v-bind:value="option.id">
                         {{ option.name }}
                     </option>

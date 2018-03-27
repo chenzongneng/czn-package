@@ -245,6 +245,14 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         return roles;
     }
 
+    @Override
+    public List<Role> queryRoles() {
+        RoleCriteria roleCriteria = new RoleCriteria();
+        roleCriteria.createCriteria().andStatusEqualTo(1);
+        List<Role> roles = this.selectByCriteria(roleCriteria);
+        return roles;
+    }
+
     private RoleView convertToRoleView(Role role) {
         RoleView roleView = new RoleView();
         roleView.setRole(role);

@@ -3,14 +3,13 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.service.ApplicationService;
 import io.swagger.annotations.*;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,7 @@ import java.util.List;
  * @since torinosrc-rs 1.0.0
  */
 @Api(value = "[Garnet]应用接口")
+@LoginRequired
 @RestController
 @RequestMapping(value = "/api/v1.0")
 public class ApplicationController {
@@ -55,6 +55,7 @@ public class ApplicationController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/applications", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createApplication(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "应用", required = true) @RequestBody ApplicationView applicationView,
             UriComponentsBuilder ucBuilder) {
         try {
@@ -85,6 +86,7 @@ public class ApplicationController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteApplication(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "应用id", required = true) @PathVariable(value = "id") long id) {
         try {
             applicationService.deleteByPrimaryKey(id);
@@ -105,6 +107,7 @@ public class ApplicationController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/applications", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteApplications(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         String error = "Failed to delete entities! " + MessageDescription.OPERATION_DELETE_FAILURE;
         try {
@@ -137,6 +140,7 @@ public class ApplicationController {
             @ApiResponse(code = 500, message = "internal Server Error") })
     @RequestMapping(value = "/applications", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateApplications(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "应用信息", required = true) @RequestBody ApplicationView applicationView) {
         try {
 
@@ -158,6 +162,7 @@ public class ApplicationController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getApplication(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "应用id", required = true) @PathVariable(value = "id") long id) {
         try {
 
@@ -182,8 +187,10 @@ public class ApplicationController {
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户Id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
             @ApiParam(value = "searchName", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
-            @ApiParam(value = "modeId", defaultValue = "", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) Integer modeId, //默认搜索PAAS
+            @ApiParam(value = "modeId", defaultValue = "", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) Integer modeId,
+            @ApiParam(value = "mode", defaultValue = "", required = false) @RequestParam(value = "mode", defaultValue = "", required = false) String  mode,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
         try {
             ApplicationParm applicationParm = new ApplicationParm();
@@ -192,8 +199,10 @@ public class ApplicationController {
             applicationParm.setPageNumber(pageNumber);
             applicationParm.setPageSize(pageSize);
             applicationParm.setSearchName(searchName);
-            applicationParm.setModeId(modeId);
+//            applicationParm.setModeId(modeId);
+            applicationParm.setMode(mode);
             PageUtil applications = applicationService.queryApplicationsByParms(applicationParm);
+
             // 封装返回信息
 //            GarnetMessage<PageInfo<Application>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, applications);
             return new ResponseEntity<>(applications, HttpStatus.OK);
@@ -211,6 +220,7 @@ public class ApplicationController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/applications/relate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> hasRelated(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
             boolean b = applicationService.hasRelated(ids);

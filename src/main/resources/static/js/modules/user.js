@@ -46,7 +46,7 @@ $(function () {
         },
         // 在URL中传递参数
         postData: {
-            token: garnetToken
+            token: accessToken
         },
         gridComplete: function () {
             // 隐藏grid底部滚动条
@@ -395,7 +395,7 @@ var vm = new Vue({
         },
         /** 查询当前用户信息 */
         getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (response) {
+            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
                 currentUser = response;
             });
         },

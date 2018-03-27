@@ -12,4 +12,11 @@ public interface SystemConfigService extends BaseService<SystemConfig, SystemCon
 
     PageUtil<SystemConfig> querySystemConfigsByParms(SystemConfigParm systemConfigParm);
 
+    /**
+     * 通过parameter 获取 systemConfig
+     * @param parameter
+     * @return
+     */
+    SystemConfig selectSystemConfigByParam(String parameter);
+
 }

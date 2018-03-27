@@ -11,7 +11,7 @@
 var baseURL = "http://localhost:12306/garnet/api/v1.0/";
 
 /** token */
-var garnetToken = localStorage.getItem("garnetToken");
+// var garnetToken = localStorage.getItem("garnetToken");
 var accessToken = localStorage.getItem("accessToken");
 if (!accessToken) {
     // parent.location.href = 'login.html';
@@ -30,7 +30,7 @@ $.ajaxSetup({
     headers: {
         // "token": token,
         // "gempileToken": localStorage.getItem("gempileToken")
-        "garnetToken": localStorage.getItem("garnetToken"),
+        // "garnetToken": localStorage.getItem("garnetToken"),
         // "userToken": localStorage.getItem("userToken")
         "accessToken": localStorage.getItem("accessToken"),
         "refreshToken": localStorage.getItem("refreshToken")
@@ -39,12 +39,22 @@ $.ajaxSetup({
     complete: function (xhr) {
         // console.log("xhr == " + JSON.stringify(xhr));
         var response = JSON.parse(xhr.responseText);
+
         // token过期，则跳转到登录页面
         if (response.code == 401) {
-            parent.location.href = '../login.html';
+            swal({
+                    title: response.message,
+                    type: "error"
+                },
+                function () {
+                    // parent.location.href = '../login.html';
+                });
+            //todo common.js的token处理
+            // parent.location.href = '../login.html';
         } else if (response.code == 403) {
             swal({
-                    title: "没有权限",
+                    // title: "没有权限",
+                    title: response.message,
                     type: "error"
                 },
                 function () {

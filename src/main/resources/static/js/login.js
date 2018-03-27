@@ -47,15 +47,13 @@ var vm = new Vue({
                 contentType: "application/json",
                 dataType: "",
                 success: function (result) {
-
-                    console.log("result == " + JSON.stringify(result));
-
                     if (result.loginStatus == "success") {
-                        alert(result.user.id);
-                        localStorage.setItem("garnetToken", result.user.accessToken);
-                        localStorage.setItem("accessToken", result.user.accessToken);
-                        localStorage.setItem("accessToken", result.user.accessToken);
+                        // alert(result.user.id);
+                        // localStorage.setItem("garnetToken", result.accessToken);
+                        localStorage.setItem("refreshToken", result.refreshToken);
+                        localStorage.setItem("accessToken", result.accessToken);
                         localStorage.setItem("userId", result.user.id);
+                        // alert("login token == " + localStorage.getItem("accessToken"));
                         parent.location.href = 'index.html';
                     } else {
                         vm.error = true;

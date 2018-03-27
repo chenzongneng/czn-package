@@ -35,4 +35,12 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfig, Syste
     public PageUtil<SystemConfig> querySystemConfigsByParms(SystemConfigParm systemConfigParm) {
         return null;
     }
+
+    @Override
+    public SystemConfig selectSystemConfigByParam(String parameter) {
+        SystemConfigCriteria systemConfigCriteria = new SystemConfigCriteria();
+        systemConfigCriteria.createCriteria().andParameterEqualTo(parameter);
+        SystemConfig systemConfig = this.selectSingleByCriteria(systemConfigCriteria);
+        return systemConfig;
+    }
 }

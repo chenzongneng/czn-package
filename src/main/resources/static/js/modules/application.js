@@ -7,8 +7,12 @@
 $(function () {
     /**  初始化应用列表  */
     $("#jqGrid").jqGrid({
-        url: baseURL + 'applications',
+        url: baseURL + 'applications?userId=' + userId,
         datatype: "json",
+        postData:{
+            'mode': localStorage.getItem("mode"),
+            'token': accessToken
+        },
         colModel: [
             {label: '应用ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
             {label: '应用名称', name: 'name', align: 'center', width: 80},
@@ -75,7 +79,8 @@ var vm = new Vue({
         searchName: null,
         showList: true,
         title: null,
-        modeId: 1,// SAAS为0，PAAS为1
+        modeId: null,// SAAS为0，PAAS为1
+        mode: null,
         modeName: null,
         application: {
             id:null,
@@ -94,19 +99,31 @@ var vm = new Vue({
         },
         // 选择模式列表
         modeList: {
-            selectedMode: "",
+            selectedMode: localStorage.getItem("mode"),
             options: [
                 {
-                id : -1,
+                id : "all",
                 name : "all"
             },
             {
-                id : 0,
+                id : "saas",
                 name : "saas"
             },{
-                id : 1,
+                id : "paas",
                 name : "paas"
             }]
+        }
+    },
+    mounted:function () {
+        //移除mode option
+        if (localStorage.getItem("mode") == "saas") {
+            $("#selectModeId option[value='paas']").remove();
+            $("#selectModeId option[value='all']").remove();
+        } else if (localStorage.getItem("mode") == "paas") {
+            $("#selectModeId option[value='all']").remove();
+            $("#selectModeId option[value='saas']").remove();
+        } else if (localStorage.getItem("mode") == "all") {
+
         }
     },
     methods: {
@@ -133,7 +150,7 @@ var vm = new Vue({
             };
 
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&modeId=" + vm.modeId, function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
@@ -154,7 +171,7 @@ var vm = new Vue({
             vm.getApplication(applicationId);
 
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&modeId=" + vm.modeId, function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
@@ -166,7 +183,8 @@ var vm = new Vue({
             if (!applicationIds) {
                 return;
             }
-            $.get(baseURL + "applications/relate?ids=" + applicationIds, function (response) {
+
+            $.get(baseURL + "applications/relate?ids=" + applicationIds + "&token=" + accessToken, function (response) {
                 if (response == Boolean(true)) {
                     title = "应用仍被其他租户关联，若确定则将关联租户一并删除，是否确定删除？";
                 } else {
@@ -186,7 +204,7 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "applications?ids=" + applicationIds.toString(),
+                        url: baseURL + "applications?ids=" + applicationIds.toString() + "&token=" + accessToken,
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
@@ -212,16 +230,18 @@ var vm = new Vue({
                 return;
             }
 
-            if (vm.modeId == null) {
-                vm.modeId = vm.modeList.selectedMode;
+            var mode = localStorage.getItem("mode");
+            if (mode == null) {
+                localStorage.setItem("mode", vm.modeList.selectedMode);
+                // vm.mode = vm.modeList.selectedMode;
             }
 
-            if(vm.modeId == 0) {  //saas
+            if(mode == "saas") {  //saas
                 vm.application.serviceMode = "saas";
                 //saas模式下，一个租户被一个应用绑定
 
-            } else if(vm.modeId == 1) {
-                vm.application.serviceMode = "paas"
+            } else if(mode == "paas") {
+                vm.application.serviceMode = "paas";
                 if (tenantIdList.length > 1) {
                     swal("当前模式不能添加多个租户", "", "error");
                     return;
@@ -238,7 +258,7 @@ var vm = new Vue({
                 }, function () {
                     $.ajax({
                         type: vm.application.id === null ? "POST" : "PUT",
-                        url: baseURL + "applications",
+                        url: baseURL + "applications?token=" + accessToken,
                         contentType: "application/json",
                         data:JSON.stringify(obj),
                         dataType: "",
@@ -256,7 +276,7 @@ var vm = new Vue({
 
             $.ajax({
                 type: vm.application.id === null ? "POST" : "PUT",
-                url: baseURL + "applications",
+                url: baseURL + "applications?token=" + accessToken,
                 contentType: "application/json",
                 data:JSON.stringify(obj),
                 dataType: "",
@@ -271,9 +291,9 @@ var vm = new Vue({
         },
         /**  根据ID获取应用信息 */
         getApplication: function (applicationId) {
-            $.get(baseURL + "applications/" + applicationId, function (response) {
+            console.log("app get accessToken " + accessToken);
+            $.get(baseURL + "applications/" + applicationId + "?token=" + accessToken, function (response) {
                 response=response.data;
-
                 if (response) {
                     vm.application.id = response.application.id;
                     vm.application.name = response.application.name;
@@ -290,16 +310,6 @@ var vm = new Vue({
                     $.each(response.tenantNameList, function (index, item) {
                         vm.application.tenantNames.push(item);
                     })
-
-                    var mode = response.application.serviceMode;
-                    if(mode == "saas") {
-                        vm.modeId = 0;
-                    } else if (mode == "paas") {
-                        vm.modeId = 1;
-                    } else {
-                        vm.modeId = -1;
-                    }
-
                 }
             });
         },
@@ -333,8 +343,9 @@ var vm = new Vue({
         },
         //模式选择事件
         selectMode: function () {
-            vm.modeId = vm.modeList.selectedMode;
-            vm.reload(true);
+            var mode = vm.modeList.selectedMode;
+            localStorage.setItem("mode", mode);
+            vm.reload(false);
         },
         reload: function (backFirst) {
             vm.showList = true;
@@ -347,7 +358,7 @@ var vm = new Vue({
             $("#jqGrid").jqGrid('setGridParam', {
                 postData: {
                     'searchName': vm.searchName,
-                    'modeId' : vm.modeId
+                    'mode': localStorage.getItem("mode")
                 },
                 page: page
             }).trigger("reloadGrid");

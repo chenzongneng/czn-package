@@ -298,6 +298,7 @@ CREATE TABLE gar_system_config
   value VARCHAR(256) NOT NULL,
   PRIMARY KEY (id)
 ) WITHOUT OIDS;
+INSERT INTO gar_system_config VALUES (1, 'mode', 'paas');
 
 
 /* Comments */

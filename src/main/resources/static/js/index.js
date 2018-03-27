@@ -3,7 +3,6 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
-localStorage.setItem("userId", "1519893662");
 /** 生成菜单 */
 var menuItem = Vue.extend({
     name: 'menu-item',
@@ -81,7 +80,15 @@ var vm = new Vue({
             // });
         },
         getMode : function () {
-
+            $.get(baseURL + "/systemconfigs/parameter?parameter=mode", function (response) {
+                if (!response) {
+                    console.log("mode is null");
+                    parent.location.href = 'index.html';
+                } else {
+                    var mode = response.data.value;
+                    localStorage.setItem("mode", mode);
+                }
+            });
         },
         /** 修改密码 */
         updatePassword: function () {
@@ -121,26 +128,20 @@ var vm = new Vue({
         },
         /** 退出登录 */
         logout: function () {
-            localStorage.removeItem("garnetToken");
+            localStorage.removeItem("accessToken");
             location.href = 'login.html';
         }
     },
     /**  初始化页面时执行该方法 */
     created: function () {
         // this.getMenuList();
-
-        console.log("index 初始化页面时请求ajax");
-        //todo ajax请求mode,并设置localstorage
-
-
+        console.log("localStorage token == " + localStorage.getItem("accessToken"));
+        console.log("index mode == " + localStorage.getItem("mode"))
+        this.getMode();
         this.getUser();
         this.getButtonList();
     }
 });
-
-function selectMode() {
-    console.log("selectMode")
-}
 
 /** 菜单路由 */
 function routerList(router, menuList,vm) {

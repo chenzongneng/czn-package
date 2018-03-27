@@ -183,4 +183,24 @@ public class SystemConfigController {
         }
     }
 
+    @ApiOperation(value = "[Torino Source]获取单个系统配置", notes = "通过parameter获取系统配置")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/systemconfigs/parameter", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getSystemConfigByParam(
+            @ApiParam(value = "系统配置parameter", required = true) @RequestParam(value = "parameter") String parameter) {
+        try {
+            final SystemConfig systemConfig = systemConfigService.selectSystemConfigByParam(parameter);
+            // 封装返回信息
+            GarnetMessage<SystemConfig> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, systemConfig);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
+        }
+    }
+
 }

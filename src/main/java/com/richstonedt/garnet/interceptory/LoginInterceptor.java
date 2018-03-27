@@ -39,7 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     private UserCredentialService userCredentialService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         //如果是映射到方法，验证登录
         if (handler instanceof HandlerMethod) {
@@ -49,40 +49,40 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             //没有声明需要权限,或者声明不验证权限
             if(loginRequired == null){
                 return true;
-            }else{
+            } else{
+                //有加token验证注解的情况
                 String tokenWithAppCode = request.getHeader("token");
+                if (StringUtils.isEmpty(tokenWithAppCode)) {
+                    tokenWithAppCode = request.getHeader("accessToken");
+                }
                 if(StringUtils.isEmpty(tokenWithAppCode)){
                     tokenWithAppCode = request.getParameter("token");
                 }
+
                 //如果token存在
-                if(!StringUtils.isEmpty(tokenWithAppCode)){//如果验证成功返回true（这里直接写false来模拟验证失败的处理）
+                if(StringUtils.isEmpty(tokenWithAppCode) || !"null".equals(tokenWithAppCode)){
                     Map<String, Claim> tokenParams = null;
+                    //从前端传来的token中获取真正的token。关键步骤！！！
+                    String[] tokenParams1 = tokenWithAppCode.split("#");
+                    //真正的token
+                    String token = tokenParams1[0];
 
-                        //从前端传来的token中获取真正的token。关键步骤！！！
-                        String[] tokenParams1 = tokenWithAppCode.split("#");
-                        //真正的token
-                        String token = tokenParams1[0];
+                    //从token中获取userName
+                    String userName = JWT.decode(token).getAudience().get(0);
+                    //通过userName获取密码
+                    UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
+                    if (ObjectUtils.isEmpty(userCredential)) {
+                        return userNotExist(request, response);
+                    }
 
-                        //从token中获取userName
-                        String userName = JWT.decode(token).getAudience().get(0);
-                        //通过userName获取密码
-                        UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
-                        if (ObjectUtils.isEmpty(userCredential)) {
-                            return userNotExist(request, response);
-                        }
-                        String password = userCredential.getCredential();
+                    //根据password解密
+                    String password = userCredential.getCredential();
                     try {
-                        //根据password解密
                         tokenParams = JwtToken.verifyToken(token, password);
                     } catch (Exception e) {
                         //无法解密，token不正确
                         return tokenError(request, response);
                     }
-
-                    //从token中取出appCode，并验证token是否和DB中的一致
-//                    String appCode = tokenParams.get("appCode").asString();
-//                    String routerGroupName =  routerGroupService.getGroupNameByAppCode(appCode);
-//                    String tokenFromDB = tokenService.getTokenByRouterGroupName(routerGroupName);
 
                     //根据userName从数据库中拿出token
                     TokenCriteria tokenCriteria = new TokenCriteria();
@@ -91,6 +91,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     if (ObjectUtils.isEmpty(token1)) {
                         return haveNotToken(request, response);
                     }
+
                     //将token和数据库中的token对比
                     String tokenFromDB = token1.getToken();
                     if (!token.equals(tokenFromDB)) {
@@ -104,12 +105,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     }
 
                     return true;
-                }else{
-                    //token为空
-                    return haveNotToken(request, response);
+                } else{
+                    return haveNotToken(request, response);  //token为空
                 }
             }
-        }else{
+        } else{
             return true;
         }
     }
@@ -142,7 +142,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    private boolean haveNotToken(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean haveNotToken(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("请先登录");
@@ -154,39 +154,33 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         return false;
     }
 
-    private boolean tokenExpired(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean tokenExpired(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("登录失效，请重新登录");
         loginMessage.setLoginStatus("false");
-        loginMessage.setCode(403);
+        loginMessage.setCode(401);
         responseOutWithJson(response, loginMessage);
-//        response.sendRedirect("/garnet/login.html");
-//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 
-    private boolean tokenError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean tokenError(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
-        loginMessage.setMessage("TOKEN验证错误，请重新登录");
+        loginMessage.setMessage("TOKEN验证错误，请重新登录或确保您有权限进行此操作");
         loginMessage.setLoginStatus("false");
         loginMessage.setCode(403);
         responseOutWithJson(response, loginMessage);
-//        response.sendRedirect("/garnet/login.html");
-//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 
-    private boolean userNotExist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private boolean userNotExist(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json; charset=utf-8");
         LoginMessage loginMessage = new LoginMessage();
         loginMessage.setMessage("用户不存在，请重新登录");
         loginMessage.setLoginStatus("false");
         loginMessage.setCode(401);
         responseOutWithJson(response, loginMessage);
-//        response.sendRedirect("/garnet/login.html");
-//        request.getRequestDispatcher("/garnet/login.html").forward(request, response);
         return false;
     }
 

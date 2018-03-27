@@ -35,6 +35,7 @@ import java.util.List;
  */
 @Api(value = "[Torino Source]租户接口")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class TenantController {
 
@@ -53,6 +54,7 @@ public class TenantController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/tenants", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createTenant(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "租户", required = true) @RequestBody TenantView tenantView,
             UriComponentsBuilder ucBuilder) {
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
@@ -86,6 +88,7 @@ public class TenantController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/tenants/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteTenant(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id) {
         try {
             tenantService.deleteTenant(id);
@@ -106,6 +109,7 @@ public class TenantController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/tenants", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteTenants(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
 
@@ -134,6 +138,7 @@ public class TenantController {
             @ApiResponse(code = 500, message = "internal Server Error") })
     @RequestMapping(value = "/tenants", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateTenants(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "租户信息", required = true) @RequestBody TenantView tenantView) {
         try {
 
@@ -155,6 +160,7 @@ public class TenantController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/tenants/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getTenant(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id) {
         try {
             TenantView tenantView = tenantService.getTenantWithApplication(id);
@@ -176,10 +182,12 @@ public class TenantController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/tenants", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getTenants(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "应用Id", defaultValue = "", required = false) @RequestParam(value = "applicaionId", defaultValue = "", required = false) Long applicaionId,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @ApiParam(value = "mode", defaultValue = "0", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) int modeId,
+            @ApiParam(value = "modeId", defaultValue = "0", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) int modeId,
+            @ApiParam(value = "mode", defaultValue = "0", required = false) @RequestParam(value = "mode", defaultValue = "", required = false) String mode,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int limit) {
         try {
             TenantParm tenantParm = new TenantParm();
@@ -187,7 +195,8 @@ public class TenantController {
             tenantParm.setApplicationId(applicaionId);
             tenantParm.setPageSize(limit);
             tenantParm.setPageNumber(page);
-            tenantParm.setModeId(modeId);
+//            tenantParm.setModeId(modeId);
+            tenantParm.setMode(mode);
             PageUtil result = tenantService.queryTenantssByParms(tenantParm);
             // 封装返回信息
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -204,7 +213,8 @@ public class TenantController {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/tenants/appidwithtenant", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getApplicationIs() {
+    public ResponseEntity<?> getApplicationIs(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
 //            @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id) {
         try {
             List<Long> applicationIs = tenantService.getApplicationIs();
