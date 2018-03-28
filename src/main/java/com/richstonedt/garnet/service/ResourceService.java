@@ -17,9 +17,4 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
 
     public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm);
 
-    /**
-     * 当用户点击删除时，将其状态设为禁用
-     * @param resource
-     */
-    public void updateStatusById(Resource resource);
 }

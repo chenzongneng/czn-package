@@ -2,6 +2,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.GroupParm;
@@ -33,6 +34,7 @@ import java.util.List;
  */
 @Api(value = "[Garnet]用户组接口")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class GroupController {
 
@@ -184,8 +186,8 @@ public class GroupController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getGroups(
-            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
-            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
+            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
             @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {

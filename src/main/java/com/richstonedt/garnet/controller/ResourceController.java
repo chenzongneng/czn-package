@@ -3,6 +3,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.ResourceParm;
@@ -33,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Api(value = "[Torino Source]资源接口")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class ResourceController {
 
@@ -164,7 +166,8 @@ public class ResourceController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/resources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getResources(
-            //@ApiParam(value = "用户名", defaultValue = "", required = false) @RequestParam(value = "userName", defaultValue = "", required = false) String userName,
+            @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
+            @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) Integer pageSize) {
@@ -172,6 +175,8 @@ public class ResourceController {
 
             ResourceParm resourceParm = new ResourceParm();
             resourceParm.setPageSize(pageSize);
+            resourceParm.setUserId(userId);
+            resourceParm.setSearchName(searchName);
             resourceParm.setPageNumber(pageNumber);
 
             PageUtil pageInfo = resourceService

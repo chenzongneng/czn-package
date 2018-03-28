@@ -16,13 +16,13 @@ import com.richstonedt.garnet.model.criteria.RolePermissionCriteria;
 import com.richstonedt.garnet.model.parm.PermissionParm;
 import com.richstonedt.garnet.model.parm.PermissionResourceParm;
 import com.richstonedt.garnet.model.view.PermissionView;
-import com.richstonedt.garnet.service.PermissionService;
-import com.richstonedt.garnet.service.ResourceService;
-import com.richstonedt.garnet.service.RolePermissionService;
+import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import springfox.documentation.spring.web.json.Json;
 
 import java.util.ArrayList;
@@ -41,6 +41,9 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
     @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -168,23 +171,33 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     public PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm) {
 
         Permission permission = permissionParm.getPermission();
-
         PermissionCriteria permissionCriteria = new PermissionCriteria();
+        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
+        criteria.andStatusEqualTo(1); //查询没被删除的
 
-        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
-
-            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
-
+        if (!StringUtils.isEmpty(permissionParm.getUserId())) {
+            List<Long> tenantIds = userService.getTenantIdsByUserId(permissionParm.getUserId());
+            if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
+                criteria.andTenantIdIn(tenantIds);
+            } else {
+                //没有关联租户，返回空
+                PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
+                return  new PageInfo<Permission>(null);
+            }
         }
-        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
-
-            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
+        if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
+            criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
         }
+
+//        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
+//            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
+//        }
+//        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
+//            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
+//        }
 
         PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
-
         List<Permission> permissions = this.selectByCriteria(permissionCriteria);
-
         PageInfo<Permission> permissionPageInfo = new PageInfo<Permission>(permissions);
 
         return permissionPageInfo;
@@ -195,17 +208,28 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         Permission permission = permissionParm.getPermission();
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
-        permissionCriteria.createCriteria().andStatusEqualTo(1);
+        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
+        criteria.andStatusEqualTo(1); //查询没被删除的
 
-        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
-
-            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
-
+        if (!StringUtils.isEmpty(permissionParm.getUserId())) {
+            List<Long> tenantIds = userService.getTenantIdsByUserId(permissionParm.getUserId());
+            if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
+                criteria.andTenantIdIn(tenantIds);
+            } else {
+                //没有关联租户，返回空
+                return  new PageUtil(null, 0 ,permissionParm.getPageSize(), permissionParm.getPageNumber());
+            }
         }
-        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
-
-            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
+        if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
+            criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
         }
+
+//        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
+//            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
+//        }
+//        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
+//            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
+//        }
 
         PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
 

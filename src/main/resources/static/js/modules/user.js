@@ -7,7 +7,7 @@
 $(function () {
     /** 初始化用户列表 */
     $("#jqGrid").jqGrid({
-        url: baseURL + 'users',
+        url: baseURL + 'users?userId=' + userId,
         datatype: "json",
         colModel: [
             {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
@@ -267,9 +267,6 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-
-            // alert(JSON.stringify(vm.multiple.selectedListTenant) + "dd" + JSON.stringify(vm.user));
-
             var obj = new Object();
 
             obj.user = vm.user;
@@ -281,12 +278,9 @@ var vm = new Vue({
 
             //获取选择的租户
             for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {
-
-                // console.log(vm.multiple.selectedListTenant[i].id);
                 var userTenant = new Object();
                 userTenant.tenantId = vm.multiple.selectedListTenant[i].id;
                 obj.userTenants.push(userTenant);
-
             }
 
             $.ajax({
@@ -345,7 +339,6 @@ var vm = new Vue({
                 applicationTree.expandAll(true);
             });
             //加载部门树
-            // $.get(baseURL + "depts/add/" + currentUser.userId, function (response) {
             $.get(baseURL + "departments?page=1&limit=1000", function (response) {
                 deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
                 deptTree.expandAll(true);
@@ -369,12 +362,10 @@ var vm = new Vue({
         /** 根据用户ID获取用户信息 */
         getUser: function (userId) {
             $.get(baseURL + "users/" + userId, function (response) {
-
                 response = response.data;
 
-                // alert(response.password);
                 vm.user = response.user;
-                vm.user.password =response.password;
+                vm.user.password = response.password;
                 // vm.user.userId = response.userId;
                 // vm.user.userName = response.userName;
                 // vm.user.password = null;
@@ -395,7 +386,7 @@ var vm = new Vue({
         },
         /** 查询当前用户信息 */
         getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+            $.getJSON(baseURL + "users/" + userId + "?token=" + accessToken, function (response) {
                 currentUser = response;
             });
         },

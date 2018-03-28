@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.jdbc.support.nativejdbc.OracleJdbc4NativeJdbcExtractor;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 

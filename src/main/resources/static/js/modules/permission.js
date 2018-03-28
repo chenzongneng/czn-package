@@ -53,6 +53,7 @@ $(function () {
             rows: "limit"
         },
         postData: {
+            userId: userId,
             token: accessToken
         },
         gridComplete: function () {

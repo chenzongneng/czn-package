@@ -28,7 +28,7 @@ var Group = {
 $(function () {
     /** 初始化角色列表 */
     $("#jqGrid").jqGrid({
-        url: baseURL + 'groups',
+        url: baseURL + 'groups?userId=' + userId,
         datatype: "json",
         colModel: [
             {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
@@ -329,7 +329,6 @@ var vm = new Vue({
             });
             // 加载角色树
             $.get(baseURL + "/roletree?token=" + accessToken, function (response) {
-                console.log("group response == " + JSON.stringify(response));
                 roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
                 roleTree.expandAll(true);
             });
@@ -380,7 +379,7 @@ var vm = new Vue({
         /** 初始化部门信息 */
         initGroupInfo: function () {
             // 获取当前用户信息
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+            $.getJSON(baseURL + "users/" +  userId + "?token=" + accessToken, function (response) {
                 currentUser = response;
             });
         },

@@ -215,7 +215,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         }
 
         if (StringUtils.isEmpty(tenantParm.getMode())) {
-            return new PageUtil(null, (int)this.countByCriteria(tenantCriteria),tenantParm.getPageNumber() ,tenantParm.getPageSize());
+            criteria.andStatusEqualTo(1);
         }  else if (SERVICE_MODE_SAAS.equals(tenantParm.getMode())) {
             criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
         } else if (SERVICE_MODE_PAAS.equals(tenantParm.getMode())) {

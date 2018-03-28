@@ -170,11 +170,14 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             userTenants = userTenantService.selectByCriteria(userTenantCriteria);
 
             List<Long> tenantIds = new ArrayList<>();
-            if (!CollectionUtils.isEmpty(userTenants)) {
-                for (UserTenant userTenant : userTenants) {
-                    tenantIds.add(userTenant.getTenantId());
-                }
+            //如果用户没有关联的租户，返回空
+            if (CollectionUtils.isEmpty(userTenants) || userTenants.size() == 0) {
+                return  new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
             }
+            for (UserTenant userTenant : userTenants) {
+                tenantIds.add(userTenant.getTenantId());
+            }
+            //通过租户id拿应用id
             ApplicationTenantCriteria applicationTenantCriteria1 = new ApplicationTenantCriteria();
             applicationTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
             List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria1);
@@ -183,38 +186,34 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             for (ApplicationTenant applicationTenant : applicationTenantList) {
                 applicationIds.add(applicationTenant.getApplicationId());
             }
-
             criteria.andIdIn(applicationIds);
         }
 
-
         //根据tenant id 获取user对应的应用
-        if (!ObjectUtils.isEmpty(applicationParm.getTenantId())) {
-            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-            applicationTenantCriteria.createCriteria().andTenantIdEqualTo(applicationParm.getTenantId());
-
-            List<ApplicationTenant> applicationTenants = new ArrayList<ApplicationTenant>();
-            applicationTenants.addAll(applicationTenantService.selectByCriteria(applicationTenantCriteria));
-
-            List<Long> applicationTenantIds = new ArrayList<Long>();
-            for (ApplicationTenant applicationTenant : applicationTenants) {
-                applicationTenantIds.add(applicationTenant.getApplicationId());
-            }
-
-            if (applicationTenantIds.size() == 0) {
-                applicationTenantIds.add(GarnetContants.NON_VALUE);
-            }
-            applicationCriteria.createCriteria().andIdIn(applicationTenantIds);
-        }
+//        if (!ObjectUtils.isEmpty(applicationParm.getTenantId())) {
+//            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+//            applicationTenantCriteria.createCriteria().andTenantIdEqualTo(applicationParm.getTenantId());
+//
+//            List<ApplicationTenant> applicationTenants = new ArrayList<ApplicationTenant>();
+//            applicationTenants.addAll(applicationTenantService.selectByCriteria(applicationTenantCriteria));
+//
+//            List<Long> applicationTenantIds = new ArrayList<Long>();
+//            for (ApplicationTenant applicationTenant : applicationTenants) {
+//                applicationTenantIds.add(applicationTenant.getApplicationId());
+//            }
+//
+//            if (applicationTenantIds.size() == 0) {
+//                applicationTenantIds.add(GarnetContants.NON_VALUE);
+//            }
+//            applicationCriteria.createCriteria().andIdIn(applicationTenantIds);
+//        }
 
         if (!ObjectUtils.isEmpty(applicationParm.getSearchName())) {
-            applicationCriteria.createCriteria().andNameLike("%" + applicationParm.getSearchName() + "%");
+            criteria.andNameLike("%" + applicationParm.getSearchName() + "%");
         }
 
         if (StringUtils.isEmpty(applicationParm.getMode())) {
-            //查询status为1，即没被删除的
-            applicationCriteria.createCriteria().andStatusEqualTo(1);
-//            return null;
+            criteria.andStatusEqualTo(1);
         } else if (SERVICE_MODE_SAAS.equals(applicationParm.getMode())) {
             criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
         } else if (SERVICE_MODE_PAAS.equals(applicationParm.getMode())) {
@@ -222,9 +221,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         } else if (SERVICE_MODE_ALL.equals(applicationParm.getMode())) {
             criteria.andStatusEqualTo(1);
         } else {
-            //查询status为1，即没被删除的
-            criteria.andStatusEqualTo(1);
-//            return null;
+            return new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());

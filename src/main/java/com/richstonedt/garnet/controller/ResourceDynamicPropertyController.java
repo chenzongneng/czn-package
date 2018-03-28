@@ -2,6 +2,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.message.*;
@@ -35,6 +36,7 @@ import java.util.List;
  */
 @Api(value = "[Torino Source]资源动态属性接口")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class ResourceDynamicPropertyController {
 

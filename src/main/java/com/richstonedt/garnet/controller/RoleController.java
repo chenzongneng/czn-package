@@ -2,6 +2,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Role;
 import com.richstonedt.garnet.model.RolePermission;
 import com.richstonedt.garnet.model.criteria.RoleCriteria;
@@ -36,6 +37,7 @@ import java.util.List;
  */
 @Api(value = "[Garnet]角色接口")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class RoleController {
 
@@ -192,7 +194,7 @@ public class RoleController {
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         try {
             RoleParm roleParm = new RoleParm();
-           // roleParm.setUserId(userId);
+            roleParm.setUserId(userId);
             //roleParm.setTenantId(tenantId);
             roleParm.setPageNumber(pageNumber);
             roleParm.setPageSize(pageSize);

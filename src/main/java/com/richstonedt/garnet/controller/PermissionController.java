@@ -3,6 +3,7 @@ package com.richstonedt.garnet.controller;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceException;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Permission;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.PermissionParm;
@@ -38,6 +39,7 @@ import java.util.List;
  */
 @Api(value = "[Torino Source]权限接口")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class PermissionController {
 
@@ -179,12 +181,14 @@ public class PermissionController {
     @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getPermissions(
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
+            @ApiParam(value = "用户id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) Integer pageSize) {
         try {
 
             PermissionParm permissionParm = new PermissionParm();
+            permissionParm.setUserId(userId);
             permissionParm.setPageNumber(page);
             permissionParm.setPageSize(pageSize);
             PageUtil permissionPageInfo = permissionService.queryPermissionsByParms(permissionParm);

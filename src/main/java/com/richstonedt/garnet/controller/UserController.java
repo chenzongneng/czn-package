@@ -65,6 +65,7 @@ public class UserController {
     @Autowired
     private Producer producer;
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]创建用户", notes = "创建一个用户")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
@@ -102,6 +103,7 @@ public class UserController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]删除用户", notes = "通过id删除用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -126,6 +128,7 @@ public class UserController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]删除用户", notes = "批量删除用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -163,6 +166,7 @@ public class UserController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]更新用户", notes = "更新用户信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
@@ -185,6 +189,7 @@ public class UserController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]获取单个用户", notes = "通过id获取用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -205,6 +210,7 @@ public class UserController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -218,7 +224,7 @@ public class UserController {
         try {
 
             UserParm userParm = new UserParm();
-            //userParm.setUserId(userId);
+            userParm.setUserId(userId);
             userParm.setTenantId(tenantId);
             userParm.setPageSize(pageSize);
             userParm.setPageNumber(pageNumber);
@@ -308,6 +314,36 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "[Garnet]garnet刷新token", notes = "garnet刷新token")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 409, message = "conflict"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @LoginRequired
+    @RequestMapping(value = "/users/garnetrefreshtoken", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> garnetRefreshToken(
+            HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
+            @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
+        String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
+        try {
+            LoginMessage loginMessage = userService.garnetRefreshToken(loginView);
+            if (StringUtils.isEmpty(loginMessage.getAccessToken()) || StringUtils.isEmpty(loginMessage.getRefreshToken())) {
+                error = "刷新失败，请重新登录";
+            }
+            response.setHeader("accessToken", loginMessage.getAccessToken());
+            response.setHeader("refreshToken", loginMessage.getRefreshToken());
+            // 设置http的headers
+            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            error = t.getMessage();
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
+        }
+    }
+
+    @LoginRequired
     @ApiOperation(value = "[Garnet]根据租户id获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -351,6 +387,7 @@ public class UserController {
                 loginMessage.setMessage("验证码不正确");
                 loginMessage.setLoginStatus("false");
                 loginMessage.setCode(401);
+
             } else {
                 loginMessage = userService.garLogin(garLoginView);
             }
@@ -398,41 +435,6 @@ public class UserController {
         } catch (Throwable t) {
             LOG.error("Failed to get Kaptcha ", t);
             return GarnetRsUtil.newResponseEntity(t);
-        }
-    }
-
-    @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
-            @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/users/mode", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> getMode(HttpServletRequest request, HttpServletResponse response,
-                                         @ApiParam(value = "用户", required = true) @RequestBody GarLoginView garLoginView) {
-
-        String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
-        try {
-
-            LoginMessage loginMessage = new LoginMessage();
-            String nowTime = garLoginView.getNowTime();
-            String kaptcha = kaptchaMap.get(nowTime);
-            if (StringUtils.isEmpty(garLoginView.getKaptcha()) || !garLoginView.getKaptcha().equals(kaptcha)) {
-                loginMessage.setMessage("验证码不正确");
-                loginMessage.setLoginStatus("false");
-                loginMessage.setCode(401);
-            } else {
-                loginMessage = userService.garLogin(garLoginView);
-            }
-
-            response.setHeader("accessToken", loginMessage.getAccessToken());
-            response.setHeader("refreshToken", loginMessage.getRefreshToken());
-
-            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
-        } catch (Throwable t) {
-            error = t.getMessage();
-            LOG.error(error, t);
-            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
-            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
         }
     }
 }

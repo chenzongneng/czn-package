@@ -2,6 +2,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.RouterGroup;
 import com.richstonedt.garnet.model.criteria.RouterGroupCriteria;
 import com.richstonedt.garnet.model.message.*;
@@ -34,6 +35,7 @@ import java.util.List;
  */
 @Api(value = "[Torino Source]router白名单接口",tags = "[Torino Source]router白名单接口",description = "")
 @RestController
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class RouterGroupController {
 

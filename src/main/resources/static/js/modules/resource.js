@@ -46,6 +46,7 @@ $(function () {
             rows: "limit"
         },
         postData: {
+            userId: userId,
             token: accessToken
         },
         gridComplete: function () {
@@ -325,8 +326,6 @@ var vm = new Vue({
             obj.resource.tenantId = vm.tenantList.selectedTenant;
             obj.resource.applicationId = applicationList.appList.selectedApp;
 
-            console.log("obj == " + JSON.stringify(obj));
-
             $.ajax({
                 type: vm.resource.id === null ? "POST" : "PUT",
                 url: baseURL + "resources",
@@ -441,7 +440,6 @@ var vm = new Vue({
         },
         selectType: function () {
             var type = vm.typeList.selectedType;
-            console.log("type == " + type);
             vm.getResourceDynamicPropertyByType(type);
         },
         /**  获取应用列表 */

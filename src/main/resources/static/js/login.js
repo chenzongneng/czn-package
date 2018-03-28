@@ -31,15 +31,13 @@ var vm = new Vue({
             // alert(JSON.stringify(this.inputtext));
         },
         login: function () {
-
             var data = {
                 userName: vm.userName,
                 password: vm.password,
                 kaptcha: vm.captcha,
                 nowTime: nowTime,
-                appCode: 1
+                appCode: 'garnet'
             };
-            // alert(JSON.stringify(this.inputtext));
             $.ajax({
                 type: "POST",
                 url: baseURL + "users/garnetlogin",
@@ -48,12 +46,10 @@ var vm = new Vue({
                 dataType: "",
                 success: function (result) {
                     if (result.loginStatus == "success") {
-                        // alert(result.user.id);
-                        // localStorage.setItem("garnetToken", result.accessToken);
                         localStorage.setItem("refreshToken", result.refreshToken);
                         localStorage.setItem("accessToken", result.accessToken);
                         localStorage.setItem("userId", result.user.id);
-                        // alert("login token == " + localStorage.getItem("accessToken"));
+                        localStorage.setItem("userName", result.user.userName);
                         parent.location.href = 'index.html';
                     } else {
                         vm.error = true;

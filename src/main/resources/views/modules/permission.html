@@ -54,6 +54,7 @@
                 <div class="col-sm-2 control-label">所属应用</div>
                 <div class="col-sm-10">
                     <select class="form-control" id="applicaitonIdSelected" v-model="permission.applicationId" @change="selectApp">
+                        <option disabled value="">--请选择--</option>
                         <option v-for="option in appList.options" v-bind:value="option.id">
                             {{ option.name }}
                         </option>
@@ -64,6 +65,7 @@
                 <div class="col-sm-2 control-label">所属租户</div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="permission.tenantId" @change="selectTenant">
+                        <option disabled value="">--请选择--</option>
                         <option v-for="option in tenantList.options" v-bind:value="option.id">
                             {{ option.name }}
                         </option>

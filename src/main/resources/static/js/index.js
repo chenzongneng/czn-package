@@ -72,17 +72,17 @@ var vm = new Vue({
         /** 查询用户信息 */
         getUser: function () {
             // $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (r) {
-            //     if (!r) {
-            //         parent.location.href = 'index.html';
-            //     } else {
-            //         vm.user = r;
-            //     }
-            // });
+            $.getJSON(baseURL + "/users/"+ userId + "?token=" + accessToken, function (response) {
+                if (!response) {
+                    parent.location.href = 'index.html';
+                } else {
+                    vm.user = response.data.user;
+                }
+            });
         },
         getMode : function () {
             $.get(baseURL + "/systemconfigs/parameter?parameter=mode", function (response) {
                 if (!response) {
-                    console.log("mode is null");
                     parent.location.href = 'index.html';
                 } else {
                     var mode = response.data.value;
@@ -129,17 +129,17 @@ var vm = new Vue({
         /** 退出登录 */
         logout: function () {
             localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
             location.href = 'login.html';
         }
     },
     /**  初始化页面时执行该方法 */
     created: function () {
         // this.getMenuList();
-        console.log("localStorage token == " + localStorage.getItem("accessToken"));
-        console.log("index mode == " + localStorage.getItem("mode"))
         this.getMode();
         this.getUser();
         this.getButtonList();
+        // this.refreshToken();
     }
 });
 
@@ -163,6 +163,36 @@ function routerList(router, menuList,vm) {
         }
     }
 }
+
+
+//刷新token
+function refreshToken () {
+    var data = {
+        userName: localStorage.getItem("userName"),
+        token: localStorage.getItem("refreshToken"),
+        appCode: "garnet"
+    }
+    $.ajax({
+        type: "POST",
+        url: baseURL + "users/garnetrefreshtoken?token=" + accessToken,
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "",
+        success: function (result) {
+            console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
+            localStorage.setItem("accessToken", result.accessToken);
+            localStorage.setItem("refreshToken", result.refreshToken);
+        }
+        // ,
+        // error:function(result){
+        //     console.log("result refresh token error = " + JSON.stringify(result));
+        // }
+    });
+}
+//每半小时自动刷新token
+// window.setInterval("refreshToken();", 5000);
+window.setInterval("refreshToken();", 30 * 60 * 1000);
+// setTimeout(refreshToken(), 30 * 60 * 1000);
 
 /** iframe自适应 */
 $(window).on('resize', function () {

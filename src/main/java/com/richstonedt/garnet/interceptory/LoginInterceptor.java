@@ -60,7 +60,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 }
 
                 //如果token存在
-                if(StringUtils.isEmpty(tokenWithAppCode) || !"null".equals(tokenWithAppCode)){
+                if(!StringUtils.isEmpty(tokenWithAppCode) && !"null".equals(tokenWithAppCode)){
                     Map<String, Claim> tokenParams = null;
                     //从前端传来的token中获取真正的token。关键步骤！！！
                     String[] tokenParams1 = tokenWithAppCode.split("#");

@@ -291,7 +291,6 @@ var vm = new Vue({
         },
         /**  根据ID获取应用信息 */
         getApplication: function (applicationId) {
-            console.log("app get accessToken " + accessToken);
             $.get(baseURL + "applications/" + applicationId + "?token=" + accessToken, function (response) {
                 response=response.data;
                 if (response) {

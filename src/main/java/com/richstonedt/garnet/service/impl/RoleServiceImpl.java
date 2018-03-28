@@ -8,6 +8,7 @@ import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.GroupRoleCriteria;
 import com.richstonedt.garnet.model.criteria.RoleCriteria;
 import com.richstonedt.garnet.model.criteria.RolePermissionCriteria;
+import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.RoleParm;
 import com.richstonedt.garnet.model.view.RoleView;
 import com.richstonedt.garnet.service.*;
@@ -47,6 +48,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private UserTenantService userTenantService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -165,12 +172,18 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         Role role = roleParm.getRole();
         RoleCriteria roleCriteria = new RoleCriteria();
+        RoleCriteria.Criteria criteria = roleCriteria.createCriteria();
+        //只查询status为1，即没被删除的
+        criteria.andStatusEqualTo(1);
 
-        if(!ObjectUtils.isEmpty(roleParm.getTenantId())){
-            roleCriteria.createCriteria().andStatusEqualTo(1).andTenantIdEqualTo(roleParm.getTenantId());
-        } else {
-            //只查询status为1，即没被删除的
-            roleCriteria.createCriteria().andStatusEqualTo(1);
+        if (!StringUtils.isEmpty(roleParm.getUserId())) {
+            List<Long> tenantIds = userService.getTenantIdsByUserId(roleParm.getUserId());
+            if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0) {
+                //根据tenantId列表查询role
+                criteria.andTenantIdIn(tenantIds);
+            } else {
+                return  new PageUtil(null, 0,roleParm.getPageNumber() ,roleParm.getPageSize());
+            }
         }
 
         List<Role> roles = this.selectByCriteria(roleCriteria);
@@ -307,4 +320,5 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         return roleView;
     }
+
 }

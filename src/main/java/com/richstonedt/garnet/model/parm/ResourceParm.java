@@ -9,6 +9,16 @@ public class ResourceParm extends BaseParm{
 
     private Resource resource;
 
+    private String searchName;
+
+    public String getSearchName() {
+        return searchName;
+    }
+
+    public void setSearchName(String searchName) {
+        this.searchName = searchName;
+    }
+
     /**
      * Gets resource.
      *

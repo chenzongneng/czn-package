@@ -14,10 +14,12 @@ import com.richstonedt.garnet.model.parm.ResourceParm;
 import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
 import com.richstonedt.garnet.service.ResourceService;
+import com.richstonedt.garnet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -30,6 +32,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
     @Autowired
     private ResourceDynamicPropertyService resourceDynamicPropertyService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -118,36 +123,23 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         Resource resource = resourceParm.getResource();
 
         ResourceCriteria resourceCriteria = new ResourceCriteria();
+        ResourceCriteria.Criteria criteria =resourceCriteria.createCriteria();
+
+        if (!StringUtils.isEmpty(resourceParm.getUserId())) {
+            List<Long> tenantIds = userService.getTenantIdsByUserId(resourceParm.getUserId());
+            criteria.andTenantIdIn(tenantIds);
+        }
 
         if(!ObjectUtils.isEmpty(resourceParm.getApplicationId())){
-
             resourceCriteria.createCriteria().andApplicationIdEqualTo(resourceParm.getApplicationId());
-
         }
         if(!ObjectUtils.isEmpty(resourceParm.getTenantId())){
-
             resourceCriteria.createCriteria().andTenantIdEqualTo(resourceParm.getTenantId());
         }
 
         PageHelper.startPage(resourceParm.getPageNumber(),resourceParm.getPageSize());
-
-        List<Resource> resources = this.selectByCriteria(resourceCriteria);
-
-//        PageInfo<Resource> resourcePageInfo = new PageInfo<Resource>(resources);
-
         PageUtil result = new PageUtil(this.selectByCriteria(resourceCriteria), (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
-
-
         return result;
     }
-
-    @Override
-    public void updateStatusById(Resource resource) {
-        Long currentTime = new Date().getTime();
-        resource.setModifiedTime(currentTime);
-        resource.setInt05(0);
-        this.updateByPrimaryKeySelective(resource);
-    }
-
 
 }

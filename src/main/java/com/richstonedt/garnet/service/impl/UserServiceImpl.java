@@ -265,25 +265,60 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     public PageUtil queryUsersByParms(UserParm userParm) {
 
         UserCriteria userCriteria = new UserCriteria();
-        //获取tenantId,获取统一租户下的所有用户的列表
-        if (!ObjectUtils.isEmpty(userParm.getTenantId())) {
+        UserCriteria.Criteria criteria = userCriteria.createCriteria();
+        //根据userId ,获取tenantId列表
+        if (!StringUtils.isEmpty(userParm.getUserId())) {
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-            userTenantCriteria.createCriteria().andTenantIdEqualTo(userParm.getTenantId());
+            userTenantCriteria.createCriteria().andUserIdEqualTo(userParm.getUserId());
             List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
 
-            //根据中间表获取User的具体信息并且返回
-            List<Long> userTenantIds = new ArrayList<>();
-            for (UserTenant userTenant : userTenants) {
-                userTenantIds.add(userTenant.getUserId());
+            //获取tenantId列表
+            List<Long> tenantIds = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
+                for (UserTenant userTenant : userTenants) {
+                    tenantIds.add(userTenant.getTenantId());
+                }
             }
-            if (userTenantIds.size() == 0) {
-                userTenantIds.add(GarnetContants.NON_VALUE);
-            }
-            userCriteria.createCriteria().andIdIn(userTenantIds).andStatusEqualTo(1);
 
+            //根据tenantId获取user列表
+            userTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
+            List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria);
+            List<Long> userIds = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
+                for (UserTenant userTenant : userTenants1) {
+                    userIds.add(userTenant.getUserId());
+                }
+            }
+            if (!CollectionUtils.isEmpty(userIds)) {
+                criteria.andIdIn(userIds).andStatusEqualTo(1);
+            } else {
+                //没有关联的userId，返回空
+                return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
+            }
         } else {
-            userCriteria.createCriteria().andStatusEqualTo(1);
+            //没有传入userId，直接返回null
+            return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
         }
+
+        //获取tenantId,获取统一租户下的所有用户的列表
+//        if (!ObjectUtils.isEmpty(userParm.getTenantId())) {
+//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+//            userTenantCriteria.createCriteria().andTenantIdEqualTo(userParm.getTenantId());
+//            List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+//
+//            //根据中间表获取User的具体信息并且返回
+//            List<Long> userTenantIds = new ArrayList<>();
+//            for (UserTenant userTenant : userTenants) {
+//                userTenantIds.add(userTenant.getUserId());
+//            }
+//            if (userTenantIds.size() == 0) {
+//                userTenantIds.add(GarnetContants.NON_VALUE);
+//            }
+//            userCriteria.createCriteria().andIdIn(userTenantIds).andStatusEqualTo(1);
+//
+//        } else {
+//            userCriteria.createCriteria().andStatusEqualTo(1);
+//        }
 
         List<User> users = this.selectByCriteria(userCriteria);
         List<User> usersWithTenant = new ArrayList<>();
@@ -627,6 +662,83 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     }
 
     @Override
+    public LoginMessage garnetRefreshToken(LoginView loginView) throws Exception {
+        //能通过拦截器，说明token是正确且有效的,故不再验证token是否正确
+        LoginMessage loginMessage = new LoginMessage();
+
+        //取出token中携带的信息
+        String tokenWithAppCode = loginView.getToken();
+        String[] tokenParams = tokenWithAppCode.split("#");
+        System.out.println(tokenParams.length);
+        String token = tokenParams[0];
+        String appCode = tokenParams[1];
+        String userName = tokenParams[2];
+        String createTime = tokenParams[3];
+
+        //如果要跳转的appCode不存在，返回错误
+        if (StringUtils.isEmpty(loginView.getAppCode())) {
+            loginMessage.setMessage("appCode不能为空");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        //根据username 查询密码，如果查不到则账号有误
+        UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
+        if (ObjectUtils.isEmpty(userCredential)) {
+            loginMessage.setMessage("用户不存在");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        String password = userCredential.getCredential();
+        Map<String, Claim> tokenPlayload = null;
+        try {
+            //用密码解密token
+            tokenPlayload = JwtToken.verifyToken(token, password);
+        } catch (Exception e) {
+            loginMessage.setMessage("账号或密码错误");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        //初始登录的应用 所在的组
+        String routerGroupName = routerGroupService.getGroupNameByAppCode(appCode);
+        //应用没有被添加进应用组或不在同一个应用组，无法访问
+        if (StringUtils.isEmpty(routerGroupName)) {
+            loginMessage.setMessage("没有权限");
+            loginMessage.setLoginStatus("false");
+            loginMessage.setCode(403);
+            return loginMessage;
+        }
+
+        //更新token
+        Long currentTime = System.currentTimeMillis();
+        String tokenNew = JwtToken.createToken(userName, password, appCode, currentTime);
+        String accessTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#accessToken";
+        String refreshTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#refreshToken";
+
+        //根据userName拿出token并更新到数据库
+        TokenCriteria tokenCriteria = new TokenCriteria();
+        tokenCriteria.createCriteria().andUserNameEqualTo(userName);
+        Token token1 = tokenService.selectSingleByCriteria(tokenCriteria);
+        token1.setToken(tokenNew);
+        token1.setModifiedTime(currentTime);
+        token1.setExpireTime(currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
+        tokenService.updateByPrimaryKeySelective(token1);
+
+        loginMessage.setMessage("token刷新成功");
+        loginMessage.setLoginStatus("success");
+        loginMessage.setCode(201);
+        loginMessage.setAccessToken(accessTokenReturn);
+        loginMessage.setRefreshToken(refreshTokenReturn);
+
+        return loginMessage;
+    }
+
+    @Override
     public LoginMessage garLogin(GarLoginView garLoginView) throws Exception {
         UserCriteria userCriteria = new UserCriteria();
         LoginMessage loginMessage = new LoginMessage();
@@ -704,6 +816,21 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             tokenService.updateByPrimaryKeySelective(tokenOld);
         }
         return loginMessage;
+    }
+
+    @Override
+    public List<Long> getTenantIdsByUserId(Long userId) {
+        //根据userId 查 tenantId列表
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> tenantIds = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
+            for (UserTenant userTenant : userTenants) {
+                tenantIds.add(userTenant.getTenantId());
+            }
+        }
+        return tenantIds;
     }
 
 

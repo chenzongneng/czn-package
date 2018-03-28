@@ -7,18 +7,20 @@ import com.richstonedt.garnet.mapper.GroupMapper;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.GroupRole;
 import com.richstonedt.garnet.model.GroupUser;
+import com.richstonedt.garnet.model.UserTenant;
 import com.richstonedt.garnet.model.criteria.GroupCriteria;
 import com.richstonedt.garnet.model.criteria.GroupRoleCriteria;
 import com.richstonedt.garnet.model.criteria.GroupUserCriteria;
+import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.GroupParm;
 import com.richstonedt.garnet.model.view.GroupView;
-import com.richstonedt.garnet.service.GroupRoleService;
-import com.richstonedt.garnet.service.GroupService;
-import com.richstonedt.garnet.service.GroupUserService;
+import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.w3c.dom.ls.LSInput;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +37,12 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
     @Autowired
     private GroupRoleService groupRoleService;
+
+    @Autowired
+    private UserTenantService userTenantService;
+
+    @Autowired
+    private TenantService tenantService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -271,39 +279,58 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
         Group group = groupParm.getGroup();
         GroupCriteria groupCriteria = new GroupCriteria();
+        GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
         //只查询状态为1，即可见的
-        groupCriteria.createCriteria().andStatusEqualTo(1);
-        groupCriteria.createCriteria().andNameIsNotNull();
+        criteria.andStatusEqualTo(1);
+        criteria.andNameIsNotNull();
 
-        if(!ObjectUtils.isEmpty(groupParm.getApplicationId())){
-            groupCriteria.createCriteria().andApplicationIdEqualTo(groupParm.getApplicationId());
-        }
-        if(!ObjectUtils.isEmpty(groupParm.getTenantId())){
-            groupCriteria.createCriteria().andTenantIdEqualTo(groupParm.getTenantId());
-        }
+//        if(!ObjectUtils.isEmpty(groupParm.getApplicationId())){
+//            criteria.andApplicationIdEqualTo(groupParm.getApplicationId());
+//        }
+//        if(!ObjectUtils.isEmpty(groupParm.getTenantId())){
+//            criteria.andTenantIdEqualTo(groupParm.getTenantId());
+//        }
 
         if (!ObjectUtils.isEmpty(groupParm.getSearchName())) {
-            groupCriteria.createCriteria().andNameLike("%" + groupParm.getSearchName() + "%");
+            criteria.andNameLike("%" + groupParm.getSearchName() + "%");
         }
-//        if(!ObjectUtils.isEmpty(groupParm.getUserId())){
-//
-//            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-//
-//            groupUserCriteria.createCriteria().andUserIdEqualTo(groupParm.getUserId());
-//
-//            List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
-//
-//            List<Long> groupUserIds = new ArrayList<>();
-//
-//            for (Long groupUserId : groupUserIds){
-//
-//                groupUserIds.add(groupUserId);
-//
-//            }
-//
-//            groupCriteria.createCriteria().andIdIn(groupUserIds);
-//
-//        }
+        if(!ObjectUtils.isEmpty(groupParm.getUserId())){
+            //根据userId 查tenantId
+            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+            userTenantCriteria.createCriteria().andUserIdEqualTo(groupParm.getUserId());
+            List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+            List<Long> tenantIds = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
+                for (UserTenant userTenant : userTenants) {
+                    tenantIds.add(userTenant.getTenantId());
+                }
+            }
+
+            //根据tenantIds 查userIds
+            List<Long> userIds = new ArrayList<>();
+            UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
+            userTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
+            List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
+            if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
+                for (UserTenant userTenant : userTenants1) {
+                    userIds.add(userTenant.getUserId());
+                }
+            }
+
+            //根据userIds 查group列表
+            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+            groupUserCriteria.createCriteria().andUserIdIn(userIds);
+            List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
+            if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
+                List<Long> groupIds = new ArrayList<>();
+                for (GroupUser groupUser : groupUsers) {
+                    groupIds.add(groupUser.getGroupId());
+                }
+                criteria.andIdIn(groupIds);
+            } else {
+                return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
+            }
+        }
 
         PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria),groupParm.getPageNumber() ,groupParm.getPageSize());
         return result;

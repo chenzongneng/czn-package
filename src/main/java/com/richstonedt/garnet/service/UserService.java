@@ -74,6 +74,16 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
 
     LoginMessage refreshToken(LoginView loginView) throws Exception;
 
+    LoginMessage garnetRefreshToken(LoginView loginView) throws Exception;
+
     LoginMessage garLogin(GarLoginView garLoginView) throws Exception;
+
+    /**
+     * 通过userId查询tenantId列表
+     * @param userId
+     * @return
+     */
+    List<Long> getTenantIdsByUserId(Long userId);
+
 
 }
