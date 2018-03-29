@@ -53,7 +53,11 @@ var vm = new Vue({
             // $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1/appName/garnet", function (r) {
             $.ajaxSettings.async = false;
             // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
-            $.getJSON(baseURL + "resources/getsysmenu", function (r) {
+            $.getJSON(baseURL + "resources/getsysmenu?userId=" + userId, function (r) {
+
+                // console.log("getsysmenu == " + JSON.stringify(r));
+
+
                 that.menuList = r;
                 //路由
                 var router = new Router();
@@ -65,7 +69,10 @@ var vm = new Vue({
         getButtonList: function () {
             $.ajaxSettings.async = false;
             // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
-            $.getJSON(baseURL + "resources/getappcode", function (r) {
+            $.getJSON(baseURL + "resources/getappcode?userId=" + userId, function (r) {
+
+                // console.log("appcode == " + JSON.stringify(r));
+
                 resources = r;
                 // console.log(JSON.stringify(resources));
             });
@@ -138,9 +145,9 @@ var vm = new Vue({
     /**  初始化页面时执行该方法 */
     created: function () {
         // this.getMenuList();
-        this.getMode();
         this.getUser();
         this.getButtonList();
+        this.getMode();
         // this.refreshToken();
     }
 });

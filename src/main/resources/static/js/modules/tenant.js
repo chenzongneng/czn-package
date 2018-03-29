@@ -286,6 +286,14 @@ var vm = new Vue({
                     vm.tenant.appIdList = response.appIdList;
                     // vm.userName = response.userName;
 
+
+                    console.log("tenant == " + JSON.stringify(response));
+
+
+                    // $.each(response.appIdList, function (index, item) {
+                    //     var node = appTree.getNodeByParam("id", item);
+                    //     appTree.checkNode(node, true, false);
+                    // });
                     $.each(response.appNameList, function (index, item) {
                         vm.tenant.appNames.push(item);
                     })

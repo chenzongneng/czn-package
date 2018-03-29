@@ -115,6 +115,9 @@ var vm = new Vue({
         }
     },
     mounted:function () {
+
+        console.log("remove == " + localStorage.getItem("mode"));
+
         //移除mode option
         if (localStorage.getItem("mode") == "saas") {
             $("#selectModeId option[value='paas']").remove();
@@ -167,14 +170,17 @@ var vm = new Vue({
             vm.application.tenantIds = null;
             vm.application.tenantNames = [];
 
-            //初始化应用信息，及应用模式
-            vm.getApplication(applicationId);
+
+
 
             // 加载租户树
             $.get(baseURL + "tenants?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
+
+            //初始化应用信息，及应用模式
+            vm.getApplication(applicationId);
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -231,6 +237,9 @@ var vm = new Vue({
             }
 
             var mode = localStorage.getItem("mode");
+
+            console.log("appp mode == " + mode);
+
             if (mode == null) {
                 localStorage.setItem("mode", vm.modeList.selectedMode);
                 // vm.mode = vm.modeList.selectedMode;
@@ -301,6 +310,9 @@ var vm = new Vue({
                     vm.application.refreshResourcesApi = response.application.refreshResourcesApi;
                     vm.application.createdTime = response.application.createdTime;
                     vm.application.modifiedTime = response.application.modifiedTime;
+
+                    console.log("app response == " + JSON.stringify(response));
+
                     // 勾选已有租户
                     $.each(response.tenantIdList, function (index, item) {
                         var node = tenantTree.getNodeByParam("id", item);

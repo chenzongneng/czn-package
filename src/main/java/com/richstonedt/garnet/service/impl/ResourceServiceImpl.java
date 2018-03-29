@@ -8,30 +8,26 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceMapper;
-import com.richstonedt.garnet.model.Resource;
-import com.richstonedt.garnet.model.ResourceDynamicProperty;
-import com.richstonedt.garnet.model.criteria.ResourceCriteria;
-import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
+import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.ResourceParm;
 import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.model.view.SySMenuJsonObject;
-import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
-import com.richstonedt.garnet.service.ResourceService;
-import com.richstonedt.garnet.service.UserService;
+import com.richstonedt.garnet.service.*;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -44,6 +40,21 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private GroupUserService groupUserService;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private RolePermissionService rolePermissionService;
+
+    @Autowired
+    private GroupRoleService groupRoleService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -155,20 +166,29 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     }
 
     @Override
-    public String getGarnetAppCodeResources() throws IOException {
-        ResourceCriteria resourceCriteria = new ResourceCriteria();
-        resourceCriteria.createCriteria().andTypeEqualTo("garnet_appCode");
-        List<Resource> resourceList = this.selectByCriteria(resourceCriteria);
-        JSONObject jsonObject = new JSONObject();
-        for (Resource resource : resourceList) {
-            jsonObject.put(resource.getVarchar00(), Boolean.parseBoolean(resource.getVarchar01()));
+    public String getGarnetAppCodeResources(ResourceParm resourceParm) throws IOException {
+
+        if (!StringUtils.isEmpty(resourceParm.getUserId())) {
+            List<Resource> resourceList = this.getResourceListByUserId(resourceParm.getUserId(), "garnet_appCode");
+            if (CollectionUtils.isEmpty(resourceList)) {
+                return "";
+            }
+//            ResourceCriteria resourceCriteria = new ResourceCriteria();
+//            resourceCriteria.createCriteria().andTypeEqualTo("garnet_appCode");
+//            List<Resource> resourceList = this.selectByCriteria(resourceCriteria);
+            JSONObject jsonObject = new JSONObject();
+            for (Resource resource : resourceList) {
+                jsonObject.put(resource.getVarchar00(), Boolean.parseBoolean(resource.getVarchar01()));
+            }
+            return jsonObject.toString();
+        } else {
+            return "";
         }
 
-        return jsonObject.toString();
     }
 
     @Override
-    public String getGarnetSysMenuResources() throws IOException {
+    public String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException {
         ResourceCriteria resourceCriteria = new ResourceCriteria();
         resourceCriteria.createCriteria().andTypeEqualTo("garnet_sysMenu").andVarchar07Like("garnetSysManagement%");
         List<Resource> resourceList1 = this.selectByCriteria(resourceCriteria);
@@ -363,5 +383,79 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 //
 //        return jsonArray.toString();
 //    }
+
+    public List<Resource> getResourceListByUserId(Long userId, String type) {
+        //根据userId 拿 group
+        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+
+        if (CollectionUtils.isEmpty(groupUserList)) {
+            return null;
+        }
+        //根据group 拿 role
+        List<Long> groupIds = new ArrayList<>();
+        for (GroupUser groupUser : groupUserList) {
+            Long groupId = groupUser.getGroupId();
+            groupIds.add(groupId);
+        }
+        //通过中间表拿关联的role
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
+        List<GroupRole> groupRoleList = groupRoleService.selectByCriteria(groupRoleCriteria);
+        if (CollectionUtils.isEmpty(groupRoleList)) {
+            return null;
+        }
+
+        List<Long> roleIds = new ArrayList<>();
+        for (GroupRole groupRole : groupRoleList) {
+            Long roleId = groupRole.getRoleId();
+            roleIds.add(roleId);
+        }
+        //根据role拿permission
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds);
+        List<RolePermission> rolePermissionList = rolePermissionService.selectByCriteria(rolePermissionCriteria);
+        if (CollectionUtils.isEmpty(rolePermissionList)) {
+            return null;
+        }
+        List<Long> permissionIds = new ArrayList<>();
+        for (RolePermission rolePermission : rolePermissionList) {
+            Long permissionId = rolePermission.getPermissionId();
+            permissionIds.add(permissionId);
+        }
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andIdIn(permissionIds);
+        List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
+        if (CollectionUtils.isEmpty(permissionList)) {
+            return null;
+        }
+
+        //通过权限的通配符 查询相对应的resource
+        List<Resource> resourceList = new ArrayList<>();
+        for (Permission permission : permissionList) {
+            String resourcePathWildcard = permission.getResourcePathWildcard();
+            if (!StringUtils.isEmpty(resourcePathWildcard)) {
+                ResourceCriteria resourceCriteria = new ResourceCriteria();
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(1l);
+                List<Resource> resources = this.selectByCriteria(resourceCriteria);
+                resourceList.addAll(resources);
+            }
+        }
+        if (CollectionUtils.isEmpty(resourceList)) {
+            return null;
+        }
+        //对resource去重
+        Set<Resource> resourceSet = new HashSet<>();
+        List<Resource> resourceList1 = new ArrayList<>();
+        for (Resource resource : resourceList) {
+            Long resourceId = resource.getId();
+            if (!resourceSet.contains(resourceId)) {
+                resourceList1.add(resource);
+            }
+        }
+
+        return resourceList1;
+    }
 
 }

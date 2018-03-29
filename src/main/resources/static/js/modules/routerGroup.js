@@ -191,7 +191,7 @@ var vm = new Vue({
                     vm.routerGroup.groupName = response.routerGroup.groupName;
                     vm.routerGroup.appCode = response.routerGroup.appCode;
                     vm.applicationList = response.applicationIdList;
-                    // 勾选已有租户
+                    // 勾选已有应用
                     $.each(response.applicationIdList, function (index, item) {
                         var node = applicationTree.getNodeByParam("id", item);
                         applicationTree.checkNode(node, true, false);

@@ -203,7 +203,7 @@ public class ResourceController {
             ResourceParm resourceParm = new ResourceParm();
             resourceParm.setUserId(userId);
 
-            String jsonString = resourceService.getGarnetAppCodeResources();
+            String jsonString = resourceService.getGarnetAppCodeResources(resourceParm);
             // 封装返回信息
             return new ResponseEntity<>(jsonString, HttpStatus.OK);
         } catch (Throwable t) {
@@ -226,7 +226,7 @@ public class ResourceController {
             ResourceParm resourceParm = new ResourceParm();
             resourceParm.setUserId(userId);
 
-            String jsonString = resourceService.getGarnetSysMenuResources();
+            String jsonString = resourceService.getGarnetSysMenuResources(resourceParm);
             // 封装返回信息
             return new ResponseEntity<>(jsonString, HttpStatus.OK);
         } catch (Throwable t) {

@@ -7,10 +7,7 @@ import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.TenantMapper;
 import com.richstonedt.garnet.model.*;
-import com.richstonedt.garnet.model.criteria.ApplicationTenantCriteria;
-import com.richstonedt.garnet.model.criteria.TenantCriteria;
-import com.richstonedt.garnet.model.criteria.UserCriteria;
-import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
+import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
@@ -247,18 +244,30 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         TenantView tenantView = new TenantView();
         tenantView.setTenant(tenant);
 
-        ApplicationParm applicationParm = new ApplicationParm();
-        applicationParm.setTenantId(tenantId);
-        applicationParm.setPageNumber(1);
-        applicationParm.setPageSize(Integer.MAX_VALUE);
-        applicationParm.setTenantId(tenantId);
-        PageUtil<Application> applicationPage = applicationService.queryApplicationsByParms(applicationParm);
+//        ApplicationParm applicationParm = new ApplicationParm();
+//        applicationParm.setTenantId(tenantId);
+//        applicationParm.setPageNumber(1);
+//        applicationParm.setPageSize(Integer.MAX_VALUE);
+//        applicationParm.setTenantId(tenantId);
+//        PageUtil<Application> applicationPage = applicationService.queryApplicationsByParms(applicationParm);
 
-        List<String> appNameList = new ArrayList<>();
+        //根据tenantId拿应用
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
         List<Long> appIdList = new ArrayList<>();
-        for (Application application: applicationPage.getList()) {
-            appIdList.add(application.getId());
-            appNameList.add(application.getName());
+        List<String> appNameList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(applicationTenants) && applicationTenants.size() > 0) {
+            for (ApplicationTenant applicationTenant : applicationTenants) {
+                appIdList.add(applicationTenant.getApplicationId());
+            }
+            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+            applicationCriteria.createCriteria().andIdIn(appIdList);
+            List<Application> applications = applicationService.selectByCriteria(applicationCriteria);
+
+            for (Application application: applications) {
+                appNameList.add(application.getName());
+            }
         }
 
         tenantView.setAppIdList(appIdList);
@@ -339,9 +348,17 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                     userTenants = userTenantService.selectByCriteria(userTenantCriteria);
                 }
                 //如果该租户已有其它外键关联，先删后加
-                if (!CollectionUtils.isEmpty(userTenants)) {
-                    userTenantService.deleteByCriteria(userTenantCriteria);
+//                if (!CollectionUtils.isEmpty(userTenants)) {
+//                    userTenantService.deleteByCriteria(userTenantCriteria);
+//                }
+                //如果已经关联此用户，抛异常
+                UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
+                userTenantCriteria1.createCriteria().andUserIdEqualTo(user.getId());
+                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
+                if (!CollectionUtils.isEmpty(userTenants1)) {
+                    throw new RuntimeException("此用户已被添加");
                 }
+
                 UserTenant userTenant = new UserTenant();
                 userTenant.setUserId(user.getId());
                 userTenant.setTenantId(tenantView.getTenant().getId());

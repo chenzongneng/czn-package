@@ -24,13 +24,13 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      * @return
      * @throws IOException
      */
-    String getGarnetAppCodeResources() throws IOException;
+    String getGarnetAppCodeResources(ResourceParm resourceParm) throws IOException;
 
     /**
      * 获取garnet_sysMenu下的所有resources
      * @return
      * @throws IOException
      */
-    String getGarnetSysMenuResources() throws IOException;
+    String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException;
 
 }
