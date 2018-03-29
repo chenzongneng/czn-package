@@ -52,7 +52,8 @@ var vm = new Vue({
             var that = this;
             // $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1/appName/garnet", function (r) {
             $.ajaxSettings.async = false;
-            $.getJSON("http://localhost:12306/garnet/sysMenu.json", function (r) {
+            // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
+            $.getJSON(baseURL + "resources/getsysmenu", function (r) {
                 that.menuList = r;
                 //路由
                 var router = new Router();
@@ -63,7 +64,8 @@ var vm = new Vue({
         /** 查询按钮列表 */
         getButtonList: function () {
             $.ajaxSettings.async = false;
-            $.getJSON("http://localhost:12306/garnet/appCode.json", function (r) {
+            // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
+            $.getJSON(baseURL + "resources/getappcode", function (r) {
                 resources = r;
                 // console.log(JSON.stringify(resources));
             });

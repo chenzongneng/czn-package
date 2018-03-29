@@ -12,10 +12,7 @@ import com.richstonedt.garnet.mapper.UserMapper;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.UserParm;
-import com.richstonedt.garnet.model.view.GarLoginView;
-import com.richstonedt.garnet.model.view.LoginView;
-import com.richstonedt.garnet.model.view.UserProfile;
-import com.richstonedt.garnet.model.view.UserView;
+import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +50,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private TenantService tenantService;
 
     @Autowired
     private PermissionService permissionService;
@@ -266,21 +266,22 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         UserCriteria userCriteria = new UserCriteria();
         UserCriteria.Criteria criteria = userCriteria.createCriteria();
+        //查询没被删除的user
+        criteria.andStatusEqualTo(1);
+
         //根据userId ,获取tenantId列表
         if (!StringUtils.isEmpty(userParm.getUserId())) {
-            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-            userTenantCriteria.createCriteria().andUserIdEqualTo(userParm.getUserId());
-            List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+            ReturnTenantIdView returnTenantIdView = this.getTenantIdsByUserId(userParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-            //获取tenantId列表
-            List<Long> tenantIds = new ArrayList<>();
-            if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
-                for (UserTenant userTenant : userTenants) {
-                    tenantIds.add(userTenant.getTenantId());
-                }
+            //如果是超级管理员，直接返回所有user列表
+            if (returnTenantIdView.isSuperAdmin()) {
+                PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
+                return result;
             }
 
             //根据tenantId获取user列表
+            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
             userTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
             List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria);
             List<Long> userIds = new ArrayList<>();
@@ -300,26 +301,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
         }
 
-        //获取tenantId,获取统一租户下的所有用户的列表
-//        if (!ObjectUtils.isEmpty(userParm.getTenantId())) {
-//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-//            userTenantCriteria.createCriteria().andTenantIdEqualTo(userParm.getTenantId());
-//            List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
-//
-//            //根据中间表获取User的具体信息并且返回
-//            List<Long> userTenantIds = new ArrayList<>();
-//            for (UserTenant userTenant : userTenants) {
-//                userTenantIds.add(userTenant.getUserId());
-//            }
-//            if (userTenantIds.size() == 0) {
-//                userTenantIds.add(GarnetContants.NON_VALUE);
-//            }
-//            userCriteria.createCriteria().andIdIn(userTenantIds).andStatusEqualTo(1);
-//
-//        } else {
-//            userCriteria.createCriteria().andStatusEqualTo(1);
-//        }
-
         List<User> users = this.selectByCriteria(userCriteria);
         List<User> usersWithTenant = new ArrayList<>();
         for (User user : users) {
@@ -331,7 +312,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             if (!CollectionUtils.isEmpty(userTenants)) {
                 usersWithTenant.add(user);
             }
-
         }
 
         PageUtil result = new PageUtil(usersWithTenant, (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
@@ -819,7 +799,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     }
 
     @Override
-    public List<Long> getTenantIdsByUserId(Long userId) {
+    public ReturnTenantIdView getTenantIdsByUserId(Long userId) {
+
         //根据userId 查 tenantId列表
         UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
         userTenantCriteria.createCriteria().andUserIdEqualTo(userId);
@@ -830,8 +811,34 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                 tenantIds.add(userTenant.getTenantId());
             }
         }
-        return tenantIds;
+
+        ResourceCriteria resourceCriteria = new ResourceCriteria();
+        resourceCriteria.createCriteria().andTenantIdIn(tenantIds);
+        List<Resource> resourceList = resourceService.selectByCriteria(resourceCriteria);
+        boolean flag = false; //判断是否拥有超级权限
+        for (Resource resource : resourceList) {
+            if (GarnetContants.RESOURCE_PERMISSION.equals(resource.getVarchar00())) {
+                flag = true;
+            }
+        }
+
+        ReturnTenantIdView returnTenantIdView = new ReturnTenantIdView();
+        returnTenantIdView.setSuperAdmin(flag);
+
+        if (flag) {
+            TenantCriteria tenantCriteria = new TenantCriteria();
+            tenantCriteria.createCriteria();
+            List<Tenant> tenants = tenantService.selectByCriteria(tenantCriteria);
+            List<Long> teantIdList = new ArrayList<>();
+            for (Tenant tenant : tenants) {
+                teantIdList.add(tenant.getId());
+            }
+            returnTenantIdView.setTenantIds(teantIdList);
+            return returnTenantIdView;
+        } else {
+            returnTenantIdView.setTenantIds(tenantIds);
+            return returnTenantIdView;
+        }
+
     }
-
-
 }

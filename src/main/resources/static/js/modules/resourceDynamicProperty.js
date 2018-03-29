@@ -235,7 +235,7 @@ var vm = new Vue({
         initTreesToUpdate: function (resourceDynamicPropertyId) {
             vm.getResourceDynamicPropertyById(resourceDynamicPropertyId);
         },
-        /** 通过id 得到一个resource对象 */
+        /** 通过id 得到一个resourcedynamicpropertys对象 */
         getResourceDynamicPropertyById: function (resourceDynamicPropertyId) {
             $.get(baseURL + "resourcedynamicpropertys/" + resourceDynamicPropertyId, function (response) {
                 response = response.data;

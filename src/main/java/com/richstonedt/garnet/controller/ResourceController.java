@@ -34,7 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Api(value = "[Torino Source]资源接口")
 @RestController
-@LoginRequired
+//@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class ResourceController {
 
@@ -191,4 +191,49 @@ public class ResourceController {
         }
     }
 
+    @ApiOperation(value = "[Torino Source]获取菜单控制appCode资源列表", notes = "获取菜单控制appCode资源列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/getappcode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getAppCodeResources(
+            @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId) {
+        try {
+
+            ResourceParm resourceParm = new ResourceParm();
+            resourceParm.setUserId(userId);
+
+            String jsonString = resourceService.getGarnetAppCodeResources();
+            // 封装返回信息
+            return new ResponseEntity<>(jsonString, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Torino Source]获取菜单资源列表", notes = "获取菜单资源列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/getsysmenu", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getSysMenuResources(
+            @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId) {
+        try {
+
+            ResourceParm resourceParm = new ResourceParm();
+            resourceParm.setUserId(userId);
+
+            String jsonString = resourceService.getGarnetSysMenuResources();
+            // 封装返回信息
+            return new ResponseEntity<>(jsonString, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
 }

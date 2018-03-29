@@ -16,6 +16,7 @@ import com.richstonedt.garnet.model.criteria.RolePermissionCriteria;
 import com.richstonedt.garnet.model.parm.PermissionParm;
 import com.richstonedt.garnet.model.parm.PermissionResourceParm;
 import com.richstonedt.garnet.model.view.PermissionView;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -176,13 +177,17 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         criteria.andStatusEqualTo(1); //查询没被删除的
 
         if (!StringUtils.isEmpty(permissionParm.getUserId())) {
-            List<Long> tenantIds = userService.getTenantIdsByUserId(permissionParm.getUserId());
-            if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
-                criteria.andTenantIdIn(tenantIds);
-            } else {
-                //没有关联租户，返回空
-                PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
-                return  new PageInfo<Permission>(null);
+            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
+            //如果不是超级管理员
+            if (!returnTenantIdView.isSuperAdmin()) {
+                if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
+                    criteria.andTenantIdIn(tenantIds);
+                } else {
+                    //没有关联租户，返回空
+                    PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
+                    return  new PageInfo<Permission>(null);
+                }
             }
         }
         if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
@@ -212,13 +217,19 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         criteria.andStatusEqualTo(1); //查询没被删除的
 
         if (!StringUtils.isEmpty(permissionParm.getUserId())) {
-            List<Long> tenantIds = userService.getTenantIdsByUserId(permissionParm.getUserId());
-            if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
-                criteria.andTenantIdIn(tenantIds);
-            } else {
-                //没有关联租户，返回空
-                return  new PageUtil(null, 0 ,permissionParm.getPageSize(), permissionParm.getPageNumber());
+            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
+
+            //如果不是超级管理员
+            if (!returnTenantIdView.isSuperAdmin()) {
+                if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
+                    criteria.andTenantIdIn(tenantIds);
+                } else {
+                    //没有关联租户，返回空
+                    return  new PageUtil(null, 0 ,permissionParm.getPageSize(), permissionParm.getPageNumber());
+                }
             }
+
         }
         if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
             criteria.andNameLike("%" + permissionParm.getSearchName() + "%");

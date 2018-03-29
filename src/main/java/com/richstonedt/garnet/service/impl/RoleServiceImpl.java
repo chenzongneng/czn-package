@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.criteria.RoleCriteria;
 import com.richstonedt.garnet.model.criteria.RolePermissionCriteria;
 import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.RoleParm;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.model.view.RoleView;
 import com.richstonedt.garnet.service.*;
 //import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
@@ -177,12 +178,17 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         criteria.andStatusEqualTo(1);
 
         if (!StringUtils.isEmpty(roleParm.getUserId())) {
-            List<Long> tenantIds = userService.getTenantIdsByUserId(roleParm.getUserId());
-            if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0) {
-                //根据tenantId列表查询role
-                criteria.andTenantIdIn(tenantIds);
-            } else {
-                return  new PageUtil(null, 0,roleParm.getPageNumber() ,roleParm.getPageSize());
+            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(roleParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
+
+            //如果不是超级管理员,根据tenantId返回列表
+            if (!returnTenantIdView.isSuperAdmin()) {
+                if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0) {
+                    //根据tenantId列表查询role
+                    criteria.andTenantIdIn(tenantIds);
+                } else {
+                    return  new PageUtil(null, 0,roleParm.getPageNumber() ,roleParm.getPageSize());
+                }
             }
         }
 

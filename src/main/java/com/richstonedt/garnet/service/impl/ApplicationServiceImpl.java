@@ -17,10 +17,8 @@ import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
-import com.richstonedt.garnet.service.ApplicationService;
-import com.richstonedt.garnet.service.ApplicationTenantService;
-import com.richstonedt.garnet.service.TenantService;
-import com.richstonedt.garnet.service.UserTenantService;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
+import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +43,9 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     @Autowired
     private UserTenantService userTenantService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private TenantService tenantService;
@@ -165,28 +166,36 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         //根据用户id拿应用
         if (!ObjectUtils.isEmpty(applicationParm.getUserId())) {
-            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-            userTenantCriteria.createCriteria().andUserIdEqualTo(applicationParm.getUserId());
-            userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+//            userTenantCriteria.createCriteria().andUserIdEqualTo(applicationParm.getUserId());
+//            userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+//
+//            List<Long> tenantIds = new ArrayList<>();
+//            //如果用户没有关联的租户，返回空
+//            if (CollectionUtils.isEmpty(userTenants) || userTenants.size() == 0) {
+//                return  new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
+//            }
+//            for (UserTenant userTenant : userTenants) {
+//                tenantIds.add(userTenant.getTenantId());
+//            }
 
-            List<Long> tenantIds = new ArrayList<>();
-            //如果用户没有关联的租户，返回空
-            if (CollectionUtils.isEmpty(userTenants) || userTenants.size() == 0) {
-                return  new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
-            }
-            for (UserTenant userTenant : userTenants) {
-                tenantIds.add(userTenant.getTenantId());
-            }
-            //通过租户id拿应用id
-            ApplicationTenantCriteria applicationTenantCriteria1 = new ApplicationTenantCriteria();
-            applicationTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
-            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria1);
+            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(applicationParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-            List<Long> applicationIds = new ArrayList<>();
-            for (ApplicationTenant applicationTenant : applicationTenantList) {
-                applicationIds.add(applicationTenant.getApplicationId());
+            //如果不是超级管理员
+            if (!returnTenantIdView.isSuperAdmin()) {
+                //通过租户id拿应用id
+                ApplicationTenantCriteria applicationTenantCriteria1 = new ApplicationTenantCriteria();
+                applicationTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
+                List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria1);
+
+                List<Long> applicationIds = new ArrayList<>();
+                for (ApplicationTenant applicationTenant : applicationTenantList) {
+                    applicationIds.add(applicationTenant.getApplicationId());
+                }
+                criteria.andIdIn(applicationIds);
             }
-            criteria.andIdIn(applicationIds);
+
         }
 
         //根据tenant id 获取user对应的应用

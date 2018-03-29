@@ -13,6 +13,7 @@ import com.richstonedt.garnet.model.criteria.UserCriteria;
 import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.model.view.TenantView;
 import com.richstonedt.garnet.service.*;
 import org.slf4j.Logger;
@@ -178,22 +179,31 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         Tenant tenant = tenantParm.getTenant();
         TenantCriteria tenantCriteria = new TenantCriteria();
         TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
         //根据userId获取用户所有的租户
         if(!ObjectUtils.isEmpty(tenantParm.getUserId())){
-            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-            userTenantCriteria.createCriteria().andUserIdEqualTo(tenantParm.getUserId());
-            List<UserTenant> userTenants =  userTenantService.selectByCriteria(userTenantCriteria);
-            List<Long> userTenantIds = new ArrayList<Long>();
+//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+//            userTenantCriteria.createCriteria().andUserIdEqualTo(tenantParm.getUserId());
+//            List<UserTenant> userTenants =  userTenantService.selectByCriteria(userTenantCriteria);
+//            List<Long> userTenantIds = new ArrayList<Long>();
+//
+//            for(UserTenant userTenant : userTenants){
+//                userTenantIds.add(userTenant.getTenantId());
+//            }
 
-            for(UserTenant userTenant : userTenants){
-                userTenantIds.add(userTenant.getTenantId());
-            }
+            ReturnTenantIdView returnTenantIdView =userService.getTenantIdsByUserId(tenantParm.getUserId());
+            List<Long> userTenantIds = returnTenantIdView.getTenantIds();
+
 
             if(userTenantIds.size() == 0){
                 userTenantIds.add(GarnetContants.NON_VALUE);
             }
-//            tenantCriteria.createCriteria().andIdIn(userTenantIds);
-            criteria.andIdIn(userTenantIds);
+            //如果不是超级管理员
+            if (!returnTenantIdView.isSuperAdmin()) {
+                //            tenantCriteria.createCriteria().andIdIn(userTenantIds);
+                criteria.andIdIn(userTenantIds);
+            }
+
         }
 
         //根据appclition获取租户

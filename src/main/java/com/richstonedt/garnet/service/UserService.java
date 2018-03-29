@@ -7,10 +7,7 @@ import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
 import com.richstonedt.garnet.model.parm.UserParm;
-import com.richstonedt.garnet.model.view.GarLoginView;
-import com.richstonedt.garnet.model.view.LoginView;
-import com.richstonedt.garnet.model.view.UserProfile;
-import com.richstonedt.garnet.model.view.UserView;
+import com.richstonedt.garnet.model.view.*;
 
 import java.text.ParseException;
 import java.util.List;
@@ -83,7 +80,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * @param userId
      * @return
      */
-    List<Long> getTenantIdsByUserId(Long userId);
+    ReturnTenantIdView getTenantIdsByUserId(Long userId);
 
 
 }
