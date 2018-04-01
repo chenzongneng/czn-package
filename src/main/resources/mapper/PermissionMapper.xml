@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="resource_path_wildcard" jdbcType="VARCHAR" property="resourcePathWildcard" />
@@ -22,7 +22,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -56,7 +56,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -90,7 +90,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     id, resource_path_wildcard, name, description, created_time, modified_time, application_id, 
     tenant_id, status, updated_by_user_name
@@ -99,7 +99,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select
     <if test="distinct">
@@ -121,7 +121,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select 
     <include refid="Base_Column_List" />
@@ -132,7 +132,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     delete from gar_permissions
     where id = #{id,jdbcType=BIGINT}
@@ -141,7 +141,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     delete from gar_permissions
     <if test="_parameter != null">
@@ -152,7 +152,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_permissions (id, resource_path_wildcard, name, 
       description, created_time, modified_time, 
@@ -167,7 +167,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_permissions
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -239,7 +239,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select count(*) from gar_permissions
     <if test="_parameter != null">
@@ -250,7 +250,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_permissions
     <set>
@@ -293,7 +293,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_permissions
     set id = #{record.id,jdbcType=BIGINT},
@@ -314,7 +314,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_permissions
     <set>
@@ -352,7 +352,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_permissions
     set resource_path_wildcard = #{resourcePathWildcard,jdbcType=VARCHAR},
@@ -370,7 +370,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select
     <if test="distinct">
@@ -389,7 +389,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_permissions
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -464,7 +464,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_permissions

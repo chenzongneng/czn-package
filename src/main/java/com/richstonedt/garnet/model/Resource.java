@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-12 16:08
+ * DATE: 2018-03-30 13:23
  */
 public class Resource implements Serializable {
     private Long id;
@@ -45,7 +45,7 @@ function - function opint,对应的是功能项，例如用户查询；
     private Long modifiedTime;
 
     /**
-     * 资源类型例如，
+     * 资源类型例如， 
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等
@@ -105,13 +105,13 @@ function-功能项，如页面，菜单模块等
 
     private Integer int05;
 
-    private boolean boolean01;
+    private Integer boolean01;
 
-    private boolean boolean02;
+    private Integer boolean02;
 
-    private boolean boolean03;
+    private Integer boolean03;
 
-    private boolean boolean04;
+    private Integer boolean04;
 
     /**
      * 更新的人
@@ -124,7 +124,7 @@ function-功能项，如页面，菜单模块等
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     private static final long serialVersionUID = 1L;
 
@@ -167,7 +167,7 @@ function - function opint,对应的是功能项，例如用户查询；
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public String getPath() {
         return path;
@@ -196,7 +196,7 @@ function - function opint,对应的是功能项，例如用户查询；
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public void setPath(String path) {
         this.path = path == null ? null : path.trim();
@@ -235,7 +235,7 @@ function - function opint,对应的是功能项，例如用户查询；
     }
 
     /**
-     * 资源类型例如，
+     * 资源类型例如， 
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等<br>
@@ -245,14 +245,14 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public String getType() {
         return type;
     }
 
     /**
-     * 资源类型例如，
+     * 资源类型例如， 
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等<br>
@@ -262,7 +262,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
@@ -476,35 +476,35 @@ function-功能项，如页面，菜单模块等<br>
         this.int05 = int05;
     }
 
-    public boolean getBoolean01() {
+    public Integer getBoolean01() {
         return boolean01;
     }
 
-    public void setBoolean01(boolean boolean01) {
+    public void setBoolean01(Integer boolean01) {
         this.boolean01 = boolean01;
     }
 
-    public boolean getBoolean02() {
+    public Integer getBoolean02() {
         return boolean02;
     }
 
-    public void setBoolean02(boolean boolean02) {
+    public void setBoolean02(Integer boolean02) {
         this.boolean02 = boolean02;
     }
 
-    public boolean getBoolean03() {
+    public Integer getBoolean03() {
         return boolean03;
     }
 
-    public void setBoolean03(boolean boolean03) {
+    public void setBoolean03(Integer boolean03) {
         this.boolean03 = boolean03;
     }
 
-    public boolean getBoolean04() {
+    public Integer getBoolean04() {
         return boolean04;
     }
 
-    public void setBoolean04(boolean boolean04) {
+    public void setBoolean04(Integer boolean04) {
         this.boolean04 = boolean04;
     }
 
@@ -516,7 +516,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public String getUpdatedByUserName() {
         return updatedByUserName;
@@ -530,7 +530,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
@@ -543,7 +543,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public boolean equals(Object that) {
@@ -591,10 +591,10 @@ function-功能项，如页面，菜单模块等<br>
             && (this.getInt03() == null ? other.getInt03() == null : this.getInt03().equals(other.getInt03()))
             && (this.getInt04() == null ? other.getInt04() == null : this.getInt04().equals(other.getInt04()))
             && (this.getInt05() == null ? other.getInt05() == null : this.getInt05().equals(other.getInt05()))
-            && (this.getBoolean01() == false ? other.getBoolean01() == false : this.getBoolean01() == other.getBoolean01())
-            && (this.getBoolean02() == false ? other.getBoolean02() == false : this.getBoolean02() == other.getBoolean02())
-            && (this.getBoolean03() == false ? other.getBoolean03() == false : this.getBoolean03() == other.getBoolean03())
-            && (this.getBoolean04() == false ? other.getBoolean04() == false : this.getBoolean04() == other.getBoolean04())
+            && (this.getBoolean01() == null ? other.getBoolean01() == null : this.getBoolean01().equals(other.getBoolean01()))
+            && (this.getBoolean02() == null ? other.getBoolean02() == null : this.getBoolean02().equals(other.getBoolean02()))
+            && (this.getBoolean03() == null ? other.getBoolean03() == null : this.getBoolean03().equals(other.getBoolean03()))
+            && (this.getBoolean04() == null ? other.getBoolean04() == null : this.getBoolean04().equals(other.getBoolean04()))
             && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
@@ -605,7 +605,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public int hashCode() {
@@ -645,10 +645,10 @@ function-功能项，如页面，菜单模块等<br>
         result = prime * result + ((getInt03() == null) ? 0 : getInt03().hashCode());
         result = prime * result + ((getInt04() == null) ? 0 : getInt04().hashCode());
         result = prime * result + ((getInt05() == null) ? 0 : getInt05().hashCode());
-        result = prime * result + ((getBoolean01() == false) ? 0 : Boolean.hashCode(getBoolean01()));
-        result = prime * result + ((getBoolean02() == false) ? 0 : Boolean.hashCode(getBoolean02()));
-        result = prime * result + ((getBoolean03() == false) ? 0 : Boolean.hashCode(getBoolean03()));
-        result = prime * result + ((getBoolean04() == false) ? 0 : Boolean.hashCode(getBoolean04()));
+        result = prime * result + ((getBoolean01() == null) ? 0 : getBoolean01().hashCode());
+        result = prime * result + ((getBoolean02() == null) ? 0 : getBoolean02().hashCode());
+        result = prime * result + ((getBoolean03() == null) ? 0 : getBoolean03().hashCode());
+        result = prime * result + ((getBoolean04() == null) ? 0 : getBoolean04().hashCode());
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }
@@ -660,7 +660,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public String toString() {

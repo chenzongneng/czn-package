@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
@@ -15,7 +15,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -49,7 +49,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -83,7 +83,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     id, group_name, app_code
   </sql>
@@ -91,7 +91,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     select
     <if test="distinct">
@@ -113,7 +113,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     select 
     <include refid="Base_Column_List" />
@@ -124,7 +124,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     delete from gar_router_group
     where id = #{id,jdbcType=BIGINT}
@@ -133,7 +133,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     delete from gar_router_group
     <if test="_parameter != null">
@@ -144,7 +144,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     insert into gar_router_group (id, group_name, app_code
       )
@@ -155,7 +155,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     insert into gar_router_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -185,7 +185,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     select count(*) from gar_router_group
     <if test="_parameter != null">
@@ -196,7 +196,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     update gar_router_group
     <set>
@@ -218,7 +218,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     update gar_router_group
     set id = #{record.id,jdbcType=BIGINT},
@@ -232,7 +232,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     update gar_router_group
     <set>
@@ -249,7 +249,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     update gar_router_group
     set group_name = #{groupName,jdbcType=VARCHAR},
@@ -260,7 +260,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     select
     <if test="distinct">
@@ -279,7 +279,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     insert into gar_router_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -312,7 +312,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-21 11:54
+      DATE: 2018-03-30 13:28
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_router_group

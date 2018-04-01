@@ -14,5 +14,7 @@ public class GarnetContants {
 
     public static final String JSON_FILE_PATH = System.getProperty("user.dir") + "/src/main/resources/views/test.json";
 
+    public static final Long GARNET_TENANT_ID= 1L;
+
 
 }

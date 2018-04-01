@@ -44,6 +44,9 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     @Autowired
     private TenantService tenantService;
 
+    @Autowired
+    private CommonService commonService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.groupMapper;
@@ -65,10 +68,14 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
         this.insertSelective(group);
 
+        System.out.println("创建组");
+
         //插入到组-用户中间表
         if (!ObjectUtils.isEmpty(groupView.getUserIds())) {
             List<Long> userIds = groupView.getUserIds();
             for (Long userId : userIds) {
+
+                System.out.println("创建组userId："+userId);
                 GroupUser groupUser = new GroupUser();
                 groupUser.setId(IdGeneratorUtil.generateId());
                 groupUser.setUserId(userId);
@@ -76,6 +83,8 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupUserService.insertSelective(groupUser);
             }
         }
+
+        System.out.println("创建组后");
 
         //插入到组-角色中间表
         if (!ObjectUtils.isEmpty(groupView.getRoleIds())) {
@@ -300,11 +309,15 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             userTenantCriteria.createCriteria().andUserIdEqualTo(groupParm.getUserId());
             List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
             List<Long> tenantIds = new ArrayList<>();
+
             if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
                 for (UserTenant userTenant : userTenants) {
                     tenantIds.add(userTenant.getTenantId());
                 }
             }
+
+            //change by ming
+            tenantIds =  commonService.dealTenantIdsIfGarnet(groupParm.getUserId(),tenantIds);
 
             //根据tenantIds 查userIds
             List<Long> userIds = new ArrayList<>();

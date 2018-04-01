@@ -56,6 +56,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommonService commonService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.roleMapper;
@@ -183,6 +186,8 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
             //如果不是超级管理员,根据tenantId返回列表
             if (!returnTenantIdView.isSuperAdmin()) {
+                //change by ming
+                tenantIds =  commonService.dealTenantIdsIfGarnet(roleParm.getUserId(),tenantIds);
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0) {
                     //根据tenantId列表查询role
                     criteria.andTenantIdIn(tenantIds);

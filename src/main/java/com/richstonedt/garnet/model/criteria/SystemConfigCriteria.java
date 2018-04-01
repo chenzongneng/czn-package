@@ -8,7 +8,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public SystemConfigCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -506,7 +506,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -521,7 +521,7 @@ public class SystemConfigCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:53
+     * DATE: 2018-03-30 13:28
      */
     public static class Criterion {
         private String condition;

@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-21 11:54
+ * DATE: 2018-03-30 13:28
  */
 public class RouterGroup implements Serializable {
     private Long id;
@@ -22,7 +22,7 @@ public class RouterGroup implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-30 13:28
      */
     private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class RouterGroup implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-30 13:28
      */
     @Override
     public boolean equals(Object that) {
@@ -83,7 +83,7 @@ public class RouterGroup implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-30 13:28
      */
     @Override
     public int hashCode() {
@@ -102,7 +102,7 @@ public class RouterGroup implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-21 11:54
+     * DATE: 2018-03-30 13:28
      */
     @Override
     public String toString() {

@@ -56,6 +56,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     @Autowired
     private GroupRoleService groupRoleService;
 
+    @Autowired
+    private CommonService commonService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.resourceMapper;
@@ -148,6 +151,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         if (!StringUtils.isEmpty(resourceParm.getUserId())) {
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(resourceParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
+
+            //change by ming
+            tenantIds =  commonService.dealTenantIdsIfGarnet(resourceParm.getUserId(),tenantIds);
+
             if (!returnTenantIdView.isSuperAdmin()) {
                 criteria.andTenantIdIn(tenantIds);
             }

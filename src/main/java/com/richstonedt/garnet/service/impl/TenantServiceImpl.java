@@ -53,6 +53,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommonService commonService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -191,6 +193,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             ReturnTenantIdView returnTenantIdView =userService.getTenantIdsByUserId(tenantParm.getUserId());
             List<Long> userTenantIds = returnTenantIdView.getTenantIds();
 
+            //change by ming 添加判断
+            userTenantIds =  commonService.dealTenantIdsIfGarnet(tenantParm.getUserId(),userTenantIds);
 
             if(userTenantIds.size() == 0){
                 userTenantIds.add(GarnetContants.NON_VALUE);
@@ -355,9 +359,9 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                 UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
                 userTenantCriteria1.createCriteria().andUserIdEqualTo(user.getId());
                 List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
-                if (!CollectionUtils.isEmpty(userTenants1)) {
-                    throw new RuntimeException("此用户已被添加");
-                }
+//                if (!CollectionUtils.isEmpty(userTenants1)) {
+//                    throw new RuntimeException("此用户已被添加");
+//                }
 
                 UserTenant userTenant = new UserTenant();
                 userTenant.setUserId(user.getId());

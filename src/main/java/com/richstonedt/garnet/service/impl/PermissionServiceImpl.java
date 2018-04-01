@@ -46,6 +46,9 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommonService commonService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.permissionMapper;
@@ -181,6 +184,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
             //如果不是超级管理员
             if (!returnTenantIdView.isSuperAdmin()) {
+
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
                     criteria.andTenantIdIn(tenantIds);
                 } else {
@@ -222,6 +226,10 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
             //如果不是超级管理员
             if (!returnTenantIdView.isSuperAdmin()) {
+
+                //change my ming
+                tenantIds =  commonService.dealTenantIdsIfGarnet(permissionParm.getUserId(),tenantIds);
+
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
                     criteria.andTenantIdIn(tenantIds);
                 } else {

@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-12 16:08
+ * DATE: 2018-03-30 13:23
  */
 public class Permission implements Serializable {
     private Long id;
@@ -29,16 +29,6 @@ public class Permission implements Serializable {
 
     private Integer status;
 
-    private Permission permission;
-
-    public Permission getPermission() {
-        return permission;
-    }
-
-    public void setPermission(Permission permission) {
-        this.permission = permission;
-    }
-
     /**
      * 更新的人
      * gar_permissions.updated_by_user_name
@@ -50,7 +40,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     private static final long serialVersionUID = 1L;
 
@@ -134,7 +124,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public String getUpdatedByUserName() {
         return updatedByUserName;
@@ -148,7 +138,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
@@ -161,7 +151,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public boolean equals(Object that) {
@@ -194,7 +184,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public int hashCode() {
@@ -220,7 +210,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public String toString() {

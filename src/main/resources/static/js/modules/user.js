@@ -126,7 +126,9 @@ var vm = new Vue({
         //     status: null
         // },
 
-        user: {},
+        user: {
+
+        },
 
         // 租户列表数据
         tenantList: {
@@ -194,6 +196,7 @@ var vm = new Vue({
             vm.appList.options = [];
             vm.user = {
                 id: null,
+                belongToGarnet:''
                 // userName: null,
                 // password: null,
                 // name: null,
@@ -282,7 +285,7 @@ var vm = new Vue({
                 userTenant.tenantId = vm.multiple.selectedListTenant[i].id;
                 obj.userTenants.push(userTenant);
             }
-
+            console.log("obj.user.belongToGarnet: "+obj.user.belongToGarnet);
             $.ajax({
                 type: obj.user.id === null ? "POST" : "PUT",
                 url: baseURL + "users",

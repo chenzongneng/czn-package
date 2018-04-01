@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="token" jdbcType="VARCHAR" property="token" />
@@ -19,7 +19,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -53,7 +53,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -87,7 +87,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     id, token, user_name, router_group_name, created_time, modified_time, expire_time
   </sql>
@@ -95,7 +95,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     select
     <if test="distinct">
@@ -117,9 +117,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
-    select
+    select 
     <include refid="Base_Column_List" />
     from gar_tokens
     where id = #{id,jdbcType=BIGINT}
@@ -128,7 +128,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     delete from gar_tokens
     where id = #{id,jdbcType=BIGINT}
@@ -137,7 +137,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     delete from gar_tokens
     <if test="_parameter != null">
@@ -148,20 +148,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
-    insert into gar_tokens (id, token, user_name,
-    router_group_name, created_time, modified_time,
-    expire_time)
-    values (#{id,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
-    #{routerGroupName,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT},
-    #{expireTime,jdbcType=BIGINT})
+    insert into gar_tokens (id, token, user_name, 
+      router_group_name, created_time, modified_time, 
+      expire_time)
+    values (#{id,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{routerGroupName,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT}, 
+      #{expireTime,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Token">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_tokens
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -215,7 +215,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     select count(*) from gar_tokens
     <if test="_parameter != null">
@@ -226,7 +226,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     update gar_tokens
     <set>
@@ -260,16 +260,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     update gar_tokens
     set id = #{record.id,jdbcType=BIGINT},
-    token = #{record.token,jdbcType=VARCHAR},
-    user_name = #{record.userName,jdbcType=VARCHAR},
-    router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
-    created_time = #{record.createdTime,jdbcType=BIGINT},
-    modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-    expire_time = #{record.expireTime,jdbcType=BIGINT}
+      token = #{record.token,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      router_group_name = #{record.routerGroupName,jdbcType=VARCHAR},
+      created_time = #{record.createdTime,jdbcType=BIGINT},
+      modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+      expire_time = #{record.expireTime,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -278,7 +278,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     update gar_tokens
     <set>
@@ -307,22 +307,22 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     update gar_tokens
     set token = #{token,jdbcType=VARCHAR},
-    user_name = #{userName,jdbcType=VARCHAR},
-    router_group_name = #{routerGroupName,jdbcType=VARCHAR},
-    created_time = #{createdTime,jdbcType=BIGINT},
-    modified_time = #{modifiedTime,jdbcType=BIGINT},
-    expire_time = #{expireTime,jdbcType=BIGINT}
+      user_name = #{userName,jdbcType=VARCHAR},
+      router_group_name = #{routerGroupName,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=BIGINT},
+      modified_time = #{modifiedTime,jdbcType=BIGINT},
+      expire_time = #{expireTime,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TokenCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     select
     <if test="distinct">
@@ -341,7 +341,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_tokens
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -367,7 +367,7 @@
         expire_time,
       </if>
     </trim>
-    values
+     values 
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -398,7 +398,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-26 18:18
+      DATE: 2018-03-30 13:23
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_tokens
@@ -422,7 +422,7 @@
           expire_time=#{item.expireTime,jdbcType=BIGINT},
         </if>
       </set>
-      where
+      where 
       id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>

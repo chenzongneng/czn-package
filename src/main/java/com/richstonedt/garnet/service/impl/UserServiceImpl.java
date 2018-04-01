@@ -75,6 +75,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     @Autowired
     private ResourceDynamicPropertyService resourceDynamicPropertyService;
 
+    @Autowired
+    private CommonService commonService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.userMapper;
@@ -274,6 +277,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             ReturnTenantIdView returnTenantIdView = this.getTenantIdsByUserId(userParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
+            //==========Change By Ming==如果不是garnet自身的管理员，没有必要显示garnet相关的信息
+            tenantIds =  commonService.dealTenantIdsIfGarnet(userParm.getUserId(),tenantIds);
+            System.out.println("tenantIds.size(): "+returnTenantIdView.isSuperAdmin());
             //如果是超级管理员，直接返回所有user列表
             if (returnTenantIdView.isSuperAdmin()) {
                 PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
@@ -538,7 +544,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         Token token1 = tokenService.selectSingleByCriteria(tokenCriteria);
         token1.setToken(tokenNew);
         token1.setModifiedTime(currentTime);
-        token1.setExpireTime(currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
+        token1.setExpireTime((long)currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
         tokenService.updateByPrimaryKeySelective(token1);
 
         loginMessage.setMessage("token刷新成功");
@@ -812,12 +818,69 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             }
         }
 
-        ResourceCriteria resourceCriteria = new ResourceCriteria();
-        resourceCriteria.createCriteria().andTenantIdIn(tenantIds);
-        List<Resource> resourceList = resourceService.selectByCriteria(resourceCriteria);
+        //change by ming
+        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
+
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+
+        List<Long> groupIds = new ArrayList<>();
+        for(GroupUser groupUser : groupUsers){
+
+            groupIds.add(groupUser.getGroupId());
+        }
+
+         groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
+
+         List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
+
+
+         List<Long> roleIds = new ArrayList<>();
+
+        for(GroupRole groupRole : groupRoles){
+
+            roleIds.add(groupRole.getRoleId());
+        }
+
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds);
+
+        List<RolePermission> rolePermissions =  rolePermissionService.selectByCriteria(rolePermissionCriteria);
+
+        List<Long> permissionIds = new ArrayList<>();
+
+        for(RolePermission rolePermission : rolePermissions){
+
+            permissionIds.add(rolePermission.getPermissionId());
+
+        }
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andIdIn(permissionIds);
+
+       List<Permission> permissions = permissionService.selectByCriteria(permissionCriteria);
+
+
+
+
+        //====================
+
+        List<Resource> resourceList = new ArrayList<>();
+
+        for(Permission permission : permissions){
+
+            System.out.println("资源wildCard: "+ permission.getResourcePathWildcard());
+            ResourceCriteria resourceCriteria = new ResourceCriteria();
+            resourceCriteria.createCriteria().andTenantIdIn(tenantIds).andPathLike(permission.getResourcePathWildcard());
+            resourceList.addAll(resourceService.selectByCriteria(resourceCriteria));
+        }
+
+//        resourceList = resourceService.selectByCriteria(resourceCriteria);
         boolean flag = false; //判断是否拥有超级权限
         for (Resource resource : resourceList) {
             if (GarnetContants.RESOURCE_PERMISSION.equals(resource.getVarchar00())) {
+                System.out.println("资源存在超级权限");
                 flag = true;
             }
         }

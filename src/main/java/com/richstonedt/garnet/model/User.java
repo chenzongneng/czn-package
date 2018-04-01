@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-12 16:08
+ * DATE: 2018-03-30 13:23
  */
 public class User implements Serializable {
     private Long id;
@@ -25,6 +25,8 @@ public class User implements Serializable {
 
     private Integer status;
 
+    private String belongToGarnet;
+
     /**
      * 更新的人
      * gar_users.updated_by_user_name
@@ -36,7 +38,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     private static final long serialVersionUID = 1L;
 
@@ -96,6 +98,14 @@ public class User implements Serializable {
         this.status = status;
     }
 
+    public String getBelongToGarnet() {
+        return belongToGarnet;
+    }
+
+    public void setBelongToGarnet(String belongToGarnet) {
+        this.belongToGarnet = belongToGarnet == null ? null : belongToGarnet.trim();
+    }
+
     /**
      * 更新的人<br>
      *
@@ -104,7 +114,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public String getUpdatedByUserName() {
         return updatedByUserName;
@@ -118,7 +128,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
@@ -131,7 +141,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public boolean equals(Object that) {
@@ -152,6 +162,7 @@ public class User implements Serializable {
             && (this.getMobileNumber() == null ? other.getMobileNumber() == null : this.getMobileNumber().equals(other.getMobileNumber()))
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getBelongToGarnet() == null ? other.getBelongToGarnet() == null : this.getBelongToGarnet().equals(other.getBelongToGarnet()))
             && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
@@ -162,7 +173,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public int hashCode() {
@@ -175,6 +186,7 @@ public class User implements Serializable {
         result = prime * result + ((getMobileNumber() == null) ? 0 : getMobileNumber().hashCode());
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getBelongToGarnet() == null) ? 0 : getBelongToGarnet().hashCode());
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
     }
@@ -186,7 +198,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-12 16:08
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public String toString() {
@@ -201,6 +213,7 @@ public class User implements Serializable {
         sb.append(", mobileNumber=").append(mobileNumber);
         sb.append(", email=").append(email);
         sb.append(", status=").append(status);
+        sb.append(", belongToGarnet=").append(belongToGarnet);
         sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

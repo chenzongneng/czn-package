@@ -244,6 +244,7 @@ CREATE TABLE gar_users
 	mobile_number varchar(256) DEFAULT '' NOT NULL,
 	email varchar(256) DEFAULT '' NOT NULL,
 	status int DEFAULT 1  NOT NULL,
+	belong_to_garnet varchar(5) DEFAULT '' NOT NULL,
 	-- 更新的人
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
@@ -479,7 +480,7 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01) VALUES ('45', '1', '/index.html', '控制菜单显示', 'appCode_garnetDevelopmentRouterGroupUpdate', '1522252800000', '1522252800000', 'garnet_appCode', '1', 'garnetDevelopmentRouterGroupUpdate', 'true');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01) VALUES ('46', '1', '/index.html', '控制菜单显示', 'appCode_garnetDevelopmentRouterGroupDelete', '1522252800000', '1522252800000', 'garnet_appCode', '1', 'garnetDevelopmentRouterGroupDelete', 'true');
 -- superAdmin
-INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00) VALUES ('60', '1', '/index.html', '控制菜单显示', 'superAdmin_permission', '1522252800000', '1522252800000', 'superAdmin', '1', 'all_permission');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00) VALUES ('60', '1', '/superAll', '控制菜单显示', 'superAdmin_permission', '1522252800000', '1522252800000', 'superAdmin', '1', 'all_permission');
 -- sysMenu
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('47', '1', '/index.html',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '1', '0', '', '系统管理', '', '0', 'fa fa-cog', 'garnetSysManagement', '0', '', '');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('48', '1', '/index.html',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '2', '1', '', '租户管理', 'modules/tenant.html', '1', 'fa fa-address-book', 'garnetSysManagementTenant', '1', '', '');

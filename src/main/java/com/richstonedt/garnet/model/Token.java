@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-26 18:18
+ * DATE: 2018-03-30 13:23
  */
 public class Token implements Serializable {
     private Long id;
@@ -30,7 +30,7 @@ public class Token implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:18
+     * DATE: 2018-03-30 13:23
      */
     private static final long serialVersionUID = 1L;
 
@@ -97,7 +97,7 @@ public class Token implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:18
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public boolean equals(Object that) {
@@ -112,12 +112,12 @@ public class Token implements Serializable {
         }
         Token other = (Token) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-                && (this.getToken() == null ? other.getToken() == null : this.getToken().equals(other.getToken()))
-                && (this.getUserName() == null ? other.getUserName() == null : this.getUserName().equals(other.getUserName()))
-                && (this.getRouterGroupName() == null ? other.getRouterGroupName() == null : this.getRouterGroupName().equals(other.getRouterGroupName()))
-                && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-                && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-                && (this.getExpireTime() == null ? other.getExpireTime() == null : this.getExpireTime().equals(other.getExpireTime()));
+            && (this.getToken() == null ? other.getToken() == null : this.getToken().equals(other.getToken()))
+            && (this.getUserName() == null ? other.getUserName() == null : this.getUserName().equals(other.getUserName()))
+            && (this.getRouterGroupName() == null ? other.getRouterGroupName() == null : this.getRouterGroupName().equals(other.getRouterGroupName()))
+            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
+            && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
+            && (this.getExpireTime() == null ? other.getExpireTime() == null : this.getExpireTime().equals(other.getExpireTime()));
     }
 
     /**
@@ -127,7 +127,7 @@ public class Token implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:18
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public int hashCode() {
@@ -150,7 +150,7 @@ public class Token implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-26 18:18
+     * DATE: 2018-03-30 13:23
      */
     @Override
     public String toString() {

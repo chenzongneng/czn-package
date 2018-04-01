@@ -249,6 +249,8 @@ var vm = new Vue({
 
             var obj = new Object();
             obj.group = vm.group;
+            //change by ming
+            var LoginUserId = localStorage.getItem("userId");
 
             if(vm.group.name === null || vm.group.name === ""){
                 alert("部门名称不能为空");
@@ -260,6 +262,7 @@ var vm = new Vue({
             var userIdList = [];
             for (var i = 0; i < userNodes.length; i++) {
                 userIdList.push(userNodes[i].id);
+
             }
             vm.group.userIds = userIdList.join(",");
 
@@ -270,6 +273,10 @@ var vm = new Vue({
                 roleIdList.push(roleNodes[k].id);
             }
             vm.group.roleIds = roleIdList.join(",");
+
+
+
+
 
             obj.userIds = userIdList;
             obj.roleIds = roleIdList;

@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
@@ -17,7 +17,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -51,7 +51,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -85,7 +85,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     id, user_id, tenant_id, application_id, status
   </sql>
@@ -93,7 +93,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select
     <if test="distinct">
@@ -115,7 +115,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select 
     <include refid="Base_Column_List" />
@@ -126,7 +126,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     delete from gar_user_tenant_applications
     where id = #{id,jdbcType=BIGINT}
@@ -135,7 +135,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     delete from gar_user_tenant_applications
     <if test="_parameter != null">
@@ -146,7 +146,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_user_tenant_applications (id, user_id, tenant_id, 
       application_id, status)
@@ -157,7 +157,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_user_tenant_applications
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -199,7 +199,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select count(*) from gar_user_tenant_applications
     <if test="_parameter != null">
@@ -210,7 +210,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_user_tenant_applications
     <set>
@@ -238,7 +238,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_user_tenant_applications
     set id = #{record.id,jdbcType=BIGINT},
@@ -254,7 +254,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_user_tenant_applications
     <set>
@@ -277,7 +277,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     update gar_user_tenant_applications
     set user_id = #{userId,jdbcType=BIGINT},
@@ -290,7 +290,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     select
     <if test="distinct">
@@ -309,7 +309,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     insert into gar_user_tenant_applications
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -354,7 +354,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-12 16:08
+      DATE: 2018-03-30 13:23
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_user_tenant_applications
