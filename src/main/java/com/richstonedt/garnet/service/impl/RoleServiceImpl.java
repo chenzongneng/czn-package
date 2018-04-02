@@ -108,11 +108,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         role.setModifiedTime(currentTime);
         this.updateByPrimaryKeySelective(role);
 
+        //删除关联的组
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andRoleIdEqualTo(role.getId());
+        groupRoleService.deleteByCriteria(groupRoleCriteria);
         if(!ObjectUtils.isEmpty(roleView.getGroupIds())){
-            GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
-            groupRoleCriteria.createCriteria().andRoleIdEqualTo(role.getId());
-            //删除关联的组
-            groupRoleService.deleteByCriteria(groupRoleCriteria);
+
             for (Long groupId : roleView.getGroupIds()) {
                 GroupRole groupRole = new GroupRole();
                 groupRole.setGroupId(groupId);
@@ -122,11 +123,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
             }
         }
 
+        //删除关联的权限
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andRoleIdEqualTo(role.getId());
+        rolePermissionService.deleteByCriteria(rolePermissionCriteria);
         if(!ObjectUtils.isEmpty(roleView.getPermissionIds())){
-            RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
-            rolePermissionCriteria.createCriteria().andRoleIdEqualTo(role.getId());
-            //删除关联的权限
-            rolePermissionService.deleteByCriteria(rolePermissionCriteria);
+
             for (Long permissionId : roleView.getPermissionIds()) {
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setRoleId(role.getId());
@@ -180,14 +182,17 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         //只查询status为1，即没被删除的
         criteria.andStatusEqualTo(1);
 
+        if (!StringUtils.isEmpty(roleParm.getSearchName())) {
+            criteria.andNameLike("%" + roleParm.getSearchName() + "%");
+        }
+
         if (!StringUtils.isEmpty(roleParm.getUserId())) {
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(roleParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
             //如果不是超级管理员,根据tenantId返回列表
-            if (!returnTenantIdView.isSuperAdmin()) {
-                //change by ming
-                tenantIds =  commonService.dealTenantIdsIfGarnet(roleParm.getUserId(),tenantIds);
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(roleParm.getUserId()))) {
+
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0) {
                     //根据tenantId列表查询role
                     criteria.andTenantIdIn(tenantIds);

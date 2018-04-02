@@ -11,4 +11,11 @@ public interface CommonService{
      * @return
      */
     public List<Long> dealTenantIdsIfGarnet(Long userId,List<Long> tenantIds);
+
+    /**
+     * 返回是不是garnet的超级管理员
+     * @param userId
+     * @return
+     */
+    boolean superAdminBelongGarnet(Long userId);
 }

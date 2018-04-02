@@ -224,11 +224,8 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-            //如果不是超级管理员
-            if (!returnTenantIdView.isSuperAdmin()) {
-
-                //change my ming
-                tenantIds =  commonService.dealTenantIdsIfGarnet(permissionParm.getUserId(),tenantIds);
+            //如果不是garnet的超级管理员
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(permissionParm.getUserId()))) {
 
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
                     criteria.andTenantIdIn(tenantIds);

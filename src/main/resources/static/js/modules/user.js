@@ -108,6 +108,7 @@ var vm = new Vue({
         searchName: null,
         showList: true,
         title: null,
+        belongToGarnet:false,
 
         multiple: {
             originOptionsTenant: [],
@@ -197,18 +198,13 @@ var vm = new Vue({
             vm.user = {
                 id: null,
                 belongToGarnet:''
-                // userName: null,
-                // password: null,
-                // name: null,
-                // email: null,
-                // mobile: null,
-                // status: 1,
-                // deptIds: null
             };
             this.queryData("add");
-            // vm.initTreeToAdd();
-            // vm.getTenantList();
-            // vm.getAppList();
+            if ("Y" == localStorage.getItem("belongToGarnet")) {
+                vm.belongToGarnet = true;
+            } else {
+                vm.belongToGarnet = false;
+            }
         },
         /**  更新按钮点击事件 */
         update: function () {

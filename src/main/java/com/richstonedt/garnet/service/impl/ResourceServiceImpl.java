@@ -155,7 +155,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             //change by ming
             tenantIds =  commonService.dealTenantIdsIfGarnet(resourceParm.getUserId(),tenantIds);
 
-            if (!returnTenantIdView.isSuperAdmin()) {
+            //如果不是garnet的超级管理员，返回绑定tenantId下的resource
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(resourceParm.getUserId()))) {
                 criteria.andTenantIdIn(tenantIds);
             }
         }
@@ -271,21 +272,23 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             }
         }
 
-        sySMenuJsonObject2.setMenuId(Integer.valueOf(resource1.getVarchar00()));
-        sySMenuJsonObject2.setParentId(Integer.valueOf(resource1.getVarchar01()));
-        sySMenuJsonObject2.setParentName(resource1.getVarchar02() == "" ? null : resource1.getVarchar00());
-        sySMenuJsonObject2.setName(resource1.getVarchar03());
-        sySMenuJsonObject2.setUrl(resource1.getVarchar04() == "" ? null : resource1.getVarchar04());
+        sySMenuJsonObject2.setMenuId(Integer.valueOf(resource2.getVarchar00()));
+        sySMenuJsonObject2.setParentId(Integer.valueOf(resource2.getVarchar01()));
+        sySMenuJsonObject2.setParentName(resource2.getVarchar02() == "" ? null : resource2.getVarchar00());
+        sySMenuJsonObject2.setName(resource2.getVarchar03());
+        sySMenuJsonObject2.setUrl(resource2.getVarchar04() == "" ? null : resource1.getVarchar04());
         sySMenuJsonObject2.setType(Integer.valueOf(resource1.getVarchar05()));
-        sySMenuJsonObject2.setIcon(resource1.getVarchar06());
-        sySMenuJsonObject2.setCode(resource1.getVarchar07());
-        sySMenuJsonObject2.setOrderNum(Integer.valueOf(resource1.getVarchar08()));
-        sySMenuJsonObject2.setOpen(resource1.getVarchar09() == "" ? null : resource1.getVarchar09());
+        sySMenuJsonObject2.setIcon(resource2.getVarchar06());
+        sySMenuJsonObject2.setCode(resource2.getVarchar07());
+        sySMenuJsonObject2.setOrderNum(Integer.valueOf(resource2.getVarchar08()));
+        sySMenuJsonObject2.setOpen(resource2.getVarchar09() == "" ? null : resource2.getVarchar09());
         sySMenuJsonObject2.setList(sySMenuJsonObjectList2);
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(sySMenuJsonObject1);
         jsonArray.add(sySMenuJsonObject2);
+
+        FileUtil.writeJsonFile(jsonArray.toString());
 
         return jsonArray.toString();
     }

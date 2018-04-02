@@ -14,6 +14,7 @@ import com.richstonedt.garnet.model.criteria.GroupUserCriteria;
 import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.parm.GroupParm;
 import com.richstonedt.garnet.model.view.GroupView;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
     @Autowired
     private CommonService commonService;
+
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -140,12 +145,13 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             throw new RuntimeException("group's id can not be null");
         }
 
+        //先删除关联 组-用户 外键
+        GroupUserCriteria groupUserCriteria =  new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andGroupIdEqualTo(group.getId());
+        groupUserService.deleteByCriteria(groupUserCriteria);
+
         //更新组-用户中间表
         if (!ObjectUtils.isEmpty(groupView.getUserIds())) {
-            //先删除关联外键
-            GroupUserCriteria groupUserCriteria =  new GroupUserCriteria();
-            groupUserCriteria.createCriteria().andGroupIdEqualTo(group.getId());
-            groupUserService.deleteByCriteria(groupUserCriteria);
             //插入更新关联信息
             List<Long> userIds = groupView.getUserIds();
             for (Long userId : userIds) {
@@ -157,11 +163,12 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             }
         }
 
+        //先删除 组-角色 关联外键
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andGroupIdEqualTo(group.getId());
+        groupRoleService.deleteByCriteria(groupRoleCriteria);
+
         if (!ObjectUtils.isEmpty(groupView.getRoleIds())) {
-            //先删除关联外键
-            GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
-            groupRoleCriteria.createCriteria().andGroupIdEqualTo(group.getId());
-            groupRoleService.deleteByCriteria(groupRoleCriteria);
             //插入更新关联信息
             List<Long> roleIds = groupView.getRoleIds();
             for (Long roleId : roleIds) {
@@ -293,56 +300,44 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         criteria.andStatusEqualTo(1);
         criteria.andNameIsNotNull();
 
-//        if(!ObjectUtils.isEmpty(groupParm.getApplicationId())){
-//            criteria.andApplicationIdEqualTo(groupParm.getApplicationId());
-//        }
-//        if(!ObjectUtils.isEmpty(groupParm.getTenantId())){
-//            criteria.andTenantIdEqualTo(groupParm.getTenantId());
-//        }
-
         if (!ObjectUtils.isEmpty(groupParm.getSearchName())) {
             criteria.andNameLike("%" + groupParm.getSearchName() + "%");
         }
+
         if(!ObjectUtils.isEmpty(groupParm.getUserId())){
+
             //根据userId 查tenantId
-            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-            userTenantCriteria.createCriteria().andUserIdEqualTo(groupParm.getUserId());
-            List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
-            List<Long> tenantIds = new ArrayList<>();
+            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(groupParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-            if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
-                for (UserTenant userTenant : userTenants) {
-                    tenantIds.add(userTenant.getTenantId());
+            //如果不是garnet下的超级管理员，根据tenantId返回，否则返回所有group
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(groupParm.getUserId()))) {
+                //根据tenantIds 查userIds
+                List<Long> userIds = new ArrayList<>();
+                UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
+                userTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
+                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
+                if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
+                    for (UserTenant userTenant : userTenants1) {
+                        userIds.add(userTenant.getUserId());
+                    }
+                }
+
+                //根据userIds 查group列表
+                GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+                groupUserCriteria.createCriteria().andUserIdIn(userIds);
+                List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
+                if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
+                    List<Long> groupIds = new ArrayList<>();
+                    for (GroupUser groupUser : groupUsers) {
+                        groupIds.add(groupUser.getGroupId());
+                    }
+                    criteria.andIdIn(groupIds);
+                } else {
+                    return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
                 }
             }
 
-            //change by ming
-            tenantIds =  commonService.dealTenantIdsIfGarnet(groupParm.getUserId(),tenantIds);
-
-            //根据tenantIds 查userIds
-            List<Long> userIds = new ArrayList<>();
-            UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
-            userTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
-            List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
-            if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
-                for (UserTenant userTenant : userTenants1) {
-                    userIds.add(userTenant.getUserId());
-                }
-            }
-
-            //根据userIds 查group列表
-            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-            groupUserCriteria.createCriteria().andUserIdIn(userIds);
-            List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
-            if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
-                List<Long> groupIds = new ArrayList<>();
-                for (GroupUser groupUser : groupUsers) {
-                    groupIds.add(groupUser.getGroupId());
-                }
-                criteria.andIdIn(groupIds);
-            } else {
-                return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
-            }
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria),groupParm.getPageNumber() ,groupParm.getPageSize());

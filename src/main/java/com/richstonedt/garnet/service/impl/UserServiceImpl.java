@@ -4,7 +4,6 @@ import com.auth0.jwt.interfaces.Claim;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
-import com.richstonedt.garnet.exception.GarnetServiceException;
 import com.richstonedt.garnet.interceptory.JwtToken;
 import com.richstonedt.garnet.interceptory.LoginMessage;
 import com.richstonedt.garnet.mapper.BaseMapper;
@@ -272,36 +271,41 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //查询没被删除的user
         criteria.andStatusEqualTo(1);
 
+        if (!StringUtils.isEmpty(userParm.getSearchName())) {
+            criteria.andUserNameLike("%" + userParm.getSearchName() + "%");
+        }
+
         //根据userId ,获取tenantId列表
         if (!StringUtils.isEmpty(userParm.getUserId())) {
             ReturnTenantIdView returnTenantIdView = this.getTenantIdsByUserId(userParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-            //==========Change By Ming==如果不是garnet自身的管理员，没有必要显示garnet相关的信息
-            tenantIds =  commonService.dealTenantIdsIfGarnet(userParm.getUserId(),tenantIds);
-            System.out.println("tenantIds.size(): "+returnTenantIdView.isSuperAdmin());
-            //如果是超级管理员，直接返回所有user列表
-            if (returnTenantIdView.isSuperAdmin()) {
-                PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
-                return result;
-            }
+            //如果是garnet的超级管理员，直接返回所有user列表
+//            if (returnTenantIdView.isSuperAdmin() && commonService.superAdminBelongGarnet(userParm.getUserId())) {
+//                PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
+//                return result;
+//            }
 
-            //根据tenantId获取user列表
-            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-            userTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
-            List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria);
-            List<Long> userIds = new ArrayList<>();
-            if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
-                for (UserTenant userTenant : userTenants1) {
-                    userIds.add(userTenant.getUserId());
+            //如果不是属于garnet的超级管理员，根据tenantId返回
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(userParm.getUserId()))) {
+                //根据tenantId获取user列表
+                UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+                userTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
+                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria);
+                List<Long> userIds = new ArrayList<>();
+                if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
+                    for (UserTenant userTenant : userTenants1) {
+                        userIds.add(userTenant.getUserId());
+                    }
+                }
+                if (!CollectionUtils.isEmpty(userIds)) {
+                    criteria.andIdIn(userIds);
+                } else {
+                    //没有关联的userId，返回空
+                    return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
                 }
             }
-            if (!CollectionUtils.isEmpty(userIds)) {
-                criteria.andIdIn(userIds).andStatusEqualTo(1);
-            } else {
-                //没有关联的userId，返回空
-                return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
-            }
+
         } else {
             //没有传入userId，直接返回null
             return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
@@ -896,9 +900,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             for (Tenant tenant : tenants) {
                 teantIdList.add(tenant.getId());
             }
+
+            teantIdList =  commonService.dealTenantIdsIfGarnet(userId, teantIdList);
             returnTenantIdView.setTenantIds(teantIdList);
             return returnTenantIdView;
         } else {
+            tenantIds =  commonService.dealTenantIdsIfGarnet(userId, tenantIds);
+
             returnTenantIdView.setTenantIds(tenantIds);
             return returnTenantIdView;
         }

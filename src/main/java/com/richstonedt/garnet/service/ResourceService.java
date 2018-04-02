@@ -8,6 +8,7 @@ import com.richstonedt.garnet.model.parm.ResourceParm;
 import com.richstonedt.garnet.model.view.ResourceView;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ResourceService extends BaseService<Resource, ResourceCriteria, Long> {
 
@@ -32,5 +33,6 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      * @throws IOException
      */
     String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException;
+
 
 }

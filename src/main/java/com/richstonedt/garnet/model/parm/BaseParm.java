@@ -1,5 +1,7 @@
 package com.richstonedt.garnet.model.parm;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * The type Base parm.
  */
@@ -14,6 +16,17 @@ public class BaseParm {
     private Long tenantId;
 
     private Long applicationId;
+
+    @ApiModelProperty(value = "根据名字搜索")
+    private String searchName;
+
+    public String getSearchName() {
+        return searchName;
+    }
+
+    public void setSearchName(String searchName) {
+        this.searchName = searchName;
+    }
 
     /**
      * Gets page size.

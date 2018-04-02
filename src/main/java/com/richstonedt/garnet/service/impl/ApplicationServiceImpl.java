@@ -185,13 +185,8 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(applicationParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-
-//
-            //如果不是超级管理员
-            if (!returnTenantIdView.isSuperAdmin()) {
-
-                //change by ming
-                tenantIds =  commonService.dealTenantIdsIfGarnet(applicationParm.getUserId(),tenantIds);
+            //如果不是garnet的超级管理员,返回绑定tenantId下的应用
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(applicationParm.getUserId()))) {
 
                 //通过租户id拿应用id
                 ApplicationTenantCriteria applicationTenantCriteria1 = new ApplicationTenantCriteria();

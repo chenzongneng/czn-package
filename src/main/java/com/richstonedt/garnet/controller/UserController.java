@@ -219,6 +219,7 @@ public class UserController {
     public ResponseEntity<?> getUsers(
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户Id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
+            @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         try {
@@ -227,6 +228,7 @@ public class UserController {
             userParm.setUserId(userId);
             userParm.setTenantId(tenantId);
             userParm.setPageSize(pageSize);
+            userParm.setSearchName(searchName);
             userParm.setPageNumber(pageNumber);
             PageUtil result = userService.queryUsersByParms(userParm);
             // 封装返回信息
@@ -257,8 +259,7 @@ public class UserController {
             if (StringUtils.isEmpty(loginMessage.getAccessToken()) || StringUtils.isEmpty(loginMessage.getRefreshToken())) {
                 error = "登录失败，请重新登录";
             }
-//            HttpSession session = request.getSession();
-//            session.setAttribute("token", loginMessage.getToken());
+
             response.setHeader("accessToken", loginMessage.getAccessToken());
             response.setHeader("refreshToken", loginMessage.getRefreshToken());
 

@@ -176,6 +176,9 @@ function routerList(router, menuList,vm) {
 
 //刷新token
 function refreshToken () {
+
+    console.log("刷新token: " + $.now());
+
     var data = {
         userName: localStorage.getItem("userName"),
         token: localStorage.getItem("refreshToken"),
@@ -192,10 +195,6 @@ function refreshToken () {
             localStorage.setItem("accessToken", result.accessToken);
             localStorage.setItem("refreshToken", result.refreshToken);
         }
-        // ,
-        // error:function(result){
-        //     console.log("result refresh token error = " + JSON.stringify(result));
-        // }
     });
 }
 //每半小时自动刷新token

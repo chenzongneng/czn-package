@@ -283,7 +283,7 @@ var vm = new Vue({
 
             $.ajax({
                 type: vm.group.groupId === null ? "POST" : "PUT",
-                url: baseURL + "groups",
+                url: baseURL + "groups?userId=" + userId,
                 contentType: "application/json",
                 data: JSON.stringify(obj),
                 dataType: "",
@@ -334,6 +334,8 @@ var vm = new Vue({
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
                 userTree.expandAll(true);
             });
+
+
             // 加载角色树
             $.get(baseURL + "/roletree?token=" + accessToken, function (response) {
                 roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
@@ -348,6 +350,8 @@ var vm = new Vue({
         /** 根据ID获取部门信息 */
         getGroupInfo: function (groupId) {
             $.get(baseURL + "groups/" + groupId, function (response) {
+
+                console.log("group response == " + JSON.stringify(response))
 
                 vm.group.groupId = response.data.group.groupId;
                 vm.group.applicationId = response.data.group.applicationId;
@@ -405,6 +409,15 @@ var vm = new Vue({
             $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant, function (response) {
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                 userTree.expandAll(true);
+
+                for (i = 0; i<response.length; i++) {
+                    var userId1 = JSON.stringify(response[i].id);
+                    if (userId1 == userId) {
+                    //勾选登录用户
+                    var node = userTree.getNodeByParam("id", userId);
+                    userTree.checkNode(node, true, false);
+                    }
+                }
             })
         },
         //根据租户加载角色树
@@ -416,7 +429,7 @@ var vm = new Vue({
         },
         /**  获取租户列表 */
         getTenantList: function () {
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000"  + "&userId=" + userId, function (response) {
                 $.each(response.list, function (index, item) {
                     vm.tenantList.options.push(item);
                 })
@@ -424,7 +437,7 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?page=1&limit=1000"  + "&userId=" + userId, function (response) {
                 $.each(response.list, function (index, item) {
                     vm.appList.options.push(item);
                 })

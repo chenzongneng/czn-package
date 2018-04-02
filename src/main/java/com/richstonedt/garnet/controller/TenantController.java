@@ -184,6 +184,7 @@ public class TenantController {
     public ResponseEntity<?> getTenants(
             @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
+            @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "应用Id", defaultValue = "", required = false) @RequestParam(value = "applicaionId", defaultValue = "", required = false) Long applicaionId,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @ApiParam(value = "modeId", defaultValue = "0", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) int modeId,
@@ -192,6 +193,7 @@ public class TenantController {
         try {
             TenantParm tenantParm = new TenantParm();
             tenantParm.setUserId(userId);
+            tenantParm.setSearchName(searchName);
             tenantParm.setApplicationId(applicaionId);
             tenantParm.setPageSize(limit);
             tenantParm.setPageNumber(page);

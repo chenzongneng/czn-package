@@ -139,7 +139,7 @@ public class GroupController {
             @ApiResponse(code = 500, message = "internal Server Error") })
     @RequestMapping(value = "/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateGroups(
-            //@ApiParam(value = "用户组id", required = true) @PathVariable(value = "id") long id,
+            @ApiParam(value = "用户组id", required = true) @RequestParam(value = "userId") long userId,
             @ApiParam(value = "用户组信息", required = true) @RequestBody GroupView groupView) {
         try {
             //groupView.getGroup().setId(id);

@@ -50,6 +50,7 @@ var vm = new Vue({
                         localStorage.setItem("accessToken", result.accessToken);
                         localStorage.setItem("userId", result.user.id);
                         localStorage.setItem("userName", result.user.userName);
+                        localStorage.setItem("belongToGarnet", result.user.belongToGarnet)
                         parent.location.href = 'index.html';
                     } else {
                         vm.error = true;

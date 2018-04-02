@@ -138,9 +138,19 @@ var vm = new Vue({
                 appIdList: []
             };
 
+            var mode;
+            if ("all" == localStorage.getItem("mode")) {
+                mode = "paas"
+            } else {
+                mode = localStorage.getItem("mode")
+            }
+
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
+            $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
+
+                console.log("applications == " + JSON.stringify(response.list));
+
                 appTree.expandAll(true);
 
             });
@@ -158,8 +168,14 @@ var vm = new Vue({
 
             vm.getTenant(tenantId);
 
+            var mode;
+            if ("all" == localStorage.getItem("mode")) {
+                mode = "paas"
+            } else {
+                mode = localStorage.getItem("mode")
+            }
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
+            $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
             });
@@ -285,11 +301,6 @@ var vm = new Vue({
                     vm.tenant.modifiedTime = response.tenant.modifiedTime;
                     vm.tenant.appIdList = response.appIdList;
                     // vm.userName = response.userName;
-
-
-                    console.log("tenant == " + JSON.stringify(response));
-
-
                     // $.each(response.appIdList, function (index, item) {
                     //     var node = appTree.getNodeByParam("id", item);
                     //     appTree.checkNode(node, true, false);

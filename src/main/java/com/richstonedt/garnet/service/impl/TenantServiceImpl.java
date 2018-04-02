@@ -179,29 +179,22 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         TenantCriteria tenantCriteria = new TenantCriteria();
         TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
         criteria.andStatusEqualTo(1);
+
+        if (!StringUtils.isEmpty(tenantParm.getSearchName())) {
+            criteria.andNameLike(tenantParm.getSearchName());
+        }
+
         //根据userId获取用户所有的租户
         if(!ObjectUtils.isEmpty(tenantParm.getUserId())){
-//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-//            userTenantCriteria.createCriteria().andUserIdEqualTo(tenantParm.getUserId());
-//            List<UserTenant> userTenants =  userTenantService.selectByCriteria(userTenantCriteria);
-//            List<Long> userTenantIds = new ArrayList<Long>();
-//
-//            for(UserTenant userTenant : userTenants){
-//                userTenantIds.add(userTenant.getTenantId());
-//            }
 
             ReturnTenantIdView returnTenantIdView =userService.getTenantIdsByUserId(tenantParm.getUserId());
             List<Long> userTenantIds = returnTenantIdView.getTenantIds();
 
-            //change by ming 添加判断
-            userTenantIds =  commonService.dealTenantIdsIfGarnet(tenantParm.getUserId(),userTenantIds);
-
             if(userTenantIds.size() == 0){
                 userTenantIds.add(GarnetContants.NON_VALUE);
             }
-            //如果不是超级管理员
-            if (!returnTenantIdView.isSuperAdmin()) {
-                //            tenantCriteria.createCriteria().andIdIn(userTenantIds);
+            //如果不是属于garnet的超级管理员,根据tenantId返回
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(tenantParm.getUserId()))) {
                 criteria.andIdIn(userTenantIds);
             }
 
@@ -221,7 +214,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             if(applicationTenantIds.size()==0){
                 applicationTenantIds.add(GarnetContants.NON_VALUE);
             }
-//            tenantCriteria.createCriteria().andIdIn(applicationTenantIds);
             criteria.andIdIn(applicationTenantIds);
         }
 

@@ -152,8 +152,15 @@ var vm = new Vue({
                 tenantIds: null
             };
 
+            var mode;
+            if ("all" == localStorage.getItem("mode")) {
+                mode = "paas"
+            } else {
+                mode = localStorage.getItem("mode")
+            }
+
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
@@ -170,11 +177,15 @@ var vm = new Vue({
             vm.application.tenantIds = null;
             vm.application.tenantNames = [];
 
-
-
+            var mode;
+            if ("all" == localStorage.getItem("mode")) {
+                mode = "paas"
+            } else {
+                mode = localStorage.getItem("mode")
+            }
 
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + localStorage.getItem("mode"), function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
@@ -256,6 +267,11 @@ var vm = new Vue({
                     return;
                 }
             } else {
+                vm.application.serviceMode = "paas";
+                if (tenantIdList.length > 1) {
+                    swal("当前模式不能添加多个租户", "", "error");
+                    return;
+                }
                 swal({
                     title: "当前默认为PAAS模式，是否确认添加",
                     type: "warning",

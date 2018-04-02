@@ -5,6 +5,7 @@
  */
 
 $(function () {
+
     /** 初始化角色列表 */
     $("#jqGrid").jqGrid({
         url: baseURL + 'resources',
@@ -13,11 +14,9 @@ $(function () {
             {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
             {label: '资源名称', name: 'name', align: 'center', width: 40},
-            // {label: '说明', name: 'varchar00', align: 'center', width: 70},
-            // {label: '父资源标识', name: 'varchar02', align: 'center', width: 70},
-            // {label: '资源标识', name: 'varchar01', align: 'center', width: 70},
             {label: '路径标识', name: 'path', align: 'center', width: 70},
-            {label: 'action', name: 'actions', align: 'center', width: 40},
+            {label: 'actions', name: 'actions', align: 'center', width: 70}
+
             // {
             //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
             //     return value === 0 ?
@@ -115,6 +114,7 @@ var applicationList = {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+        test:null,
         name: null,
         showList: true,
         showParentCode: false,
@@ -444,7 +444,7 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?userId=" + userId +"&page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
                     applicationList.appList.options.push(item);
                     applicationList.appSearchList.options.push(item);
@@ -456,7 +456,7 @@ var vm = new Vue({
         },
         /**  获取租户列表 */
         getTenantList: function () {
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+            $.get(baseURL + "tenants?userId=" + userId + "&page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
                     vm.tenantList.options.push(item);
                 })
