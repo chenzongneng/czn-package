@@ -146,7 +146,7 @@ var vm = new Vue({
                 groupIds: null,
                 permissionIdList:null
             };
-            vm.initTreesToAdd();
+            // vm.initTreesToAdd();
             vm.getTenantList();
             vm.getAppList();
         },
@@ -258,6 +258,7 @@ var vm = new Vue({
                 groupTree.expandAll(true);
             });
             //加载权限树
+            // $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
             $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
                 permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response.list);
                 permissionTree.expandAll(true);
@@ -334,6 +335,7 @@ var vm = new Vue({
         },
         /** 租户列表onchange 事件*/
         selectTenant: function () {
+            vm.initTreesToAdd();
             vm.role.tenantId = vm.tenantList.selectedTenant;
             vm.roadPermissionTree();
         },
@@ -344,7 +346,7 @@ var vm = new Vue({
         },
         /**  获取租户列表 */
         getTenantList: function () {
-            $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
+            $.get(baseURL + "tenants?page=1&limit=1000&userId=" + userId, function (response) {
                 $.each(response.list, function (index, item) {
                     vm.tenantList.options.push(item);
                 })
@@ -352,7 +354,7 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?page=1&limit=1000&userId=" + userId, function (response) {
                 $.each(response.list, function (index, item) {
                     vm.appList.options.push(item);
                 })
