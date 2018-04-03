@@ -14,8 +14,8 @@ $(function () {
             {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
             {label: '资源名称', name: 'name', align: 'center', width: 40},
-            {label: '路径标识', name: 'path', align: 'center', width: 70},
-            {label: 'actions', name: 'actions', align: 'center', width: 70}
+            {label: '路径标识', name: 'path', align: 'center',  width: 70},
+            {label: 'actions', name: 'actions', align: 'center',  width: 70}
 
             // {
             //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
@@ -108,6 +108,18 @@ var applicationList = {
     appSearchList: {
         selectedApp: "",
         options: []
+    },
+    typeSearchList: {
+        searchType: "",
+        options: []
+    }
+};
+
+var typeList = {
+    // 类型选择框应用列表数据
+    typeSearchList: {
+        searchType: "",
+        searchTypeOptions: []
     }
 };
 
@@ -115,8 +127,14 @@ var vm = new Vue({
     el: '#garnetApp',
     data: {
         test:null,
+        showResourceDetail: false,
+        resourceDetail: null,
+        searchType: null,
+        searchApp: null,
         name: null,
+        searchName: null, //根据名称搜索
         showList: true,
+        showList1: true,
         showParentCode: false,
         title: null,
         resourceDynamicPropertyList : [],
@@ -203,6 +221,9 @@ var vm = new Vue({
         option: {
             applicationId: 1,
             appSearchId: ""
+        },
+        searchTypeOption: {
+            searchType: ""
         }
     },
     mounted:function () {
@@ -234,9 +255,61 @@ var vm = new Vue({
         query: function () {
             vm.reload(true);
         },
+        //查看按钮
+        view: function () {
+            if (vm.searchType == null || vm.searchApp == null) {
+                swal("应用和类型都不能为空", "", "error");
+            }
+
+            $.get(baseURL + "resources/byappandtype?applicationId=" + vm.searchApp + "&type=" + vm.searchType, function (response) {
+                vm.resourceDetail = JSON.stringify(response, null, "\t");
+            });
+            vm.showList = false;
+            vm.showList1 = true;
+            vm.showResourceDetail = true;
+
+        },
+        //导入Excel
+        inputExcel: function () {
+          console.log("导入Excel");
+          $('#file').click();
+        },
+        importFile: function (ele) {
+
+            var file = document.getElementById("file").files[0];
+            var formData = new FormData();
+            formData.append('file',file);    // 将文件转成二进制形式
+
+            console.log("开始发送请求... ");
+
+            $.ajax({
+                type: "POST",
+                url: baseURL + "/upload/resourceexcel",
+                processData : false,
+                contentType : undefined,
+                data: formData ,
+                // dataType: "",
+                success: function (result) {
+                    vm.reload(false);
+                    swal("导入Resource成功", "", "success");
+                },
+                error: function (result) {
+                    console.log("import result == " + JSON.stringify(result));
+                    if (result.status == 200 && result.readyState == 4) {
+                        swal("导入Resource成功", "", "success");
+                    } else {
+                        swal("导入Resource失败", "", "error");
+                    }
+                }
+            });
+
+            //重新选择同一个文件的时候，可以重复上传
+            $('#file').val('');
+        },
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
+            vm.showList1 = false;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.typeList.selectedTenant = "";
@@ -272,6 +345,7 @@ var vm = new Vue({
                 return;
             }
             vm.showList = false;
+            vm.showList1 = false;
             vm.title = "修改";
             vm.typeList.options = [];
             vm.tenantList.options = [];
@@ -420,6 +494,7 @@ var vm = new Vue({
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;
+            vm.showList1 = true;
             var page;
             if(backFirst) {
                 page = 1;
@@ -427,7 +502,11 @@ var vm = new Vue({
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {name: vm.name, applicationId: vm.option.appSearchId},
+                postData: {
+                    searchName: vm.searchName,
+                    applicationId: vm.searchApp,
+                    type: vm.searchType
+                },
                 page: page
             }).trigger("reloadGrid");
         },
@@ -441,6 +520,14 @@ var vm = new Vue({
         selectType: function () {
             var type = vm.typeList.selectedType;
             vm.getResourceDynamicPropertyByType(type);
+        },
+        //通过type和appId返回resource
+        getResourceByTypeAndApp: function () {
+            vm.searchType = vm.searchTypeOption.searchType;
+            vm.searchApp = vm.option.appSearchId;
+
+            console.log("type: " + vm.searchType + " == applicationId: " + vm.searchApp);
+            vm.reload(true);
         },
         /**  获取应用列表 */
         getAppList: function () {
@@ -470,8 +557,18 @@ var vm = new Vue({
             $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
                     vm.typeList.options.push(item);
+                    // typeList.typeSearchList.options.push(item);
                 })
-               // console.log("cccc == " + JSON.stringify(vm.typeList.options));
+                // console.log("cccc == " + JSON.stringify(typeList.typeSearchList.options));
+            });
+        },
+        getSearchTypeList: function () {
+            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    // vm.typeList.options.push(item);
+                    // typeList.typeSearchList.searchTypeOptions.push(item);
+                    applicationList.typeSearchList.options.push(item)
+                })
             });
         },
         //获取动态资源列表
@@ -564,5 +661,6 @@ var vm = new Vue({
     created: function () {
         this.getCurrentUser();
         this.getAppList();
+        this.getSearchTypeList();
     }
 });

@@ -482,12 +482,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     }
 
     @Override
-    public LoginMessage refreshToken(LoginView loginView) throws Exception {
+    public LoginMessage refreshToken(TokenRefreshView tokenRefreshView) throws Exception {
         //能通过拦截器，说明token是正确且有效的,故不再验证token是否正确
         LoginMessage loginMessage = new LoginMessage();
 
         //取出token中携带的信息
-        String tokenWithAppCode = loginView.getToken();
+        String tokenWithAppCode = tokenRefreshView.getRefreshToken();
         String[] tokenParams = tokenWithAppCode.split("#");
         System.out.println(tokenParams.length);
         String token = tokenParams[0];
@@ -496,7 +496,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String createTime = tokenParams[3];
 
         //如果要跳转的appCode不存在，返回错误
-        if (StringUtils.isEmpty(loginView.getAppCode())) {
+        if (StringUtils.isEmpty(tokenRefreshView.getAppCode())) {
             loginMessage.setMessage("appCode不能为空");
             loginMessage.setLoginStatus("false");
             loginMessage.setCode(401);
@@ -527,7 +527,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //初始登录的应用 所在的组
         String routerGroupName = routerGroupService.getGroupNameByAppCode(appCode);
         //要跳转的应用 所在的组
-        String routerGroupNameGo = routerGroupService.getGroupNameByAppCode(loginView.getAppCode());
+        String routerGroupNameGo = routerGroupService.getGroupNameByAppCode(tokenRefreshView.getAppCode());
         //应用没有被添加进应用组或不在同一个应用组，无法访问
         if (StringUtils.isEmpty(routerGroupName) || StringUtils.isEmpty(routerGroupNameGo) || !routerGroupName.equals(routerGroupNameGo)) {
             loginMessage.setMessage("没有权限");

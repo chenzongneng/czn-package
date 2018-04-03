@@ -331,14 +331,14 @@ var vm = new Vue({
         initTreesToAdd: function () {
             //加载用户树
             $.get(baseURL + "users?token=" + accessToken + "&page=1&limit=1000", function (response) {
-                userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response.list);
+                userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, []);
                 userTree.expandAll(true);
             });
 
 
             // 加载角色树
             $.get(baseURL + "/roletree?token=" + accessToken, function (response) {
-                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
+                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, []);
                 roleTree.expandAll(true);
             });
         },
@@ -396,6 +396,8 @@ var vm = new Vue({
         },
         /** 租户列表onchange 事件*/
         selectTenant: function () {
+
+
             vm.group.tenantId = vm.tenantList.selectedTenant;
             vm.reloadUserTree();
             vm.reloadRoleTree();

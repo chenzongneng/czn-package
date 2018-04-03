@@ -310,7 +310,7 @@ INSERT INTO gar_users(id, user_name, created_time, modified_time, status, belong
 INSERT INTO gar_user_credentials(id, created_time, modified_time, credential, expired_date_time, user_id) VALUES ('1', '1522252800000', '1522252800000', 'admin', '7959830400000', '1');
 
 -- gar_tenants
-INSERT INTO gar_tenants(id, name, created_time, modified_time, description, status, service_mode) VALUES ('1', 'garnet租户paas', '1522252800000', '1522252800000', '超级paas租户', '1', 'paas');
+INSERT INTO gar_tenants(id, name, created_time, modified_time, description, status, service_mode) VALUES ('1', 'garnet', '1522252800000', '1522252800000', '超级租户', '1', 'paas');
 
 -- gar_user_tenants
 INSERT INTO gar_user_tenants(user_id, tenant_id, id) VALUES ('1', '1', '1');

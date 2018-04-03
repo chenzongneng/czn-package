@@ -16,5 +16,9 @@ public class GarnetContants {
 
     public static final Long GARNET_TENANT_ID= 1L;
 
+    public static final Long GARNET_USER_ID= 1L;
+
+    public static final String SAVE_PATH = "C:\\www\\root\\garnet";
+
 
 }

@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
@@ -313,29 +314,48 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             //如果不是garnet下的超级管理员，根据tenantId返回，否则返回所有group
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(groupParm.getUserId()))) {
                 //根据tenantIds 查userIds
-                List<Long> userIds = new ArrayList<>();
-                UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
-                userTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
-                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
-                if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
-                    for (UserTenant userTenant : userTenants1) {
-                        userIds.add(userTenant.getUserId());
-                    }
-                }
+//                List<Long> userIds = new ArrayList<>();
+//                UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
+//                userTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
+//                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
+//                if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
+//                    for (UserTenant userTenant : userTenants1) {
+//                        userIds.add(userTenant.getUserId());
+//                    }
+//                }
+//
+//                //根据userIds 查group列表
+////                GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+////                groupUserCriteria.createCriteria().andUserIdIn(userIds);
+////                List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
+////                if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
+////                    List<Long> groupIds = new ArrayList<>();
+////                    for (GroupUser groupUser : groupUsers) {
+////                        groupIds.add(groupUser.getGroupId());
+////                    }
+////                    criteria.andIdIn(groupIds);
+////                } else {
+////                    return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
+////                }
 
-                //根据userIds 查group列表
+                //根据userId 查group列表
                 GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-                groupUserCriteria.createCriteria().andUserIdIn(userIds);
+                groupUserCriteria.createCriteria().andUserIdEqualTo(groupParm.getUserId());
                 List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
                 if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
                     List<Long> groupIds = new ArrayList<>();
                     for (GroupUser groupUser : groupUsers) {
                         groupIds.add(groupUser.getGroupId());
                     }
-                    criteria.andIdIn(groupIds);
+
+                    List<Long> groupIdList = commonService.dealGroupIdsIfGarnet(groupParm.getUserId(), groupIds);
+
+                    criteria.andIdIn(groupIdList);
+
                 } else {
                     return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
                 }
+
             }
 
         }

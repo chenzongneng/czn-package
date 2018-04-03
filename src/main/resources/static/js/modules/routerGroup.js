@@ -34,6 +34,10 @@ $(function () {
             page: "page",
             rows: "limit"
         },
+        postData: {
+            userId: userId,
+            token: accessToken
+        },
         gridComplete: function () {
             //隐藏grid底部滚动条
             $("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
@@ -97,7 +101,7 @@ var vm = new Vue({
             };
 
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
                 applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
                 applicationTree.expandAll(true);
             });
@@ -115,7 +119,7 @@ var vm = new Vue({
             vm.applicationNames = [];
             vm.appCodeList = [];
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
                 applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
                 applicationTree.expandAll(true);
                 vm.getrouterGroup(routerGroupId);

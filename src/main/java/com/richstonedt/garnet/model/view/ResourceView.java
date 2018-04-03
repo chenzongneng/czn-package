@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.model.view;
 
+import com.richstonedt.garnet.common.utils.ExcelVOAttribute;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 

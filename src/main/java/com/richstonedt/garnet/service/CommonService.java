@@ -18,4 +18,6 @@ public interface CommonService{
      * @return
      */
     boolean superAdminBelongGarnet(Long userId);
+
+    List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds);
 }

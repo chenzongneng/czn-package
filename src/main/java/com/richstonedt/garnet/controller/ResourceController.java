@@ -167,6 +167,8 @@ public class ResourceController {
     @RequestMapping(value = "/resources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getResources(
             @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
+            @ApiParam(value = "应用ID", defaultValue = "", required = false) @RequestParam(value = "applicationId", defaultValue = "", required = false) Long applicationId,
+            @ApiParam(value = "类型名称", defaultValue = "", required = false) @RequestParam(value = "type", defaultValue = "", required = false) String type,
             @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer pageNumber,
@@ -176,6 +178,8 @@ public class ResourceController {
             ResourceParm resourceParm = new ResourceParm();
             resourceParm.setPageSize(pageSize);
             resourceParm.setUserId(userId);
+            resourceParm.setType(type);
+            resourceParm.setApplicationId(applicationId);
             resourceParm.setSearchName(searchName);
             resourceParm.setPageNumber(pageNumber);
 
@@ -209,6 +213,35 @@ public class ResourceController {
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Torino Source]根据应用和类型获取资源列表", notes = "根据应用和类型获取资源列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/byappandtype", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getResourcesByAppAndType(
+            @ApiParam(value = "appId", defaultValue = "", required = false) @RequestParam(value = "applicationId", defaultValue = "", required = false) Long applicationId ,
+            @ApiParam(value = "type", defaultValue = "", required = false) @RequestParam(value = "type", defaultValue = "", required = false) String type ,
+            @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId) {
+        try {
+
+            ResourceParm resourceParm = new ResourceParm();
+            resourceParm.setUserId(userId);
+            resourceParm.setApplicationId(applicationId);
+            resourceParm.setType(type);
+
+            String result = resourceService.getAllResourceByAppAndType(resourceParm);
+            // 封装返回信息
+            GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            t.printStackTrace();
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }

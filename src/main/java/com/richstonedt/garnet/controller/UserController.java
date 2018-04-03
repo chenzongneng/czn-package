@@ -9,10 +9,7 @@ import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.UserParm;
-import com.richstonedt.garnet.model.view.GarLoginView;
-import com.richstonedt.garnet.model.view.LoginView;
-import com.richstonedt.garnet.model.view.UserProfile;
-import com.richstonedt.garnet.model.view.UserView;
+import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.UserService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -296,10 +293,10 @@ public class UserController {
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request, HttpServletResponse response,
             @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
-            @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
+            @ApiParam(value = "用户", required = true) @RequestBody TokenRefreshView tokenRefreshView) {
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
         try {
-            LoginMessage loginMessage = userService.refreshToken(loginView);
+            LoginMessage loginMessage = userService.refreshToken(tokenRefreshView);
             if (StringUtils.isEmpty(loginMessage.getAccessToken()) || StringUtils.isEmpty(loginMessage.getRefreshToken())) {
                 error = "刷新失败，请重新登录";
             }

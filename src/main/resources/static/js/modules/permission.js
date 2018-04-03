@@ -296,12 +296,13 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
+            $.get(baseURL + "applications?page=1&limit=1000&userId=" + userId, function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.appList.options.push(item);
+                })
+            });
             if (vm.appList.options.length == 0) {
-                $.get(baseURL + "applications?page=1&limit=1000?userId=" + userId, function (response) {
-                    $.each(response.list, function (index, item) {
-                        vm.appList.options.push(item);
-                    })
-                });
+
             }
         },
         /** 租户列表onchange 事件*/
@@ -310,12 +311,13 @@ var vm = new Vue({
         },
         /**  获取租户列表 */
         getTenantList: function () {
+            $.get(baseURL + "tenants?page=1&limit=1000&userId=" + userId, function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.tenantList.options.push(item);
+                })
+            });
             if (vm.tenantList.options.length == 0) {
-                $.get(baseURL + "tenants?page=1&limit=1000?userId=" + userId, function (response) {
-                    $.each(response.list, function (index, item) {
-                        vm.tenantList.options.push(item);
-                    })
-                });
+
             }
         }
 

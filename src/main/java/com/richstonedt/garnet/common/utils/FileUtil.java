@@ -2,6 +2,7 @@ package com.richstonedt.garnet.common.utils;
 
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.filter.helper.GsonUtil;
+import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -25,14 +26,11 @@ public class FileUtil {
 
     public static void main(String[] args) {
 
-        boolean b = true;
-        boolean b1 = false;
-
-       if (!b || (b &&!b1)) {
-           System.out.println("true");
-       } else {
-           System.out.println("false");
-       }
+        JSONObject jsonObject = new JSONObject();
+        Resource resource = new Resource();
+        resource.setName("dddddd");
+        jsonObject.put("ddd", resource.getName());
+        System.out.println(jsonObject.toString());
     }
 }
 

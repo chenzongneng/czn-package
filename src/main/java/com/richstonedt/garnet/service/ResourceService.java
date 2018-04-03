@@ -5,6 +5,7 @@ import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.parm.ResourceParm;
+import com.richstonedt.garnet.model.view.ResourceExcelView;
 import com.richstonedt.garnet.model.view.ResourceView;
 
 import java.io.IOException;
@@ -33,6 +34,10 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      * @throws IOException
      */
     String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException;
+
+    String getAllResourceByAppAndType(ResourceParm resourceParm);
+
+    void saveResourcesExcel(List<ResourceExcelView> resourceExcelViews);
 
 
 }

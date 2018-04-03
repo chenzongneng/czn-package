@@ -11,14 +11,13 @@ import com.richstonedt.garnet.mapper.ResourceMapper;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.ResourceParm;
-import com.richstonedt.garnet.model.view.ResourceView;
-import com.richstonedt.garnet.model.view.ReturnTenantIdView;
-import com.richstonedt.garnet.model.view.SySMenuJsonObject;
+import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.*;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.naming.factory.ResourceLinkFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +57,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
     @Autowired
     private CommonService commonService;
+
+    @Autowired
+    private TenantService tenantService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -147,6 +152,18 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         ResourceCriteria resourceCriteria = new ResourceCriteria();
         ResourceCriteria.Criteria criteria =resourceCriteria.createCriteria();
+
+        if (!StringUtils.isEmpty(resourceParm.getSearchName())) {
+            criteria.andNameLike("%" + resourceParm.getSearchName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(resourceParm.getApplicationId())) {
+            criteria.andApplicationIdEqualTo(resourceParm.getApplicationId());
+        }
+
+        if (!StringUtils.isEmpty(resourceParm.getType())) {
+            criteria.andTypeEqualTo(resourceParm.getType());
+        }
 
         if (!StringUtils.isEmpty(resourceParm.getUserId())) {
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(resourceParm.getUserId());
@@ -292,6 +309,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         return jsonArray.toString();
     }
+
 //
 //    @Override
 //    public String getGarnetSysMenuResources() throws IOException {
@@ -466,6 +484,207 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         }
 
         return resourceList1;
+    }
+
+    @Override
+    public String getAllResourceByAppAndType(ResourceParm resourceParm) {
+
+        if (!ObjectUtils.isEmpty(resourceParm.getApplicationId()) && !StringUtils.isEmpty(resourceParm.getType())) {
+            ResourceDynamicPropertyView resourceDynamicPropertyView = resourceDynamicPropertyService.selectResourceDynamicPropertyViewByType(resourceParm.getType());
+            List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyView.getResourceDynamicPropertyList();
+
+            ResourceCriteria resourceCriteria = new ResourceCriteria();
+            resourceCriteria.createCriteria().andTypeEqualTo(resourceParm.getType()).andApplicationIdEqualTo(resourceParm.getApplicationId());
+            List<Resource> resourceList = this.selectByCriteria(resourceCriteria);
+
+            StringBuilder result = new StringBuilder();
+            JSONArray jsonArray = new JSONArray();
+            for (Resource resource : resourceList) {
+                JSONObject jsonObject = new JSONObject();
+                String name = resource.getName();
+                jsonObject.put("资源名称", name);
+                if (!ObjectUtils.isEmpty(resource.getApplicationId())) {
+                    Application application = applicationService.selectByPrimaryKey(resource.getApplicationId());
+                    jsonObject.put("所属应用", application.getName());
+                } else {
+                    jsonObject.put("所属应用", null);
+                }
+                if (!ObjectUtils.isEmpty(resource.getTenantId())) {
+                    Tenant tenant = tenantService.selectByPrimaryKey(resource.getTenantId());
+                    jsonObject.put("所属租户", tenant.getName());
+                } else {
+                    jsonObject.put("所属租户", null);
+                }
+                jsonObject.put("路径标识", resource.getPath());
+                jsonObject.put("action", resource.getActions());
+
+                for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList) {
+                    if ("varchar00".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar00());
+                    }
+                    if ("varchar01".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar01());
+                    }
+                    if ("varchar02".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar02());
+                    }
+                    if ("varchar03".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar03());
+                    }
+                    if ("varchar04".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar04());
+                    }
+                    if ("varchar05".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar05());
+                    }
+                    if ("varchar06".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar06());
+                    }
+                    if ("varchar07".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar07());
+                    }
+                    if ("varchar08".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar08());
+                    }
+                    if ("varchar09".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar09());
+                    }
+                    if ("varchar10".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar10());
+                    }
+                    if ("varchar11".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar11());
+                    }
+                    if ("varchar12".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar12());
+                    }
+                    if ("varchar13".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar13());
+                    }
+                    if ("varchar14".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar14());
+                    }
+                    if ("varchar15".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar15());
+                    }
+                    if ("varchar16".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar16());
+                    }
+                    if ("varchar17".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar17());
+                    }
+                    if ("varchar18".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar18());
+                    }
+                    if ("varchar19".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar19());
+                    }
+                    if ("int01".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt01());
+                    }
+                    if ("int02".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt02());
+                    }
+                    if ("int03".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt03());
+                    }
+                    if ("int04".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt04());
+                    }
+                    if ("int05".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt05());
+                    }
+                    if ("boolean01".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean01());
+                    }
+                    if ("boolean02".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean02());
+                    }
+                    if ("boolean03".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean03());
+                    }
+                    if ("boolean04".equals(resourceDynamicProperty.getFiledName())) {
+                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean04());
+                    }
+                }
+
+                result.append(jsonObject.toString());
+                jsonArray.add(jsonObject);
+//                result.append("\n");
+            }
+
+            return jsonArray.toString();
+        }
+        return null;
+    }
+
+    @Override
+    public void saveResourcesExcel(List<ResourceExcelView> resourceExcelViews) {
+
+        ResourceView resourceView;
+        Resource resource;
+        for (ResourceExcelView resourceExcel : resourceExcelViews) {
+            resourceView = new ResourceView();
+            resource = new Resource();
+
+            if (!StringUtils.isEmpty(resourceExcel.getApplicationName())) {
+                //设置appId'
+                ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+                applicationCriteria.createCriteria().andNameEqualTo(resourceExcel.getApplicationName());
+                Application application = applicationService.selectSingleByCriteria(applicationCriteria);
+                if (!ObjectUtils.isEmpty(application)) {
+                    resource.setApplicationId(application.getId());
+                }
+            }
+            if (!StringUtils.isEmpty(resourceExcel.getTenantName())) {
+                //设置appId'
+                TenantCriteria tenantCriteria = new TenantCriteria();
+                tenantCriteria.createCriteria().andNameEqualTo(resourceExcel.getTenantName());
+                Tenant tenant = tenantService.selectSingleByCriteria(tenantCriteria);
+                if (!ObjectUtils.isEmpty(tenant)) {
+                    resource.setTenantId(tenant.getId());
+                }
+            }
+
+            resource.setName(resourceExcel.getName());
+            resource.setType(resourceExcel.getType());
+            resource.setActions(resourceExcel.getActions());
+
+            resource.setVarchar00(resourceExcel.getVarchar00());
+            resource.setVarchar01(resourceExcel.getVarchar01());
+            resource.setVarchar02(resourceExcel.getVarchar02());
+            resource.setVarchar03(resourceExcel.getVarchar03());
+            resource.setVarchar04(resourceExcel.getVarchar04());
+            resource.setVarchar05(resourceExcel.getVarchar05());
+            resource.setVarchar06(resourceExcel.getVarchar06());
+            resource.setVarchar07(resourceExcel.getVarchar07());
+            resource.setVarchar08(resourceExcel.getVarchar08());
+            resource.setVarchar09(resourceExcel.getVarchar09());
+            resource.setVarchar10(resourceExcel.getVarchar10());
+            resource.setVarchar11(resourceExcel.getVarchar11());
+            resource.setVarchar12(resourceExcel.getVarchar12());
+            resource.setVarchar13(resourceExcel.getVarchar13());
+            resource.setVarchar14(resourceExcel.getVarchar14());
+            resource.setVarchar15(resourceExcel.getVarchar15());
+            resource.setVarchar16(resourceExcel.getVarchar16());
+            resource.setVarchar17(resourceExcel.getVarchar17());
+            resource.setVarchar18(resourceExcel.getVarchar18());
+            resource.setVarchar19(resourceExcel.getVarchar19());
+            resource.setInt01(resourceExcel.getInt01());
+            resource.setInt02(resourceExcel.getInt02());
+            resource.setInt03(resourceExcel.getInt03());
+            resource.setInt04(resourceExcel.getInt04());
+            resource.setInt05(resourceExcel.getInt05());
+            resource.setBoolean01(resourceExcel.getBoolean01());
+            resource.setBoolean02(resourceExcel.getBoolean02());
+            resource.setBoolean03(resourceExcel.getBoolean03());
+            resource.setBoolean04(resourceExcel.getBoolean04());
+
+            resourceView.setResource(resource);
+
+            this.insertResource(resourceView);
+        }
+
     }
 
 }

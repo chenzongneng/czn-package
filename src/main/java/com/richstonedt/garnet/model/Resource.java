@@ -1,5 +1,7 @@
 package com.richstonedt.garnet.model;
 
+import com.richstonedt.garnet.common.utils.ExcelVOAttribute;
+
 import java.io.Serializable;
 
 /**
@@ -34,10 +36,13 @@ function - function opint,对应的是功能项，例如用户查询；
 /{page_name}/{function_name}
      * gar_resources.path
      */
+    @ExcelVOAttribute(name = "", column = "B")
     private String path;
 
+    @ExcelVOAttribute(name = "", column = "C")
     private String actions;
 
+    @ExcelVOAttribute(name = "", column = "A")
     private String name;
 
     private Long createdTime;
@@ -51,66 +56,96 @@ openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内�
 function-功能项，如页面，菜单模块等
      * gar_resources.type
      */
+    @ExcelVOAttribute(name = "", column = "D")
     private String type;
 
     private Long tenantId;
 
+    @ExcelVOAttribute(name = "", column = "F")
     private String varchar00;
 
+    @ExcelVOAttribute(name = "", column = "G")
     private String varchar01;
 
+    @ExcelVOAttribute(name = "", column = "H")
     private String varchar02;
 
+    @ExcelVOAttribute(name = "", column = "I")
     private String varchar03;
 
+    @ExcelVOAttribute(name = "", column = "J")
     private String varchar04;
 
+    @ExcelVOAttribute(name = "", column = "K")
     private String varchar05;
 
+    @ExcelVOAttribute(name = "", column = "L")
     private String varchar06;
 
+    @ExcelVOAttribute(name = "", column = "M")
     private String varchar07;
 
+    @ExcelVOAttribute(name = "", column = "N")
     private String varchar08;
 
+    @ExcelVOAttribute(name = "", column = "O")
     private String varchar09;
 
+    @ExcelVOAttribute(name = "", column = "P")
     private String varchar10;
 
+    @ExcelVOAttribute(name = "", column = "Q")
     private String varchar11;
 
+    @ExcelVOAttribute(name = "", column = "R")
     private String varchar12;
 
+    @ExcelVOAttribute(name = "", column = "S")
     private String varchar13;
 
+    @ExcelVOAttribute(name = "", column = "T")
     private String varchar14;
 
+    @ExcelVOAttribute(name = "", column = "U")
     private String varchar15;
 
+    @ExcelVOAttribute(name = "", column = "V")
     private String varchar16;
 
+    @ExcelVOAttribute(name = "", column = "W")
     private String varchar17;
 
+    @ExcelVOAttribute(name = "", column = "X")
     private String varchar18;
 
+    @ExcelVOAttribute(name = "", column = "Y")
     private String varchar19;
 
+    @ExcelVOAttribute(name = "", column = "Z")
     private Integer int01;
 
+    @ExcelVOAttribute(name = "", column = "AA")
     private Integer int02;
 
+    @ExcelVOAttribute(name = "", column = "AB")
     private Integer int03;
 
+    @ExcelVOAttribute(name = "", column = "AC")
     private Integer int04;
 
+    @ExcelVOAttribute(name = "", column = "AD")
     private Integer int05;
 
+    @ExcelVOAttribute(name = "", column = "AE")
     private Integer boolean01;
 
+    @ExcelVOAttribute(name = "", column = "AF")
     private Integer boolean02;
 
+    @ExcelVOAttribute(name = "", column = "AG")
     private Integer boolean03;
 
+    @ExcelVOAttribute(name = "", column = "AH")
     private Integer boolean04;
 
     /**
