@@ -305,8 +305,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         jsonArray.add(sySMenuJsonObject1);
         jsonArray.add(sySMenuJsonObject2);
 
-        FileUtil.writeJsonFile(jsonArray.toString());
-
         return jsonArray.toString();
     }
 

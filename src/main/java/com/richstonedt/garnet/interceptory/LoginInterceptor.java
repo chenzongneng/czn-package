@@ -101,6 +101,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     //验证token是否过期
                     Long expiredTime = token1.getExpireTime();
                     if (System.currentTimeMillis() > expiredTime) {
+                        System.out.println(System.currentTimeMillis() + " == " + expiredTime);
                         return tokenExpired(request, response);
                     }
 

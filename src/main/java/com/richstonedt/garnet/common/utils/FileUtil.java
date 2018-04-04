@@ -23,15 +23,6 @@ public class FileUtil {
         fw.close();
         out.close();
     }
-
-    public static void main(String[] args) {
-
-        JSONObject jsonObject = new JSONObject();
-        Resource resource = new Resource();
-        resource.setName("dddddd");
-        jsonObject.put("ddd", resource.getName());
-        System.out.println(jsonObject.toString());
-    }
 }
 
 

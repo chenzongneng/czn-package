@@ -8,13 +8,17 @@ package com.richstonedt.garnet;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
+import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.ApplicationTenant;
 import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.UserTenant;
 import com.richstonedt.garnet.model.criteria.TenantCriteria;
+import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.TenantView;
 import com.richstonedt.garnet.service.TenantService;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +110,20 @@ public class TenantTests {
 		tenantView.setUserTenants(userTenants);
 
 		tenantService.updateTenant(tenantView);
+
+	}
+
+	@Test
+	public void testGetTenantListByParams() {
+
+		TenantParm tenantParm = new TenantParm();
+		tenantParm.setUserId(GarnetContants.GARNET_USER_ID);
+		tenantParm.setPageNumber(1);
+		tenantParm.setPageSize(10);
+
+		PageUtil pageUtil = tenantService.queryTenantssByParms(tenantParm);
+
+		Assert.assertEquals(pageUtil.getList().size(), 1);
 
 	}
 

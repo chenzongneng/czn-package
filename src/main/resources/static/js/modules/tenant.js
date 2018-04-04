@@ -184,6 +184,7 @@ var vm = new Vue({
             vm.tenant.description = null,
             vm.tenant.appIds = null;
             vm.tenant.appNames = [];
+            vm.userName = null;
 
             vm.getTenant(tenantId);
 
@@ -236,6 +237,12 @@ var vm = new Vue({
             // alert(JSON.stringify(vm.tenant));
             var obj = new Object();
             vm.tenant.updatedByUserName = localStorage.getItem("userName");
+
+            if (vm.tenant.id == null) {
+                //如果是新增租户，默认绑定登录用户
+                vm.userName = localStorage.getItem("userName");
+            }
+
             var userName = vm.userName;
             obj.tenant = vm.tenant;
             obj.appIds =vm.tenant.appIds;
