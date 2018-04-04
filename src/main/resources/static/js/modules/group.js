@@ -33,12 +33,9 @@ $(function () {
         colModel: [
             {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
             {label: '组名称', name: 'name', align: 'center', width: 40},
-            {label: '创建时间', name: 'createdTime', align: 'center', width: 40},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', width: 70}
-            // {label: '上级部门', name: 'parentName', align: 'center', width: 70},
-            // {label: '用户列表', name: 'userNameList', align: 'center', width: 70},
-            // {label: '角色列表', name: 'roleNameList', align: 'center', width: 70},
-            // {label: '排序号', name: 'orderNum', align: 'center', width: 20}
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 100},
+            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 100},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -72,6 +69,17 @@ $(function () {
         }
     });
 });
+
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    return Y + M + D;
+    // return new Date(cellvalue).toLocaleString();
+}
+
 /** 部门树 */
 var groupTree;
 var groupTreeSetting = {
@@ -151,7 +159,8 @@ var vm = new Vue({
             parentName: null,
             orderNum: 0,
             userIds: null,
-            roleIds: null
+            roleIds: null,
+            updatedByUserName: null
         },
         // 租户列表数据
         tenantList: {
@@ -248,6 +257,7 @@ var vm = new Vue({
         saveOrUpdate: function () {
 
             var obj = new Object();
+            vm.group.updatedByUserName = localStorage.getItem("userName");
             obj.group = vm.group;
             //change by ming
             var LoginUserId = localStorage.getItem("userId");

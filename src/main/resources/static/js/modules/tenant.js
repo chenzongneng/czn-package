@@ -17,8 +17,9 @@ $(function () {
         colModel: [
             {label: '租户ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
             {label: '租户名称', name: 'name', align: 'center', width: 80},
-            {label: '创建时间', name: 'createdTime', align: 'center', width: 100},
-            {label: '修改时间时间', name: 'modifiedTime', align: 'center', width: 100},
+            {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 100},
+            {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 100},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80},
             {label: '备注', name: 'description', align: 'center', width: 80}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
@@ -52,6 +53,19 @@ $(function () {
     });
 });
 
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    // h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    // m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    // s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D;
+    // return new Date(cellvalue).toLocaleString();
+}
+
 /** 用户树 */
 var appTree;
 var appTreeSetting = {
@@ -70,6 +84,10 @@ var appTreeSetting = {
         chkboxType: {"Y": "", "N": ""}
     }
 };
+
+function forMatTime(time) {
+    return new Date(time).Format('yyyy-MM-dd')
+}
 
 var vm = new Vue({
     el: '#garnetApp',
@@ -133,6 +151,7 @@ var vm = new Vue({
                 id: null,
                 name: null,
                 description: null,
+                updatedByUserName: null,
                 appIds: null,
                 appNames: [],
                 appIdList: []
@@ -216,6 +235,7 @@ var vm = new Vue({
         saveOrUpdate: function () {
             // alert(JSON.stringify(vm.tenant));
             var obj = new Object();
+            vm.tenant.updatedByUserName = localStorage.getItem("userName");
             var userName = vm.userName;
             obj.tenant = vm.tenant;
             obj.appIds =vm.tenant.appIds;

@@ -76,6 +76,7 @@ var vm = new Vue({
         showList: true,
         showParentCode: false,
         title: null,
+        searchName: null,
         resourceDynamicPropertyList : [],
         resourceDynamicProperty: {
             id: null,
@@ -265,9 +266,12 @@ var vm = new Vue({
             }else {
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
-
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {type: vm.type, applicationId: vm.option.appSearchId},
+                postData: {
+                    searchName: vm.searchName,
+                    type: vm.type,
+                    applicationId: vm.option.appSearchId
+                },
                 page: page
             }).trigger("reloadGrid");
         },

@@ -14,8 +14,9 @@ $(function () {
             {label: '账号', name: 'userName', align: 'center', width: 70},
             {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70},
             {label: '邮箱', name: 'email', align: 'center', width: 100},
-            {label: '创建时间', name: 'createdTime', align: 'center', width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', width: 80}
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
             // {
             //     label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
             //     return value === 0 ?
@@ -58,6 +59,19 @@ $(function () {
         }
     });
 });
+
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    // h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    // m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    // s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D;
+    // return new Date(cellvalue).toLocaleString();
+}
 
 /** 应用树 */
 var applicationTree;
@@ -273,7 +287,7 @@ var vm = new Vue({
             }
 
             var obj = new Object();
-
+            vm.user.updatedByUserName = localStorage.getItem("userName");
             obj.user = vm.user;
             obj.userTenants = [];
             obj.password = vm.user.password;

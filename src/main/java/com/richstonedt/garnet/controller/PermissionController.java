@@ -191,6 +191,7 @@ public class PermissionController {
             permissionParm.setUserId(userId);
             permissionParm.setPageNumber(page);
             permissionParm.setPageSize(pageSize);
+            permissionParm.setSearchName(searchName);
             PageUtil permissionPageInfo = permissionService.queryPermissionsByParms(permissionParm);
 
             return new ResponseEntity<>(permissionPageInfo, HttpStatus.OK);

@@ -15,7 +15,8 @@ $(function () {
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
             {label: '资源名称', name: 'name', align: 'center', width: 40},
             {label: '路径标识', name: 'path', align: 'center',  width: 70},
-            {label: 'actions', name: 'actions', align: 'center',  width: 70}
+            {label: 'actions', name: 'actions', align: 'center',  width: 70},
+            {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70}
 
             // {
             //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
@@ -148,6 +149,7 @@ var vm = new Vue({
             applicationId: null,
             tenantId: null,
             type:null,
+            updatedByUserName: null,
             varchar00: null,
             varchar01: null,
             varchar02: null,
@@ -257,8 +259,10 @@ var vm = new Vue({
         },
         //查看按钮
         view: function () {
-            if (vm.searchType == null || vm.searchApp == null) {
+
+            if (vm.searchType == null || vm.searchType =="" || vm.searchApp == null || vm.searchApp == "") {
                 swal("应用和类型都不能为空", "", "error");
+                return;
             }
 
             $.get(baseURL + "resources/byappandtype?applicationId=" + vm.searchApp + "&type=" + vm.searchType, function (response) {
@@ -299,6 +303,7 @@ var vm = new Vue({
 
                     if (result.status == 200 && result.readyState == 4) {
                         swal("导入Resource成功", "", "success");
+                        vm.reload(false);
                     } else {
                         swal("导入Resource失败", result.responseJSON.data.errorResponseMessage, "error");
                         // swal("导入Resource失败", "", "error");
@@ -397,6 +402,7 @@ var vm = new Vue({
         saveOrUpdate: function () {
             // 获取访问权限树选择的访问权限
             var obj = new Object();
+            vm.resource.updatedByUserName = localStorage.getItem("userName");
            // obj.typeId = vm.typeList.selectedType;
             obj.resource = vm.resource;
             obj.resource.type = vm.typeList.selectedType;
@@ -557,7 +563,7 @@ var vm = new Vue({
         },
         /**  获取类型列表 */
         getTypeList: function () {
-            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000", function (response) {
+            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000&userId=" + userId, function (response) {
                 $.each(response.list, function (index, item) {
                     vm.typeList.options.push(item);
                     // typeList.typeSearchList.options.push(item);
@@ -566,7 +572,7 @@ var vm = new Vue({
             });
         },
         getSearchTypeList: function () {
-            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000", function (response) {
+            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000&userId=" + userId, function (response) {
                 $.each(response.list, function (index, item) {
                     // vm.typeList.options.push(item);
                     // typeList.typeSearchList.searchTypeOptions.push(item);

@@ -199,7 +199,7 @@ function refreshToken () {
 }
 //每半小时自动刷新token
 // window.setInterval("refreshToken();", 5000);
-window.setInterval("refreshToken();", 60 * 1000 * 30);
+window.setInterval("refreshToken();", 60 * 1000 * 29);
 // setTimeout(refreshToken(), 30 * 60 * 1000);
 
 /** iframe自适应 */

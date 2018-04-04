@@ -15,7 +15,10 @@ $(function () {
             {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
             {label: '所属应用', name: 'applicationName', align: 'center', width: 70},
             {label: '部门列表', name: 'groupNames', align: 'center', width: 100},
-            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100}
+            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100},
+            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更改人', name: 'role.updatedByUserName', align: 'center', width: 100}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
@@ -51,6 +54,19 @@ $(function () {
         }
     });
 });
+
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    // h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    // m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    // s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D;
+    // return new Date(cellvalue).toLocaleString();
+}
 
 /** 部门结构树 */
 var groupTree;
@@ -109,7 +125,8 @@ var vm = new Vue({
             name: null,
             remark: null,
             groupIds: null,
-            permissionIds: null
+            permissionIds: null,
+            updatedByUserName: null
         },
         // 租户列表数据
         tenantList: {
@@ -202,6 +219,7 @@ var vm = new Vue({
         saveOrUpdate: function () {
 
             var obj = new Object();
+            vm.role.updatedByUserName = localStorage.getItem("userName");
             obj.role = vm.role;
 
             // 获取部门树选择的部门

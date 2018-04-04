@@ -111,7 +111,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
         List<ResourceDynamicProperty> resourceDynamicPropertyList1 = this.dealResourceDynamicPropertyIfGarnet(resourceDynamicPropertyParm.getUserId(), resourceDynamicPropertyList);
 
-        PageUtil result = new PageUtil(resourceDynamicPropertyList1, (int)this.countByCriteria(resourceDynamicPropertyCriteria) ,resourceDynamicPropertyParm.getPageSize(),resourceDynamicPropertyParm.getPageNumber());
+        PageUtil result = new PageUtil(resourceDynamicPropertyList1, resourceDynamicPropertyList1.size() ,resourceDynamicPropertyParm.getPageSize(),resourceDynamicPropertyParm.getPageNumber());
         return result;
     }
 

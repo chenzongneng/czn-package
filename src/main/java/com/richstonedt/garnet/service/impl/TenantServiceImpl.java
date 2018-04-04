@@ -8,7 +8,6 @@ import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.TenantMapper;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.*;
-import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.model.view.TenantView;
@@ -178,10 +177,10 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         Tenant tenant = tenantParm.getTenant();
         TenantCriteria tenantCriteria = new TenantCriteria();
         TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
-        criteria.andStatusEqualTo(1);
+//        criteria.andStatusEqualTo(1);
 
         if (!StringUtils.isEmpty(tenantParm.getSearchName())) {
-            criteria.andNameLike(tenantParm.getSearchName());
+            criteria.andNameLike("%" + tenantParm.getSearchName() + "%");
         }
 
         //根据userId获取用户所有的租户

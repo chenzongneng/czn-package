@@ -208,7 +208,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
             roleViews.add(convertToRoleView(role1));
         }
 
-        PageUtil result = new PageUtil(roleViews, (int)this.countByCriteria(roleCriteria),roleParm.getPageNumber() ,roleParm.getPageSize());
+        PageUtil result = new PageUtil(roleViews, (int)this.countByCriteria(roleCriteria), roleParm.getPageSize(),roleParm.getPageNumber());
         return result;
     }
 

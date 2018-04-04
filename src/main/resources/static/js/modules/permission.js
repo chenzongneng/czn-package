@@ -24,13 +24,16 @@ $(function () {
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 30},
             {label: '通配符', name: 'resourcePathWildcard', align: 'center', width: 80},
             {label: '详细说明', name: 'description', align: 'center', width: 70},
-            {
-                label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
-                return value === 0 ?
-                    '<span class="label label-danger">禁用</span>' :
-                    '<span class="label label-success">正常</span>';
-            }
-            }
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 70},
+            // {
+            //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
+            //     return value === 0 ?
+            //         '<span class="label label-danger">禁用</span>' :
+            //         '<span class="label label-success">正常</span>';
+            // }
+            // },
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
@@ -66,6 +69,19 @@ $(function () {
         }
     });
 });
+
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    // h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    // m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    // s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D;
+    // return new Date(cellvalue).toLocaleString();
+}
 
 /** 菜单结构树 */
 var resourceTree;
@@ -110,7 +126,8 @@ var vm = new Vue({
             tenantId: null,
             description: null,
             resourceIds: null,
-            status: null
+            status: null,
+            updatedByUserName: null
         },
         // 租户列表数据
         resourceList: {
@@ -203,6 +220,7 @@ var vm = new Vue({
 
             // alert($("#applicaitonIdSelected").find("option:selected").val());
             var obj = new Object();
+            vm.permission.updatedByUserName = localStorage.getItem("userName");
             obj.permission = vm.permission;
 
             if(vm.permission.name === null || vm.permission.name === ""){

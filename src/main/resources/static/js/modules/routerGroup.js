@@ -244,7 +244,9 @@ var vm = new Vue({
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {'searchName': vm.searchName},
+                postData: {
+                    'searchName': vm.searchName
+                },
                 page: page
             }).trigger("reloadGrid");
         }

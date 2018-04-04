@@ -3,6 +3,9 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
+function timeFormat() {
+    console.log("timefomate " + createdTime);
+}
 
 $(function () {
     /**  初始化应用列表  */
@@ -20,8 +23,9 @@ $(function () {
             {label: '所属公司', name: 'company', align: 'center', width: 80},
             {label: 'refreshResourcesApi', name: 'refreshResourcesApi', align: 'center', width: 80},
             {label: '主机', name: 'hosts', align: 'center', width: 80},
-            {label: '创建时间', name: 'createdTime', align: 'center', width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', width: 80}
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
         ],
         viewrecords: true,
         height: 385,
@@ -52,6 +56,19 @@ $(function () {
         }
     });
 });
+
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    // h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    // m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    // s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D;
+    // return new Date(cellvalue).toLocaleString();
+}
 
 /** 用户树 */
 var tenantTree;
@@ -149,7 +166,8 @@ var vm = new Vue({
                 hosts: null,
                 modifiedTime: null,
                 tenantNames: [],
-                tenantIds: null
+                tenantIds: null,
+                updatedByUserName: null
             };
 
             var mode;
@@ -238,6 +256,7 @@ var vm = new Vue({
         saveOrUpdate: function () {
 
             var obj = new Object();
+            vm.application.updatedByUserName = localStorage.getItem("userName");
             obj.application = vm.application;
             obj.tenantIds =vm.application.tenantIds;
             // alert(JSON.stringify(obj));
