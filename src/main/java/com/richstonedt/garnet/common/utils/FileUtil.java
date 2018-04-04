@@ -15,14 +15,14 @@ import java.util.List;
 
 public class FileUtil {
 
-    public static void writeJsonFile(String content) throws IOException {
-        FileWriter fw = new FileWriter(GarnetContants.JSON_FILE_PATH);
-        PrintWriter out = new PrintWriter(fw);
-        out.write(content);
-        out.println();
-        fw.close();
-        out.close();
-    }
+//    public static void writeJsonFile(String content) throws IOException {
+//        FileWriter fw = new FileWriter(GarnetContants.JSON_FILE_PATH);
+//        PrintWriter out = new PrintWriter(fw);
+//        out.write(content);
+//        out.println();
+//        fw.close();
+//        out.close();
+//    }
 }
 
 

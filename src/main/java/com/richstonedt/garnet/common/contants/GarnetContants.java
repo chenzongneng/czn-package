@@ -12,7 +12,7 @@ public class GarnetContants {
 
     public static final String RESOURCE_PERMISSION = "all_permission";//判断是否拥有所有权限的标志，和数据库对应
 
-    public static final String JSON_FILE_PATH = System.getProperty("user.dir") + "/src/main/resources/views/test.json";
+//    public static final String JSON_FILE_PATH = System.getProperty("user.dir") + "/src/main/resources/views/test.json";
 
     public static final Long GARNET_TENANT_ID= 1L;
 
