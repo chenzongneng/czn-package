@@ -4,6 +4,7 @@ import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.ExcelUtils;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.model.Resource;
+import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.view.FileView;
 import com.richstonedt.garnet.model.view.ResourceExcelView;
 import com.richstonedt.garnet.model.view.ResourceView;
@@ -74,11 +75,14 @@ public class ExcelController {
             if (file.exists()) {
                 file.delete();
             }
-            return new ResponseEntity<Void>(HttpStatus.OK);
+            return new ResponseEntity<>("Import Excel Success", HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("excel error == " + e.toString());
+            String error = "Import Excel Fail";
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(e.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, e);
         }
-        return null;
+//        return null;
     }
 
     private ResponseEntity<?> upload(HttpServletRequest request, HttpServletResponse response, ModelMap map, String type) {

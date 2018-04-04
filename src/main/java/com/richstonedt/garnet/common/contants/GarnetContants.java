@@ -18,6 +18,14 @@ public class GarnetContants {
 
     public static final Long GARNET_USER_ID= 1L;
 
+    public static final Long GARNET_SUPER_ROUTER_GROUP_ID= 1L;
+
+    public static final String GARNET_RESOURCE_DYNAMICPROPERTY_APPCODE = "garnet_appCode"; //默认菜单列表，和数据库type对应
+
+    public static final String GARNET_RESOURCE_DYNAMICPROPERTY_SYSMENU = "garnet_sysMenu"; //默认菜单配置，和数据库type对应
+
+    public static final String GARNET_RESOURCE_DYNAMICPROPERTY_SUPERADMIN = "superAdmin"; //默认超级管理员配置，和数据库type对应
+
     public static final String SAVE_PATH = "C:\\www\\root\\garnet";
 
 

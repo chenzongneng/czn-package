@@ -141,17 +141,15 @@ var vm = new Vue({
             vm.title = "新增";
             vm.permission = {
                 id: null,
-                applicationId: null,
-                tenantId: null,
-                // name: null,
-                // wildcard: null,
-                // description: null,
-                // resourceIds: null,
+                applicationId: "",
+                tenantId: "",
                 status: 1
             };
+            vm.tenantList.options = [];
+            vm.appList.options = [];
             vm.getAppList();
             vm.getTenantList();
-            vm.initTreesToAdd();
+            // vm.initTreesToAdd();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -162,6 +160,8 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
+            vm.tenantList.options = [];
+            vm.appList.options = [];
             // vm.initTreesToUpdate(permissionId);
             vm.getPermissionById(id);
             vm.getAppList();
@@ -256,8 +256,8 @@ var vm = new Vue({
                 vm.permission.description = response.description;
                 vm.permission.status = response.status;
 
-                vm.getAppList();
-                vm.getTenantList();
+                // vm.getAppList();
+                // vm.getTenantList();
                 //vm.initTreesToUpdate();
             });
         },

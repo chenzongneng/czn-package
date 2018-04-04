@@ -351,7 +351,7 @@ var vm = new Vue({
         getGroupInfo: function (groupId) {
             $.get(baseURL + "groups/" + groupId, function (response) {
 
-                console.log("group response == " + JSON.stringify(response))
+                // console.log("group response == " + JSON.stringify(response))
 
                 vm.group.groupId = response.data.group.groupId;
                 vm.group.applicationId = response.data.group.applicationId;

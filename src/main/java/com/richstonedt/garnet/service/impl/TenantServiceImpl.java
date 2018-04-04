@@ -332,7 +332,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             if (CollectionUtils.isEmpty(users)) {
                 throw new RuntimeException("此用户不存在");
             } else {
-                User user = users.get(0);
+                User user = users.get(0); // username是唯一的
                 if (user.getStatus() == null || user.getStatus() == 0) {
                     throw new RuntimeException("此用户已被冻结");
                 }
@@ -347,10 +347,19 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 //                if (!CollectionUtils.isEmpty(userTenants)) {
 //                    userTenantService.deleteByCriteria(userTenantCriteria);
 //                }
-                //如果已经关联此用户，抛异常
+                //如果该租户已经关联此用户，抛异常
                 UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
                 userTenantCriteria1.createCriteria().andUserIdEqualTo(user.getId());
                 List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
+                if (!CollectionUtils.isEmpty(userTenants1)) {
+                    for (UserTenant userTenant : userTenants1) {
+                        if (userTenant.getTenantId() == tenantView.getTenant().getId() && userTenant.getUserId() == user.getId()) {
+                            throw new RuntimeException("您已经添加过此用户");
+                        }
+                    }
+
+                }
+
 //                if (!CollectionUtils.isEmpty(userTenants1)) {
 //                    throw new RuntimeException("此用户已被添加");
 //                }

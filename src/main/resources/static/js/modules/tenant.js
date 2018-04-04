@@ -248,7 +248,7 @@ var vm = new Vue({
             } else {
                 swal({
                     title: "当前默认为PAAS模式，是否确认添加",
-                    type: "warning",
+                        type: "warning",
                     showCancelButton: true,
                     closeOnConfirm: false,
                     confirmButtonText: "确认",

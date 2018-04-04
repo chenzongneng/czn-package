@@ -1,5 +1,7 @@
 package com.richstonedt.garnet.service;
 
+import com.richstonedt.garnet.model.RouterGroup;
+
 import java.util.List;
 
 public interface CommonService{
@@ -20,4 +22,5 @@ public interface CommonService{
     boolean superAdminBelongGarnet(Long userId);
 
     List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds);
+
 }

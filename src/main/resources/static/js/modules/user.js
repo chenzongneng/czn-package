@@ -266,6 +266,12 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
+
+            //不选用户是否属于garnet，默认不是
+            if (vm.user.belongToGarnet == null || vm.user.belongToGarnet == "") {
+                vm.user.belongToGarnet = "N";
+            }
+
             var obj = new Object();
 
             obj.user = vm.user;
@@ -275,13 +281,14 @@ var vm = new Vue({
                 return;
             }
 
+
             //获取选择的租户
             for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {
                 var userTenant = new Object();
                 userTenant.tenantId = vm.multiple.selectedListTenant[i].id;
                 obj.userTenants.push(userTenant);
             }
-            console.log("obj.user.belongToGarnet: "+obj.user.belongToGarnet);
+            // console.log("obj.user.belongToGarnet: "+obj.user.belongToGarnet);
             $.ajax({
                 type: obj.user.id === null ? "POST" : "PUT",
                 url: baseURL + "users",

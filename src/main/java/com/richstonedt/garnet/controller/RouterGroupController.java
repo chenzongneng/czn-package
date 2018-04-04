@@ -171,10 +171,14 @@ public class RouterGroupController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/routergroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRouterGroups(
+            @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
+            @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) Integer pageSize) {
         try {
             RouterGroupParm routerGroupParm = new RouterGroupParm();
+            routerGroupParm.setUserId(userId);
+            routerGroupParm.setSearchName(searchName);
             routerGroupParm.setPageNumber(pageNumber);
             routerGroupParm.setPageSize(pageSize);
             PageUtil rolePageInfo = routerGroupService.queryRouterGroupByParms(routerGroupParm);

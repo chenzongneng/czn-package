@@ -634,6 +634,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                 Application application = applicationService.selectSingleByCriteria(applicationCriteria);
                 if (!ObjectUtils.isEmpty(application)) {
                     resource.setApplicationId(application.getId());
+                } else {
+                    throw new RuntimeException("应用："+ resourceExcel.getApplicationName() +" 不存在");
                 }
             }
             if (!StringUtils.isEmpty(resourceExcel.getTenantName())) {
@@ -643,11 +645,28 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                 Tenant tenant = tenantService.selectSingleByCriteria(tenantCriteria);
                 if (!ObjectUtils.isEmpty(tenant)) {
                     resource.setTenantId(tenant.getId());
+                } else {
+                    throw new RuntimeException("租户：" + resourceExcel.getTenantName() + " 不存在");
                 }
             }
 
-            resource.setName(resourceExcel.getName());
-            resource.setType(resourceExcel.getType());
+            if (!StringUtils.isEmpty(resourceExcel.getType())) {
+                ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+                resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resourceExcel.getType());
+                List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
+                if (!CollectionUtils.isEmpty(resourceDynamicPropertyList)) {
+                    resource.setType(resourceExcel.getType());
+                }  else {
+                    throw new RuntimeException("资源类型：" + resourceExcel.getType() + " 不存在");
+                }
+            }
+
+            if (!StringUtils.isEmpty(resourceExcel.getName())) {
+                resource.setName(resourceExcel.getName());
+            } else {
+                throw new RuntimeException("资源名称不能为空");
+            }
+
             resource.setActions(resourceExcel.getActions());
 
             resource.setVarchar00(resourceExcel.getVarchar00());

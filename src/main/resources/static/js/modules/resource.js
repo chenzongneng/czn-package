@@ -286,7 +286,7 @@ var vm = new Vue({
                 type: "POST",
                 url: baseURL + "/upload/resourceexcel",
                 processData : false,
-                contentType : undefined,
+                contentType : false,
                 data: formData ,
                 // dataType: "",
                 success: function (result) {
@@ -294,11 +294,14 @@ var vm = new Vue({
                     swal("导入Resource成功", "", "success");
                 },
                 error: function (result) {
+
                     console.log("import result == " + JSON.stringify(result));
+
                     if (result.status == 200 && result.readyState == 4) {
                         swal("导入Resource成功", "", "success");
                     } else {
-                        swal("导入Resource失败", "", "error");
+                        swal("导入Resource失败", result.responseJSON.data.errorResponseMessage, "error");
+                        // swal("导入Resource失败", "", "error");
                     }
                 }
             });

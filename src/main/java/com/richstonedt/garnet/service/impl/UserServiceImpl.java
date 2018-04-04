@@ -280,12 +280,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             ReturnTenantIdView returnTenantIdView = this.getTenantIdsByUserId(userParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
-            //如果是garnet的超级管理员，直接返回所有user列表
-//            if (returnTenantIdView.isSuperAdmin() && commonService.superAdminBelongGarnet(userParm.getUserId())) {
-//                PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
-//                return result;
-//            }
-
             //如果不是属于garnet的超级管理员，根据tenantId返回
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(userParm.getUserId()))) {
                 //根据tenantId获取user列表
@@ -304,6 +298,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                     //没有关联的userId，返回空
                     return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
                 }
+            } else {
+                //如果是garnet的超级管理员，直接返回所有user列表
+                PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
+                return result;
             }
 
         } else {

@@ -3,6 +3,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.GroupUser;
+import com.richstonedt.garnet.model.RouterGroup;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.criteria.GroupCriteria;
 import com.richstonedt.garnet.model.criteria.GroupUserCriteria;
@@ -62,15 +63,6 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public boolean superAdminBelongGarnet(Long userId) {
-        User user = userService.selectByPrimaryKey(userId);
-        if (!ObjectUtils.isEmpty(user) && "Y".equals(user.getBelongToGarnet())) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds) {
 
         boolean b = this.superAdminBelongGarnet(userId);
@@ -81,31 +73,44 @@ public class CommonServiceImpl implements CommonService {
         //如果不是超级管理员
         if (!b) {
 
-            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-            groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
-           List<GroupUser> groupUsers =  groupUserService.selectByCriteria(groupUserCriteria);
+//            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+//            groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
+//            List<GroupUser> groupUsers =  groupUserService.selectByCriteria(groupUserCriteria);
+//
+//            for (GroupUser groupUser:
+//                 groupUsers ) {
+//                groupIdList.add(groupUser.getGroupId());
+//            }
+//
+//            GroupCriteria groupCriteria = new GroupCriteria();
+//            groupCriteria.createCriteria().andIdIn(groupIdList);
+//
+//           List<Group> groups = groupService.selectByCriteria(groupCriteria);
+            GroupCriteria groupCriteria = new GroupCriteria();
+            groupCriteria.createCriteria().andIdIn(groupIds);
+            List<Group> groups = groupService.selectByCriteria(groupCriteria);
 
-            for (GroupUser groupUser:
-                 groupUsers ) {
-                groupIdList.add(groupUser.getGroupId());
+            for(Group group : groups){
+                if(group.getTenantId() != GarnetContants.GARNET_TENANT_ID){
+                    returnGroupIds.add(group.getId());
+                }
             }
 
-            GroupCriteria groupCriteria = new GroupCriteria();
-            groupCriteria.createCriteria().andIdIn(groupIdList);
-
-           List<Group> groups = groupService.selectByCriteria(groupCriteria);
-
-           for(Group group : groups){
-
-               if(group.getTenantId() != GarnetContants.GARNET_USER_ID){
-
-                   returnGroupIds.add(group.getId());
-               }
-           }
-
+            return returnGroupIds;
+        } else {
+            //如果是超级管理员，原封返回
+            return groupIds;
         }
-
-
-        return returnGroupIds;
     }
+
+    @Override
+    public boolean superAdminBelongGarnet(Long userId) {
+        User user = userService.selectByPrimaryKey(userId);
+        if (!ObjectUtils.isEmpty(user) && "Y".equals(user.getBelongToGarnet())) {
+            return true;
+        }
+        return false;
+    }
+
+
 }

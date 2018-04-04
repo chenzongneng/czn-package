@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
@@ -11,6 +12,7 @@ import com.richstonedt.garnet.model.criteria.RouterGroupCriteria;
 import com.richstonedt.garnet.model.parm.RouterGroupParm;
 import com.richstonedt.garnet.model.view.RouterGroupView;
 import com.richstonedt.garnet.service.ApplicationService;
+import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.RouterGroupService;
 import com.sun.javafx.iio.common.RoughScaler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,6 +35,9 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private CommonService commonService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -103,9 +109,14 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         RouterGroup routerGroup = routerGroupParm.getRouterGroup();
         RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        RouterGroupCriteria.Criteria criteria = routerGroupCriteria.createCriteria();
+
+        if (!StringUtils.isEmpty(routerGroupParm.getSearchName())) {
+            criteria.andGroupNameLike("%" + routerGroupParm.getSearchName() + "%");
+        }
 
         if (!ObjectUtils.isEmpty(routerGroup) && !ObjectUtils.isEmpty(routerGroup.getGroupName())) {
-            routerGroupCriteria.createCriteria().andGroupNameEqualTo(routerGroup.getGroupName());
+            criteria.andGroupNameEqualTo(routerGroup.getGroupName());
         }
 
         List<RouterGroup> routerGroups = this.selectByCriteria(routerGroupCriteria);
@@ -125,14 +136,8 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
             }
         }
 
-//        for (RouterGroup routerGroup1 : routerGroupList) {
-//            RouterGroupView routerGroupView = new RouterGroupView();
-//            appCodes.add(routerGroup1.getAppCode());
-//            routerGroupView.setAppCodeList(appCodes);
-//            routerGroupView.setRouterGroup(routerGroup1);
-//            routerGroupViews.add(routerGroupView);
-//        }
-        PageUtil result = new PageUtil(routerGroupList, (int)this.countByCriteria(routerGroupCriteria) ,routerGroupParm.getPageSize(),routerGroupParm.getPageNumber());
+        List<RouterGroup> routerGroupList1 = this.dealRouterGroupListIfGarnet(routerGroupParm.getUserId(), routerGroupList);
+        PageUtil result = new PageUtil(routerGroupList1, (int)this.countByCriteria(routerGroupCriteria) ,routerGroupParm.getPageSize(),routerGroupParm.getPageNumber());
         return result;
     }
 
@@ -178,4 +183,26 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         String groupName = routerGroup.getGroupName();
         return groupName;
     }
+
+    public List<RouterGroup> dealRouterGroupListIfGarnet(Long userId, List<RouterGroup> routerGroups) {
+
+        boolean isSuperAdmin = commonService.superAdminBelongGarnet(userId);
+
+        List<RouterGroup> routerGroupList = new ArrayList<>();
+        //如果不是超级管理员
+        if (!isSuperAdmin) {
+            //去除超级应用组
+            for (RouterGroup routerGroup : routerGroups) {
+                if (routerGroup.getId() != GarnetContants.GARNET_SUPER_ROUTER_GROUP_ID) {
+                    routerGroupList.add(routerGroup);
+                }
+            }
+            return routerGroupList;
+        } else {
+            return routerGroups;
+        }
+
+
+    }
+
 }
