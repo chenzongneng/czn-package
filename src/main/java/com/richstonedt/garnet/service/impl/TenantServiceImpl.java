@@ -353,7 +353,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                 List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
                 if (!CollectionUtils.isEmpty(userTenants1)) {
                     for (UserTenant userTenant : userTenants1) {
-                        if (userTenant.getTenantId() == tenantView.getTenant().getId() && userTenant.getUserId() == user.getId()) {
+                        if (userTenant.getTenantId().longValue() == tenantView.getTenant().getId().longValue() && userTenant.getUserId().longValue() == user.getId().longValue()) {
                             throw new RuntimeException("您已经添加过此用户");
                         }
                     }
