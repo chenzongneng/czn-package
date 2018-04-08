@@ -314,7 +314,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal(response.responseJSON.data.errorResponseMessage, "", "error");
                 }
             });
 

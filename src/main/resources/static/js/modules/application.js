@@ -281,13 +281,13 @@ var vm = new Vue({
 
             } else if(mode == "paas") {
                 vm.application.serviceMode = "paas";
-                if (tenantIdList.length > 1) {
+                if (tenantIdList!=null && tenantIdList.length > 1) {
                     swal("当前模式不能添加多个租户", "", "error");
                     return;
                 }
             } else {
                 vm.application.serviceMode = "paas";
-                if (tenantIdList.length > 1) {
+                if (tenantIdList!=null && tenantIdList.length > 1) {
                     swal("当前模式不能添加多个租户", "", "error");
                     return;
                 }
@@ -311,7 +311,7 @@ var vm = new Vue({
                             swal("操作成功!", "", "success");
                         },
                         error: function (response) {
-                            swal(response.responseJSON.errorMessage, "", "error");
+                            swal(response.responseJSON.data.errorResponseMessage, "", "error");
                         }
                     });
                 });

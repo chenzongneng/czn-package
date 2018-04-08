@@ -294,10 +294,10 @@ CREATE TABLE gar_router_group
 DROP TABLE IF EXISTS gar_system_config;
 CREATE TABLE gar_system_config
 (
-  id bigint DEFAULT 0 NOT NULL UNIQUE,
-  parameter VARCHAR(256) NOT NULL,
-  value VARCHAR(256) NOT NULL,
-  PRIMARY KEY (id)
+	id bigint DEFAULT 0 NOT NULL UNIQUE,
+	parameter VARCHAR(256) NOT NULL,
+	value VARCHAR(256) NOT NULL,
+	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
 -- gar_system_config

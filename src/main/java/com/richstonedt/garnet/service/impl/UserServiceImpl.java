@@ -89,6 +89,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         User user = userView.getUser();
 
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.createCriteria().andUserNameEqualTo(user.getUserName());
+        List<User> users = this.selectByCriteria(userCriteria);
+        if (!CollectionUtils.isEmpty(users)) {
+            throw new RuntimeException("账号已存在");
+        }
+
         user.setId(IdGeneratorUtil.generateId());
 
         UserCredential userCredential = new UserCredential();
@@ -293,7 +300,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                     }
                 }
                 if (!CollectionUtils.isEmpty(userIds)) {
-                    criteria.andIdIn(userIds);
+                    List<Long> userIdList = new ArrayList<>();
+                    for (Long userId : userIds) { //隐藏admin
+                        if (userId.longValue() != GarnetContants.GARNET_USER_ID) {
+                            userIdList.add(userId);
+                        }
+                    }
+                    criteria.andIdIn(userIdList);
                 } else {
                     //没有关联的userId，返回空
                     return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());

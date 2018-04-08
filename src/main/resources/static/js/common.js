@@ -47,9 +47,8 @@ $.ajaxSetup({
                     type: "error"
                 },
                 function () {
-                    // parent.location.href = '../login.html';
+                    parent.location.href = '../login.html';
                 });
-            //todo common.js的token处理
             // parent.location.href = '../login.html';
         } else if (response.code == 403) {
             swal({

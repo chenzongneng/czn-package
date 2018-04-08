@@ -68,6 +68,16 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     public Long insertApplication(ApplicationView applicationView) {
 
         Application application = applicationView.getApplication();
+
+        //检查appCode是否已存在
+        String appCode = application.getAppCode();
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode);
+        List<Application> applications = this.selectByCriteria(applicationCriteria);
+        if (!CollectionUtils.isEmpty(applications)) {
+            throw new RuntimeException("appCode已经存在");
+        }
+
         application.setId(IdGeneratorUtil.generateId());
         Long currentTime = new Date().getTime();
         application.setCreatedTime(currentTime);
@@ -298,7 +308,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         application.setStatus(0);
         this.updateByPrimaryKeySelective(application);
 
-
         if (!ObjectUtils.isEmpty(application) && !ObjectUtils.isEmpty(application.getId())) {
             //删除关联外键
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
@@ -307,14 +316,14 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
             //删除关联着此应用的租户
-            if (!CollectionUtils.isEmpty(applicationTenants)) {
-                for (ApplicationTenant applicationTenant : applicationTenants) {
-                    Long tenantId = applicationTenant.getTenantId();
-                    Tenant tenant = new Tenant();
-                    tenant.setId(tenantId);
-                    tenantService.updateStatusById(tenant);
-                }
-            }
+//            if (!CollectionUtils.isEmpty(applicationTenants)) {
+//                for (ApplicationTenant applicationTenant : applicationTenants) {
+//                    Long tenantId = applicationTenant.getTenantId();
+//                    Tenant tenant = new Tenant();
+//                    tenant.setId(tenantId);
+//                    tenantService.updateStatusById(tenant);
+//                }
+//            }
         }
     }
 
