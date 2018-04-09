@@ -72,6 +72,7 @@ public class RoleTest {
         tenant.setDescription("test role with tenant");
         tenantView.setTenant(tenant);
         Long tenantId = tenantService.insertTenant(tenantView);
+
         RoleView roleView = new RoleView();
         Role role = new Role();
         role.setName("test_role");
