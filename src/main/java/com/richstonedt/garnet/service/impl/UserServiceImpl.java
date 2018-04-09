@@ -339,6 +339,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         return result;
     }
 
+    /**
+     * 1. 判断参数是否正确（userName, password, appCode）
+     * 2. 账号密码核验正确，生成token并计算过期时间
+     * 3. 查询数据库，判断用户在数据库中是否已有token,有则更新，无则添加
+     * 4. 返回状态码 201 给前端
+     * @param loginView
+     * @return
+     * @throws Exception
+     */
     @Override
     public LoginMessage userLogin(LoginView loginView) throws Exception {
 

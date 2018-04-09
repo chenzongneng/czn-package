@@ -168,6 +168,16 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         this.deleteByPrimaryKey(applicationId);
     }
 
+    /**
+     * 1. 判断是否有userId
+     * 2. 根据判断登录用户是否是超级管理员，
+     *    如果是超级管理员，返回全部applications
+     *    如果不是超级管理员，根据userId获取 tenantId，并从中去掉超级租户的id
+     *    根据tenanId 返回相对应的应用
+     * 3. 根据传入的serviceMode，返回相对应模式的应用
+     * @param applicationParm
+     * @return
+     */
     @Override
     public PageUtil queryApplicationsByParms(ApplicationParm applicationParm) {
 
@@ -179,18 +189,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         //根据用户id拿应用
         if (!ObjectUtils.isEmpty(applicationParm.getUserId())) {
-//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-//            userTenantCriteria.createCriteria().andUserIdEqualTo(applicationParm.getUserId());
-//            userTenants = userTenantService.selectByCriteria(userTenantCriteria);
-//
-//            List<Long> tenantIds = new ArrayList<>();
-//            //如果用户没有关联的租户，返回空
-//            if (CollectionUtils.isEmpty(userTenants) || userTenants.size() == 0) {
-//                return  new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
-//            }
-//            for (UserTenant userTenant : userTenants) {
-//                tenantIds.add(userTenant.getTenantId());
-//            }
 
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(applicationParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();

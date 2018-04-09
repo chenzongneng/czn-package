@@ -73,6 +73,15 @@
             <artifactId>postgresql</artifactId>
             <version>9.4.1207.jre7</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.oracle/ojdbc14 -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc14</artifactId>
+            <version>10.2.0.4.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/ojdbc14-10.2.0.4.0.jar</systemPath>
+        </dependency>
+
         <!-- Swagger UI -->
         <dependency>
             <groupId>io.springfox</groupId>

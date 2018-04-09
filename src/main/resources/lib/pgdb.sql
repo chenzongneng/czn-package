@@ -11,6 +11,8 @@ DROP TABLE IF EXISTS gar_permissions;
 DROP TABLE IF EXISTS gar_resources;
 DROP TABLE IF EXISTS gar_resource_dynamic_properties;
 DROP TABLE IF EXISTS gar_roles;
+DROP TABLE IF EXISTS gar_router_group;
+DROP TABLE IF EXISTS gar_system_config;
 DROP TABLE IF EXISTS gar_user_tenants;
 DROP TABLE IF EXISTS gar_tenants;
 DROP TABLE IF EXISTS gar_tokens;
@@ -170,10 +172,11 @@ CREATE TABLE gar_resources
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
+
 CREATE TABLE gar_resource_dynamic_properties
 (
 	id bigint NOT NULL UNIQUE,
-	type VARCHAR(50) DEFAULT 0 NOT NULL,
+	type varchar(50) DEFAULT '0' NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	filed_name varchar(256) DEFAULT '' NOT NULL,
 	description varchar(256) DEFAULT '' NOT NULL,
@@ -202,6 +205,24 @@ CREATE TABLE gar_role_permissions
 	role_id bigint NOT NULL,
 	permission_id bigint NOT NULL,
 	id bigint NOT NULL UNIQUE,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+CREATE TABLE gar_router_group
+(
+	id bigint NOT NULL,
+	group_name varchar(256) NOT NULL,
+	app_code varchar(256) NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+CREATE TABLE gar_system_config
+(
+	id bigint NOT NULL UNIQUE,
+	parameter varchar(256),
+	value varchar(256),
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -243,8 +264,8 @@ CREATE TABLE gar_users
 	modified_time bigint DEFAULT 0 NOT NULL,
 	mobile_number varchar(256) DEFAULT '' NOT NULL,
 	email varchar(256) DEFAULT '' NOT NULL,
-	status int DEFAULT 1  NOT NULL,
-	belong_to_garnet varchar(5) DEFAULT '' NOT NULL,
+	status int DEFAULT 1 NOT NULL,
+	belong_to_garnet varchar(5) NOT NULL,
 	-- 更新的人
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
@@ -282,24 +303,45 @@ CREATE TABLE gar_user_tenant_applications
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
-DROP TABLE IF EXISTS gar_router_group;
-CREATE TABLE gar_router_group
-(
-	id bigint DEFAULT 0 NOT NULL UNIQUE,
-	group_name VARCHAR(256) NOT NULL,
-	app_code VARCHAR(256) NOT NULL,
-	PRIMARY KEY (id)
-) WITHOUT OIDS;
+/* Comments */
 
-DROP TABLE IF EXISTS gar_system_config;
-CREATE TABLE gar_system_config
-(
-	id bigint DEFAULT 0 NOT NULL UNIQUE,
-	parameter VARCHAR(256) NOT NULL,
-	value VARCHAR(256) NOT NULL,
-	PRIMARY KEY (id)
-) WITHOUT OIDS;
+COMMENT ON COLUMN gar_applications.app_code IS '调用接口时应用唯一标识';
+COMMENT ON COLUMN gar_applications.hosts IS '此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
 
+加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。';
+COMMENT ON COLUMN gar_applications.service_mode IS '属于paas服务还是saas服务';
+COMMENT ON COLUMN gar_applications.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_groups.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_permissions.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_resources.path IS 'ui - UI组件
+/{page_name}/{element_name}
+
+openApi - open api，对外开放的api，并非内部使用的api;
+
+/api/v1/users
+此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
+
+function - function opint,对应的是功能项，例如用户查询；
+例如
+一个具体的页面：
+/{page_name}
+
+某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
+
+/{page_name}/{function_name}';
+COMMENT ON COLUMN gar_resources.type IS '资源类型例如，
+ui-UI组件，如button, input, textarea, table, drop down list等
+openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
+function-功能项，如页面，菜单模块等';
+COMMENT ON COLUMN gar_resources.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_roles.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_tenants.service_mode IS '属于paas服务还是saas服务';
+COMMENT ON COLUMN gar_tenants.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_users.updated_by_user_name IS '更新的人';
+
+
+
+-- 初始化数据
 -- gar_system_config
 INSERT INTO gar_system_config VALUES (1, 'mode', 'all');
 
@@ -499,39 +541,3 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 -- gar_router_group
 INSERT INTO gar_router_group (id, group_name, app_code) VALUES ('1', '超级应用组', 'garnet');
 
-
-/* Comments */
-
-COMMENT ON COLUMN gar_applications.app_code IS '调用接口时应用唯一标识';
-COMMENT ON COLUMN gar_applications.hosts IS '此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
-
-加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。';
-COMMENT ON COLUMN gar_applications.service_mode IS '属于paas服务还是saas服务';
-COMMENT ON COLUMN gar_applications.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_groups.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_permissions.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_resources.path IS 'ui - UI组件
-/{page_name}/{element_name}
-
-openApi - open api，对外开放的api，并非内部使用的api;
-
-/api/v1/users
-此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
-
-function - function opint,对应的是功能项，例如用户查询；
-例如
-一个具体的页面：
-/{page_name}
-
-某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
-
-/{page_name}/{function_name}';
-COMMENT ON COLUMN gar_resources.type IS '资源类型例如，
-ui-UI组件，如button, input, textarea, table, drop down list等
-openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
-function-功能项，如页面，菜单模块等';
-COMMENT ON COLUMN gar_resources.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_roles.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_tenants.service_mode IS '属于paas服务还是saas服务';
-COMMENT ON COLUMN gar_tenants.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_users.updated_by_user_name IS '更新的人';
