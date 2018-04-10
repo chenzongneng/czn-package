@@ -406,8 +406,6 @@ var vm = new Vue({
         },
         /** 租户列表onchange 事件*/
         selectTenant: function () {
-
-
             vm.group.tenantId = vm.tenantList.selectedTenant;
             vm.reloadUserTree();
             vm.reloadRoleTree();

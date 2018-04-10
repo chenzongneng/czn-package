@@ -98,6 +98,7 @@ var vm = new Vue({
         title: null,
         modeId: null,// SAAS为0，PAAS为1
         mode: null,
+        hidden: true,
         modeName: null,
         application: {
             id:null,
@@ -129,12 +130,21 @@ var vm = new Vue({
                 id : "paas",
                 name : "paas"
             }]
+        },
+        // 新增和更新 选择模式列表
+        modeList2: {
+            selectedMode: localStorage.getItem("mode"),
+            options: [
+                {
+                    id : "saas",
+                    name : "saas"
+                },{
+                    id : "paas",
+                    name : "paas"
+                }]
         }
     },
     mounted:function () {
-
-        console.log("remove == " + localStorage.getItem("mode"));
-
         //移除mode option
         if (localStorage.getItem("mode") == "saas") {
             $("#selectModeId option[value='paas']").remove();
@@ -153,7 +163,18 @@ var vm = new Vue({
         },
         /**  新增按钮点击事件 */
         add: function () {
+            var mode;
+            if ("all" == localStorage.getItem("mode")) {
+                mode = "paas";
+                vm.modeList2.selectedMode = mode;
+                console.log("vm.modeList2 " + vm.modeList2.selectedMode);
+            } else {
+                mode = localStorage.getItem("mode");
+                vm.modeList2.selectedMode = mode;
+            }
+
             vm.showList = false;
+            vm.hidden = false;
             vm.title = "新增";
             vm.application = {
                 id:null,
@@ -170,13 +191,6 @@ var vm = new Vue({
                 updatedByUserName: null
             };
 
-            var mode;
-            if ("all" == localStorage.getItem("mode")) {
-                mode = "paas"
-            } else {
-                mode = localStorage.getItem("mode")
-            }
-
             // 加载租户树
             $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
@@ -185,28 +199,24 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
+            var mode;
+            if ("all" == localStorage.getItem("mode")) {
+                mode = "paas";
+                vm.modeList2.selectedMode = mode;
+            } else {
+                mode = localStorage.getItem("mode");
+            }
+
             var applicationId = getSelectedRow();
             if (!applicationId) {
                 return;
             }
             vm.showList = false;
+            vm.hidden = true;
             vm.title = "修改";
 
             vm.application.tenantIds = null;
             vm.application.tenantNames = [];
-
-            var mode;
-            if ("all" == localStorage.getItem("mode")) {
-                mode = "paas"
-            } else {
-                mode = localStorage.getItem("mode")
-            }
-
-            // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
-                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
-                tenantTree.expandAll(true);
-            });
 
             //初始化应用信息，及应用模式
             vm.getApplication(applicationId);
@@ -266,9 +276,7 @@ var vm = new Vue({
                 return;
             }
 
-            var mode = localStorage.getItem("mode");
-
-            console.log("appp mode == " + mode);
+            var mode = vm.modeList2.selectedMode;
 
             if (mode == null) {
                 localStorage.setItem("mode", vm.modeList.selectedMode);
@@ -277,7 +285,6 @@ var vm = new Vue({
 
             if(mode == "saas") {  //saas
                 vm.application.serviceMode = "saas";
-                //saas模式下，一个租户被一个应用绑定
 
             } else if(mode == "paas") {
                 vm.application.serviceMode = "paas";
@@ -286,35 +293,36 @@ var vm = new Vue({
                     return;
                 }
             } else {
-                vm.application.serviceMode = "paas";
-                if (tenantIdList!=null && tenantIdList.length > 1) {
-                    swal("当前模式不能添加多个租户", "", "error");
-                    return;
-                }
-                swal({
-                    title: "当前默认为PAAS模式，是否确认添加",
-                    type: "warning",
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    confirmButtonText: "确认",
-                    cancelButtonText: "取消",
-                    confirmButtonColor: "#DD6B55"
-                }, function () {
-                    $.ajax({
-                        type: vm.application.id === null ? "POST" : "PUT",
-                        url: baseURL + "applications?token=" + accessToken,
-                        contentType: "application/json",
-                        data:JSON.stringify(obj),
-                        dataType: "",
-                        success: function () {
-                            vm.reload(false);
-                            swal("操作成功!", "", "success");
-                        },
-                        error: function (response) {
-                            swal(response.responseJSON.data.errorResponseMessage, "", "error");
-                        }
-                    });
-                });
+                // vm.application.serviceMode = "paas";
+                // if (tenantIdList!=null && tenantIdList.length > 1) {
+                //     swal("当前模式不能添加多个租户", "", "error");
+                //     return;
+                // }
+                // swal({
+                //     title: "当前默认为PAAS模式，是否确认添加",
+                //     type: "warning",
+                //     showCancelButton: true,
+                //     closeOnConfirm: false,
+                //     confirmButtonText: "确认",
+                //     cancelButtonText: "取消",
+                //     confirmButtonColor: "#DD6B55"
+                // }, function () {
+                //     $.ajax({
+                //         type: vm.application.id === null ? "POST" : "PUT",
+                //         url: baseURL + "applications?token=" + accessToken,
+                //         contentType: "application/json",
+                //         data:JSON.stringify(obj),
+                //         dataType: "",
+                //         success: function () {
+                //             vm.reload(false);
+                //             swal("操作成功!", "", "success");
+                //         },
+                //         error: function (response) {
+                //             swal(response.responseJSON.data.errorResponseMessage, "", "error");
+                //         }
+                //     });
+                // });
+                swal("请选择正确模式", "", "error");
                 return;
             }
 
@@ -345,12 +353,24 @@ var vm = new Vue({
                     vm.application.refreshResourcesApi = response.application.refreshResourcesApi;
                     vm.application.createdTime = response.application.createdTime;
                     vm.application.modifiedTime = response.application.modifiedTime;
+                    vm.modeList2.selectedMode = response.application.serviceMode;
 
-                    console.log("app response == " + JSON.stringify(response));
+                    var mode = vm.modeList2.selectedMode;
+                    // console.log("app response == " + JSON.stringify(response));
+
+                    // 加载租户树
+                    $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
+                        tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
+                        tenantTree.expandAll(true);
+                    });
 
                     // 勾选已有租户
                     $.each(response.tenantIdList, function (index, item) {
                         var node = tenantTree.getNodeByParam("id", item);
+                        if (node == null) {
+                            console.log("勾选已有租户 null");
+                            return;
+                        }
                         tenantTree.checkNode(node, true, false);
                     });
                     $.each(response.tenantNameList, function (index, item) {
@@ -392,6 +412,18 @@ var vm = new Vue({
             var mode = vm.modeList.selectedMode;
             localStorage.setItem("mode", mode);
             vm.reload(false);
+        },
+        //新增和更新 模式选择事件
+        selectMode2: function () {
+            vm.mode = vm.modeList2.selectedMode;
+            localStorage.setItem("mode", vm.mode);
+            vm.modeList.selectedMode = vm.mode;
+            vm.application.tenantNames = null;
+            // 加载租户树
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId, function (response) {
+                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
+                tenantTree.expandAll(true);
+            });
         },
         reload: function (backFirst) {
             vm.showList = true;
