@@ -9,10 +9,8 @@ DROP TABLE IF EXISTS gar_groups;
 DROP TABLE IF EXISTS gar_role_permissions;
 DROP TABLE IF EXISTS gar_permissions;
 DROP TABLE IF EXISTS gar_resources;
-DROP TABLE IF EXISTS gar_resource_dynamic_props;
+DROP TABLE IF EXISTS gar_resource_dynamic_properties;
 DROP TABLE IF EXISTS gar_roles;
-DROP TABLE IF EXISTS gar_router_group;
-DROP TABLE IF EXISTS gar_system_config;
 DROP TABLE IF EXISTS gar_user_tenants;
 DROP TABLE IF EXISTS gar_tenants;
 DROP TABLE IF EXISTS gar_tokens;
@@ -34,7 +32,7 @@ CREATE TABLE gar_applications
 	app_code varchar(256) NOT NULL,
 	refresh_resources_api varchar(256) DEFAULT '' NOT NULL,
 	-- 此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
-	--
+	-- 
 	-- 加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。
 	hosts varchar(256) DEFAULT '' NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
@@ -113,26 +111,26 @@ CREATE TABLE gar_resources
 	application_id bigint DEFAULT 0 NOT NULL,
 	-- ui - UI组件
 	-- /{page_name}/{element_name}
-	--
+	-- 
 	-- openApi - open api，对外开放的api，并非内部使用的api;
-	--
+	-- 
 	-- /api/v1/users
 	-- 此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
-	--
+	-- 
 	-- function - function opint,对应的是功能项，例如用户查询；
 	-- 例如
 	-- 一个具体的页面：
 	-- /{page_name}
-	--
+	-- 
 	-- 某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
-	--
+	-- 
 	-- /{page_name}/{function_name}
 	path varchar(256) DEFAULT '' NOT NULL,
 	actions varchar(256) DEFAULT '' NOT NULL,
 	name varchar(256) DEFAULT '' NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
-	-- 资源类型例如，
+	-- 资源类型例如， 
 	-- ui-UI组件，如button, input, textarea, table, drop down list等
 	-- openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 	-- function-功能项，如页面，菜单模块等
@@ -172,11 +170,10 @@ CREATE TABLE gar_resources
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
-
-CREATE TABLE gar_resource_dynamic_props
+CREATE TABLE gar_resource_dynamic_properties
 (
 	id bigint NOT NULL UNIQUE,
-	type varchar(50) DEFAULT '0' NOT NULL,
+	type VARCHAR(50) DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	filed_name varchar(256) DEFAULT '' NOT NULL,
 	description varchar(256) DEFAULT '' NOT NULL,
@@ -209,28 +206,10 @@ CREATE TABLE gar_role_permissions
 ) WITHOUT OIDS;
 
 
-CREATE TABLE gar_router_group
-(
-	id bigint NOT NULL,
-	group_name varchar(256) NOT NULL,
-	app_code varchar(256) NOT NULL,
-	PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
-CREATE TABLE gar_system_config
-(
-	id bigint NOT NULL UNIQUE,
-	parameter varchar(256),
-	value varchar(256),
-	PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
 CREATE TABLE gar_tenants
 (
 	id bigint NOT NULL UNIQUE,
-	name varchar(256) DEFAULT '' NOT NULL,
+	name varchar(256) DEFAULT '' NOT NULL UNIQUE,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
 	description varchar(250) DEFAULT '' NOT NULL,
@@ -241,6 +220,7 @@ CREATE TABLE gar_tenants
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
+
 
 CREATE TABLE gar_tokens
 (
@@ -263,8 +243,8 @@ CREATE TABLE gar_users
 	modified_time bigint DEFAULT 0 NOT NULL,
 	mobile_number varchar(256) DEFAULT '' NOT NULL,
 	email varchar(256) DEFAULT '' NOT NULL,
-	status int DEFAULT 1 NOT NULL,
-	belong_to_garnet varchar(5) NOT NULL,
+	status int DEFAULT 1  NOT NULL,
+	belong_to_garnet varchar(5) DEFAULT '' NOT NULL,
 	-- 更新的人
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
@@ -302,45 +282,24 @@ CREATE TABLE gar_user_tenant_applications
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
-/* Comments */
+DROP TABLE IF EXISTS gar_router_group;
+CREATE TABLE gar_router_group
+(
+	id bigint DEFAULT 0 NOT NULL UNIQUE,
+	group_name VARCHAR(256) NOT NULL,
+	app_code VARCHAR(256) NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
 
-COMMENT ON COLUMN gar_applications.app_code IS '调用接口时应用唯一标识';
-COMMENT ON COLUMN gar_applications.hosts IS '此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
+DROP TABLE IF EXISTS gar_system_config;
+CREATE TABLE gar_system_config
+(
+  id bigint DEFAULT 0 NOT NULL UNIQUE,
+  parameter VARCHAR(256) NOT NULL,
+  value VARCHAR(256) NOT NULL,
+  PRIMARY KEY (id)
+) WITHOUT OIDS;
 
-加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。';
-COMMENT ON COLUMN gar_applications.service_mode IS '属于paas服务还是saas服务';
-COMMENT ON COLUMN gar_applications.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_groups.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_permissions.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_resources.path IS 'ui - UI组件
-/{page_name}/{element_name}
-
-openApi - open api，对外开放的api，并非内部使用的api;
-
-/api/v1/users
-此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
-
-function - function opint,对应的是功能项，例如用户查询；
-例如
-一个具体的页面：
-/{page_name}
-
-某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
-
-/{page_name}/{function_name}';
-COMMENT ON COLUMN gar_resources.type IS '资源类型例如，
-ui-UI组件，如button, input, textarea, table, drop down list等
-openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
-function-功能项，如页面，菜单模块等';
-COMMENT ON COLUMN gar_resources.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_roles.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_tenants.service_mode IS '属于paas服务还是saas服务';
-COMMENT ON COLUMN gar_tenants.updated_by_user_name IS '更新的人';
-COMMENT ON COLUMN gar_users.updated_by_user_name IS '更新的人';
-
-
-
--- 初始化数据
 -- gar_system_config
 INSERT INTO gar_system_config VALUES (1, 'mode', 'all');
 
@@ -380,97 +339,97 @@ INSERT INTO gar_group_roles(role_id, group_id, id) VALUES ('1', '1', '1');
 -- gar_group_user
 INSERT INTO gar_group_users(group_id, user_id, id) VALUES ('1', '1', '1');
 
--- gar_resource_dynamic_props
+-- gar_resource_dynamic_properties
 -- appCode
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('1', 'garnet_appCode', '0', 'varchar00', '填 code name');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('2', 'garnet_appCode', '0', 'varchar01', '填 true/false');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('3', 'garnet_appCode', '0', 'varchar02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('4', 'garnet_appCode', '0', 'varchar03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('5', 'garnet_appCode', '0', 'varchar04', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('6', 'garnet_appCode', '0', 'varchar05', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('7', 'garnet_appCode', '0', 'varchar06', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('8', 'garnet_appCode', '0', 'varchar07', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('9', 'garnet_appCode', '0', 'varchar08', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('10', 'garnet_appCode', '0', 'varchar09', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('11', 'garnet_appCode', '0', 'varchar10', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('12', 'garnet_appCode', '0', 'varchar11', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('13', 'garnet_appCode', '0', 'varchar12', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('14', 'garnet_appCode', '0', 'varchar13', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('15', 'garnet_appCode', '0', 'varchar14', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('16', 'garnet_appCode', '0', 'varchar15', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('17', 'garnet_appCode', '0', 'varchar16', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('18', 'garnet_appCode', '0', 'varchar17', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('19', 'garnet_appCode', '0', 'varchar18', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('20', 'garnet_appCode', '0', 'varchar19', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('21', 'garnet_appCode', '0', 'int01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('22', 'garnet_appCode', '0', 'int02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('23', 'garnet_appCode', '0', 'int03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('24', 'garnet_appCode', '0', 'int04', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('25', 'garnet_appCode', '0', 'int05', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('26', 'garnet_appCode', '0', 'boolean01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('27', 'garnet_appCode', '0', 'boolean02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('28', 'garnet_appCode', '0', 'boolean03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('29', 'garnet_appCode', '0', 'boolean04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('1', 'garnet_appCode', '0', 'varchar00', '填 code name');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('2', 'garnet_appCode', '0', 'varchar01', '填 true/false');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('3', 'garnet_appCode', '0', 'varchar02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('4', 'garnet_appCode', '0', 'varchar03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('5', 'garnet_appCode', '0', 'varchar04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('6', 'garnet_appCode', '0', 'varchar05', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('7', 'garnet_appCode', '0', 'varchar06', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('8', 'garnet_appCode', '0', 'varchar07', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('9', 'garnet_appCode', '0', 'varchar08', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('10', 'garnet_appCode', '0', 'varchar09', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('11', 'garnet_appCode', '0', 'varchar10', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('12', 'garnet_appCode', '0', 'varchar11', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('13', 'garnet_appCode', '0', 'varchar12', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('14', 'garnet_appCode', '0', 'varchar13', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('15', 'garnet_appCode', '0', 'varchar14', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('16', 'garnet_appCode', '0', 'varchar15', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('17', 'garnet_appCode', '0', 'varchar16', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('18', 'garnet_appCode', '0', 'varchar17', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('19', 'garnet_appCode', '0', 'varchar18', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('20', 'garnet_appCode', '0', 'varchar19', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('21', 'garnet_appCode', '0', 'int01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('22', 'garnet_appCode', '0', 'int02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('23', 'garnet_appCode', '0', 'int03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('24', 'garnet_appCode', '0', 'int04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('25', 'garnet_appCode', '0', 'int05', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('26', 'garnet_appCode', '0', 'boolean01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('27', 'garnet_appCode', '0', 'boolean02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('28', 'garnet_appCode', '0', 'boolean03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('29', 'garnet_appCode', '0', 'boolean04', '');
 -- superAdmin
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('30', 'superAdmin', '0', 'varchar00', '拥有的权限');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('31', 'superAdmin', '0', 'varchar01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('32', 'superAdmin', '0', 'varchar02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('33', 'superAdmin', '0', 'varchar03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('34', 'superAdmin', '0', 'varchar04', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('35', 'superAdmin', '0', 'varchar05', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('36', 'superAdmin', '0', 'varchar06', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('37', 'superAdmin', '0', 'varchar07', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('38', 'superAdmin', '0', 'varchar08', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('39', 'superAdmin', '0', 'varchar09', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('40', 'superAdmin', '0', 'varchar10', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('41', 'superAdmin', '0', 'varchar11', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('42', 'superAdmin', '0', 'varchar12', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('43', 'superAdmin', '0', 'varchar13', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('44', 'superAdmin', '0', 'varchar14', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('45', 'superAdmin', '0', 'varchar15', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('46', 'superAdmin', '0', 'varchar16', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('47', 'superAdmin', '0', 'varchar17', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('48', 'superAdmin', '0', 'varchar18', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('49', 'superAdmin', '0', 'varchar19', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('50', 'superAdmin', '0', 'int01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('51', 'superAdmin', '0', 'int02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('52', 'superAdmin', '0', 'int03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('53', 'superAdmin', '0', 'int04', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('54', 'superAdmin', '0', 'int05', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('55', 'superAdmin', '0', 'boolean01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('56', 'superAdmin', '0', 'boolean02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('57', 'superAdmin', '0', 'boolean03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('58', 'superAdmin', '0', 'boolean04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('30', 'superAdmin', '0', 'varchar00', '拥有的权限');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('31', 'superAdmin', '0', 'varchar01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('32', 'superAdmin', '0', 'varchar02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('33', 'superAdmin', '0', 'varchar03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('34', 'superAdmin', '0', 'varchar04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('35', 'superAdmin', '0', 'varchar05', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('36', 'superAdmin', '0', 'varchar06', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('37', 'superAdmin', '0', 'varchar07', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('38', 'superAdmin', '0', 'varchar08', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('39', 'superAdmin', '0', 'varchar09', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('40', 'superAdmin', '0', 'varchar10', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('41', 'superAdmin', '0', 'varchar11', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('42', 'superAdmin', '0', 'varchar12', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('43', 'superAdmin', '0', 'varchar13', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('44', 'superAdmin', '0', 'varchar14', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('45', 'superAdmin', '0', 'varchar15', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('46', 'superAdmin', '0', 'varchar16', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('47', 'superAdmin', '0', 'varchar17', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('48', 'superAdmin', '0', 'varchar18', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('49', 'superAdmin', '0', 'varchar19', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('50', 'superAdmin', '0', 'int01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('51', 'superAdmin', '0', 'int02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('52', 'superAdmin', '0', 'int03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('53', 'superAdmin', '0', 'int04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('54', 'superAdmin', '0', 'int05', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('55', 'superAdmin', '0', 'boolean01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('56', 'superAdmin', '0', 'boolean02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('57', 'superAdmin', '0', 'boolean03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('58', 'superAdmin', '0', 'boolean04', '');
 -- sysMenu
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('59', 'garnet_sysMenu', '0', 'varchar00', 'menuId');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('60', 'garnet_sysMenu', '0', 'varchar01', 'parentId');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('61', 'garnet_sysMenu', '0', 'varchar02', 'parentName');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('62', 'garnet_sysMenu', '0', 'varchar03', 'name');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('63', 'garnet_sysMenu', '0', 'varchar04', 'url');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('64', 'garnet_sysMenu', '0', 'varchar05', 'type');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('65', 'garnet_sysMenu', '0', 'varchar06', 'icon');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('66', 'garnet_sysMenu', '0', 'varchar07', 'code');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('67', 'garnet_sysMenu', '0', 'varchar08', 'orderNum');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('68', 'garnet_sysMenu', '0', 'varchar09', 'open');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('69', 'garnet_sysMenu', '0', 'varchar10', 'list');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('70', 'garnet_sysMenu', '0', 'varchar11', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('71', 'garnet_sysMenu', '0', 'varchar12', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('72', 'garnet_sysMenu', '0', 'varchar13', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('73', 'garnet_sysMenu', '0', 'varchar14', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('74', 'garnet_sysMenu', '0', 'varchar15', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('75', 'garnet_sysMenu', '0', 'varchar16', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('76', 'garnet_sysMenu', '0', 'varchar17', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('77', 'garnet_sysMenu', '0', 'varchar18', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('78', 'garnet_sysMenu', '0', 'varchar19', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('79', 'garnet_sysMenu', '0', 'int01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('80', 'garnet_sysMenu', '0', 'int02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('81', 'garnet_sysMenu', '0', 'int03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('82', 'garnet_sysMenu', '0', 'int04', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('83', 'garnet_sysMenu', '0', 'int05', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('84', 'garnet_sysMenu', '0', 'boolean01', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('85', 'garnet_sysMenu', '0', 'boolean02', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('86', 'garnet_sysMenu', '0', 'boolean03', '');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description) VALUES ('87', 'garnet_sysMenu', '0', 'boolean04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('59', 'garnet_sysMenu', '0', 'varchar00', 'menuId');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('60', 'garnet_sysMenu', '0', 'varchar01', 'parentId');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('61', 'garnet_sysMenu', '0', 'varchar02', 'parentName');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('62', 'garnet_sysMenu', '0', 'varchar03', 'name');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('63', 'garnet_sysMenu', '0', 'varchar04', 'url');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('64', 'garnet_sysMenu', '0', 'varchar05', 'type');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('65', 'garnet_sysMenu', '0', 'varchar06', 'icon');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('66', 'garnet_sysMenu', '0', 'varchar07', 'code');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('67', 'garnet_sysMenu', '0', 'varchar08', 'orderNum');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('68', 'garnet_sysMenu', '0', 'varchar09', 'open');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('69', 'garnet_sysMenu', '0', 'varchar10', 'list');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('70', 'garnet_sysMenu', '0', 'varchar11', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('71', 'garnet_sysMenu', '0', 'varchar12', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('72', 'garnet_sysMenu', '0', 'varchar13', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('73', 'garnet_sysMenu', '0', 'varchar14', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('74', 'garnet_sysMenu', '0', 'varchar15', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('75', 'garnet_sysMenu', '0', 'varchar16', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('76', 'garnet_sysMenu', '0', 'varchar17', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('77', 'garnet_sysMenu', '0', 'varchar18', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('78', 'garnet_sysMenu', '0', 'varchar19', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('79', 'garnet_sysMenu', '0', 'int01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('80', 'garnet_sysMenu', '0', 'int02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('81', 'garnet_sysMenu', '0', 'int03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('82', 'garnet_sysMenu', '0', 'int04', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('83', 'garnet_sysMenu', '0', 'int05', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('84', 'garnet_sysMenu', '0', 'boolean01', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('85', 'garnet_sysMenu', '0', 'boolean02', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('86', 'garnet_sysMenu', '0', 'boolean03', '');
+INSERT INTO gar_resource_dynamic_properties (id, type, application_id, filed_name, description) VALUES ('87', 'garnet_sysMenu', '0', 'boolean04', '');
 
 -- gar_resources
 -- appCode
@@ -539,4 +498,43 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 
 -- gar_router_group
 INSERT INTO gar_router_group (id, group_name, app_code) VALUES ('1', '超级应用组', 'garnet');
+
+
+/* Comments */
+
+COMMENT ON COLUMN gar_applications.app_code IS '调用接口时应用唯一标识';
+COMMENT ON COLUMN gar_applications.hosts IS '此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
+
+加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。';
+COMMENT ON COLUMN gar_applications.service_mode IS '属于paas服务还是saas服务';
+COMMENT ON COLUMN gar_applications.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_groups.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_permissions.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_resources.path IS 'ui - UI组件
+/{page_name}/{element_name}
+
+openApi - open api，对外开放的api，并非内部使用的api;
+
+/api/v1/users
+此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
+
+function - function opint,对应的是功能项，例如用户查询；
+例如
+一个具体的页面：
+/{page_name}
+
+某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
+
+/{page_name}/{function_name}';
+COMMENT ON COLUMN gar_resources.type IS '资源类型例如， 
+ui-UI组件，如button, input, textarea, table, drop down list等
+openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
+function-功能项，如页面，菜单模块等';
+COMMENT ON COLUMN gar_resources.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_roles.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_tenants.service_mode IS '属于paas服务还是saas服务';
+COMMENT ON COLUMN gar_tenants.updated_by_user_name IS '更新的人';
+COMMENT ON COLUMN gar_users.updated_by_user_name IS '更新的人';
+
+
 

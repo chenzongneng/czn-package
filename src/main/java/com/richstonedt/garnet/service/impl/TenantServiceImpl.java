@@ -63,12 +63,18 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     @Override
     public Long insertTenant(TenantView tenantView) {
 
+        TenantCriteria tenantCriteria = new TenantCriteria();
+        tenantCriteria.createCriteria().andNameEqualTo(tenantView.getTenant().getName()).andStatusEqualTo(1);
+        Tenant tenant1 = this.selectSingleByCriteria(tenantCriteria);
+        if (!ObjectUtils.isEmpty(tenant1)) {
+            throw new RuntimeException("租户名: " + tenant1.getName() +" 已经存在");
+        }
+
         Tenant tenant = tenantView.getTenant();
         tenant.setId(IdGeneratorUtil.generateId());
         Long currentTime = new Date().getTime();
         tenant.setCreatedTime(currentTime);
         tenant.setModifiedTime(currentTime);
-
         this.insertSelective(tenant);
         this.dealForgenKeyApplications(tenantView);
         this.dealForgenKeyUsers(tenantView);
@@ -86,6 +92,15 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     @Override
     public void updateTenant(TenantView tenantView) {
         Tenant tenant = tenantView.getTenant();
+
+        //查看该租户名是否已经存在
+        TenantCriteria tenantCriteria = new TenantCriteria();
+        tenantCriteria.createCriteria().andNameEqualTo(tenant.getName()).andStatusEqualTo(1);
+        Tenant tenant1 = this.selectSingleByCriteria(tenantCriteria);
+        if (!ObjectUtils.isEmpty(tenant1)) {
+            throw new RuntimeException("租户名: " + tenant1.getName() +" 已经存在");
+        }
+
         tenant.setModifiedTime(new Date().getTime());
         this.updateByPrimaryKeySelective(tenant);
         this.dealForgenKeyApplications(tenantView);
@@ -126,7 +141,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                 }
                 for (String appId : tenantView.getAppIds().split(",")) {
                     if (applicationIds.contains(Long.parseLong(appId))) {
-                        throw new RuntimeException("此应用已被绑定");
+                        Application application = applicationService.selectByPrimaryKey(Long.parseLong(appId));
+                        throw new RuntimeException("应用" + application.getName() +"已被绑定");
                     }
                 }
             }
@@ -174,7 +190,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     @Override
     public PageUtil queryTenantssByParms(TenantParm tenantParm) {
 
-        Tenant tenant = tenantParm.getTenant();
         TenantCriteria tenantCriteria = new TenantCriteria();
         TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
 //        criteria.andStatusEqualTo(1);
@@ -204,7 +219,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(tenantParm.getApplicationId());
             List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
-            List<Long> applicationTenantIds = new ArrayList<Long>();
+            List<Long> applicationTenantIds = new ArrayList<>();
 
             for (ApplicationTenant applicationTenant: applicationTenants) {
                  applicationTenantIds.add(applicationTenant.getTenantId());
