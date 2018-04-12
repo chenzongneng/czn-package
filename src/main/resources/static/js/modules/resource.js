@@ -400,7 +400,7 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-            // 获取访问权限树选择的访问权限
+
             var obj = new Object();
             vm.resource.updatedByUserName = localStorage.getItem("userName");
            // obj.typeId = vm.typeList.selectedType;
@@ -408,6 +408,18 @@ var vm = new Vue({
             obj.resource.type = vm.typeList.selectedType;
             obj.resource.tenantId = vm.tenantList.selectedTenant;
             obj.resource.applicationId = applicationList.appList.selectedApp;
+
+            if(vm.resource.name == null || vm.resource.name == "") {
+                swal("资源名称不能为空", "", "error");
+                return;
+            } else if(vm.resource.type == null || vm.resource.type == "") {
+                swal("资源类型不能为空", "", "error");
+                return;
+            } else if(vm.resource.path == null || vm.resource.path == "") {
+                swal("路径标识不能为空", "", "error");
+                return;
+            }
+
 
             $.ajax({
                 type: vm.resource.id === null ? "POST" : "PUT",

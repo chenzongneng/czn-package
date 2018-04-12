@@ -70,11 +70,7 @@ var vm = new Vue({
             $.ajaxSettings.async = false;
             // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
             $.getJSON(baseURL + "resources/getappcode?userId=" + userId, function (r) {
-
-                // console.log("appcode == " + JSON.stringify(r));
-
                 resources = r;
-                // console.log(JSON.stringify(resources));
             });
             this.getMenuList();
         },
@@ -85,6 +81,14 @@ var vm = new Vue({
                 if (!response) {
                     parent.location.href = 'index.html';
                 } else {
+                    // console.log("getUser: " + JSON.stringify(response));
+                    if (response.loginStatus == "false") {
+                        // swal({title: "请先登录111", type: "error"}, function () {
+                        //     parent.location.href = 'login.html';
+                        // });
+                        return;
+                    }
+
                     vm.user = response.data.user;
                 }
             });
@@ -101,6 +105,11 @@ var vm = new Vue({
         },
         /** 修改密码 */
         updatePassword: function () {
+
+            if (vm.user == null || vm.user.id == null) {
+                location.href = 'login.html';
+            }
+
             vm.password = '';
             vm.newPassword = '';
             layer.open({
@@ -112,15 +121,27 @@ var vm = new Vue({
                 content: jQuery("#passwordLayer"),
                 btn: ['修改', '取消'],
                 btn1: function (index) {
+
+                    if (vm.newPassword.length < 4 || vm.newPassword.length > 20) {
+                        swal({
+                            title: name + '的长度只能在4-20！',
+                            type: 'warning',
+                            confirmButtonText: '确定',
+                            allowOutsideClick: false
+                        });
+                        return false;
+                    }
+
+                    var obj = new Object();
+                    obj.userId = vm.user.id;
+                    obj.password = vm.password;
+                    obj.newPassword = vm.newPassword;
+
                     $.ajax({
-                        type: "POST",
-                        url: baseURL + "password",
-                        data: {
-                            userId: vm.user.userId,
-                            oldPassword: vm.password,
-                            newPassword: vm.newPassword
-                        },
-                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                        type: "PUT",
+                        url: baseURL + "users/password",
+                        contentType: "application/json",
+                        data: JSON.stringify(obj),
                         dataType: "",
                         success: function () {
                             layer.close(index);
@@ -128,7 +149,7 @@ var vm = new Vue({
                         },
                         error: function (response) {
                             layer.close(index);
-                            swal("修改密码失败！", response.responseJSON.errorMessage, "error");
+                            swal("修改密码失败！", response.responseJSON.data.errorResponseMessage, "error");
                         }
                     });
                 }
@@ -172,7 +193,6 @@ function routerList(router, menuList,vm) {
         }
     }
 }
-
 
 //刷新token
 function refreshToken () {

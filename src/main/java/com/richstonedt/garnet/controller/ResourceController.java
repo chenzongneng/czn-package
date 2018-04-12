@@ -34,7 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Api(value = "[Torino Source]资源接口")
 @RestController
-//@LoginRequired
+@LoginRequired
 @RequestMapping(value = "/api/v1.0")
 public class ResourceController {
 

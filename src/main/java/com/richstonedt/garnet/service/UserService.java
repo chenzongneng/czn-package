@@ -82,5 +82,11 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      */
     ReturnTenantIdView getTenantIdsByUserId(Long userId);
 
+    /**
+     * 更新用户密码
+     * @param userCredentialView
+     */
+    void updateUserPassword(UserCredentialView userCredentialView);
+
 
 }

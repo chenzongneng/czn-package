@@ -8,8 +8,9 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-
+// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+\
 /** token */
 // var garnetToken = localStorage.getItem("garnetToken");
 var accessToken = localStorage.getItem("accessToken");
@@ -47,7 +48,14 @@ $.ajaxSetup({
                     type: "error"
                 },
                 function () {
-                    parent.location.href = '../login.html';
+                    var pathName = window.document.location.pathname;
+                    var patrn = /.*index.html$/;
+                    if (patrn.exec(pathName)) {
+                        parent.location.href = 'login.html';
+                    } else {
+                        parent.location.href = '../login.html';
+                    }
+                    // parent.location.href = '../login.html';
                 });
             // parent.location.href = '../login.html';
         } else if (response.code == 403) {
@@ -62,6 +70,8 @@ $.ajaxSetup({
         }
     }
 });
+
+
 
 /** jqGrid 配置 */
 $.jgrid.defaults.width = 1000;

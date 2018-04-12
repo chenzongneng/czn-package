@@ -9,8 +9,8 @@ server:
 
 spring:
     profiles:
-#        active: dev
-        active: local
+        active: dev
+#        active: local
     # AOP config
     aop:
       auto: true

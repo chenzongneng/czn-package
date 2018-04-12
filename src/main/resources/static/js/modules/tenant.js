@@ -97,6 +97,8 @@ var vm = new Vue({
         title: null,
         userName:null,
         hidden:false,
+        tips:null,
+        // placeholder:false, //选择应用框，根据选择模式的不同给出相对应的提示
         modeId: 1,// SAAS为0，PAAS为1
         mode: null,
         disabled: null,
@@ -141,11 +143,11 @@ var vm = new Vue({
     mounted:function () {
 
         if (localStorage.getItem("mode") == "saas") {
-            $("#selectModeId option[value='paas']").remove(); //删除Select中Value='3'的Optiona
-            $("#selectModeId option[value='all']").remove(); //删除Select中Value='3'的Optiona
+            $("#selectModeId option[value='paas']").remove();
+            $("#selectModeId option[value='all']").remove();
         } else if (localStorage.getItem("mode") == "paas") {
-            $("#selectModeId option[value='all']").remove(); //删除Select中Value='3'的Optiona
-            $("#selectModeId option[value='saas']").remove(); //删除Select中Value='3'的Optiona
+            $("#selectModeId option[value='all']").remove();
+            $("#selectModeId option[value='saas']").remove();
         } else if (localStorage.getItem("mode") == "all") {
 
         }
@@ -161,8 +163,14 @@ var vm = new Vue({
             var mode;
             if ("all" == localStorage.getItem("mode")) {
                 mode = "paas";
+                vm.tips = "可选多个应用";
+                vm.modeList2.selectedMode = mode;
+            } else if ("paas" == localStorage.getItem("mode")) {
+                mode = "paas";
+                vm.tips = "可选多个应用";
                 vm.modeList2.selectedMode = mode;
             } else {
+                vm.tips = "只能选择一个应用";
                 mode = localStorage.getItem("mode");
             }
 
@@ -191,11 +199,18 @@ var vm = new Vue({
         update: function () {
             vm.hidden = true;
             var mode;
+
             if ("all" == localStorage.getItem("mode")) {
-                mode = "paas"
+                mode = "paas";
+                vm.tips = "可选多个应用";
+                vm.modeList2.selectedMode = mode;
+            } else if ("paas" == localStorage.getItem("mode")) {
+                mode = "paas";
+                vm.tips = "可选多个应用";
                 vm.modeList2.selectedMode = mode;
             } else {
-                mode = localStorage.getItem("mode")
+                vm.tips = "只能选择一个应用";
+                mode = localStorage.getItem("mode");
             }
 
             var tenantId = getSelectedRow();
@@ -423,7 +438,14 @@ var vm = new Vue({
             vm.modeList.selectedMode = vm.mode;
 
             vm.tenant.appNames = null;
+            vm.tenant.appIds = null;
+            vm.tenant.appIdList = null;
 
+            if (vm.mode == "paas") {
+                vm.tips = "可选多个应用";
+            } else if (vm.mode == "saas") {
+                vm.tips = "只能选择一个应用";
+            }
             // 加载应用树
             $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
