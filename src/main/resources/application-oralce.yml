@@ -1,0 +1,6 @@
+spring:
+    datasource:
+        url: jdbc:oracle:thin:@192.168.0.10:1521:whxy
+        username: ming
+        password: 123456
+        driverClassName: oracle.jdbc.OracleDriver
