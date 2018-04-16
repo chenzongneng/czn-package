@@ -10,7 +10,6 @@
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
 // var baseURL = "http://localhost:12306/garnet/api/v1.0/";
 var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
-\
 /** token */
 // var garnetToken = localStorage.getItem("garnetToken");
 var accessToken = localStorage.getItem("accessToken");
@@ -23,6 +22,18 @@ var userId = localStorage.getItem("userId");
 /*function hasPermission(permission) {
     return window.parent.permissions.indexOf(permission) > -1;
 }*/
+
+function getExceptionMessage(value) {
+
+    var exception = value.responseJSON.data.errorResponseMessage;
+    var message = exception.match(/java.lang.RuntimeException:(.*)/)
+    if (message != null) {
+        message = message[1];
+    } else {
+        message = "操作失败，请检查您的参数是否正确";
+    }
+    return message;
+}
 
 /** jquery全局配置 */
 $.ajaxSetup({
@@ -70,7 +81,6 @@ $.ajaxSetup({
         }
     }
 });
-
 
 
 /** jqGrid 配置 */

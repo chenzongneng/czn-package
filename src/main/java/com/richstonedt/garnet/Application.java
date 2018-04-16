@@ -11,6 +11,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,8 +36,8 @@ import javax.sql.DataSource;
  * @version $Revision$ 2017/8/8 11:01.
  * @since garnet-core-be-fe 1.0.0
  */
-//@SpringBootApplication
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
+@SpringBootApplication
+//@SpringBootApplication(exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
 //@MapperScan(value = "com.richstonedt.garnet.mapper")
 @EnableAspectJAutoProxy
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
@@ -73,23 +74,23 @@ public class Application extends SpringBootServletInitializer {
         SpringApplication.run(Application.class, args);
     }
 
-    @Autowired
-    private Environment env;
-
-    //destroy-method="close"的作用是当数据库连接不使用的时候,就把该连接重新放到数据池中,方便下次使用调用.
-    @Bean
-    public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:oracle:thin:@192.168.0.10:1521:whxy");
-        dataSource.setUsername("ming");//用户名
-        dataSource.setPassword("123456");//密码
-        dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
-        dataSource.setInitialSize(2);//初始化时建立物理连接的个数
-        dataSource.setMaxActive(20);//最大连接池数量
-        dataSource.setMinIdle(0);//最小连接池数量
-        dataSource.setMaxWait(60000);//获取连接时最大等待时间，单位毫秒。
-        dataSource.setPoolPreparedStatements(false);//是否缓存preparedStatement，也就是PSCache
-        return dataSource;
-    }
+//    @Autowired
+//    private Environment env;
+//
+//    //destroy-method="close"的作用是当数据库连接不使用的时候,就把该连接重新放到数据池中,方便下次使用调用.
+//    @Bean
+//    public DataSource dataSource() {
+//        DruidDataSource dataSource = new DruidDataSource();
+//        dataSource.setUrl("jdbc:oracle:thin:@192.168.0.10:1521:whxy");
+//        dataSource.setUsername("ming");//用户名
+//        dataSource.setPassword("123456");//密码
+//        dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
+//        dataSource.setInitialSize(2);//初始化时建立物理连接的个数
+//        dataSource.setMaxActive(20);//最大连接池数量
+//        dataSource.setMinIdle(0);//最小连接池数量
+//        dataSource.setMaxWait(60000);//获取连接时最大等待时间，单位毫秒。
+//        dataSource.setPoolPreparedStatements(false);//是否缓存preparedStatement，也就是PSCache
+//        return dataSource;
+//    }
 
 }

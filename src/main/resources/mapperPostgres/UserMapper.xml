@@ -192,6 +192,7 @@
         status,
       </if>
       <if test="belongToGarnet != null">
+
         belong_to_garnet,
       </if>
       <if test="updatedByUserName != null">

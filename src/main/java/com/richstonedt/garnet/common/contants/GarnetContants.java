@@ -16,6 +16,8 @@ public class GarnetContants {
 
     public static final Long GARNET_TENANT_ID= 1L;
 
+    public static final Long GARNET_APPLICATION_ID= 1L;
+
     public static final Long GARNET_USER_ID= 1L;
 
     public static final Long GARNET_SUPER_ROUTER_GROUP_ID= 1L;
@@ -26,7 +28,7 @@ public class GarnetContants {
 
     public static final String GARNET_RESOURCE_DYNAMICPROPERTY_SUPERADMIN = "superAdmin"; //默认超级管理员配置，和数据库type对应
 
-    public static final String SAVE_PATH = "C:\\www\\root\\garnet";
+    public static final String SAVE_PATH = System.getProperty("user.dir") + "/src/main/resources/excel";
 
 
 }

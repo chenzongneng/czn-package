@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,13 +53,13 @@ public class ExcelController {
     @RequestMapping(value = "/upload/resourceexcel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, method = {RequestMethod.POST})
     @CrossOrigin
     public ResponseEntity<?> uploadResourceExcel(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws FileNotFoundException {
-
+        FileInputStream fileInputStream = null;
         try {
             ResponseEntity<?> head = upload(request, response, map, "excel");
             FileView fileVo = (FileView) head.getBody();
             String[] split = fileVo.getFilePath().split("\\.");
             String excelPath = GarnetContants.SAVE_PATH  + "/" + fileVo.getFilePath();
-            FileInputStream fileInputStream = new FileInputStream(excelPath);
+            fileInputStream = new FileInputStream(excelPath);
             ExcelUtils<ResourceExcelView> excelUtils = new ExcelUtils<>(ResourceExcelView.class);
             List<ResourceExcelView> resources = new ArrayList<>();
 
@@ -77,10 +78,18 @@ public class ExcelController {
             }
             return new ResponseEntity<>("Import Excel Success", HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("excel error == " + e.toString());
+//            System.out.println("excel error == " + e.toString());
             String error = "Import Excel Fail";
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(e.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, e);
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 //        return null;
     }
@@ -88,9 +97,8 @@ public class ExcelController {
     private ResponseEntity<?> upload(HttpServletRequest request, HttpServletResponse response, ModelMap map, String type) {
         MultipartHttpServletRequest mhs = (MultipartHttpServletRequest) request;
         MultipartFile file = mhs.getFile("file");
-        //System.out.println("get upload request");
         ServletContext application = request.getSession().getServletContext();
-        System.out.println("pic url: " + application.getRealPath("/"));
+//        System.out.println("pic url: " + application.getRealPath("/"));
         LOG.info("pic url: " + application.getRealPath("/"));
         String savePath = GarnetContants.SAVE_PATH + "/";
         String filePath = "images/" + type + "/";
@@ -109,17 +117,18 @@ public class ExcelController {
                 SimpleDateFormat bartDateFormat = new SimpleDateFormat
                         ("yyyyMMddHHmmss");
                 newFileName = String.valueOf(bartDateFormat.format(new Date()));
-                filePath = filePath + newFileName + "_" + file.getOriginalFilename();
+//                filePath = filePath + newFileName + "_" + file.getOriginalFilename();
+                filePath = filePath + "upload_resource";
                 LOG.info("上传文件： " + filePath);
                 FileUtils.writeByteArrayToFile(new File(savePath + filePath), file.getBytes());
-                System.out.println(filePath);
+//                System.out.println(filePath);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         FileView fileVo = new FileView();
         fileVo.setFilePath(filePath);
-        System.out.println(fileVo.getFilePath());
+//        System.out.println(fileVo.getFilePath());
         try {
 //              return fileVo;
             return new ResponseEntity<>(fileVo, HttpStatus.OK);

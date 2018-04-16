@@ -17,20 +17,12 @@ $(function () {
             {label: '路径标识', name: 'path', align: 'center',  width: 70},
             {label: 'actions', name: 'actions', align: 'center',  width: 70},
             {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70}
-
-            // {
-            //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
-            //     return value === 0 ?
-            //         '<span class="label label-danger">禁用</span>' :
-            //         '<span class="label label-success">正常</span>';
-            // }
-            // }
         ],
         viewrecords: true,
         height: 385,
         rowNum: 10,
-        rowList: [10, 30, 50],
-        rownumbers: true,
+        rowList: [10, 30, 50, 100],
+        rownumbers: false,
         rownumWidth: 25,
         autowidth: true,
         multiselect: true,
@@ -128,6 +120,8 @@ var vm = new Vue({
     el: '#garnetApp',
     data: {
         test:null,
+        actionsEdit: null,
+        actionsReadonly: null,
         showResourceDetail: false,
         resourceDetail: null,
         searchType: null,
@@ -284,8 +278,6 @@ var vm = new Vue({
             var formData = new FormData();
             formData.append('file',file);    // 将文件转成二进制形式
 
-            console.log("开始发送请求... ");
-
             $.ajax({
                 type: "POST",
                 url: baseURL + "/upload/resourceexcel",
@@ -401,6 +393,21 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
+            console.log("vm.actionEdit: " + JSON.stringify(vm.actionsEdit));
+            console.log("vm.actionReadonly: " + JSON.stringify(vm.actionsReadonly));
+
+            if (vm.actionsEdit == true && vm.actionsReadonly == true) {
+                vm.resource.actions = "edit;readonly";
+            }
+            if (vm.actionsReadonly == null && vm.actionsEdit == true) {
+                vm.resource.actions = "edit";
+            }
+            if (vm.actionsEdit == null && vm.actionsReadonly == true) {
+                vm.resource.actions = "readonly";
+            }
+
+            console.log("actions == " + JSON.stringify(vm.resource.actions));
+
             var obj = new Object();
             vm.resource.updatedByUserName = localStorage.getItem("userName");
            // obj.typeId = vm.typeList.selectedType;
@@ -408,6 +415,7 @@ var vm = new Vue({
             obj.resource.type = vm.typeList.selectedType;
             obj.resource.tenantId = vm.tenantList.selectedTenant;
             obj.resource.applicationId = applicationList.appList.selectedApp;
+
 
             if(vm.resource.name == null || vm.resource.name == "") {
                 swal("资源名称不能为空", "", "error");
@@ -420,6 +428,7 @@ var vm = new Vue({
                 return;
             }
 
+            console.log("resource actions == " + JSON.stringify(obj));
 
             $.ajax({
                 type: vm.resource.id === null ? "POST" : "PUT",
@@ -432,7 +441,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -507,11 +516,11 @@ var vm = new Vue({
             });
         },
         /** 查询当前用户信息 */
-        getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
-                vm.currentUser = response;
-            });
-        },
+        // getCurrentUser: function () {
+        //     $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+        //         vm.currentUser = response;
+        //     });
+        // },
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;

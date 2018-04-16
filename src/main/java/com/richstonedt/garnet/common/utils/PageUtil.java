@@ -6,7 +6,10 @@
 
 package com.richstonedt.garnet.common.utils;
 
+import org.springframework.util.CollectionUtils;
+
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -74,7 +77,28 @@ public class PageUtil<T> implements Serializable {
      * @since garnet-core-be-fe 1.0.0
      */
     public PageUtil(List<T> list, int totalCount, int pageSize, int currPage) {
-        this.list = list;
+
+        //(currPage+1-1)*pageSize
+        int startPage = currPage;
+
+       List<T> tmp = new LinkedList<>();
+
+        if (!CollectionUtils.isEmpty(list)) {
+            int count= 0;
+            for(int i = 0; i< list.size();i++){
+
+                if(count == pageSize){
+                    break;
+                }
+
+                else if(i>=(startPage-1)*pageSize){
+                    tmp.add(list.get(i));
+                    count++;
+                }
+            }
+        }
+
+        this.list = tmp;
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.currPage = currPage;

@@ -30,7 +30,7 @@ $(function () {
         height: 385,
         rowNum: 10,
         rowList: [10, 30, 50],
-        rownumbers: true,
+        rownumbers: false,
         rownumWidth: 25,
         autowidth: true,
         multiselect: true,
@@ -63,14 +63,13 @@ $(function () {
 //时间戳 转 Y-M-D
 function timeFormat(cellvalue, options, row) {
     var date = new Date(cellvalue);
-    Y = date.getFullYear() + '-';
-    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
-    D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
-    // h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
-    // m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
-    // s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
-    return Y + M + D;
-    // return new Date(cellvalue).toLocaleString();
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    var h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D + "  " + h + m + s;
 }
 
 /** 应用树 */
@@ -121,6 +120,7 @@ var vm = new Vue({
     data: {
         searchName: null,
         showList: true,
+        readusername:true,
         title: null,
         belongToGarnet:false,
 
@@ -204,6 +204,7 @@ var vm = new Vue({
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
+            vm.readusername = false;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
@@ -314,7 +315,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.data.errorResponseMessage, "", "error");
+                    swal("", getExceptionMessage(response), "error");
                 }
             });
 

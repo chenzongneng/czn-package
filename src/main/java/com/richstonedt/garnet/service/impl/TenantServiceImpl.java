@@ -72,7 +72,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
         Tenant tenant = tenantView.getTenant();
         tenant.setId(IdGeneratorUtil.generateId());
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         tenant.setCreatedTime(currentTime);
         tenant.setModifiedTime(currentTime);
         this.insertSelective(tenant);
@@ -97,11 +97,11 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         TenantCriteria tenantCriteria = new TenantCriteria();
         tenantCriteria.createCriteria().andNameEqualTo(tenant.getName()).andStatusEqualTo(1);
         Tenant tenant1 = this.selectSingleByCriteria(tenantCriteria);
-        if (!ObjectUtils.isEmpty(tenant1)) {
+        if (!ObjectUtils.isEmpty(tenant1) && tenantView.getTenant().getId().longValue() != tenant1.getId().longValue()) {
             throw new RuntimeException("租户名: " + tenant1.getName() +" 已经存在");
         }
 
-        tenant.setModifiedTime(new Date().getTime());
+        tenant.setModifiedTime(System.currentTimeMillis());
         this.updateByPrimaryKeySelective(tenant);
         this.dealForgenKeyApplications(tenantView);
         //更新用户
@@ -240,10 +240,10 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         } else if (SERVICE_MODE_ALL.equals(tenantParm.getMode())) {
             criteria.andStatusEqualTo(1);
         } else {
-            return new PageUtil(null, (int)this.countByCriteria(tenantCriteria),tenantParm.getPageNumber() ,tenantParm.getPageSize());
+            return new PageUtil(null, (int)this.countByCriteria(tenantCriteria) ,tenantParm.getPageSize(), tenantParm.getPageNumber());
         }
 
-        PageUtil result = new PageUtil(this.selectByCriteria(tenantCriteria), (int)this.countByCriteria(tenantCriteria),tenantParm.getPageNumber() ,tenantParm.getPageSize());
+        PageUtil result = new PageUtil(this.selectByCriteria(tenantCriteria), (int)this.countByCriteria(tenantCriteria) ,tenantParm.getPageSize() ,tenantParm.getPageNumber());
         return result;
     }
 

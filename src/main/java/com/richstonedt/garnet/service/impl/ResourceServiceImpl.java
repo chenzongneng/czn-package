@@ -3,6 +3,7 @@ package com.richstonedt.garnet.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.FileUtil;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
@@ -76,7 +77,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         resource.setId(IdGeneratorUtil.generateId());
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
 
         resource.setCreatedTime(currentTime);
 
@@ -105,7 +106,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     public void updateResource(ResourceView resourceView) {
 
         Resource resource = resourceView.getResource();
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         resource.setModifiedTime(currentTime);
         this.updateByPrimaryKeySelective(resource);
 
@@ -148,8 +149,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     @Override
     public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm) {
 
+        PageHelper.startPage(1, 10);
         Resource resource = resourceParm.getResource();
-
+        List<Resource> resourceList = null;
         ResourceCriteria resourceCriteria = new ResourceCriteria();
         ResourceCriteria.Criteria criteria =resourceCriteria.createCriteria();
 
@@ -166,39 +168,37 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         }
 
         if (!StringUtils.isEmpty(resourceParm.getUserId())) {
+            //获取用户绑定的tenantIds
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(resourceParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
-
             //change by ming
             tenantIds =  commonService.dealTenantIdsIfGarnet(resourceParm.getUserId(),tenantIds);
 
             //如果不是garnet的超级管理员，返回绑定tenantId下的resource
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(resourceParm.getUserId()))) {
-                criteria.andTenantIdIn(tenantIds);
+//                criteria.andTenantIdIn(tenantIds);
+                resourceList = this.getResourcesByUserId(resourceParm.getUserId());
+            } else {
+                // 是超级管理员，返回所有resource
+                resourceList = this.selectByCriteria(resourceCriteria);
             }
         }
 
-        if(!ObjectUtils.isEmpty(resourceParm.getApplicationId())){
-            resourceCriteria.createCriteria().andApplicationIdEqualTo(resourceParm.getApplicationId());
-        }
-        if(!ObjectUtils.isEmpty(resourceParm.getTenantId())){
-            resourceCriteria.createCriteria().andTenantIdEqualTo(resourceParm.getTenantId());
-        }
+//        PageInfo pageInfo = new PageInfo(resourceList,10);
+        PageUtil result = new PageUtil(resourceList, (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
 
-        PageHelper.startPage(resourceParm.getPageNumber(),resourceParm.getPageSize());
-        PageUtil result = new PageUtil(this.selectByCriteria(resourceCriteria), (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
         return result;
     }
 
     @Override
-    public String getGarnetAppCodeResources(ResourceParm resourceParm) throws IOException {
+    public String getGarnetAppCodeResources(ResourceParm resourceParm) {
 
         if (!StringUtils.isEmpty(resourceParm.getUserId())) {
             List<Resource> resourceList = this.getResourceListByUserId(resourceParm.getUserId(), "garnet_appCode");
             if (CollectionUtils.isEmpty(resourceList)) {
                 return "";
             }
-//            ResourceCriteria resourceCriteria = new ResourceCriteria();
+//            ResourceCriteria resourceCriteria = ne  w ResourceCriteria();
 //            resourceCriteria.createCriteria().andTypeEqualTo("garnet_appCode");
 //            List<Resource> resourceList = this.selectByCriteria(resourceCriteria);
             JSONObject jsonObject = new JSONObject();
@@ -308,7 +308,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         return jsonArray.toString();
     }
 
-
+    /**
+     * 根据userId获取permissions，根据permissions获取相匹配的resources并去重
+     * @param userId
+     * @param type
+     * @return
+     */
     public List<Resource> getResourceListByUserId(Long userId, String type) {
         //根据userId 拿 group
         GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
@@ -362,7 +367,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(1l);
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(GarnetContants.GARNET_APPLICATION_ID);
                 List<Resource> resources = this.selectByCriteria(resourceCriteria);
                 resourceList.addAll(resources);
             }
@@ -383,6 +388,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         return resourceList1;
     }
 
+    /**
+     * 根据应用和资源类型查看所有的配置
+     * @param resourceParm
+     * @return
+     */
     @Override
     public String getAllResourceByAppAndType(ResourceParm resourceParm) {
 
@@ -601,6 +611,92 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             this.insertResource(resourceView);
         }
 
+    }
+
+    /**
+     * 根据userId 获取权限，根据权限的resource_path_wildcard和action匹配获取资源列表
+     * @param userId
+     * @return
+     */
+    private List<Resource> getResourcesByUserId(Long userId) {
+        //根据userId 拿 group
+        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+
+        if (CollectionUtils.isEmpty(groupUserList)) {
+            return null;
+        }
+        //根据group 拿 role
+        List<Long> groupIds = new ArrayList<>();
+        for (GroupUser groupUser : groupUserList) {
+            Long groupId = groupUser.getGroupId();
+            groupIds.add(groupId);
+        }
+        //通过中间表拿关联的role
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
+        List<GroupRole> groupRoleList = groupRoleService.selectByCriteria(groupRoleCriteria);
+        if (CollectionUtils.isEmpty(groupRoleList)) {
+            return null;
+        }
+
+        List<Long> roleIds = new ArrayList<>();
+        for (GroupRole groupRole : groupRoleList) {
+            Long roleId = groupRole.getRoleId();
+            roleIds.add(roleId);
+        }
+        //根据role拿permission
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds);
+        List<RolePermission> rolePermissionList = rolePermissionService.selectByCriteria(rolePermissionCriteria);
+        if (CollectionUtils.isEmpty(rolePermissionList)) {
+            return null;
+        }
+        List<Long> permissionIds = new ArrayList<>();
+        for (RolePermission rolePermission : rolePermissionList) {
+            Long permissionId = rolePermission.getPermissionId();
+            permissionIds.add(permissionId);
+        }
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andIdIn(permissionIds);
+        List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
+        if (CollectionUtils.isEmpty(permissionList)) {
+            return null;
+        }
+
+        //通过权限的通配符 查询相对应的resource
+        List<Resource> resourceList = new ArrayList<>();
+        for (Permission permission : permissionList) {
+            String resourcePathWildcard = permission.getResourcePathWildcard();
+            if (!StringUtils.isEmpty(resourcePathWildcard)) {
+                ResourceCriteria resourceCriteria = new ResourceCriteria();
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andActionsLike(permission.getAction());
+                List<Resource> resources = this.selectByCriteria(resourceCriteria);
+                resourceList.addAll(resources);
+            }
+        }
+        if (CollectionUtils.isEmpty(resourceList)) {
+            return null;
+        }
+        //对resource去重
+        Set<Resource> resourceSet = new HashSet<>();
+        List<Resource> resourceList1 = new ArrayList<>();
+        for (Resource resource : resourceList) {
+            Long resourceId = resource.getId();
+            if (!resourceSet.contains(resourceId)) {
+                resourceList1.add(resource);
+            }
+        }
+
+        for (int i = 0; i < resourceList1.size(); i ++) {
+            //foreach 内部是调用iterator实现的，不能直接使用remove
+            if ("readonly".equals(resourceList1.get(i).getActions())) {
+                resourceList1.remove(i);
+            }
+        }
+
+        return resourceList1;
     }
 
 }

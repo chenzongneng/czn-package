@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="resource_path_wildcard" jdbcType="VARCHAR" property="resourcePathWildcard" />
@@ -15,6 +15,7 @@
     <result column="modified_time" jdbcType="BIGINT" property="modifiedTime" />
     <result column="application_id" jdbcType="BIGINT" property="applicationId" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="action" jdbcType="VARCHAR" property="action" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
   </resultMap>
@@ -22,7 +23,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -56,7 +57,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -90,16 +91,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
-    id, resource_path_wildcard, name, description, created_time, modified_time, application_id, 
-    tenant_id, status, updated_by_user_name
+    id, resource_path_wildcard, name, description, created_time, modified_time, application_id,
+    tenant_id, action, status, updated_by_user_name
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.PermissionCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     select
     <if test="distinct">
@@ -121,9 +122,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
-    select 
+    select
     <include refid="Base_Column_List" />
     from gar_permissions
     where id = #{id,jdbcType=BIGINT}
@@ -132,7 +133,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     delete from gar_permissions
     where id = #{id,jdbcType=BIGINT}
@@ -141,7 +142,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     delete from gar_permissions
     <if test="_parameter != null">
@@ -152,22 +153,22 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
-    insert into gar_permissions (id, resource_path_wildcard, name, 
-      description, created_time, modified_time, 
-      application_id, tenant_id, status, 
-      updated_by_user_name)
-    values (#{id,jdbcType=BIGINT}, #{resourcePathWildcard,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT}, 
-      #{applicationId,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
-      #{updatedByUserName,jdbcType=VARCHAR})
+    insert into gar_permissions (id, resource_path_wildcard, name,
+    description, created_time, modified_time,
+    application_id, tenant_id, action,
+    status, updated_by_user_name)
+    values (#{id,jdbcType=BIGINT}, #{resourcePathWildcard,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+    #{description,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT},
+    #{applicationId,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{action,jdbcType=VARCHAR},
+    #{status,jdbcType=INTEGER}, #{updatedByUserName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Permission">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     insert into gar_permissions
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -194,6 +195,9 @@
       </if>
       <if test="tenantId != null">
         tenant_id,
+      </if>
+      <if test="action != null">
+        action,
       </if>
       <if test="status != null">
         status,
@@ -227,6 +231,9 @@
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="action != null">
+        #{action,jdbcType=VARCHAR},
+      </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
@@ -239,7 +246,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     select count(*) from gar_permissions
     <if test="_parameter != null">
@@ -250,7 +257,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     update gar_permissions
     <set>
@@ -278,6 +285,9 @@
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
+      <if test="record.action != null">
+        action = #{record.action,jdbcType=VARCHAR},
+      </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
       </if>
@@ -293,19 +303,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     update gar_permissions
     set id = #{record.id,jdbcType=BIGINT},
-      resource_path_wildcard = #{record.resourcePathWildcard,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
-      description = #{record.description,jdbcType=VARCHAR},
-      created_time = #{record.createdTime,jdbcType=BIGINT},
-      modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-      application_id = #{record.applicationId,jdbcType=BIGINT},
-      tenant_id = #{record.tenantId,jdbcType=BIGINT},
-      status = #{record.status,jdbcType=INTEGER},
-      updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
+    resource_path_wildcard = #{record.resourcePathWildcard,jdbcType=VARCHAR},
+    name = #{record.name,jdbcType=VARCHAR},
+    description = #{record.description,jdbcType=VARCHAR},
+    created_time = #{record.createdTime,jdbcType=BIGINT},
+    modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+    application_id = #{record.applicationId,jdbcType=BIGINT},
+    tenant_id = #{record.tenantId,jdbcType=BIGINT},
+    action = #{record.action,jdbcType=VARCHAR},
+    status = #{record.status,jdbcType=INTEGER},
+    updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -314,7 +325,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     update gar_permissions
     <set>
@@ -339,6 +350,9 @@
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="action != null">
+        action = #{action,jdbcType=VARCHAR},
+      </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
@@ -352,25 +366,26 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     update gar_permissions
     set resource_path_wildcard = #{resourcePathWildcard,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      created_time = #{createdTime,jdbcType=BIGINT},
-      modified_time = #{modifiedTime,jdbcType=BIGINT},
-      application_id = #{applicationId,jdbcType=BIGINT},
-      tenant_id = #{tenantId,jdbcType=BIGINT},
-      status = #{status,jdbcType=INTEGER},
-      updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
+    name = #{name,jdbcType=VARCHAR},
+    description = #{description,jdbcType=VARCHAR},
+    created_time = #{createdTime,jdbcType=BIGINT},
+    modified_time = #{modifiedTime,jdbcType=BIGINT},
+    application_id = #{applicationId,jdbcType=BIGINT},
+    tenant_id = #{tenantId,jdbcType=BIGINT},
+    action = #{action,jdbcType=VARCHAR},
+    status = #{status,jdbcType=INTEGER},
+    updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.PermissionCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     select
     <if test="distinct">
@@ -389,7 +404,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     insert into gar_permissions
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -417,6 +432,9 @@
       <if test="list[0].tenantId!=null">
         tenant_id,
       </if>
+      <if test="list[0].action!=null">
+        action,
+      </if>
       <if test="list[0].status!=null">
         status,
       </if>
@@ -424,7 +442,7 @@
         updated_by_user_name,
       </if>
     </trim>
-     values 
+    values
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -451,6 +469,9 @@
         <if test="item.tenantId!=null">
           #{item.tenantId,jdbcType=BIGINT},
         </if>
+        <if test="item.action!=null">
+          #{item.action,jdbcType=VARCHAR},
+        </if>
         <if test="item.status!=null">
           #{item.status,jdbcType=INTEGER},
         </if>
@@ -464,7 +485,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-16 11:10
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_permissions
@@ -490,6 +511,9 @@
         <if test="item.tenantId!=null">
           tenant_id=#{item.tenantId,jdbcType=BIGINT},
         </if>
+        <if test="item.action!=null">
+          action=#{item.action,jdbcType=VARCHAR},
+        </if>
         <if test="item.status!=null">
           status=#{item.status,jdbcType=INTEGER},
         </if>
@@ -497,7 +521,7 @@
           updated_by_user_name=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </set>
-      where 
+      where
       id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>

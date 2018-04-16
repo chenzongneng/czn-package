@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-30 13:23
+ * DATE: 2018-04-16 11:10
  */
 public class Permission implements Serializable {
     private Long id;
@@ -27,6 +27,8 @@ public class Permission implements Serializable {
 
     private Long tenantId;
 
+    private String action;
+
     private Integer status;
 
     /**
@@ -40,7 +42,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     private static final long serialVersionUID = 1L;
 
@@ -108,6 +110,14 @@ public class Permission implements Serializable {
         this.tenantId = tenantId;
     }
 
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action == null ? null : action.trim();
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -124,7 +134,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public String getUpdatedByUserName() {
         return updatedByUserName;
@@ -138,7 +148,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
@@ -151,7 +161,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     @Override
     public boolean equals(Object that) {
@@ -166,15 +176,16 @@ public class Permission implements Serializable {
         }
         Permission other = (Permission) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getResourcePathWildcard() == null ? other.getResourcePathWildcard() == null : this.getResourcePathWildcard().equals(other.getResourcePathWildcard()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
-            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-            && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
-            && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
+                && (this.getResourcePathWildcard() == null ? other.getResourcePathWildcard() == null : this.getResourcePathWildcard().equals(other.getResourcePathWildcard()))
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+                && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
+                && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
+                && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
+                && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
+                && (this.getAction() == null ? other.getAction() == null : this.getAction().equals(other.getAction()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
     }
 
     /**
@@ -184,7 +195,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     @Override
     public int hashCode() {
@@ -198,6 +209,7 @@ public class Permission implements Serializable {
         result = prime * result + ((getModifiedTime() == null) ? 0 : getModifiedTime().hashCode());
         result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getTenantId() == null) ? 0 : getTenantId().hashCode());
+        result = prime * result + ((getAction() == null) ? 0 : getAction().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         return result;
@@ -210,7 +222,7 @@ public class Permission implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     @Override
     public String toString() {
@@ -226,6 +238,7 @@ public class Permission implements Serializable {
         sb.append(", modifiedTime=").append(modifiedTime);
         sb.append(", applicationId=").append(applicationId);
         sb.append(", tenantId=").append(tenantId);
+        sb.append(", action=").append(action);
         sb.append(", status=").append(status);
         sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", serialVersionUID=").append(serialVersionUID);

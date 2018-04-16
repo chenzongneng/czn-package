@@ -19,7 +19,7 @@ $(function () {
         height: 385,
         rowNum: 10,
         rowList: [10, 30, 50],
-        rownumbers: true,
+        rownumbers: false,
         rownumWidth: 25,
         autowidth: true,
         multiselect: true,
@@ -180,7 +180,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal("", getExceptionMessage, "error");
                 }
             });
         },
