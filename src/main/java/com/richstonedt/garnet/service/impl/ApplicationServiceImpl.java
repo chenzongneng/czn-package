@@ -72,10 +72,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         //检查appCode是否已存在
         String appCode = application.getAppCode();
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode);
-        List<Application> applications = this.selectByCriteria(applicationCriteria);
-        if (!CollectionUtils.isEmpty(applications)) {
-            throw new RuntimeException("appCode已经存在");
+        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
+        Application application1 = this.selectSingleByCriteria(applicationCriteria);
+        if (!ObjectUtils.isEmpty(application1)) {
+            throw new RuntimeException("appCode: " + appCode + " 已经存在");
         }
 
         application.setId(IdGeneratorUtil.generateId());
@@ -93,6 +93,15 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     public void updateApplication(ApplicationView applicationView) {
 
         Application application = applicationView.getApplication();
+
+        //检查appCode是否已存在
+        String appCode = application.getAppCode();
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
+        Application application1 = this.selectSingleByCriteria(applicationCriteria);
+        if (!ObjectUtils.isEmpty(application1)) {
+            throw new RuntimeException("appCode: " + appCode + " 已经存在");
+        }
 
         Long currentTime = new Date().getTime();
         application.setModifiedTime(currentTime);
@@ -136,7 +145,8 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
                 }
                 for (String tenantId : applicationView.getTenantIds().split(",")) {
                     if (tenantIds.contains(Long.parseLong(tenantId))) {
-                        throw new RuntimeException("此租户已被绑定");
+                        Tenant tenant = tenantService.selectByPrimaryKey(Long.parseLong(tenantId));
+                        throw new RuntimeException("租户" + tenant.getName() +"已被绑定");
                     }
                 }
             }

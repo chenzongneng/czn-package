@@ -11,6 +11,7 @@ spring:
     profiles:
 #        active: dev
         active: oracle
+#        active: local
     # AOP config
     aop:
       auto: true

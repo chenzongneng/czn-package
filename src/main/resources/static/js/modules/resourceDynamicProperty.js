@@ -204,11 +204,15 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
-            // alert(JSON.stringify(this.resourceDynamicPropertyList));
             // 获取访问权限树选择的访问权限
             var obj = new Object();
             obj.resourceDynamicProperty = vm.resourceDynamicProperty;
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
+
+            if(vm.resourceDynamicProperty.type == null || vm.resourceDynamicProperty.type == "") {
+                swal("资源类型配置名称不能为空", "", "error");
+                return;
+            }
 
             $.ajax({
                 type: vm.resourceDynamicProperty.id === null ? "POST" : "PUT",

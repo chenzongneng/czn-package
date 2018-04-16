@@ -187,6 +187,28 @@ public class UserController {
     }
 
     @LoginRequired
+    @ApiOperation(value = "[Garnet]更新密码", notes = "更新用户密码")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
+            @ApiResponse(code = 404, message = "not found"),
+            @ApiResponse(code = 409, message = "conflict"),
+            @ApiResponse(code = 500, message = "internal Server Error") })
+    @RequestMapping(value = "/users/password", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> updatePassword(
+            @ApiParam(value = "用户信息", required = true) @RequestBody UserCredentialView userCredentialView) {
+        try {
+            userService.updateUserPassword(userCredentialView);
+            // 封装返回信息
+            GarnetMessage<UserCredentialView> garnetMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, null);
+            return new ResponseEntity<>(garnetMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to update entity! " + MessageDescription.OPERATION_UPDATE_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> garnetMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(garnetMessage, t);
+        }
+    }
+
+    @LoginRequired
     @ApiOperation(value = "[Garnet]获取单个用户", notes = "通过id获取用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),

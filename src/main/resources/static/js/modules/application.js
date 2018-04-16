@@ -3,10 +3,6 @@
  * Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
  * All rights reserved.
  */
-function timeFormat() {
-    console.log("timefomate " + createdTime);
-}
-
 $(function () {
     /**  初始化应用列表  */
     $("#jqGrid").jqGrid({
@@ -98,6 +94,7 @@ var vm = new Vue({
         title: null,
         modeId: null,// SAAS为0，PAAS为1
         mode: null,
+        tips:null, //根据选择模式的不同给出不同的提示信息
         hidden: true,
         modeName: null,
         application: {
@@ -166,9 +163,15 @@ var vm = new Vue({
             var mode;
             if ("all" == localStorage.getItem("mode")) {
                 mode = "paas";
+                vm.tips = "只能选择一个租户";
                 vm.modeList2.selectedMode = mode;
-                console.log("vm.modeList2 " + vm.modeList2.selectedMode);
+                // console.log("vm.modeList2 " + vm.modeList2.selectedMode);
+            } else if ("paas" == localStorage.getItem("mode")) {
+                mode = "paas";
+                vm.tips = "只能选择一个租户";
+                vm.modeList2.selectedMode = mode;
             } else {
+                vm.tips = "可选多个租户";
                 mode = localStorage.getItem("mode");
                 vm.modeList2.selectedMode = mode;
             }
@@ -202,9 +205,16 @@ var vm = new Vue({
             var mode;
             if ("all" == localStorage.getItem("mode")) {
                 mode = "paas";
+                vm.tips = "只能选择一个租户";
                 vm.modeList2.selectedMode = mode;
-            } else {
+            } else if ("paas" == localStorage.getItem("mode")) {
+                mode = "paas";
+                vm.tips = "只能选择一个租户";
+                vm.modeList2.selectedMode = mode;
+            }else {
+                vm.tips = "可选多个租户";
                 mode = localStorage.getItem("mode");
+                vm.modeList2.selectedMode = mode;
             }
 
             var applicationId = getSelectedRow();
@@ -229,13 +239,15 @@ var vm = new Vue({
                 return;
             }
 
-            $.get(baseURL + "applications/relate?ids=" + applicationIds + "&token=" + accessToken, function (response) {
-                if (response == Boolean(true)) {
-                    title = "应用仍被其他租户关联，若确定则将关联租户一并删除，是否确定删除？";
-                } else {
-                    title = "确定要删除选中的记录";
-                }
-            });
+            // $.get(baseURL + "applications/relate?ids=" + applicationIds + "&token=" + accessToken, function (response) {
+            //     if (response == Boolean(true)) {
+            //         title = "应用仍被其他租户关联，若确定则将关联租户一并删除，是否确定删除？";
+            //     } else {
+            //         title = "确定要删除选中的记录";
+            //     }
+            // });
+
+            title = "确定要删除选中的记录";
 
             swal({
                     title: title,
@@ -419,6 +431,15 @@ var vm = new Vue({
             localStorage.setItem("mode", vm.mode);
             vm.modeList.selectedMode = vm.mode;
             vm.application.tenantNames = null;
+            vm.application.tenantIds = null;
+            vm.application.tenantIdList = null;
+
+            if ("paas" == vm.mode) {
+                vm.tips = "只能选择一个租户";
+            } else if ("saas" == vm.mode) {
+                vm.tips = "可选择多个租户";
+            }
+
             // 加载租户树
             $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);

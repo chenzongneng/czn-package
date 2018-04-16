@@ -932,4 +932,30 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
     }
+
+    @Override
+    public void updateUserPassword(UserCredentialView userCredentialView) {
+        if (ObjectUtils.isEmpty(userCredentialView) || ObjectUtils.isEmpty(userCredentialView.getUserId()) ||
+                StringUtils.isEmpty(userCredentialView.getPassword()) || StringUtils.isEmpty(userCredentialView.getNewPassword())) {
+            throw new RuntimeException("请输入正确参数");
+        }
+
+        UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
+        userCredentialCriteria.createCriteria().andUserIdEqualTo(userCredentialView.getUserId());
+        UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
+        if (!ObjectUtils.isEmpty(userCredential)) {
+            if (userCredentialView.getPassword().equals(userCredential.getCredential())) {
+
+                if (userCredentialView.getNewPassword().equals(userCredential.getCredential())) {
+                    throw new RuntimeException("新密码不能与旧密码相同");
+                }
+
+                userCredential.setModifiedTime(System.currentTimeMillis());
+                userCredential.setCredential(userCredentialView.getNewPassword());
+                userCredentialService.updateByPrimaryKeySelective(userCredential);
+            } else {
+                throw new RuntimeException("初始密码不正确");
+            }
+        }
+    }
 }
