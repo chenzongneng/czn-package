@@ -223,13 +223,19 @@ var vm = new Vue({
             vm.permission.updatedByUserName = localStorage.getItem("userName");
             obj.permission = vm.permission;
 
-            if(vm.permission.name === null || vm.permission.name === ""){
-                alert("权限名称不能为空");
+            if(vm.permission.name == null || $.trim(vm.permission.name) == ""){
+                swal("", "权限名称不能为空", "error");
                 return;
             }
 
-            if (vm.permission.action == null) {
+            if (vm.permission.action == null || $.trim(vm.permission.action)) {
                 swal("", "行为不能为空", "error");
+                return;
+            }
+
+            if (vm.permission.name.length > 30) {
+                swal("", "权限名称不能大于30", "");
+                return;
             }
 
             // 获取菜单树选择的菜单

@@ -118,7 +118,6 @@ public class TenantController {
                 Tenant tenant = new Tenant();
                 tenant.setId(Long.parseLong(id));
                 tenantService.updateStatusById(tenant);
-//                tenantService.deleteTenant(Long.parseLong(id));
             }
             // 封装返回信息
             GarnetMessage<TenantView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
@@ -197,7 +196,6 @@ public class TenantController {
             tenantParm.setApplicationId(applicaionId);
             tenantParm.setPageSize(limit);
             tenantParm.setPageNumber(page);
-//            tenantParm.setModeId(modeId);
             tenantParm.setMode(mode);
             PageUtil result = tenantService.queryTenantssByParms(tenantParm);
             // 封装返回信息
@@ -217,7 +215,6 @@ public class TenantController {
     @RequestMapping(value = "/tenants/appidwithtenant", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getApplicationIs(
             @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
-//            @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id) {
         try {
             List<Long> applicationIs = tenantService.getApplicationIs();
 

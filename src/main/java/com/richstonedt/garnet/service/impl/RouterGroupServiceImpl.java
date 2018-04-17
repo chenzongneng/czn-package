@@ -14,7 +14,6 @@ import com.richstonedt.garnet.model.view.RouterGroupView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.RouterGroupService;
-import com.sun.javafx.iio.common.RoughScaler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,8 +121,6 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         List<RouterGroup> routerGroups = this.selectByCriteria(routerGroupCriteria);
         List<RouterGroup> routerGroupList = new ArrayList<>();
-        List<RouterGroupView> routerGroupViews = new ArrayList<>();
-        List<String> appCodes = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(routerGroups)) {
             //根据groupName进行去重

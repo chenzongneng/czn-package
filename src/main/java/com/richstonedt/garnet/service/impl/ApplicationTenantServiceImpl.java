@@ -15,8 +15,6 @@ public class ApplicationTenantServiceImpl extends BaseServiceImpl<ApplicationTen
 
     @Autowired
     private ApplicationTenantMapper applicationTenantMapper;
-    //private ApplicationTenantMapper applicationTenantMapper;
-
 
     @Override
     public BaseMapper getBaseMapper() {

@@ -99,6 +99,7 @@ var vm = new Vue({
                 groupName: null,
                 appCode: null
             };
+            vm.applicationNames = null;
 
             // 加载应用树
             $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
@@ -163,8 +164,18 @@ var vm = new Vue({
             obj.applicationIds = vm.applicationIds;
             obj.appCodeList = vm.appCodeList;
             // alert(JSON.stringify(obj));
-            if(vm.routerGroup.groupName === null){
-                alert("名称不能为空");
+            if(vm.routerGroup.groupName === null || $.trim(vm.routerGroup.groupName) == ""){
+                swal("", "名称不能为空", "error");
+                return;
+            }
+
+            if (vm.routerGroup.groupName.length > 30) {
+                swal("", "名称长度不能大于30", "error");
+                return;
+            }
+
+            if (vm.appCodeList == null || vm.appCodeList.length == 0) {
+                swal("", "请添加应用", "error")
                 return;
             }
 
@@ -180,7 +191,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage, "error");
+                    swal("", getExceptionMessage(response), "error");
                 }
             });
         },

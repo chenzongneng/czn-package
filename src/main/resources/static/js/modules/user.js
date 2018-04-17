@@ -265,15 +265,15 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "users?ids=" + userIds.toString(),
+                        url: baseURL + "users?loginUserId=" + userId +"&ids=" + userIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (response) {
+                            swal("删除失败!", getExceptionMessage(response), "error");
                         }
 
                     });
@@ -295,7 +295,6 @@ var vm = new Vue({
             if (!vm.checkValue()) {
                 return;
             }
-
 
             //获取选择的租户
             for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {

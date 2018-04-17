@@ -25,6 +25,8 @@ var userId = localStorage.getItem("userId");
 
 function getExceptionMessage(value) {
 
+    console.log("getExceptionMessage: " + JSON.stringify(value));
+
     var exception = value.responseJSON.data.errorResponseMessage;
     var message = exception.match(/java.lang.RuntimeException:(.*)/)
     if (message != null) {
@@ -33,6 +35,21 @@ function getExceptionMessage(value) {
         message = "操作失败，请检查您的参数是否正确";
     }
     return message;
+}
+
+function checkValueNull(value) {
+
+    if (value == null || value.length == 0) {
+        return false;
+    }
+
+    for (var i = 0; i < value.length; i++) {
+        if (value[i] == null) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /** jquery全局配置 */

@@ -132,24 +132,14 @@ public class UserController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/users", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteUsers(
+            @ApiParam(value = "登录用户id", required = true) @RequestParam(value = "loginUserId") Long loginUserId,
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
-
-//            for (String userId:
-//                    ids.split(",")) {
-//                UserView userView = new UserView();
-//                User user  = new User();
-//                user.setId(Long.parseLong(userId));
-//                userView.setUser(user);
-//                userService.deleteUser(userView);
-//            }
-
-            System.out.println(ids);
 
             for (String id : ids.split(",")) {
                 User user = new User();
                 user.setId(Long.parseLong(id));
-                userService.updateStatusById(user);
+                userService.updateStatusById(user, loginUserId);
             }
 
             // 封装返回信息
@@ -251,7 +241,6 @@ public class UserController {
             userParm.setPageNumber(pageNumber);
             PageUtil result = userService.queryUsersByParms(userParm);
             // 封装返回信息
-//            GarnetMessage<PageUtil> garnetMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
@@ -282,20 +271,6 @@ public class UserController {
             response.setHeader("accessToken", loginMessage.getAccessToken());
             response.setHeader("refreshToken", loginMessage.getRefreshToken());
 
-
-//            if (loginMessage.getCode() == 200) {
-//                //登录成功
-//                request.getRequestDispatcher("url").forward(request, response);
-//
-//            } else if (loginMessage.getCode() == 401) {
-//                //拒绝访问，用户不存在
-//                //重定向
-//                response.sendRedirect("url");
-//            } else if (loginMessage.getCode() == 403) {
-//                //账号或密码错误
-//            }
-
-            // 设置http的headers
             return new ResponseEntity<>(loginMessage, HttpStatus.OK);
         } catch (Throwable t) {
             error = t.getMessage();
@@ -441,7 +416,6 @@ public class UserController {
                 kaptchaMap.remove(oldTime);
             }
             kaptchaMap.put(nowTime, text);
-            System.out.println(LocalTime.now() + " TEST:kaptchaMap:  " + kaptchaMap);
             // transform to byte
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             ImageIO.write(image, "jpg", stream);

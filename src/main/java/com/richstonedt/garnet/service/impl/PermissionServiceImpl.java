@@ -174,10 +174,10 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     @Override
     public PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm) {
 
-        Permission permission = permissionParm.getPermission();
         PermissionCriteria permissionCriteria = new PermissionCriteria();
         PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
-        criteria.andStatusEqualTo(1); //查询没被删除的
+        //查询没被删除的 permission
+        criteria.andStatusEqualTo(1);
 
         if (!StringUtils.isEmpty(permissionParm.getUserId())) {
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
@@ -198,13 +198,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
             criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
         }
 
-//        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
-//            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
-//        }
-//        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
-//            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
-//        }
-
         PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
         List<Permission> permissions = this.selectByCriteria(permissionCriteria);
         PageInfo<Permission> permissionPageInfo = new PageInfo<Permission>(permissions);
@@ -214,7 +207,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
     @Override
     public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm) {
-        Permission permission = permissionParm.getPermission();
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
         PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
@@ -239,13 +231,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
             criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
         }
-
-//        if (!ObjectUtils.isEmpty(permissionParm.getApplicationId())) {
-//            permissionCriteria.createCriteria().andApplicationIdEqualTo(permissionParm.getApplicationId());
-//        }
-//        if (!ObjectUtils.isEmpty(permissionParm.getTenantId())) {
-//            permissionCriteria.createCriteria().andTenantIdEqualTo(permissionParm.getTenantId());
-//        }
 
         PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
 

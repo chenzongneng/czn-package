@@ -240,18 +240,23 @@ var vm = new Vue({
             obj.groupIds = groupIdList;
             obj.permissionIds = permissionIdList;
 
-            if(vm.role.name === null || vm.role.name === "") {
-                alert("角色名称不能为空");
+            if(vm.role.name == null || $.trim(vm.role.name) == "") {
+                swal("", "角色名称不能为空", "error");
                 return;
             }
-            if(vm.role.tenantId === null) {
-                alert("请选择租户");
+            if(vm.role.tenantId == null) {
+                swal("", "请选择租户", "error");
                 return;
             }
-            if(vm.role.applicationId === null) {
-                alert("请选择应用");
+            if(vm.role.applicationId == null) {
+                swal("", "请选择应用", "error");
                 return;
             }
+
+            if (vm.role.name.length > 30) {
+                swal("", "角色名称长度不能大于30", "");
+            }
+
             $.ajax({
                 type: vm.role.id === null ? "POST" : "PUT",
                 url: baseURL + "roles",
@@ -331,12 +336,12 @@ var vm = new Vue({
         initTree:function () {
         },
         /** 查询当前用户信息 */
-        getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
-                // vm.currentUser = response;
-                currentUser = response;
-            });
-        },
+        // getCurrentUser: function () {
+        //     $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+        //         // vm.currentUser = response;
+        //         currentUser = response;
+        //     });
+        // },
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;
@@ -406,6 +411,6 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
     }
 });

@@ -78,7 +78,6 @@ public class ExcelController {
             }
             return new ResponseEntity<>("Import Excel Success", HttpStatus.OK);
         } catch (Exception e) {
-//            System.out.println("excel error == " + e.toString());
             String error = "Import Excel Fail";
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(e.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, e);
@@ -91,14 +90,12 @@ public class ExcelController {
                 }
             }
         }
-//        return null;
     }
 
     private ResponseEntity<?> upload(HttpServletRequest request, HttpServletResponse response, ModelMap map, String type) {
         MultipartHttpServletRequest mhs = (MultipartHttpServletRequest) request;
         MultipartFile file = mhs.getFile("file");
         ServletContext application = request.getSession().getServletContext();
-//        System.out.println("pic url: " + application.getRealPath("/"));
         LOG.info("pic url: " + application.getRealPath("/"));
         String savePath = GarnetContants.SAVE_PATH + "/";
         String filePath = "images/" + type + "/";
@@ -121,16 +118,13 @@ public class ExcelController {
                 filePath = filePath + "upload_resource";
                 LOG.info("上传文件： " + filePath);
                 FileUtils.writeByteArrayToFile(new File(savePath + filePath), file.getBytes());
-//                System.out.println(filePath);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         FileView fileVo = new FileView();
         fileVo.setFilePath(filePath);
-//        System.out.println(fileVo.getFilePath());
         try {
-//              return fileVo;
             return new ResponseEntity<>(fileVo, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to upload file ! upload type: " + type;

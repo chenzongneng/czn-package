@@ -264,9 +264,13 @@ var vm = new Vue({
             //change by ming
             var LoginUserId = localStorage.getItem("userId");
 
-            if(vm.group.name === null || vm.group.name === ""){
-                alert("部门名称不能为空");
+            if(vm.group.name == null || $.trim(vm.group.name) == ""){
+                swal("", "组名称不能为空", "error");
                 return;
+            }
+
+            if (vm.group.name.length > 30) {
+                swal("", "组名称不能为空", "error");
             }
 
             // 获取用户树选择的用户
@@ -422,7 +426,7 @@ var vm = new Vue({
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                 userTree.expandAll(true);
 
-                for (i = 0; i<response.length; i++) {
+                for (var i = 0; i<response.length; i++) {
                     var userId1 = JSON.stringify(response[i].id);
                     if (userId1 == userId) {
                     //勾选登录用户

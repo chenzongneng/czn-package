@@ -23,12 +23,33 @@ public class LoginMessage {
 
     private int code;
 
+    @ApiModelProperty(value = "资源列表")
     private List<Resource> resourceList;
 
-    @ApiModelProperty(value = "资源类型配置列表")
+    @ApiModelProperty(value = "资源列表readonly组")
+    private List<Resource> resourceListWithReadlyOnly;
 
+    @ApiModelProperty(value = "资源列表edit组")
+    private List<Resource> getResourceListWithEdit;
+
+    @ApiModelProperty(value = "资源类型配置列表")
     private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
 
+    public List<Resource> getResourceListWithReadlyOnly() {
+        return resourceListWithReadlyOnly;
+    }
+
+    public void setResourceListWithReadlyOnly(List<Resource> resourceListWithReadlyOnly) {
+        this.resourceListWithReadlyOnly = resourceListWithReadlyOnly;
+    }
+
+    public List<Resource> getGetResourceListWithEdit() {
+        return getResourceListWithEdit;
+    }
+
+    public void setGetResourceListWithEdit(List<Resource> getResourceListWithEdit) {
+        this.getResourceListWithEdit = getResourceListWithEdit;
+    }
 
     public List<List<ResourceDynamicProperty>> getResourceDynamicPropertyList() {
         return resourceDynamicPropertyList;

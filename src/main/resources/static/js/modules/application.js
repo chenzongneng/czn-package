@@ -17,7 +17,7 @@ $(function () {
             {label: '应用名称', name: 'name', align: 'center', width: 80},
             {label: '应用标识', name: 'appCode', align: 'center', width: 80},
             {label: '所属公司', name: 'company', align: 'center', width: 80},
-            {label: 'refreshResourcesApi', name: 'refreshResourcesApi', align: 'center', width: 80},
+            {label: '刷新资源Api', name: 'refreshResourcesApi', align: 'center', width: 80},
             {label: '主机', name: 'hosts', align: 'center', width: 80},
             {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
             {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
@@ -149,7 +149,6 @@ var vm = new Vue({
             $("#selectModeId option[value='all']").remove();
             $("#selectModeId option[value='saas']").remove();
         } else if (localStorage.getItem("mode") == "all") {
-
         }
     },
     methods: {
@@ -282,8 +281,36 @@ var vm = new Vue({
             obj.tenantIds =vm.application.tenantIds;
             // alert(JSON.stringify(obj));
             var tenantIdList = vm.application.tenantIdList;
-            if(vm.application.name === null){
-                alert("应用名称不能为空");
+
+            if(vm.application.name == null || $.trim(vm.application.name) == ""){
+                // alert("应用名称不能为空");
+                swal("", "应用名称不能为空", "error");
+                return;
+            }
+
+            if (vm.application.appCode == null) {
+                swal("", "应用标识不能为空", "error");
+                return;
+            }
+
+
+            if (vm.application.company == null) {
+                swal("", "公司名称不能为空", "error");
+                return;
+            }
+
+            if (vm.application.refreshResourcesApi == null) {
+                swal("", "刷新资源Api不能为空", "error");
+                return;
+            }
+
+            if (vm.application.hosts == null) {
+                swal("", "主机不能为空", "error");
+                return;
+            }
+
+            if (vm.application.name.length > 30 || vm.application.appCode.length > 30 || vm.application.company > 30 || vm.application.refreshResourcesApi.length > 30 || vm.application.hosts.length > 30) {
+                swal("", "参数长度不能大于30", "error");
                 return;
             }
 
@@ -300,7 +327,7 @@ var vm = new Vue({
             } else if(mode == "paas") {
                 vm.application.serviceMode = "paas";
                 if (tenantIdList!=null && tenantIdList.length > 1) {
-                    swal("当前模式不能添加多个租户", "", "error");
+                    swal("", "当前模式不能添加多个租户", "error");
                     return;
                 }
             } else {
@@ -333,7 +360,7 @@ var vm = new Vue({
                 //         }
                 //     });
                 // });
-                swal("请选择正确模式", "", "error");
+                swal("", "请选择正确模式", "error");
                 return;
             }
 
@@ -395,10 +422,11 @@ var vm = new Vue({
             layer.open({
                 type: 1,
                 offset: '50px',
+                // maxmin: true,
                 skin: 'layui-layer-molv',
                 title: "选择租户",
                 area: ['300px', '450px'],
-                shade: 0,
+                shade: 0.3,
                 shadeClose: false,
                 content: jQuery("#tenantLayer"),
                 btn: ['确定', '取消'],

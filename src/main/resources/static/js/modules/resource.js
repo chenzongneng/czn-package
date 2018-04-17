@@ -393,9 +393,6 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
-            console.log("vm.actionEdit: " + JSON.stringify(vm.actionsEdit));
-            console.log("vm.actionReadonly: " + JSON.stringify(vm.actionsReadonly));
-
             if (vm.actionsEdit == true && vm.actionsReadonly == true) {
                 vm.resource.actions = "edit;readonly";
             }
@@ -406,8 +403,6 @@ var vm = new Vue({
                 vm.resource.actions = "readonly";
             }
 
-            console.log("actions == " + JSON.stringify(vm.resource.actions));
-
             var obj = new Object();
             vm.resource.updatedByUserName = localStorage.getItem("userName");
            // obj.typeId = vm.typeList.selectedType;
@@ -417,18 +412,26 @@ var vm = new Vue({
             obj.resource.applicationId = applicationList.appList.selectedApp;
 
 
-            if(vm.resource.name == null || vm.resource.name == "") {
+            if(vm.resource.name == null || $.trim(vm.resource.name) == "") {
                 swal("资源名称不能为空", "", "error");
                 return;
-            } else if(vm.resource.type == null || vm.resource.type == "") {
+            } else if(vm.resource.type == null || $.trim(vm.resource.type) == "") {
                 swal("资源类型不能为空", "", "error");
                 return;
-            } else if(vm.resource.path == null || vm.resource.path == "") {
+            } else if(vm.resource.path == null || $.trim(vm.resource.path) == "") {
                 swal("路径标识不能为空", "", "error");
                 return;
             }
 
-            console.log("resource actions == " + JSON.stringify(obj));
+            if (vm.resource.name.length > 30) {
+                swal("", "资源名称长度不能大于30", "error");
+                return;
+            }
+
+            if (vm.resource.path.length > 30) {
+                swal("", "路径标识长度不能大于30", "error");
+                return;
+            }
 
             $.ajax({
                 type: vm.resource.id === null ? "POST" : "PUT",

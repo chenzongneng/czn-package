@@ -110,11 +110,6 @@ public class PermissionController {
     public ResponseEntity<?> deletePermissions(
             @ApiParam(value = "权限ids，样例 - 1,2,3", required = true) @RequestParam(value = "ids") String ids) {
         try {
-//            List<Long> idslist = new ArrayList<>();
-//            for (String id:
-//                    ids.split(",")) {
-//                idslist.add(Long.parseLong(id));
-//            }
             for (String id : ids.split(",")) {
                 Permission permission = new Permission();
                 permission.setId(Long.parseLong(id));
@@ -217,7 +212,6 @@ public class PermissionController {
             permissionParm.setTenantId(tenantId);
             List<Permission> permissions = permissionService.queryPermissionByTenantId(permissionParm);
             // 封装返回信息
-//            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
             return new ResponseEntity<>(permissions, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

@@ -116,18 +116,6 @@ public class RoleController {
                 roleService.updateStatusById(role);
             }
 
-//            List<Long> idslist = new ArrayList<>();
-//            for (String id: ids.split(",")) {
-////                idslist.add(Long.parseLong(id));
-//                RoleView roleView = new RoleView();
-//                Role role = new Role();
-//                role.setId(Long.parseLong(id));
-//                roleView.setRole(role);
-//                roleService.deleteRole(roleView);
-//            }
-//            RoleCriteria roleCriteria = new RoleCriteria();
-//            roleCriteria.createCriteria().andIdIn(idslist);
-//            roleService.deleteByCriteria(roleCriteria);
             // 封装返回信息
             GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
@@ -149,7 +137,6 @@ public class RoleController {
 //            @ApiParam(value = "角色id", required = true) @PathVariable(value = "id") long id,
             @ApiParam(value = "角色信息", required = true) @RequestBody RoleView roleView) {
         try {
-//            roleView.getRole().setId(id);
             roleService.updateRole(roleView);
             // 封装返回信息
             GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, roleView);
@@ -169,13 +156,14 @@ public class RoleController {
     @RequestMapping(value = "/roles/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRole(
             @ApiParam(value = "角色id", required = true) @PathVariable(value = "id") long id) {
+        String message = "Failed to get entities!";
         try {
             final RoleView roleView = roleService.selectRoleWithGroupAndPermission(id);
             // 封装返回信息
             GarnetMessage<RoleView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, roleView);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
-            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            String error = message + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
@@ -193,20 +181,19 @@ public class RoleController {
             @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
+        String message = "Failed to get entities!";
         try {
             RoleParm roleParm = new RoleParm();
             roleParm.setUserId(userId);
-            //roleParm.setTenantId(tenantId);
             roleParm.setSearchName(searchName );
             roleParm.setPageNumber(pageNumber);
             roleParm.setPageSize(pageSize);
             PageUtil rolePageInfo = roleService.queryRolesByParms(roleParm);
 
             // 封装返回信息
-//            GarnetMessage<PageInfo<Role>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, rolePageInfo);
             return new ResponseEntity<>(rolePageInfo, HttpStatus.OK);
         } catch (Throwable t) {
-            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            String error = message + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
@@ -229,7 +216,6 @@ public class RoleController {
             roleParm.setTenantId(tenantId);
             List<Role> roles = roleService.queryRolesByTenantId(roleParm);
             // 封装返回信息
-//            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
             return new ResponseEntity<>(roles, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
@@ -245,14 +231,13 @@ public class RoleController {
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/roletree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoles() {
+            String message = "Failed to get entities!";
         try {
-
             List<Role> roles = roleService.queryRoles();
             // 封装返回信息
-//            GarnetMessage<PageInfo<Role>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, rolePageInfo);
             return new ResponseEntity<>(roles, HttpStatus.OK);
         } catch (Throwable t) {
-            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            String error =  message + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);

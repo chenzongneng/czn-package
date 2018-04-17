@@ -79,7 +79,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         }
 
         application.setId(IdGeneratorUtil.generateId());
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         application.setCreatedTime(currentTime);
         application.setModifiedTime(currentTime);
         this.insertSelective(application);
@@ -125,30 +125,19 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         //其余为正常选择
 
+        Application application = applicationView.getApplication();
         if ("".equals(applicationView.getTenantIds())) {
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicationView.getApplication().getId());
+            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
         } else if (!StringUtil.isEmpty(applicationView.getTenantIds())) {
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicationView.getApplication().getId());
+            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
             //如果saas模式，判断租户是否已被绑定
-            Application application = applicationView.getApplication();
             if (!ObjectUtils.isEmpty(application) && !StringUtils.isEmpty(application.getServiceMode()) && "saas".equals(application.getServiceMode())) {
-                List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(new ApplicationTenantCriteria());
-                List<Long> tenantIds = new ArrayList<>(); //数据库中已绑定的tenantId
-
-                for (ApplicationTenant applicationTenant : applicationTenants) {
-                    tenantIds.add(applicationTenant.getTenantId());
-                }
-                for (String tenantId : applicationView.getTenantIds().split(",")) {
-                    if (tenantIds.contains(Long.parseLong(tenantId))) {
-                        Tenant tenant = tenantService.selectByPrimaryKey(Long.parseLong(tenantId));
-                        throw new RuntimeException("租户" + tenant.getName() +"已被绑定");
-                    }
-                }
+                this.checkTenantIsBinded(applicationView);
             }
 
             //选择的租户未被绑定，完成更新
@@ -162,6 +151,25 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             }
         }
 
+    }
+
+    /**
+     * 检查租户是否已经绑定，如果已经绑定，抛出异常给前端
+     * @param applicationView
+     */
+    private void checkTenantIsBinded(ApplicationView applicationView) {
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(new ApplicationTenantCriteria());
+        List<Long> tenantIds = new ArrayList<>(); //数据库中已绑定的tenantId
+
+        for (ApplicationTenant applicationTenant : applicationTenants) {
+            tenantIds.add(applicationTenant.getTenantId());
+        }
+        for (String tenantId : applicationView.getTenantIds().split(",")) {
+            if (tenantIds.contains(Long.parseLong(tenantId))) {
+                Tenant tenant = tenantService.selectByPrimaryKey(Long.parseLong(tenantId));
+                throw new RuntimeException("租户" + tenant.getName() +"已被绑定");
+            }
+        }
     }
 
     @Override
@@ -191,7 +199,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     @Override
     public PageUtil queryApplicationsByParms(ApplicationParm applicationParm) {
 
-        Application application = applicationParm.getApplication();
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
         ApplicationCriteria.Criteria criteria = applicationCriteria.createCriteria();
 
@@ -219,25 +226,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             }
 
         }
-
-        //根据tenant id 获取user对应的应用
-//        if (!ObjectUtils.isEmpty(applicationParm.getTenantId())) {
-//            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-//            applicationTenantCriteria.createCriteria().andTenantIdEqualTo(applicationParm.getTenantId());
-//
-//            List<ApplicationTenant> applicationTenants = new ArrayList<ApplicationTenant>();
-//            applicationTenants.addAll(applicationTenantService.selectByCriteria(applicationTenantCriteria));
-//
-//            List<Long> applicationTenantIds = new ArrayList<Long>();
-//            for (ApplicationTenant applicationTenant : applicationTenants) {
-//                applicationTenantIds.add(applicationTenant.getApplicationId());
-//            }
-//
-//            if (applicationTenantIds.size() == 0) {
-//                applicationTenantIds.add(GarnetContants.NON_VALUE);
-//            }
-//            applicationCriteria.createCriteria().andIdIn(applicationTenantIds);
-//        }
 
         if (!ObjectUtils.isEmpty(applicationParm.getSearchName())) {
             criteria.andNameLike("%" + applicationParm.getSearchName() + "%");
@@ -298,11 +286,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             }
         }
 
-//        for (Tenant tenant : tenantPageInfo.getList()) {
-////            tenantIdList.add(tenant.getId());
-//            tenantNameList.add(tenant.getName());
-//        }
-
         applicationView.setTenantIdList(tenantIdList);
         applicationView.setTenantNameList(tenantNameList);
 
@@ -320,18 +303,8 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             //删除关联外键
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
-            List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
-            //删除关联着此应用的租户
-//            if (!CollectionUtils.isEmpty(applicationTenants)) {
-//                for (ApplicationTenant applicationTenant : applicationTenants) {
-//                    Long tenantId = applicationTenant.getTenantId();
-//                    Tenant tenant = new Tenant();
-//                    tenant.setId(tenantId);
-//                    tenantService.updateStatusById(tenant);
-//                }
-//            }
         }
     }
 

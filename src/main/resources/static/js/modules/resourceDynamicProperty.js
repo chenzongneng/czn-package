@@ -209,8 +209,13 @@ var vm = new Vue({
             obj.resourceDynamicProperty = vm.resourceDynamicProperty;
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
-            if(vm.resourceDynamicProperty.type == null || vm.resourceDynamicProperty.type == "") {
-                swal("资源类型配置名称不能为空", "", "error");
+            if(vm.resourceDynamicProperty.type == null || $.trim(vm.resourceDynamicProperty.type) == "") {
+                swal("", "资源类型配置名称不能为空", "error");
+                return;
+            }
+
+            if (vm.resourceDynamicProperty.type.length > 30) {
+                swal("", "资源类型配置名称长度不能大于30", "error");
                 return;
             }
 

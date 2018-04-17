@@ -62,10 +62,6 @@ public class RouterGroupController {
             RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
             routerGroupCriteria.createCriteria().andGroupNameEqualTo(groupName);
             List<RouterGroup> routerGroups = routerGroupService.selectByCriteria(routerGroupCriteria);
-            // 设置http的headers
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setLocation(ucBuilder.path("/api/v1/routergroups/{id}")
-//                    .buildAndExpand(id).toUri());
             // 封装返回信息
             GarnetMessage<List<RouterGroup>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_INSERT_SUCCESS, routerGroups);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.CREATED);
@@ -183,7 +179,6 @@ public class RouterGroupController {
             routerGroupParm.setPageSize(pageSize);
             PageUtil rolePageInfo = routerGroupService.queryRouterGroupByParms(routerGroupParm);
             // 封装返回信息
-//            GarnetMessage<PageUtil> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, rolePageInfo);
             return new ResponseEntity<>(rolePageInfo, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

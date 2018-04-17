@@ -173,7 +173,6 @@ public class SystemConfigController {
             PageUtil pageInfo = systemConfigService.querySystemConfigsByParms(systemConfigParm);
 
             // 封装返回信息
-//            GarnetMessage<Page<SystemConfigView>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, systemConfigViews);
             return new ResponseEntity<>(pageInfo, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

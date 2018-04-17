@@ -78,14 +78,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         this.insertSelective(tenant);
         this.dealForgenKeyApplications(tenantView);
         this.dealForgenKeyUsers(tenantView);
-        //如果用户添加不为空，添加记录到中间表
-//        if(!ObjectUtils.isEmpty(tenantView.getUserTenants())){
-//            for(UserTenant userTenant : tenantView.getUserTenants()){
-//                userTenant.setId(IdGeneratorUtil.generateId());
-//                userTenant.setTenantId(tenant.getId());
-//                userTenantService.insertSelective(userTenant);
-//            }
-//        }
+
         return tenant.getId();
     }
 
@@ -131,21 +124,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
             //如果paas模式，判断应用是否已被绑定
-            Tenant tenant = tenantView.getTenant();
-            if (!ObjectUtils.isEmpty(tenant) && !StringUtils.isEmpty(tenant.getServiceMode()) && "paas".equals(tenant.getServiceMode())) {
-                List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(new ApplicationTenantCriteria());
-                List<Long> applicationIds = new ArrayList<>(); //数据库中已绑定的appId
+            this.checkApplicationBinked(tenantView);
 
-                for (ApplicationTenant applicationTenant : applicationTenants) {
-                    applicationIds.add(applicationTenant.getApplicationId());
-                }
-                for (String appId : tenantView.getAppIds().split(",")) {
-                    if (applicationIds.contains(Long.parseLong(appId))) {
-                        Application application = applicationService.selectByPrimaryKey(Long.parseLong(appId));
-                        throw new RuntimeException("应用" + application.getName() +"已被绑定");
-                    }
-                }
-            }
             //应用没被绑定，完成update
             for (String appId:tenantView.getAppIds().split(",")) {
                 ApplicationTenant applicationTenant = new ApplicationTenant();
@@ -157,6 +137,28 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             }
         }
 
+    }
+
+    /**
+     * 检查应用是否已经被绑定
+     * @param tenantView
+     */
+    private void checkApplicationBinked(TenantView tenantView) {
+        Tenant tenant = tenantView.getTenant();
+        if (!ObjectUtils.isEmpty(tenant) && !StringUtils.isEmpty(tenant.getServiceMode()) && "paas".equals(tenant.getServiceMode())) {
+            List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(new ApplicationTenantCriteria());
+            List<Long> applicationIds = new ArrayList<>(); //数据库中已绑定的appId
+
+            for (ApplicationTenant applicationTenant : applicationTenants) {
+                applicationIds.add(applicationTenant.getApplicationId());
+            }
+            for (String appId : tenantView.getAppIds().split(",")) {
+                if (applicationIds.contains(Long.parseLong(appId))) {
+                    Application application = applicationService.selectByPrimaryKey(Long.parseLong(appId));
+                    throw new RuntimeException("应用" + application.getName() +"已被绑定");
+                }
+            }
+        }
     }
 
 
@@ -192,7 +194,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
         TenantCriteria tenantCriteria = new TenantCriteria();
         TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
-//        criteria.andStatusEqualTo(1);
+        criteria.andStatusEqualTo(1);
 
         if (!StringUtils.isEmpty(tenantParm.getSearchName())) {
             criteria.andNameLike("%" + tenantParm.getSearchName() + "%");
@@ -200,7 +202,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
         //根据userId获取用户所有的租户
         if(!ObjectUtils.isEmpty(tenantParm.getUserId())){
-
             ReturnTenantIdView returnTenantIdView =userService.getTenantIdsByUserId(tenantParm.getUserId());
             List<Long> userTenantIds = returnTenantIdView.getTenantIds();
 
@@ -211,7 +212,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(tenantParm.getUserId()))) {
                 criteria.andIdIn(userTenantIds);
             }
-
         }
 
         //根据appclition获取租户
@@ -231,16 +231,18 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             criteria.andIdIn(applicationTenantIds);
         }
 
-        if (StringUtils.isEmpty(tenantParm.getMode())) {
-            criteria.andStatusEqualTo(1);
-        }  else if (SERVICE_MODE_SAAS.equals(tenantParm.getMode())) {
-            criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
-        } else if (SERVICE_MODE_PAAS.equals(tenantParm.getMode())) {
-            criteria.andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
-        } else if (SERVICE_MODE_ALL.equals(tenantParm.getMode())) {
-            criteria.andStatusEqualTo(1);
-        } else {
-            return new PageUtil(null, (int)this.countByCriteria(tenantCriteria) ,tenantParm.getPageSize(), tenantParm.getPageNumber());
+        switch (tenantParm.getMode()) {
+            case SERVICE_MODE_SAAS :
+                criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
+                break;
+            case SERVICE_MODE_PAAS :
+                criteria.andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
+                break;
+            case SERVICE_MODE_ALL :
+                criteria.andStatusEqualTo(1);
+                break;
+            default:
+                return new PageUtil(null, (int)this.countByCriteria(tenantCriteria) ,tenantParm.getPageSize(), tenantParm.getPageNumber());
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(tenantCriteria), (int)this.countByCriteria(tenantCriteria) ,tenantParm.getPageSize() ,tenantParm.getPageNumber());
@@ -253,13 +255,6 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         Tenant tenant = this.selectByPrimaryKey(tenantId);
         TenantView tenantView = new TenantView();
         tenantView.setTenant(tenant);
-
-//        ApplicationParm applicationParm = new ApplicationParm();
-//        applicationParm.setTenantId(tenantId);
-//        applicationParm.setPageNumber(1);
-//        applicationParm.setPageSize(Integer.MAX_VALUE);
-//        applicationParm.setTenantId(tenantId);
-//        PageUtil<Application> applicationPage = applicationService.queryApplicationsByParms(applicationParm);
 
         //根据tenantId拿应用
         ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
@@ -293,27 +288,16 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             tenantView.setUserName(user.getUserName());
         }
 
-//        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-//
-//        applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
-//
-//        List<ApplicationTenant> applicationTenants = new ArrayList<>();
-//
-//        applicationTenants.addAll(applicationTenantService.selectByCriteria(applicationTenantCriteria));
-//
-//        List<Long> applicationIds = new ArrayList<>();
-//
-//        for (ApplicationTenant:
-//                applicationTenants ) {
-//
-//        }
-
         return tenantView;
     }
 
     @Override
     public void updateStatusById(Tenant tenant) {
-        Long currentTime = new Date().getTime();
+        if (tenant.getId().longValue() == GarnetContants.GARNET_TENANT_ID) {
+            throw new RuntimeException("不能删除超级租户");
+        }
+
+        Long currentTime = System.currentTimeMillis();
         tenant.setModifiedTime(currentTime);
         tenant.setStatus(0);
         this.updateByPrimaryKeySelective(tenant);
@@ -337,7 +321,10 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         return applicationIds;
     }
 
-    //根据userName 处理关联的用户
+    /**
+     * 根据userName 处理关联的用户
+     * @param tenantView
+     */
     private void dealForgenKeyUsers(TenantView tenantView) {
         if (!ObjectUtils.isEmpty(tenantView.getUserName())) {
             UserCriteria userCriteria = new UserCriteria();
@@ -346,7 +333,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             if (CollectionUtils.isEmpty(users)) {
                 throw new RuntimeException("此用户不存在");
             } else {
-                User user = users.get(0); // username是唯一的
+                // username是唯一的
+                User user = users.get(0);
                 if (user.getStatus() == null || user.getStatus() == 0) {
                     throw new RuntimeException("此用户已被冻结");
                 }
@@ -357,26 +345,9 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                     userTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
                     userTenants = userTenantService.selectByCriteria(userTenantCriteria);
                 }
-                //如果该租户已有其它外键关联，先删后加
-//                if (!CollectionUtils.isEmpty(userTenants)) {
-//                    userTenantService.deleteByCriteria(userTenantCriteria);
-//                }
+
                 //如果该租户已经关联此用户，抛异常
-                UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
-                userTenantCriteria1.createCriteria().andUserIdEqualTo(user.getId());
-                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
-                if (!CollectionUtils.isEmpty(userTenants1)) {
-                    for (UserTenant userTenant : userTenants1) {
-                        if (userTenant.getTenantId().longValue() == tenantView.getTenant().getId().longValue() && userTenant.getUserId().longValue() == user.getId().longValue()) {
-                            throw new RuntimeException("您已经添加过此用户");
-                        }
-                    }
-
-                }
-
-//                if (!CollectionUtils.isEmpty(userTenants1)) {
-//                    throw new RuntimeException("此用户已被添加");
-//                }
+                checkUserBinked(tenantView, user);
 
                 UserTenant userTenant = new UserTenant();
                 userTenant.setUserId(user.getId());
@@ -384,6 +355,25 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                 userTenant.setId(IdGeneratorUtil.generateId());
                 userTenantService.insertSelective(userTenant);
             }
+        }
+    }
+
+    /**
+     * 检查租户是否已经关联用户
+     * @param tenantView
+     * @param user
+     */
+    private void checkUserBinked(TenantView tenantView, User user) {
+        UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
+        userTenantCriteria1.createCriteria().andUserIdEqualTo(user.getId());
+        List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
+        if (!CollectionUtils.isEmpty(userTenants1)) {
+            for (UserTenant userTenant : userTenants1) {
+                if (userTenant.getTenantId().longValue() == tenantView.getTenant().getId().longValue() && userTenant.getUserId().longValue() == user.getId().longValue()) {
+                    throw new RuntimeException("您已经添加过此用户");
+                }
+            }
+
         }
     }
 }

@@ -12,7 +12,6 @@ import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.mapping.RedisPersistentProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

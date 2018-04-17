@@ -61,12 +61,11 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     @Override
     public Long insertGroup(GroupView groupView) {
 
-        //Group group = groupView.getGroup();
         Group group = groupView.getGroup();
 
         group.setId(IdGeneratorUtil.generateId());
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
 
         group.setCreatedTime(currentTime);
 
@@ -74,14 +73,11 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
         this.insertSelective(group);
 
-        System.out.println("创建组");
 
         //插入到组-用户中间表
         if (!ObjectUtils.isEmpty(groupView.getUserIds())) {
             List<Long> userIds = groupView.getUserIds();
             for (Long userId : userIds) {
-
-                System.out.println("创建组userId："+userId);
                 GroupUser groupUser = new GroupUser();
                 groupUser.setId(IdGeneratorUtil.generateId());
                 groupUser.setUserId(userId);
@@ -89,8 +85,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupUserService.insertSelective(groupUser);
             }
         }
-
-        System.out.println("创建组后");
 
         //插入到组-角色中间表
         if (!ObjectUtils.isEmpty(groupView.getRoleIds())) {
@@ -104,31 +98,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             }
         }
 
-        /*if (!ObjectUtils.isEmpty(groupView.getGroupUsers())) {
-
-            for (GroupUser groupUser :
-                    groupView.getGroupUsers()) {
-
-                groupUser.setId(IdGeneratorUtil.generateId());
-                groupUser.setGroupId(group.getId());
-                groupUserService.insertSelective(groupUser);
-
-            }
-        }
-
-        if (!ObjectUtils.isEmpty(groupView.getGroupRoles())) {
-
-            for (GroupRole groupRole : groupView.getGroupRoles()
-                    ) {
-
-                groupRole.setId(IdGeneratorUtil.generateId());
-                groupRole.setGroupId(group.getId());
-                groupRoleService.insertSelective(groupRole);
-            }
-
-
-        }*/
-
         return group.getId();
 
 
@@ -138,7 +107,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     public void updateGroup(GroupView groupView) {
 
         Group group = groupView.getGroup();
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         group.setModifiedTime(currentTime);
         this.updateByPrimaryKeySelective(group);
 
@@ -180,42 +149,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupRoleService.insertSelective(groupRole);
             }
         }
-
-        //更新组-角色中间表
-
-        /*if (!ObjectUtils.isEmpty(groupView.getGroupUsers())) {
-
-            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-            groupUserCriteria.createCriteria().andGroupIdEqualTo(group.getId());
-            groupUserService.deleteByCriteria(groupUserCriteria);
-
-            for (GroupUser groupUser :
-                    groupView.getGroupUsers()) {
-
-                groupUser.setId(IdGeneratorUtil.generateId());
-                groupUser.setGroupId(group.getId());
-                groupUserService.insertSelective(groupUser);
-
-            }
-        }
-
-        if (!ObjectUtils.isEmpty(groupView.getGroupRoles())) {
-
-            GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
-            groupRoleCriteria.createCriteria().andGroupIdEqualTo(group.getId());
-            groupRoleService.deleteByCriteria(groupRoleCriteria);
-
-            for (GroupRole groupRole : groupView.getGroupRoles()
-                    ) {
-
-                groupRole.setId(IdGeneratorUtil.generateId());
-                groupRole.setGroupId(group.getId());
-                groupRoleService.insertSelective(groupRole);
-            }
-
-
-        }*/
-
 
     }
 
@@ -294,7 +227,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     @Override
     public PageUtil queryGroupsByParms(GroupParm groupParm) {
 
-        Group group = groupParm.getGroup();
         GroupCriteria groupCriteria = new GroupCriteria();
         GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
         //只查询状态为1，即可见的
@@ -306,62 +238,51 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         }
 
         if(!ObjectUtils.isEmpty(groupParm.getUserId())){
-
             //根据userId 查tenantId
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(groupParm.getUserId());
-            List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
             //如果不是garnet下的超级管理员，根据tenantId返回，否则返回所有group
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(groupParm.getUserId()))) {
-                //根据tenantIds 查userIds
-//                List<Long> userIds = new ArrayList<>();
-//                UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
-//                userTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
-//                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
-//                if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
-//                    for (UserTenant userTenant : userTenants1) {
-//                        userIds.add(userTenant.getUserId());
-//                    }
-//                }
-//
-//                //根据userIds 查group列表
-////                GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-////                groupUserCriteria.createCriteria().andUserIdIn(userIds);
-////                List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
-////                if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
-////                    List<Long> groupIds = new ArrayList<>();
-////                    for (GroupUser groupUser : groupUsers) {
-////                        groupIds.add(groupUser.getGroupId());
-////                    }
-////                    criteria.andIdIn(groupIds);
-////                } else {
-////                    return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
-////                }
-
                 //根据userId 查group列表
-                GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-                groupUserCriteria.createCriteria().andUserIdEqualTo(groupParm.getUserId());
-                List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
-                if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
-                    List<Long> groupIds = new ArrayList<>();
-                    for (GroupUser groupUser : groupUsers) {
-                        groupIds.add(groupUser.getGroupId());
-                    }
+                List<Long> groupIdList = this.getGroupsByUserId(groupParm.getUserId());
 
-                    List<Long> groupIdList = commonService.dealGroupIdsIfGarnet(groupParm.getUserId(), groupIds);
-
-                    criteria.andIdIn(groupIdList);
-
-                } else {
+                if (CollectionUtils.isEmpty(groupIdList) || groupIdList.size() == 0) {
                     return new PageUtil(null, 0 ,groupParm.getPageSize(), groupParm.getPageNumber());
+                } else {
+                    criteria.andIdIn(groupIdList);
                 }
-
             }
-
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria) ,groupParm.getPageSize(), groupParm.getPageNumber());
         return result;
+    }
+
+    /**
+     * 根据userId查询groupId列表
+     * @param userId
+     * @return
+     */
+    private List<Long> getGroupsByUserId(Long userId) {
+        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<GroupUser> groupUsers = groupUserService.selectByCriteria(groupUserCriteria);
+        if (!CollectionUtils.isEmpty(groupUsers) && groupUsers.size() > 0) {
+            List<Long> groupIds = new ArrayList<>();
+            for (GroupUser groupUser : groupUsers) {
+                groupIds.add(groupUser.getGroupId());
+            }
+
+            List<Long> groupIdList = commonService.dealGroupIdsIfGarnet(userId, groupIds);
+
+            if (groupIdList.size() == 0) {
+                groupIdList.add(GarnetContants.NON_VALUE);
+            }
+            return groupIdList;
+        } else {
+            return new ArrayList<>();
+        }
+
     }
 
     @Override

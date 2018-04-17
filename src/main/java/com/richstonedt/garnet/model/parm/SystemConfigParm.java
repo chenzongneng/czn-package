@@ -10,8 +10,6 @@ public class SystemConfigParm extends BaseParm{
 
     private SystemConfig systemConfig;
 
-    private String searchName;
-
     private Integer modeId;
 
     public SystemConfig getSystemConfig() {
@@ -20,14 +18,6 @@ public class SystemConfigParm extends BaseParm{
 
     public void setSystemConfig(SystemConfig systemConfig) {
         this.systemConfig = systemConfig;
-    }
-
-    public String getSearchName() {
-        return searchName;
-    }
-
-    public void setSearchName(String searchName) {
-        this.searchName = searchName;
     }
 
     public Integer getModeId() {

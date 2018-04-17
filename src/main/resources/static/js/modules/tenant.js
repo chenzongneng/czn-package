@@ -147,8 +147,6 @@ var vm = new Vue({
         } else if (localStorage.getItem("mode") == "paas") {
             $("#selectModeId option[value='all']").remove();
             $("#selectModeId option[value='saas']").remove();
-        } else if (localStorage.getItem("mode") == "all") {
-
         }
 
     },
@@ -248,8 +246,8 @@ var vm = new Vue({
                             swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (response) {
+                            swal("删除失败!", getExceptionMessage(response), "error");
                         }
 
                     });
@@ -274,8 +272,8 @@ var vm = new Vue({
             var appIdList = vm.tenant.appIdList;
 
             // alert(JSON.stringify(obj));
-            if(vm.tenant.name === null){
-                alert("租户名称不能为空");
+            if(vm.tenant.name == null || $.trim(vm.tenant.name) == ""){
+                swal("", "租户名称不能为空", "error");
                 return;
             }
 
@@ -294,7 +292,7 @@ var vm = new Vue({
             if(mode == "saas") {  //saas
                 vm.tenant.serviceMode = "saas";
                 if (appIdList.length > 1) {
-                    swal("当前模式不能添加多个应用", "", "error");
+                    swal("", "当前模式不能添加多个应用", "error");
                     return;
                 }
                 // console.log("my modeId is : " + vm.modeId);
@@ -325,7 +323,7 @@ var vm = new Vue({
                 //         }
                 //     });
                 // });
-                swal("请选择正确模式", "", "error");
+                swal("", "请选择正确模式", "error");
                 return;
             }
 
@@ -402,7 +400,7 @@ var vm = new Vue({
                 skin: 'layui-layer-molv',
                 title: "选择应用",
                 area: ['300px', '450px'],
-                shade: 0,
+                shade: 0.3,
                 shadeClose: false,
                 content: jQuery("#appLayer"),
                 btn: ['确定', '取消'],

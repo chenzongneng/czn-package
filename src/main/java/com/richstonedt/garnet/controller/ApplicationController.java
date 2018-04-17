@@ -10,6 +10,7 @@ import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.service.ApplicationService;
 import io.swagger.annotations.*;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,17 +112,13 @@ public class ApplicationController {
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         String error = "Failed to delete entities! " + MessageDescription.OPERATION_DELETE_FAILURE;
         try {
-            List<Long> idslist = new ArrayList<>();
+
             for (String id : ids.split(",")) {
                 Application application = new Application();
                 application.setId(Long.parseLong(id));
                 applicationService.updateStatusById(application);
-//                idslist.add(Long.parseLong(id));
             }
 
-//            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-//            applicationCriteria.createCriteria().andIdIn(idslist);
-//            applicationService.deleteByCriteria(applicationCriteria);
             // 封装返回信息
             GarnetMessage<ApplicationView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
@@ -199,12 +196,10 @@ public class ApplicationController {
             applicationParm.setPageNumber(pageNumber);
             applicationParm.setPageSize(pageSize);
             applicationParm.setSearchName(searchName);
-//            applicationParm.setModeId(modeId);
             applicationParm.setMode(mode);
             PageUtil applications = applicationService.queryApplicationsByParms(applicationParm);
 
             // 封装返回信息
-//            GarnetMessage<PageInfo<Application>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, applications);
             return new ResponseEntity<>(applications, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
@@ -225,7 +220,6 @@ public class ApplicationController {
         try {
             boolean b = applicationService.hasRelated(ids);
             // 封装返回信息
-//            GarnetMessage<PageInfo<Application>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, applications);
             return new ResponseEntity<>(b, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
