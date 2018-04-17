@@ -255,7 +255,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     @Override
     public void updateStatusById(Permission permission) {
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         permission.setModifiedTime(currentTime);
         permission.setStatus(0);
         this.updateByPrimaryKeySelective(permission);

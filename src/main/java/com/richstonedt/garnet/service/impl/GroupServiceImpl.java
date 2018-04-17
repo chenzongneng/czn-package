@@ -353,14 +353,14 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                     criteria.andIdIn(groupIdList);
 
                 } else {
-                    return new PageUtil(null, 0,groupParm.getPageNumber() ,groupParm.getPageSize());
+                    return new PageUtil(null, 0 ,groupParm.getPageSize(), groupParm.getPageNumber());
                 }
 
             }
 
         }
 
-        PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria),groupParm.getPageNumber() ,groupParm.getPageSize());
+        PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria) ,groupParm.getPageSize(), groupParm.getPageNumber());
         return result;
     }
 

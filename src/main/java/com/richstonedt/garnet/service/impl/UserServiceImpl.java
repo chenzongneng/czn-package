@@ -108,7 +108,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         userCredential.setUserId(user.getId());
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
 
         userCredential.setCreatedTime(currentTime);
 
@@ -172,21 +172,21 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         if (!userCredential.getExpiredDateTime().equals(userView.getExpiredDateTime())) {
 
             userCredential.setExpiredDateTime(userView.getExpiredDateTime());
-            userCredential.setModifiedTime(new Date().getTime());
+            userCredential.setModifiedTime(System.currentTimeMillis());
 
         }
 
         if (!userCredential.getCredential().equals(userView.getPassword())) {
 
             userCredential.setCredential(userView.getPassword());
-            userCredential.setModifiedTime(new Date().getTime());
+            userCredential.setModifiedTime(System.currentTimeMillis());
         }
 
         userCredentialService.updateByPrimaryKeySelective(userCredential);
 
         //更新User表
         User user = userView.getUser();
-        user.setModifiedTime(new Date().getTime());
+        user.setModifiedTime(System.currentTimeMillis());
         this.updateByPrimaryKeySelective(user);
 
         //User - tenant中间表
@@ -305,6 +305,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                         if (userId.longValue() != GarnetContants.GARNET_USER_ID) {
                             userIdList.add(userId);
                         }
+                    }
+                    if(userIdList.size()==0){
+                        userIdList.add(GarnetContants.NON_VALUE);
                     }
                     criteria.andIdIn(userIdList);
                 } else {
@@ -469,7 +472,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Override
     public void updateStatusById(User user) {
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         user.setModifiedTime(currentTime);
         user.setStatus(0);
         this.updateByPrimaryKeySelective(user);
@@ -494,7 +497,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             for (UserTenant userTenant : userTenants) {
                 Long userId = userTenant.getUserId();
                 User user = this.selectByPrimaryKey(userId);
-                if (!ObjectUtils.isEmpty(user)) users.add(user);
+                if (!ObjectUtils.isEmpty(user)) {
+                    users.add(user);
+                }
             }
         }
 

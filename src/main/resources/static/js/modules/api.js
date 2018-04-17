@@ -253,7 +253,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -276,11 +276,11 @@ var vm = new Vue({
             });
         },
         /** 查询当前用户信息 */
-        getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
-                vm.currentUser = response;
-            });
-        },
+        // getCurrentUser: function () {
+        //     $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+        //         vm.currentUser = response;
+        //     });
+        // },
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;

@@ -99,11 +99,11 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
         applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
         Application application1 = this.selectSingleByCriteria(applicationCriteria);
-        if (!ObjectUtils.isEmpty(application1)) {
+        if (!ObjectUtils.isEmpty(application1) && application.getId().longValue() != application1.getId().longValue()) {
             throw new RuntimeException("appCode: " + appCode + " 已经存在");
         }
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         application.setModifiedTime(currentTime);
         this.updateByPrimaryKeySelective(application);
 
@@ -311,7 +311,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     @Override
     public void updateStatusById(Application application) {
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         application.setModifiedTime(currentTime);
         application.setStatus(0);
         this.updateByPrimaryKeySelective(application);

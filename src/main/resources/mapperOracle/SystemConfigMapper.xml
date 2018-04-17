@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.richstonedt.garnet.mapper.SystemConfigMapper">
+  <resultMap id="BaseResultMap" type="com.richstonedt.garnet.model.SystemConfig">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PARAMETER" jdbcType="VARCHAR" property="parameter" />
+    <result column="VALUE" jdbcType="VARCHAR" property="value" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <where>
+      <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    ID, PARAMETER, VALUE
+  </sql>
+  <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.SystemConfigCriteria" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from GAR_SYSTEM_CONFIG
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="start != null and end !=null ">
+      limit #{start} , #{end}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from GAR_SYSTEM_CONFIG
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    delete from GAR_SYSTEM_CONFIG
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.SystemConfigCriteria">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    delete from GAR_SYSTEM_CONFIG
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.richstonedt.garnet.model.SystemConfig">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    insert into GAR_SYSTEM_CONFIG (ID, PARAMETER, VALUE
+      )
+    values (#{id,jdbcType=DECIMAL}, #{parameter,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.SystemConfig">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    insert into GAR_SYSTEM_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="parameter != null">
+        PARAMETER,
+      </if>
+      <if test="value != null">
+        VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="parameter != null">
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.SystemConfigCriteria" resultType="java.lang.Long">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select count(*) from GAR_SYSTEM_CONFIG
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByCriteriaSelective" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_SYSTEM_CONFIG
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.parameter != null">
+        PARAMETER = #{record.parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.value != null">
+        VALUE = #{record.value,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCriteria" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_SYSTEM_CONFIG
+    set ID = #{record.id,jdbcType=DECIMAL},
+      PARAMETER = #{record.parameter,jdbcType=VARCHAR},
+      VALUE = #{record.value,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.richstonedt.garnet.model.SystemConfig">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_SYSTEM_CONFIG
+    <set>
+      <if test="parameter != null">
+        PARAMETER = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        VALUE = #{value,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.SystemConfig">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_SYSTEM_CONFIG
+    set PARAMETER = #{parameter,jdbcType=VARCHAR},
+      VALUE = #{value,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.SystemConfigCriteria" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from GAR_SYSTEM_CONFIG
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insertBatchSelective" parameterType="java.util.List">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    insert into GAR_SYSTEM_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="list[0].id!=null">
+        ID,
+      </if>
+      <if test="list[0].parameter!=null">
+        PARAMETER,
+      </if>
+      <if test="list[0].value!=null">
+        VALUE,
+      </if>
+    </trim>
+     values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      <trim prefix=" (" suffix=")" suffixOverrides=",">
+        <if test="item.id!=null">
+          #{item.id,jdbcType=DECIMAL},
+        </if>
+        <if test="item.parameter!=null">
+          #{item.parameter,jdbcType=VARCHAR},
+        </if>
+        <if test="item.value!=null">
+          #{item.value,jdbcType=VARCHAR},
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+  <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <foreach collection="list" index="index" item="item" separator=";">
+      update GAR_SYSTEM_CONFIG
+      <set>
+        <if test="item.parameter!=null">
+          PARAMETER=#{item.parameter,jdbcType=VARCHAR},
+        </if>
+        <if test="item.value!=null">
+          VALUE=#{item.value,jdbcType=VARCHAR},
+        </if>
+      </set>
+      where 
+      ID = #{item.id,jdbcType=DECIMAL}
+    </foreach>
+  </update>
+</mapper>

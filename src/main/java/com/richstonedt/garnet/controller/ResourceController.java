@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.controller;
 
 
+import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.interceptory.LoginRequired;
@@ -183,8 +184,7 @@ public class ResourceController {
             resourceParm.setSearchName(searchName);
             resourceParm.setPageNumber(pageNumber);
 
-            PageUtil pageInfo = resourceService
-                    .queryResourcesByParms(resourceParm);
+            PageUtil pageInfo = resourceService.queryResourcesByParms(resourceParm);
             // 封装返回信息
             return new ResponseEntity<>(pageInfo, HttpStatus.OK);
         } catch (Throwable t) {

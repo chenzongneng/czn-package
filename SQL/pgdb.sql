@@ -100,6 +100,7 @@ CREATE TABLE gar_permissions
 	modified_time bigint DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	tenant_id bigint DEFAULT 0 NOT NULL,
+	action VARCHAR(100) NOT NULL,
 	status int DEFAULT 1 NOT NULL,
 	-- 更新的人
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
@@ -369,7 +370,7 @@ INSERT INTO gar_groups(id, name, created_time, modified_time, application_id, te
 INSERT INTO gar_roles(id, name, remark, created_time, modified_time, tenant_id, application_id, status) VALUES('1', '超级角色', '超级角色', '1522252800000', '1522252800000', '1', '1', '1');
 
 -- gar_permissions
-INSERT INTO gar_permissions(id, resource_path_wildcard, name, description, created_time, modified_time, application_id, tenant_id, status) VALUES ('1', '%', '超级权限', '超级权限', '1522252800000', '1522252800000', '1', '1','1');
+INSERT INTO gar_permissions(id, resource_path_wildcard, name, description, created_time, modified_time, application_id, tenant_id, action, status) VALUES ('1', '%', '超级权限', '超级权限', '1522252800000', '1522252800000', '1', '1', 'readonly', '1');
 
 -- gar_role_permissions
 INSERT INTO gar_role_permissions(role_id, permission_id, id) VALUES ('1', '1', '1');

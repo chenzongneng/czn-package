@@ -13,13 +13,18 @@ import java.util.List;
 
 public interface ResourceService extends BaseService<Resource, ResourceCriteria, Long> {
 
-    public Long insertResource(ResourceView resourceView);
+    Long insertResource(ResourceView resourceView);
 
-    public void updateResource(ResourceView resourceView);
+    void updateResource(ResourceView resourceView);
 
-    public void deleteResource(ResourceView resourceView);
+    void deleteResource(ResourceView resourceView);
 
-    public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm);
+    /**
+     * 根据参数查询resouces
+     * @param resourceParm
+     * @return
+     */
+    PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm);
 
     /**
      * 获取garnet_appCode下的所有resources

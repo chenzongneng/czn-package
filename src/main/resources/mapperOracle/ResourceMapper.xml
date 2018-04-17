@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.richstonedt.garnet.mapper.ResourceMapper">
+  <resultMap id="BaseResultMap" type="com.richstonedt.garnet.model.Resource">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="APPLICATION_ID" jdbcType="DECIMAL" property="applicationId" />
+    <result column="PATH" jdbcType="VARCHAR" property="path" />
+    <result column="ACTIONS" jdbcType="VARCHAR" property="actions" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CREATED_TIME" jdbcType="DECIMAL" property="createdTime" />
+    <result column="MODIFIED_TIME" jdbcType="DECIMAL" property="modifiedTime" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="TENANT_ID" jdbcType="DECIMAL" property="tenantId" />
+    <result column="VARCHAR_00" jdbcType="VARCHAR" property="varchar00" />
+    <result column="VARCHAR_01" jdbcType="VARCHAR" property="varchar01" />
+    <result column="VARCHAR_02" jdbcType="VARCHAR" property="varchar02" />
+    <result column="VARCHAR_03" jdbcType="VARCHAR" property="varchar03" />
+    <result column="VARCHAR_04" jdbcType="VARCHAR" property="varchar04" />
+    <result column="VARCHAR_05" jdbcType="VARCHAR" property="varchar05" />
+    <result column="VARCHAR_06" jdbcType="VARCHAR" property="varchar06" />
+    <result column="VARCHAR_07" jdbcType="VARCHAR" property="varchar07" />
+    <result column="VARCHAR_08" jdbcType="VARCHAR" property="varchar08" />
+    <result column="VARCHAR_09" jdbcType="VARCHAR" property="varchar09" />
+    <result column="VARCHAR_10" jdbcType="VARCHAR" property="varchar10" />
+    <result column="VARCHAR_11" jdbcType="VARCHAR" property="varchar11" />
+    <result column="VARCHAR_12" jdbcType="VARCHAR" property="varchar12" />
+    <result column="VARCHAR_13" jdbcType="VARCHAR" property="varchar13" />
+    <result column="VARCHAR_14" jdbcType="VARCHAR" property="varchar14" />
+    <result column="VARCHAR_15" jdbcType="VARCHAR" property="varchar15" />
+    <result column="VARCHAR_16" jdbcType="VARCHAR" property="varchar16" />
+    <result column="VARCHAR_17" jdbcType="VARCHAR" property="varchar17" />
+    <result column="VARCHAR_18" jdbcType="VARCHAR" property="varchar18" />
+    <result column="VARCHAR_19" jdbcType="VARCHAR" property="varchar19" />
+    <result column="INT_01" jdbcType="DECIMAL" property="int01" />
+    <result column="INT_02" jdbcType="DECIMAL" property="int02" />
+    <result column="INT_03" jdbcType="DECIMAL" property="int03" />
+    <result column="INT_04" jdbcType="DECIMAL" property="int04" />
+    <result column="INT_05" jdbcType="DECIMAL" property="int05" />
+    <result column="BOOLEAN_01" jdbcType="DECIMAL" property="boolean01" />
+    <result column="BOOLEAN_02" jdbcType="DECIMAL" property="boolean02" />
+    <result column="BOOLEAN_03" jdbcType="DECIMAL" property="boolean03" />
+    <result column="BOOLEAN_04" jdbcType="DECIMAL" property="boolean04" />
+    <result column="UPDATED_BY_USER_NAME" jdbcType="VARCHAR" property="updatedByUserName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <where>
+      <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    ID, APPLICATION_ID, PATH, ACTIONS, NAME, CREATED_TIME, MODIFIED_TIME, TYPE, TENANT_ID, 
+    VARCHAR_00, VARCHAR_01, VARCHAR_02, VARCHAR_03, VARCHAR_04, VARCHAR_05, VARCHAR_06, 
+    VARCHAR_07, VARCHAR_08, VARCHAR_09, VARCHAR_10, VARCHAR_11, VARCHAR_12, VARCHAR_13, 
+    VARCHAR_14, VARCHAR_15, VARCHAR_16, VARCHAR_17, VARCHAR_18, VARCHAR_19, INT_01, INT_02, 
+    INT_03, INT_04, INT_05, BOOLEAN_01, BOOLEAN_02, BOOLEAN_03, BOOLEAN_04, UPDATED_BY_USER_NAME
+  </sql>
+  <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from GAR_RESOURCES
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="start != null and end !=null ">
+      limit #{start} , #{end}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from GAR_RESOURCES
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    delete from GAR_RESOURCES
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    delete from GAR_RESOURCES
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.richstonedt.garnet.model.Resource">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    insert into GAR_RESOURCES (ID, APPLICATION_ID, PATH, 
+      ACTIONS, NAME, CREATED_TIME, 
+      MODIFIED_TIME, TYPE, TENANT_ID, 
+      VARCHAR_00, VARCHAR_01, VARCHAR_02, 
+      VARCHAR_03, VARCHAR_04, VARCHAR_05, 
+      VARCHAR_06, VARCHAR_07, VARCHAR_08, 
+      VARCHAR_09, VARCHAR_10, VARCHAR_11, 
+      VARCHAR_12, VARCHAR_13, VARCHAR_14, 
+      VARCHAR_15, VARCHAR_16, VARCHAR_17, 
+      VARCHAR_18, VARCHAR_19, INT_01, 
+      INT_02, INT_03, INT_04, 
+      INT_05, BOOLEAN_01, BOOLEAN_02, 
+      BOOLEAN_03, BOOLEAN_04, UPDATED_BY_USER_NAME
+      )
+    values (#{id,jdbcType=DECIMAL}, #{applicationId,jdbcType=DECIMAL}, #{path,jdbcType=VARCHAR}, 
+      #{actions,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=DECIMAL}, 
+      #{modifiedTime,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}, #{tenantId,jdbcType=DECIMAL}, 
+      #{varchar00,jdbcType=VARCHAR}, #{varchar01,jdbcType=VARCHAR}, #{varchar02,jdbcType=VARCHAR}, 
+      #{varchar03,jdbcType=VARCHAR}, #{varchar04,jdbcType=VARCHAR}, #{varchar05,jdbcType=VARCHAR}, 
+      #{varchar06,jdbcType=VARCHAR}, #{varchar07,jdbcType=VARCHAR}, #{varchar08,jdbcType=VARCHAR}, 
+      #{varchar09,jdbcType=VARCHAR}, #{varchar10,jdbcType=VARCHAR}, #{varchar11,jdbcType=VARCHAR}, 
+      #{varchar12,jdbcType=VARCHAR}, #{varchar13,jdbcType=VARCHAR}, #{varchar14,jdbcType=VARCHAR}, 
+      #{varchar15,jdbcType=VARCHAR}, #{varchar16,jdbcType=VARCHAR}, #{varchar17,jdbcType=VARCHAR}, 
+      #{varchar18,jdbcType=VARCHAR}, #{varchar19,jdbcType=VARCHAR}, #{int01,jdbcType=DECIMAL}, 
+      #{int02,jdbcType=DECIMAL}, #{int03,jdbcType=DECIMAL}, #{int04,jdbcType=DECIMAL}, 
+      #{int05,jdbcType=DECIMAL}, #{boolean01,jdbcType=DECIMAL}, #{boolean02,jdbcType=DECIMAL}, 
+      #{boolean03,jdbcType=DECIMAL}, #{boolean04,jdbcType=DECIMAL}, #{updatedByUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Resource">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    insert into GAR_RESOURCES
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="applicationId != null">
+        APPLICATION_ID,
+      </if>
+      <if test="path != null">
+        PATH,
+      </if>
+      <if test="actions != null">
+        ACTIONS,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID,
+      </if>
+      <if test="varchar00 != null">
+        VARCHAR_00,
+      </if>
+      <if test="varchar01 != null">
+        VARCHAR_01,
+      </if>
+      <if test="varchar02 != null">
+        VARCHAR_02,
+      </if>
+      <if test="varchar03 != null">
+        VARCHAR_03,
+      </if>
+      <if test="varchar04 != null">
+        VARCHAR_04,
+      </if>
+      <if test="varchar05 != null">
+        VARCHAR_05,
+      </if>
+      <if test="varchar06 != null">
+        VARCHAR_06,
+      </if>
+      <if test="varchar07 != null">
+        VARCHAR_07,
+      </if>
+      <if test="varchar08 != null">
+        VARCHAR_08,
+      </if>
+      <if test="varchar09 != null">
+        VARCHAR_09,
+      </if>
+      <if test="varchar10 != null">
+        VARCHAR_10,
+      </if>
+      <if test="varchar11 != null">
+        VARCHAR_11,
+      </if>
+      <if test="varchar12 != null">
+        VARCHAR_12,
+      </if>
+      <if test="varchar13 != null">
+        VARCHAR_13,
+      </if>
+      <if test="varchar14 != null">
+        VARCHAR_14,
+      </if>
+      <if test="varchar15 != null">
+        VARCHAR_15,
+      </if>
+      <if test="varchar16 != null">
+        VARCHAR_16,
+      </if>
+      <if test="varchar17 != null">
+        VARCHAR_17,
+      </if>
+      <if test="varchar18 != null">
+        VARCHAR_18,
+      </if>
+      <if test="varchar19 != null">
+        VARCHAR_19,
+      </if>
+      <if test="int01 != null">
+        INT_01,
+      </if>
+      <if test="int02 != null">
+        INT_02,
+      </if>
+      <if test="int03 != null">
+        INT_03,
+      </if>
+      <if test="int04 != null">
+        INT_04,
+      </if>
+      <if test="int05 != null">
+        INT_05,
+      </if>
+      <if test="boolean01 != null">
+        BOOLEAN_01,
+      </if>
+      <if test="boolean02 != null">
+        BOOLEAN_02,
+      </if>
+      <if test="boolean03 != null">
+        BOOLEAN_03,
+      </if>
+      <if test="boolean04 != null">
+        BOOLEAN_04,
+      </if>
+      <if test="updatedByUserName != null">
+        UPDATED_BY_USER_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="applicationId != null">
+        #{applicationId,jdbcType=DECIMAL},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="actions != null">
+        #{actions,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=DECIMAL},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="varchar00 != null">
+        #{varchar00,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar01 != null">
+        #{varchar01,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar02 != null">
+        #{varchar02,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar03 != null">
+        #{varchar03,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar04 != null">
+        #{varchar04,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar05 != null">
+        #{varchar05,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar06 != null">
+        #{varchar06,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar07 != null">
+        #{varchar07,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar08 != null">
+        #{varchar08,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar09 != null">
+        #{varchar09,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar10 != null">
+        #{varchar10,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar11 != null">
+        #{varchar11,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar12 != null">
+        #{varchar12,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar13 != null">
+        #{varchar13,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar14 != null">
+        #{varchar14,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar15 != null">
+        #{varchar15,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar16 != null">
+        #{varchar16,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar17 != null">
+        #{varchar17,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar18 != null">
+        #{varchar18,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar19 != null">
+        #{varchar19,jdbcType=VARCHAR},
+      </if>
+      <if test="int01 != null">
+        #{int01,jdbcType=DECIMAL},
+      </if>
+      <if test="int02 != null">
+        #{int02,jdbcType=DECIMAL},
+      </if>
+      <if test="int03 != null">
+        #{int03,jdbcType=DECIMAL},
+      </if>
+      <if test="int04 != null">
+        #{int04,jdbcType=DECIMAL},
+      </if>
+      <if test="int05 != null">
+        #{int05,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean01 != null">
+        #{boolean01,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean02 != null">
+        #{boolean02,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean03 != null">
+        #{boolean03,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean04 != null">
+        #{boolean04,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedByUserName != null">
+        #{updatedByUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultType="java.lang.Long">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select count(*) from GAR_RESOURCES
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByCriteriaSelective" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_RESOURCES
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.applicationId != null">
+        APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.path != null">
+        PATH = #{record.path,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actions != null">
+        ACTIONS = #{record.actions,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdTime != null">
+        CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
+      </if>
+      <if test="record.modifiedTime != null">
+        MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
+      </if>
+      <if test="record.type != null">
+        TYPE = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null">
+        TENANT_ID = #{record.tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.varchar00 != null">
+        VARCHAR_00 = #{record.varchar00,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar01 != null">
+        VARCHAR_01 = #{record.varchar01,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar02 != null">
+        VARCHAR_02 = #{record.varchar02,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar03 != null">
+        VARCHAR_03 = #{record.varchar03,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar04 != null">
+        VARCHAR_04 = #{record.varchar04,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar05 != null">
+        VARCHAR_05 = #{record.varchar05,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar06 != null">
+        VARCHAR_06 = #{record.varchar06,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar07 != null">
+        VARCHAR_07 = #{record.varchar07,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar08 != null">
+        VARCHAR_08 = #{record.varchar08,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar09 != null">
+        VARCHAR_09 = #{record.varchar09,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar10 != null">
+        VARCHAR_10 = #{record.varchar10,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar11 != null">
+        VARCHAR_11 = #{record.varchar11,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar12 != null">
+        VARCHAR_12 = #{record.varchar12,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar13 != null">
+        VARCHAR_13 = #{record.varchar13,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar14 != null">
+        VARCHAR_14 = #{record.varchar14,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar15 != null">
+        VARCHAR_15 = #{record.varchar15,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar16 != null">
+        VARCHAR_16 = #{record.varchar16,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar17 != null">
+        VARCHAR_17 = #{record.varchar17,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar18 != null">
+        VARCHAR_18 = #{record.varchar18,jdbcType=VARCHAR},
+      </if>
+      <if test="record.varchar19 != null">
+        VARCHAR_19 = #{record.varchar19,jdbcType=VARCHAR},
+      </if>
+      <if test="record.int01 != null">
+        INT_01 = #{record.int01,jdbcType=DECIMAL},
+      </if>
+      <if test="record.int02 != null">
+        INT_02 = #{record.int02,jdbcType=DECIMAL},
+      </if>
+      <if test="record.int03 != null">
+        INT_03 = #{record.int03,jdbcType=DECIMAL},
+      </if>
+      <if test="record.int04 != null">
+        INT_04 = #{record.int04,jdbcType=DECIMAL},
+      </if>
+      <if test="record.int05 != null">
+        INT_05 = #{record.int05,jdbcType=DECIMAL},
+      </if>
+      <if test="record.boolean01 != null">
+        BOOLEAN_01 = #{record.boolean01,jdbcType=DECIMAL},
+      </if>
+      <if test="record.boolean02 != null">
+        BOOLEAN_02 = #{record.boolean02,jdbcType=DECIMAL},
+      </if>
+      <if test="record.boolean03 != null">
+        BOOLEAN_03 = #{record.boolean03,jdbcType=DECIMAL},
+      </if>
+      <if test="record.boolean04 != null">
+        BOOLEAN_04 = #{record.boolean04,jdbcType=DECIMAL},
+      </if>
+      <if test="record.updatedByUserName != null">
+        UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCriteria" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_RESOURCES
+    set ID = #{record.id,jdbcType=DECIMAL},
+      APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
+      PATH = #{record.path,jdbcType=VARCHAR},
+      ACTIONS = #{record.actions,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
+      MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
+      TYPE = #{record.type,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=DECIMAL},
+      VARCHAR_00 = #{record.varchar00,jdbcType=VARCHAR},
+      VARCHAR_01 = #{record.varchar01,jdbcType=VARCHAR},
+      VARCHAR_02 = #{record.varchar02,jdbcType=VARCHAR},
+      VARCHAR_03 = #{record.varchar03,jdbcType=VARCHAR},
+      VARCHAR_04 = #{record.varchar04,jdbcType=VARCHAR},
+      VARCHAR_05 = #{record.varchar05,jdbcType=VARCHAR},
+      VARCHAR_06 = #{record.varchar06,jdbcType=VARCHAR},
+      VARCHAR_07 = #{record.varchar07,jdbcType=VARCHAR},
+      VARCHAR_08 = #{record.varchar08,jdbcType=VARCHAR},
+      VARCHAR_09 = #{record.varchar09,jdbcType=VARCHAR},
+      VARCHAR_10 = #{record.varchar10,jdbcType=VARCHAR},
+      VARCHAR_11 = #{record.varchar11,jdbcType=VARCHAR},
+      VARCHAR_12 = #{record.varchar12,jdbcType=VARCHAR},
+      VARCHAR_13 = #{record.varchar13,jdbcType=VARCHAR},
+      VARCHAR_14 = #{record.varchar14,jdbcType=VARCHAR},
+      VARCHAR_15 = #{record.varchar15,jdbcType=VARCHAR},
+      VARCHAR_16 = #{record.varchar16,jdbcType=VARCHAR},
+      VARCHAR_17 = #{record.varchar17,jdbcType=VARCHAR},
+      VARCHAR_18 = #{record.varchar18,jdbcType=VARCHAR},
+      VARCHAR_19 = #{record.varchar19,jdbcType=VARCHAR},
+      INT_01 = #{record.int01,jdbcType=DECIMAL},
+      INT_02 = #{record.int02,jdbcType=DECIMAL},
+      INT_03 = #{record.int03,jdbcType=DECIMAL},
+      INT_04 = #{record.int04,jdbcType=DECIMAL},
+      INT_05 = #{record.int05,jdbcType=DECIMAL},
+      BOOLEAN_01 = #{record.boolean01,jdbcType=DECIMAL},
+      BOOLEAN_02 = #{record.boolean02,jdbcType=DECIMAL},
+      BOOLEAN_03 = #{record.boolean03,jdbcType=DECIMAL},
+      BOOLEAN_04 = #{record.boolean04,jdbcType=DECIMAL},
+      UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.richstonedt.garnet.model.Resource">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_RESOURCES
+    <set>
+      <if test="applicationId != null">
+        APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
+      </if>
+      <if test="path != null">
+        PATH = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="actions != null">
+        ACTIONS = #{actions,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="varchar00 != null">
+        VARCHAR_00 = #{varchar00,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar01 != null">
+        VARCHAR_01 = #{varchar01,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar02 != null">
+        VARCHAR_02 = #{varchar02,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar03 != null">
+        VARCHAR_03 = #{varchar03,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar04 != null">
+        VARCHAR_04 = #{varchar04,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar05 != null">
+        VARCHAR_05 = #{varchar05,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar06 != null">
+        VARCHAR_06 = #{varchar06,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar07 != null">
+        VARCHAR_07 = #{varchar07,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar08 != null">
+        VARCHAR_08 = #{varchar08,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar09 != null">
+        VARCHAR_09 = #{varchar09,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar10 != null">
+        VARCHAR_10 = #{varchar10,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar11 != null">
+        VARCHAR_11 = #{varchar11,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar12 != null">
+        VARCHAR_12 = #{varchar12,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar13 != null">
+        VARCHAR_13 = #{varchar13,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar14 != null">
+        VARCHAR_14 = #{varchar14,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar15 != null">
+        VARCHAR_15 = #{varchar15,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar16 != null">
+        VARCHAR_16 = #{varchar16,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar17 != null">
+        VARCHAR_17 = #{varchar17,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar18 != null">
+        VARCHAR_18 = #{varchar18,jdbcType=VARCHAR},
+      </if>
+      <if test="varchar19 != null">
+        VARCHAR_19 = #{varchar19,jdbcType=VARCHAR},
+      </if>
+      <if test="int01 != null">
+        INT_01 = #{int01,jdbcType=DECIMAL},
+      </if>
+      <if test="int02 != null">
+        INT_02 = #{int02,jdbcType=DECIMAL},
+      </if>
+      <if test="int03 != null">
+        INT_03 = #{int03,jdbcType=DECIMAL},
+      </if>
+      <if test="int04 != null">
+        INT_04 = #{int04,jdbcType=DECIMAL},
+      </if>
+      <if test="int05 != null">
+        INT_05 = #{int05,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean01 != null">
+        BOOLEAN_01 = #{boolean01,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean02 != null">
+        BOOLEAN_02 = #{boolean02,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean03 != null">
+        BOOLEAN_03 = #{boolean03,jdbcType=DECIMAL},
+      </if>
+      <if test="boolean04 != null">
+        BOOLEAN_04 = #{boolean04,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedByUserName != null">
+        UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.Resource">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    update GAR_RESOURCES
+    set APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
+      PATH = #{path,jdbcType=VARCHAR},
+      ACTIONS = #{actions,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
+      TYPE = #{type,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      VARCHAR_00 = #{varchar00,jdbcType=VARCHAR},
+      VARCHAR_01 = #{varchar01,jdbcType=VARCHAR},
+      VARCHAR_02 = #{varchar02,jdbcType=VARCHAR},
+      VARCHAR_03 = #{varchar03,jdbcType=VARCHAR},
+      VARCHAR_04 = #{varchar04,jdbcType=VARCHAR},
+      VARCHAR_05 = #{varchar05,jdbcType=VARCHAR},
+      VARCHAR_06 = #{varchar06,jdbcType=VARCHAR},
+      VARCHAR_07 = #{varchar07,jdbcType=VARCHAR},
+      VARCHAR_08 = #{varchar08,jdbcType=VARCHAR},
+      VARCHAR_09 = #{varchar09,jdbcType=VARCHAR},
+      VARCHAR_10 = #{varchar10,jdbcType=VARCHAR},
+      VARCHAR_11 = #{varchar11,jdbcType=VARCHAR},
+      VARCHAR_12 = #{varchar12,jdbcType=VARCHAR},
+      VARCHAR_13 = #{varchar13,jdbcType=VARCHAR},
+      VARCHAR_14 = #{varchar14,jdbcType=VARCHAR},
+      VARCHAR_15 = #{varchar15,jdbcType=VARCHAR},
+      VARCHAR_16 = #{varchar16,jdbcType=VARCHAR},
+      VARCHAR_17 = #{varchar17,jdbcType=VARCHAR},
+      VARCHAR_18 = #{varchar18,jdbcType=VARCHAR},
+      VARCHAR_19 = #{varchar19,jdbcType=VARCHAR},
+      INT_01 = #{int01,jdbcType=DECIMAL},
+      INT_02 = #{int02,jdbcType=DECIMAL},
+      INT_03 = #{int03,jdbcType=DECIMAL},
+      INT_04 = #{int04,jdbcType=DECIMAL},
+      INT_05 = #{int05,jdbcType=DECIMAL},
+      BOOLEAN_01 = #{boolean01,jdbcType=DECIMAL},
+      BOOLEAN_02 = #{boolean02,jdbcType=DECIMAL},
+      BOOLEAN_03 = #{boolean03,jdbcType=DECIMAL},
+      BOOLEAN_04 = #{boolean04,jdbcType=DECIMAL},
+      UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from GAR_RESOURCES
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insertBatchSelective" parameterType="java.util.List">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    insert into GAR_RESOURCES
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="list[0].id!=null">
+        ID,
+      </if>
+      <if test="list[0].applicationId!=null">
+        APPLICATION_ID,
+      </if>
+      <if test="list[0].path!=null">
+        PATH,
+      </if>
+      <if test="list[0].actions!=null">
+        ACTIONS,
+      </if>
+      <if test="list[0].name!=null">
+        NAME,
+      </if>
+      <if test="list[0].createdTime!=null">
+        CREATED_TIME,
+      </if>
+      <if test="list[0].modifiedTime!=null">
+        MODIFIED_TIME,
+      </if>
+      <if test="list[0].type!=null">
+        TYPE,
+      </if>
+      <if test="list[0].tenantId!=null">
+        TENANT_ID,
+      </if>
+      <if test="list[0].varchar00!=null">
+        VARCHAR_00,
+      </if>
+      <if test="list[0].varchar01!=null">
+        VARCHAR_01,
+      </if>
+      <if test="list[0].varchar02!=null">
+        VARCHAR_02,
+      </if>
+      <if test="list[0].varchar03!=null">
+        VARCHAR_03,
+      </if>
+      <if test="list[0].varchar04!=null">
+        VARCHAR_04,
+      </if>
+      <if test="list[0].varchar05!=null">
+        VARCHAR_05,
+      </if>
+      <if test="list[0].varchar06!=null">
+        VARCHAR_06,
+      </if>
+      <if test="list[0].varchar07!=null">
+        VARCHAR_07,
+      </if>
+      <if test="list[0].varchar08!=null">
+        VARCHAR_08,
+      </if>
+      <if test="list[0].varchar09!=null">
+        VARCHAR_09,
+      </if>
+      <if test="list[0].varchar10!=null">
+        VARCHAR_10,
+      </if>
+      <if test="list[0].varchar11!=null">
+        VARCHAR_11,
+      </if>
+      <if test="list[0].varchar12!=null">
+        VARCHAR_12,
+      </if>
+      <if test="list[0].varchar13!=null">
+        VARCHAR_13,
+      </if>
+      <if test="list[0].varchar14!=null">
+        VARCHAR_14,
+      </if>
+      <if test="list[0].varchar15!=null">
+        VARCHAR_15,
+      </if>
+      <if test="list[0].varchar16!=null">
+        VARCHAR_16,
+      </if>
+      <if test="list[0].varchar17!=null">
+        VARCHAR_17,
+      </if>
+      <if test="list[0].varchar18!=null">
+        VARCHAR_18,
+      </if>
+      <if test="list[0].varchar19!=null">
+        VARCHAR_19,
+      </if>
+      <if test="list[0].int01!=null">
+        INT_01,
+      </if>
+      <if test="list[0].int02!=null">
+        INT_02,
+      </if>
+      <if test="list[0].int03!=null">
+        INT_03,
+      </if>
+      <if test="list[0].int04!=null">
+        INT_04,
+      </if>
+      <if test="list[0].int05!=null">
+        INT_05,
+      </if>
+      <if test="list[0].boolean01!=null">
+        BOOLEAN_01,
+      </if>
+      <if test="list[0].boolean02!=null">
+        BOOLEAN_02,
+      </if>
+      <if test="list[0].boolean03!=null">
+        BOOLEAN_03,
+      </if>
+      <if test="list[0].boolean04!=null">
+        BOOLEAN_04,
+      </if>
+      <if test="list[0].updatedByUserName!=null">
+        UPDATED_BY_USER_NAME,
+      </if>
+    </trim>
+     values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      <trim prefix=" (" suffix=")" suffixOverrides=",">
+        <if test="item.id!=null">
+          #{item.id,jdbcType=DECIMAL},
+        </if>
+        <if test="item.applicationId!=null">
+          #{item.applicationId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.path!=null">
+          #{item.path,jdbcType=VARCHAR},
+        </if>
+        <if test="item.actions!=null">
+          #{item.actions,jdbcType=VARCHAR},
+        </if>
+        <if test="item.name!=null">
+          #{item.name,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createdTime!=null">
+          #{item.createdTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.modifiedTime!=null">
+          #{item.modifiedTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.type!=null">
+          #{item.type,jdbcType=VARCHAR},
+        </if>
+        <if test="item.tenantId!=null">
+          #{item.tenantId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.varchar00!=null">
+          #{item.varchar00,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar01!=null">
+          #{item.varchar01,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar02!=null">
+          #{item.varchar02,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar03!=null">
+          #{item.varchar03,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar04!=null">
+          #{item.varchar04,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar05!=null">
+          #{item.varchar05,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar06!=null">
+          #{item.varchar06,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar07!=null">
+          #{item.varchar07,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar08!=null">
+          #{item.varchar08,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar09!=null">
+          #{item.varchar09,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar10!=null">
+          #{item.varchar10,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar11!=null">
+          #{item.varchar11,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar12!=null">
+          #{item.varchar12,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar13!=null">
+          #{item.varchar13,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar14!=null">
+          #{item.varchar14,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar15!=null">
+          #{item.varchar15,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar16!=null">
+          #{item.varchar16,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar17!=null">
+          #{item.varchar17,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar18!=null">
+          #{item.varchar18,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar19!=null">
+          #{item.varchar19,jdbcType=VARCHAR},
+        </if>
+        <if test="item.int01!=null">
+          #{item.int01,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int02!=null">
+          #{item.int02,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int03!=null">
+          #{item.int03,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int04!=null">
+          #{item.int04,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int05!=null">
+          #{item.int05,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean01!=null">
+          #{item.boolean01,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean02!=null">
+          #{item.boolean02,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean03!=null">
+          #{item.boolean03,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean04!=null">
+          #{item.boolean04,jdbcType=DECIMAL},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          #{item.updatedByUserName,jdbcType=VARCHAR},
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+  <update id="updateBatchByPrimaryKeySelective" parameterType="java.util.List">
+    <!--
+      WARNING - @mbg.generated
+      此SQL语句为自动生成，请不要修改.
+      DATE: 2018-04-12 18:06
+    -->
+    <foreach collection="list" index="index" item="item" separator=";">
+      update GAR_RESOURCES
+      <set>
+        <if test="item.applicationId!=null">
+          APPLICATION_ID=#{item.applicationId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.path!=null">
+          PATH=#{item.path,jdbcType=VARCHAR},
+        </if>
+        <if test="item.actions!=null">
+          ACTIONS=#{item.actions,jdbcType=VARCHAR},
+        </if>
+        <if test="item.name!=null">
+          NAME=#{item.name,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createdTime!=null">
+          CREATED_TIME=#{item.createdTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.modifiedTime!=null">
+          MODIFIED_TIME=#{item.modifiedTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.type!=null">
+          TYPE=#{item.type,jdbcType=VARCHAR},
+        </if>
+        <if test="item.tenantId!=null">
+          TENANT_ID=#{item.tenantId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.varchar00!=null">
+          VARCHAR_00=#{item.varchar00,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar01!=null">
+          VARCHAR_01=#{item.varchar01,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar02!=null">
+          VARCHAR_02=#{item.varchar02,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar03!=null">
+          VARCHAR_03=#{item.varchar03,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar04!=null">
+          VARCHAR_04=#{item.varchar04,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar05!=null">
+          VARCHAR_05=#{item.varchar05,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar06!=null">
+          VARCHAR_06=#{item.varchar06,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar07!=null">
+          VARCHAR_07=#{item.varchar07,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar08!=null">
+          VARCHAR_08=#{item.varchar08,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar09!=null">
+          VARCHAR_09=#{item.varchar09,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar10!=null">
+          VARCHAR_10=#{item.varchar10,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar11!=null">
+          VARCHAR_11=#{item.varchar11,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar12!=null">
+          VARCHAR_12=#{item.varchar12,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar13!=null">
+          VARCHAR_13=#{item.varchar13,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar14!=null">
+          VARCHAR_14=#{item.varchar14,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar15!=null">
+          VARCHAR_15=#{item.varchar15,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar16!=null">
+          VARCHAR_16=#{item.varchar16,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar17!=null">
+          VARCHAR_17=#{item.varchar17,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar18!=null">
+          VARCHAR_18=#{item.varchar18,jdbcType=VARCHAR},
+        </if>
+        <if test="item.varchar19!=null">
+          VARCHAR_19=#{item.varchar19,jdbcType=VARCHAR},
+        </if>
+        <if test="item.int01!=null">
+          INT_01=#{item.int01,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int02!=null">
+          INT_02=#{item.int02,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int03!=null">
+          INT_03=#{item.int03,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int04!=null">
+          INT_04=#{item.int04,jdbcType=DECIMAL},
+        </if>
+        <if test="item.int05!=null">
+          INT_05=#{item.int05,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean01!=null">
+          BOOLEAN_01=#{item.boolean01,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean02!=null">
+          BOOLEAN_02=#{item.boolean02,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean03!=null">
+          BOOLEAN_03=#{item.boolean03,jdbcType=DECIMAL},
+        </if>
+        <if test="item.boolean04!=null">
+          BOOLEAN_04=#{item.boolean04,jdbcType=DECIMAL},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          UPDATED_BY_USER_NAME=#{item.updatedByUserName,jdbcType=VARCHAR},
+        </if>
+      </set>
+      where 
+      ID = #{item.id,jdbcType=DECIMAL}
+    </foreach>
+  </update>
+</mapper>

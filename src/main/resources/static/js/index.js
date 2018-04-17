@@ -149,7 +149,7 @@ var vm = new Vue({
                         },
                         error: function (response) {
                             layer.close(index);
-                            swal("修改密码失败！", response.responseJSON.data.errorResponseMessage, "error");
+                            swal("修改密码失败！", getExceptionMessage(response), "error");
                         }
                     });
                 }

@@ -25,7 +25,7 @@ $(function () {
         height: 385,
         rowNum: 10,
         rowList: [10, 30, 50],
-        rownumbers: true,
+        rownumbers: false,
         rownumWidth: 25,
         autowidth: true,
         multiselect: true,
@@ -225,7 +225,7 @@ var vm = new Vue({
                     swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal(response.responseJSON.errorMessage, "", "error");
+                    swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -255,12 +255,12 @@ var vm = new Vue({
 
             });
         },
-        /** 查询当前用户信息 */
-        getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
-                vm.currentUser = response;
-            });
-        },
+        // /** 查询当前用户信息 */
+        // getCurrentUser: function () {
+        //     $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+        //         vm.currentUser = response;
+        //     });
+        // },
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;

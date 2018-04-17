@@ -8,7 +8,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public PermissionCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -809,6 +809,76 @@ public class PermissionCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andActionIsNull() {
+            addCriterion("action is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionIsNotNull() {
+            addCriterion("action is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionEqualTo(String value) {
+            addCriterion("action =", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionNotEqualTo(String value) {
+            addCriterion("action <>", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionGreaterThan(String value) {
+            addCriterion("action >", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionGreaterThanOrEqualTo(String value) {
+            addCriterion("action >=", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionLessThan(String value) {
+            addCriterion("action <", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionLessThanOrEqualTo(String value) {
+            addCriterion("action <=", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionLike(String value) {
+            addCriterion("action like", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionNotLike(String value) {
+            addCriterion("action not like", value, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionIn(List<String> values) {
+            addCriterion("action in", values, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionNotIn(List<String> values) {
+            addCriterion("action not in", values, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionBetween(String value1, String value2) {
+            addCriterion("action between", value1, value2, "action");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionNotBetween(String value1, String value2) {
+            addCriterion("action not between", value1, value2, "action");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusIsNull() {
             addCriterion("status is null");
             return (Criteria) this;
@@ -946,7 +1016,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -961,7 +1031,7 @@ public class PermissionCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-16 11:10
      */
     public static class Criterion {
         private String condition;

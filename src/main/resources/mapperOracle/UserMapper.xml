@@ -5,23 +5,23 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
-    <result column="modified_time" jdbcType="BIGINT" property="modifiedTime" />
-    <result column="mobile_number" jdbcType="VARCHAR" property="mobileNumber" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="belong_to_garnet" jdbcType="VARCHAR" property="belongToGarnet" />
-    <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="CREATED_TIME" jdbcType="DECIMAL" property="createdTime" />
+    <result column="MODIFIED_TIME" jdbcType="DECIMAL" property="modifiedTime" />
+    <result column="MOBILE_NUMBER" jdbcType="VARCHAR" property="mobileNumber" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="BELONG_TO_GARNET" jdbcType="VARCHAR" property="belongToGarnet" />
+    <result column="UPDATED_BY_USER_NAME" jdbcType="VARCHAR" property="updatedByUserName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -55,7 +55,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -89,23 +89,23 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    id, user_name, created_time, modified_time, mobile_number, email, status, belong_to_garnet, 
-    updated_by_user_name
+    ID, USER_NAME, CREATED_TIME, MODIFIED_TIME, MOBILE_NUMBER, EMAIL, STATUS, BELONG_TO_GARNET, 
+    UPDATED_BY_USER_NAME
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.UserCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from gar_users
+    from GAR_USERS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -120,29 +120,29 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
     select 
     <include refid="Base_Column_List" />
-    from gar_users
-    where id = #{id,jdbcType=BIGINT}
+    from GAR_USERS
+    where ID = #{id,jdbcType=DECIMAL}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    delete from gar_users
-    where id = #{id,jdbcType=BIGINT}
+    delete from GAR_USERS
+    where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.UserCriteria">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    delete from gar_users
+    delete from GAR_USERS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -151,65 +151,65 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    insert into gar_users (id, user_name, created_time, 
-      modified_time, mobile_number, email, 
-      status, belong_to_garnet, updated_by_user_name
+    insert into GAR_USERS (ID, USER_NAME, CREATED_TIME, 
+      MODIFIED_TIME, MOBILE_NUMBER, EMAIL, 
+      STATUS, BELONG_TO_GARNET, UPDATED_BY_USER_NAME
       )
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, 
-      #{modifiedTime,jdbcType=BIGINT}, #{mobileNumber,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{belongToGarnet,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR}
+    values (#{id,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{createdTime,jdbcType=DECIMAL}, 
+      #{modifiedTime,jdbcType=DECIMAL}, #{mobileNumber,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{status,jdbcType=DECIMAL}, #{belongToGarnet,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.User">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    insert into gar_users
+    insert into GAR_USERS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        id,
+        ID,
       </if>
       <if test="userName != null">
-        user_name,
+        USER_NAME,
       </if>
       <if test="createdTime != null">
-        created_time,
+        CREATED_TIME,
       </if>
       <if test="modifiedTime != null">
-        modified_time,
+        MODIFIED_TIME,
       </if>
       <if test="mobileNumber != null">
-        mobile_number,
+        MOBILE_NUMBER,
       </if>
       <if test="email != null">
-        email,
+        EMAIL,
       </if>
       <if test="status != null">
-        status,
+        STATUS,
       </if>
       <if test="belongToGarnet != null">
-        belong_to_garnet,
+        BELONG_TO_GARNET,
       </if>
       <if test="updatedByUserName != null">
-        updated_by_user_name,
+        UPDATED_BY_USER_NAME,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=DECIMAL},
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null">
-        #{createdTime,jdbcType=BIGINT},
+        #{createdTime,jdbcType=DECIMAL},
       </if>
       <if test="modifiedTime != null">
-        #{modifiedTime,jdbcType=BIGINT},
+        #{modifiedTime,jdbcType=DECIMAL},
       </if>
       <if test="mobileNumber != null">
         #{mobileNumber,jdbcType=VARCHAR},
@@ -218,7 +218,7 @@
         #{email,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=DECIMAL},
       </if>
       <if test="belongToGarnet != null">
         #{belongToGarnet,jdbcType=VARCHAR},
@@ -232,9 +232,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    select count(*) from gar_users
+    select count(*) from GAR_USERS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -243,36 +243,36 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    update gar_users
+    update GAR_USERS
     <set>
       <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+        ID = #{record.id,jdbcType=DECIMAL},
       </if>
       <if test="record.userName != null">
-        user_name = #{record.userName,jdbcType=VARCHAR},
+        USER_NAME = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.createdTime != null">
-        created_time = #{record.createdTime,jdbcType=BIGINT},
+        CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
       </if>
       <if test="record.modifiedTime != null">
-        modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+        MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
       </if>
       <if test="record.mobileNumber != null">
-        mobile_number = #{record.mobileNumber,jdbcType=VARCHAR},
+        MOBILE_NUMBER = #{record.mobileNumber,jdbcType=VARCHAR},
       </if>
       <if test="record.email != null">
-        email = #{record.email,jdbcType=VARCHAR},
+        EMAIL = #{record.email,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null">
-        status = #{record.status,jdbcType=INTEGER},
+        STATUS = #{record.status,jdbcType=DECIMAL},
       </if>
       <if test="record.belongToGarnet != null">
-        belong_to_garnet = #{record.belongToGarnet,jdbcType=VARCHAR},
+        BELONG_TO_GARNET = #{record.belongToGarnet,jdbcType=VARCHAR},
       </if>
       <if test="record.updatedByUserName != null">
-        updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
+        UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -283,18 +283,18 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    update gar_users
-    set id = #{record.id,jdbcType=BIGINT},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      created_time = #{record.createdTime,jdbcType=BIGINT},
-      modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-      mobile_number = #{record.mobileNumber,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=INTEGER},
-      belong_to_garnet = #{record.belongToGarnet,jdbcType=VARCHAR},
-      updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
+    update GAR_USERS
+    set ID = #{record.id,jdbcType=DECIMAL},
+      USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
+      MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
+      MOBILE_NUMBER = #{record.mobileNumber,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=DECIMAL},
+      BELONG_TO_GARNET = #{record.belongToGarnet,jdbcType=VARCHAR},
+      UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -303,66 +303,66 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    update gar_users
+    update GAR_USERS
     <set>
       <if test="userName != null">
-        user_name = #{userName,jdbcType=VARCHAR},
+        USER_NAME = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null">
-        created_time = #{createdTime,jdbcType=BIGINT},
+        CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
       </if>
       <if test="modifiedTime != null">
-        modified_time = #{modifiedTime,jdbcType=BIGINT},
+        MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
       </if>
       <if test="mobileNumber != null">
-        mobile_number = #{mobileNumber,jdbcType=VARCHAR},
+        MOBILE_NUMBER = #{mobileNumber,jdbcType=VARCHAR},
       </if>
       <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
+        EMAIL = #{email,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        status = #{status,jdbcType=INTEGER},
+        STATUS = #{status,jdbcType=DECIMAL},
       </if>
       <if test="belongToGarnet != null">
-        belong_to_garnet = #{belongToGarnet,jdbcType=VARCHAR},
+        BELONG_TO_GARNET = #{belongToGarnet,jdbcType=VARCHAR},
       </if>
       <if test="updatedByUserName != null">
-        updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
+        UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where ID = #{id,jdbcType=DECIMAL}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.User">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    update gar_users
-    set user_name = #{userName,jdbcType=VARCHAR},
-      created_time = #{createdTime,jdbcType=BIGINT},
-      modified_time = #{modifiedTime,jdbcType=BIGINT},
-      mobile_number = #{mobileNumber,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      belong_to_garnet = #{belongToGarnet,jdbcType=VARCHAR},
-      updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
+    update GAR_USERS
+    set USER_NAME = #{userName,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
+      MOBILE_NUMBER = #{mobileNumber,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=DECIMAL},
+      BELONG_TO_GARNET = #{belongToGarnet,jdbcType=VARCHAR},
+      UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.UserCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from gar_users
+    from GAR_USERS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -374,52 +374,52 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
-    insert into gar_users
+    insert into GAR_USERS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="list[0].id!=null">
-        id,
+        ID,
       </if>
       <if test="list[0].userName!=null">
-        user_name,
+        USER_NAME,
       </if>
       <if test="list[0].createdTime!=null">
-        created_time,
+        CREATED_TIME,
       </if>
       <if test="list[0].modifiedTime!=null">
-        modified_time,
+        MODIFIED_TIME,
       </if>
       <if test="list[0].mobileNumber!=null">
-        mobile_number,
+        MOBILE_NUMBER,
       </if>
       <if test="list[0].email!=null">
-        email,
+        EMAIL,
       </if>
       <if test="list[0].status!=null">
-        status,
+        STATUS,
       </if>
       <if test="list[0].belongToGarnet!=null">
-        belong_to_garnet,
+        BELONG_TO_GARNET,
       </if>
       <if test="list[0].updatedByUserName!=null">
-        updated_by_user_name,
+        UPDATED_BY_USER_NAME,
       </if>
     </trim>
      values 
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
-          #{item.id,jdbcType=BIGINT},
+          #{item.id,jdbcType=DECIMAL},
         </if>
         <if test="item.userName!=null">
           #{item.userName,jdbcType=VARCHAR},
         </if>
         <if test="item.createdTime!=null">
-          #{item.createdTime,jdbcType=BIGINT},
+          #{item.createdTime,jdbcType=DECIMAL},
         </if>
         <if test="item.modifiedTime!=null">
-          #{item.modifiedTime,jdbcType=BIGINT},
+          #{item.modifiedTime,jdbcType=DECIMAL},
         </if>
         <if test="item.mobileNumber!=null">
           #{item.mobileNumber,jdbcType=VARCHAR},
@@ -428,7 +428,7 @@
           #{item.email,jdbcType=VARCHAR},
         </if>
         <if test="item.status!=null">
-          #{item.status,jdbcType=INTEGER},
+          #{item.status,jdbcType=DECIMAL},
         </if>
         <if test="item.belongToGarnet!=null">
           #{item.belongToGarnet,jdbcType=VARCHAR},
@@ -443,38 +443,38 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-04-12 18:06
     -->
     <foreach collection="list" index="index" item="item" separator=";">
-      update gar_users
+      update GAR_USERS
       <set>
         <if test="item.userName!=null">
-          user_name=#{item.userName,jdbcType=VARCHAR},
+          USER_NAME=#{item.userName,jdbcType=VARCHAR},
         </if>
         <if test="item.createdTime!=null">
-          created_time=#{item.createdTime,jdbcType=BIGINT},
+          CREATED_TIME=#{item.createdTime,jdbcType=DECIMAL},
         </if>
         <if test="item.modifiedTime!=null">
-          modified_time=#{item.modifiedTime,jdbcType=BIGINT},
+          MODIFIED_TIME=#{item.modifiedTime,jdbcType=DECIMAL},
         </if>
         <if test="item.mobileNumber!=null">
-          mobile_number=#{item.mobileNumber,jdbcType=VARCHAR},
+          MOBILE_NUMBER=#{item.mobileNumber,jdbcType=VARCHAR},
         </if>
         <if test="item.email!=null">
-          email=#{item.email,jdbcType=VARCHAR},
+          EMAIL=#{item.email,jdbcType=VARCHAR},
         </if>
         <if test="item.status!=null">
-          status=#{item.status,jdbcType=INTEGER},
+          STATUS=#{item.status,jdbcType=DECIMAL},
         </if>
         <if test="item.belongToGarnet!=null">
-          belong_to_garnet=#{item.belongToGarnet,jdbcType=VARCHAR},
+          BELONG_TO_GARNET=#{item.belongToGarnet,jdbcType=VARCHAR},
         </if>
         <if test="item.updatedByUserName!=null">
-          updated_by_user_name=#{item.updatedByUserName,jdbcType=VARCHAR},
+          UPDATED_BY_USER_NAME=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </set>
       where 
-      id = #{item.id,jdbcType=BIGINT}
+      ID = #{item.id,jdbcType=DECIMAL}
     </foreach>
   </update>
 </mapper>
