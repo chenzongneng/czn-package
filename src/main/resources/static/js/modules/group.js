@@ -31,11 +31,11 @@ $(function () {
         url: baseURL + 'groups?userId=' + userId,
         datatype: "json",
         colModel: [
-            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '组名称', name: 'name', align: 'center', width: 40},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 100},
-            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 100},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
+            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false ,sortable: false},
+            {label: '组名称', name: 'name', align: 'center', width: 40 ,sortable: false ,sortable: false},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 150 ,sortable: false ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: true,
         height: 385,

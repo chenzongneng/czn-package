@@ -11,12 +11,12 @@ $(function () {
         url: baseURL + 'resources',
         datatype: "json",
         colModel: [
-            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
-            {label: '资源名称', name: 'name', align: 'center', width: 40},
-            {label: '路径标识', name: 'path', align: 'center',  width: 70},
-            {label: 'actions', name: 'actions', align: 'center',  width: 70},
-            {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70}
+            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            // {label: '应用名称', name: 'applicationName', align: 'center', width: 40 ,sortable: false},
+            {label: '资源名称', name: 'name', align: 'center', width: 40 ,sortable: false},
+            {label: '路径标识', name: 'path', align: 'center',  width: 70 ,sortable: false},
+            {label: 'actions', name: 'actions', align: 'center',  width: 70 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70 }
         ],
         viewrecords: true,
         height: 385,
@@ -384,8 +384,8 @@ var vm = new Vue({
                             }
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (result) {
+                            swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -692,7 +692,7 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
         this.getAppList();
         this.getSearchTypeList();
     }

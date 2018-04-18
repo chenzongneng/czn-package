@@ -10,10 +10,9 @@ $(function () {
         url: baseURL + 'routergroups',
         datatype: "json",
         colModel: [
-            {label: 'ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
-            {label: '名称', name: 'groupName', align: 'center', width: 80},
-            // TODO routerGroup 应用列表显示
-            // {label: '应用列表', name: 'appCodeList', align: 'center', width: 80}
+            {label: 'ID', name: 'routerGroup.id', align: 'center', hidden: true, width: 20, key: true, sortable: false},
+            {label: '名称', name: 'routerGroup.groupName', align: 'center', width: 80, sortable: false},
+            {label: '应用列表', name: 'applicationNames', align: 'center', width: 160}
         ],
         viewrecords: true,
         height: 385,
@@ -217,7 +216,7 @@ var vm = new Vue({
                 }
             });
         },
-        /**  租户树点击事件 */
+        /**  应用树点击事件 */
         applicationTree: function () {
             layer.open({
                 type: 1,
@@ -225,12 +224,13 @@ var vm = new Vue({
                 skin: 'layui-layer-molv',
                 title: "选择租户",
                 area: ['300px', '450px'],
-                shade: 0,
+                shade: 0.3,
                 shadeClose: false,
                 content: jQuery("#applicationLayer"),
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     vm.applicationNames = [];
+                    vm.appCodeList = [];
                     vm.applicationIds = "";
                     // 获取应用树选择的应用
                     var applicationNodes = applicationTree.getCheckedNodes(true);
@@ -242,6 +242,8 @@ var vm = new Vue({
                     }
 
                     vm.applicationIds = applicationIdList.join(",");
+                    console.log("routerGroup Id == " + JSON.stringify(vm.applicationIds));
+                    console.log("routerGroup appCode == " + JSON.stringify(vm.appCodeList));
                     layer.close(index);
                 }
             });

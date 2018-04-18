@@ -206,6 +206,7 @@ function refreshToken () {
     }
     $.ajax({
         type: "POST",
+        async: true,
         url: baseURL + "users/garnetrefreshtoken?token=" + accessToken,
         data: JSON.stringify(data),
         contentType: "application/json",
@@ -218,7 +219,7 @@ function refreshToken () {
     });
 }
 //每半小时自动刷新token
-window.setInterval("refreshToken();", 60000 * 29);
+window.setInterval("refreshToken();", 60000 * 28);
 
 /** iframe自适应 */
 $(window).on('resize', function () {

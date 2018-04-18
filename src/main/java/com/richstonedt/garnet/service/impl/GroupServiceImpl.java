@@ -231,7 +231,6 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
         //只查询状态为1，即可见的
         criteria.andStatusEqualTo(1);
-        criteria.andNameIsNotNull();
 
         if (!ObjectUtils.isEmpty(groupParm.getSearchName())) {
             criteria.andNameLike("%" + groupParm.getSearchName() + "%");

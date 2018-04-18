@@ -10,13 +10,13 @@ $(function () {
         url: baseURL + 'users?userId=' + userId,
         datatype: "json",
         colModel: [
-            {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '账号', name: 'userName', align: 'center', width: 70},
-            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70},
-            {label: '邮箱', name: 'email', align: 'center', width: 100},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
+            {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            {label: '账号', name: 'userName', align: 'center', width: 70 ,sortable: false},
+            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70 ,sortable: false},
+            {label: '邮箱', name: 'email', align: 'center', width: 100 ,sortable: false},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
             // {
             //     label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
             //     return value === 0 ?
@@ -510,6 +510,6 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
     }
 });

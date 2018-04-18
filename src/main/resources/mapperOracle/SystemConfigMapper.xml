@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="PARAMETER" jdbcType="VARCHAR" property="parameter" />
@@ -15,7 +15,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -49,7 +49,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -83,7 +83,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     ID, PARAMETER, VALUE
   </sql>
@@ -91,7 +91,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select
     <if test="distinct">
@@ -113,7 +113,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select 
     <include refid="Base_Column_List" />
@@ -124,7 +124,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     delete from GAR_SYSTEM_CONFIG
     where ID = #{id,jdbcType=DECIMAL}
@@ -133,7 +133,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     delete from GAR_SYSTEM_CONFIG
     <if test="_parameter != null">
@@ -144,7 +144,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     insert into GAR_SYSTEM_CONFIG (ID, PARAMETER, VALUE
       )
@@ -155,7 +155,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     insert into GAR_SYSTEM_CONFIG
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -185,7 +185,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select count(*) from GAR_SYSTEM_CONFIG
     <if test="_parameter != null">
@@ -196,7 +196,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_SYSTEM_CONFIG
     <set>
@@ -218,7 +218,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_SYSTEM_CONFIG
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -232,7 +232,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_SYSTEM_CONFIG
     <set>
@@ -249,7 +249,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_SYSTEM_CONFIG
     set PARAMETER = #{parameter,jdbcType=VARCHAR},
@@ -260,7 +260,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select
     <if test="distinct">
@@ -279,7 +279,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     insert into GAR_SYSTEM_CONFIG
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -312,7 +312,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_SYSTEM_CONFIG

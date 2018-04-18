@@ -13,15 +13,15 @@ $(function () {
             'token': accessToken
         },
         colModel: [
-            {label: '应用ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
-            {label: '应用名称', name: 'name', align: 'center', width: 80},
-            {label: '应用标识', name: 'appCode', align: 'center', width: 80},
-            {label: '所属公司', name: 'company', align: 'center', width: 80},
-            {label: '刷新资源Api', name: 'refreshResourcesApi', align: 'center', width: 80},
-            {label: '主机', name: 'hosts', align: 'center', width: 80},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
+            {label: '应用ID', name: 'id', align: 'center', hidden: true, width: 20, key: true ,sortable: false},
+            {label: '应用名称', name: 'name', align: 'center', width: 80 ,sortable: false},
+            {label: '应用标识', name: 'appCode', align: 'center', width: 80 ,sortable: false},
+            {label: '所属公司', name: 'company', align: 'center', width: 80 ,sortable: false},
+            {label: '刷新资源Api', name: 'refreshResourcesApi', align: 'center', width: 80 ,sortable: false},
+            {label: '主机', name: 'hosts', align: 'center', width: 80 ,sortable: false},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: true,
         height: 385,
@@ -288,28 +288,28 @@ var vm = new Vue({
                 return;
             }
 
-            if (vm.application.appCode == null) {
+            if (vm.application.appCode == null || $.trim(vm.application.name) == "") {
                 swal("", "应用标识不能为空", "error");
                 return;
             }
 
 
-            if (vm.application.company == null) {
+            if (vm.application.company == null || $.trim(vm.application.name) == "") {
                 swal("", "公司名称不能为空", "error");
                 return;
             }
 
-            if (vm.application.refreshResourcesApi == null) {
-                swal("", "刷新资源Api不能为空", "error");
-                return;
-            }
+            // if (vm.application.refreshResourcesApi == null) {
+            //     swal("", "刷新资源Api不能为空", "error");
+            //     return;
+            // }
+            //
+            // if (vm.application.hosts == null) {
+            //     swal("", "主机不能为空", "error");
+            //     return;
+            // }
 
-            if (vm.application.hosts == null) {
-                swal("", "主机不能为空", "error");
-                return;
-            }
-
-            if (vm.application.name.length > 30 || vm.application.appCode.length > 30 || vm.application.company > 30 || vm.application.refreshResourcesApi.length > 30 || vm.application.hosts.length > 30) {
+            if (vm.application.name.length > 30 || vm.application.appCode.length > 30 || vm.application.company > 30) {
                 swal("", "参数长度不能大于30", "error");
                 return;
             }
@@ -419,12 +419,21 @@ var vm = new Vue({
         },
         /**  租户树点击事件 */
         tenantTree: function () {
+
+            var title;
+
+            if ("paas" == vm.modeList2.selectedMode) {
+                title = "选择租户（只能选择一个）";
+            } else if ("saas" == vm.modeList2.selectedMode) {
+                title = "选择租户（可选择多个）";
+            }
+
             layer.open({
                 type: 1,
                 offset: '50px',
                 // maxmin: true,
                 skin: 'layui-layer-molv',
-                title: "选择租户",
+                title: title,
                 area: ['300px', '450px'],
                 shade: 0.3,
                 shadeClose: false,

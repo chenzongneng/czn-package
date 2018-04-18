@@ -78,6 +78,15 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             throw new RuntimeException("appCode: " + appCode + " 已经存在");
         }
 
+        //检查appName是否已存在
+        String name = application.getName();
+        ApplicationCriteria applicationCriteria1 = new ApplicationCriteria();
+        applicationCriteria1.createCriteria().andNameEqualTo(name).andStatusEqualTo(1);
+        Application application2 = this.selectSingleByCriteria(applicationCriteria1);
+        if (!ObjectUtils.isEmpty(application2)) {
+            throw new RuntimeException("应用名称: " + name + " 已经存在");
+        }
+
         application.setId(IdGeneratorUtil.generateId());
         Long currentTime = System.currentTimeMillis();
         application.setCreatedTime(currentTime);

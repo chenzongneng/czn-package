@@ -10,8 +10,8 @@ $(function () {
         url: baseURL + 'resourcedynamicpropertys',
         datatype: "json",
         colModel: [
-            {label: '动态资源配置ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '类型名称', name: 'type', align: 'center', width: 40}
+            {label: '动态资源配置ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            {label: '类型名称', name: 'type', align: 'center', width: 40, sortable: false}
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
             // {
             //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {

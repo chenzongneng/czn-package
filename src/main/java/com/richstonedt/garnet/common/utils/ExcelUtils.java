@@ -251,6 +251,14 @@ public class ExcelUtils<T> {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }

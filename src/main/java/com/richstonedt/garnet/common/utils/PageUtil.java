@@ -65,7 +65,7 @@ public class PageUtil<T> implements Serializable {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    private List<T> list;
+    private List<T>     list;
 
     /**
      * 分页

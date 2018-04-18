@@ -106,6 +106,9 @@ public class ResourceController {
         try {
 
             for (String id : ids.split(",")) {
+                if ("60".equals(id)) {
+                    throw new RuntimeException("不能删除超级权限");
+                }
                 resourceService.deleteByPrimaryKey(Long.parseLong(id));
             }
             // 封装返回信息

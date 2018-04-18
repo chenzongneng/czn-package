@@ -39,16 +39,18 @@ public class GarnetRsUtil {
      */
     public static ResponseEntity<Map<String, Object>> newResponseEntity(
             Throwable t) {
+
+        String errorCode = "errorCode";
         Map<String, Object> errorMap = new HashMap<>(8);
         if (t instanceof GarnetServiceException) {
             GarnetServiceException e = (GarnetServiceException) t;
             if (!StringUtils.isEmpty(e.getErrorCode())) {
-                errorMap.put("errorCode", e.getErrorCode());
+                errorMap.put(errorCode, e.getErrorCode());
             } else {
-                errorMap.put("errorCode", GarnetServiceErrorCodes.OTHER);
+                errorMap.put(errorCode, GarnetServiceErrorCodes.OTHER);
             }
         } else {
-            errorMap.put("errorCode", GarnetServiceErrorCodes.OTHER);
+            errorMap.put(errorCode, GarnetServiceErrorCodes.OTHER);
         }
         errorMap.put("errorMessage", t.getMessage());
         return new ResponseEntity<>(errorMap, HttpStatus.INTERNAL_SERVER_ERROR);

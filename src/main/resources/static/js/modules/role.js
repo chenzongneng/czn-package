@@ -10,15 +10,15 @@ $(function () {
         url: baseURL + 'roles',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'role.id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '角色名称', name: 'role.name', align: 'center', width: 70},
-            {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
-            {label: '所属应用', name: 'applicationName', align: 'center', width: 70},
-            {label: '部门列表', name: 'groupNames', align: 'center', width: 100},
-            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100},
-            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更改人', name: 'role.updatedByUserName', align: 'center', width: 100}
+            {label: '角色ID', name: 'role.id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            {label: '角色名称', name: 'role.name', align: 'center', width: 70 ,sortable: false},
+            {label: '所属租户', name: 'tenantName', align: 'center', width: 70 ,sortable: false},
+            {label: '所属应用', name: 'applicationName', align: 'center', width: 70 ,sortable: false},
+            {label: '部门列表', name: 'groupNames', align: 'center', width: 100 ,sortable: false},
+            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100 ,sortable: false},
+            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
+            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
+            {label: '更改人', name: 'role.updatedByUserName', align: 'center', width: 100 ,sortable: false}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
