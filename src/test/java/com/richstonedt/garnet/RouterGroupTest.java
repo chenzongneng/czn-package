@@ -165,4 +165,12 @@ public class RouterGroupTest {
         Assert.assertEquals(routerGroupList.size(), 0);
     }
 
+    @Test
+    public void testSearch() {
+        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.createCriteria().andAppCodeEqualTo("garnet");
+        RouterGroup routerGroup = routerGroupService.selectSingleByCriteria(routerGroupCriteria);
+        System.out.println(routerGroup);
+    }
+
 }

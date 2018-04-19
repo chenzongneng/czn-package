@@ -329,50 +329,59 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
      * @param tenantView
      */
     private void dealForgenKeyUsers(TenantView tenantView) {
-        if (!ObjectUtils.isEmpty(tenantView.getUserName())) {
-            UserCriteria userCriteria = new UserCriteria();
-            userCriteria.createCriteria().andUserNameEqualTo(tenantView.getUserName());
-            List<User> users = userService.selectByCriteria(userCriteria);
-            if (CollectionUtils.isEmpty(users)) {
-                throw new RuntimeException("此用户不存在");
-            } else {
-                // username是唯一的
-                User user = users.get(0);
-                if (user.getStatus() == null || user.getStatus() == 0) {
-                    throw new RuntimeException("此用户已被冻结");
-                }
-                List<UserTenant> userTenants = null;
-                UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-                if (!ObjectUtils.isEmpty(tenantView.getTenant()) && !ObjectUtils.isEmpty(tenantView.getTenant().getId())) {
-                    Long tenantId = tenantView.getTenant().getId();
-                    userTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
-                    userTenants = userTenantService.selectByCriteria(userTenantCriteria);
-                }
+        String userNames = tenantView.getUserNames();
+        Long tenantId = tenantView.getTenant().getId();
 
-                //如果该租户已经关联此用户，抛异常
-                checkUserBinked(tenantView, user);
-
-                UserTenant userTenant = new UserTenant();
-                userTenant.setUserId(user.getId());
-                userTenant.setTenantId(tenantView.getTenant().getId());
-                userTenant.setId(IdGeneratorUtil.generateId());
-                userTenantService.insertSelective(userTenant);
+        if (!StringUtils.isEmpty(userNames) && !ObjectUtils.isEmpty(tenantId)) {
+            for (String userName : userNames.split(",")) {
+                executeForeignUsers(tenantId, userName);
             }
         }
     }
 
     /**
+     * 完成租户-用户的外键关联
+     * @param tenantId
+     * @param userName
+     */
+    private void executeForeignUsers(Long tenantId, String userName) {
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
+        List<User> users = userService.selectByCriteria(userCriteria);
+        if (CollectionUtils.isEmpty(users) || users.size() == 0) {
+            throw new RuntimeException("用户: " + userName +" 不存在（用户名之间不能包含空格）");
+        } else {
+            // username是唯一的
+            User user = users.get(0);
+            if (user.getStatus() == null || user.getStatus() == 0) {
+                throw new RuntimeException("此用户已被冻结");
+            }
+
+            //如果该租户已经关联此用户，抛异常
+            checkUserBinked(tenantId, user);
+
+            //完成关联
+            UserTenant userTenant = new UserTenant();
+            userTenant.setUserId(user.getId());
+            userTenant.setTenantId(tenantId);
+            userTenant.setId(IdGeneratorUtil.generateId());
+            userTenantService.insertSelective(userTenant);
+        }
+
+    }
+
+    /**
      * 检查租户是否已经关联用户
-     * @param tenantView
+     * @param tenantId
      * @param user
      */
-    private void checkUserBinked(TenantView tenantView, User user) {
-        UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
-        userTenantCriteria1.createCriteria().andUserIdEqualTo(user.getId());
-        List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria1);
-        if (!CollectionUtils.isEmpty(userTenants1)) {
-            for (UserTenant userTenant : userTenants1) {
-                if (userTenant.getTenantId().longValue() == tenantView.getTenant().getId().longValue() && userTenant.getUserId().longValue() == user.getId().longValue()) {
+    private void checkUserBinked(Long tenantId, User user) {
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andUserIdEqualTo(user.getId());
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        if (!CollectionUtils.isEmpty(userTenants)) {
+            for (UserTenant userTenant : userTenants) {
+                if (userTenant.getTenantId().longValue() == tenantId.longValue() && userTenant.getUserId().longValue() == user.getId().longValue()) {
                     throw new RuntimeException("您已经添加过此用户");
                 }
             }

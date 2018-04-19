@@ -95,6 +95,7 @@ var vm = new Vue({
         showList: true,
         title: null,
         userName:null,
+        userNames:null,
         hidden:false,
         tips:null,
         // placeholder:false, //选择应用框，根据选择模式的不同给出相对应的提示
@@ -174,6 +175,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.hidden = false;
             vm.title = "新增";
+            vm.userNames = null;
             vm.tenant = {
                 id: null,
                 name: null,
@@ -218,6 +220,7 @@ var vm = new Vue({
             vm.tenant.appIds = null;
             vm.tenant.appNames = [];
             vm.userName = null;
+            vm.userNames = null;
 
             vm.getTenant(tenantId);
         },
@@ -269,6 +272,7 @@ var vm = new Vue({
             obj.appIds =vm.tenant.appIds;
             obj.userTenants = [];
             obj.userName = userName;
+            obj.userNames = vm.userNames;
             var appIdList = vm.tenant.appIdList;
 
             // alert(JSON.stringify(obj));

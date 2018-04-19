@@ -170,7 +170,7 @@ var vm = new Vue({
             //获取租户信息
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
                 mySelf.multiple.originOptionsTenant = response.list;
-                console.log("originOptionsTenant" + JSON.stringify(vm.multiple.originOptionsTenant))
+                // console.log("originOptionsTenant" + JSON.stringify(vm.multiple.originOptionsTenant))
             });
             if (method == "update") {
                 //Todo 租户更新部分
@@ -478,6 +478,15 @@ var vm = new Vue({
                 if (value.length < 4 || value.length > 20) {
                     swal({
                         title: name + '的长度只能在4-20！',
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
+                if (value.indexOf(",") != -1 && name == "账号") {
+                    swal({
+                        title: name + '不能包含特殊符号","',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false

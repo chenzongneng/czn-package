@@ -83,9 +83,32 @@ var vm = new Vue({
                 } else {
                     // console.log("getUser: " + JSON.stringify(response));
                     if (response.loginStatus == "false") {
-                        // swal({title: "请先登录111", type: "error"}, function () {
-                        //     parent.location.href = 'login.html';
-                        // });
+
+                        // if (typeof(swal) == "undefine") {
+                        //     var pathName = window.document.location.pathname;
+                        //     var patrn = /.*index.html$/;
+                        //     if (patrn.exec(pathName)) {
+                        //         parent.location.href = 'login.html';
+                        //     } else {
+                        //         parent.location.href = '../login.html';
+                        //     }
+                        //     return;
+                        // }
+
+                        // swal({
+                        //         title: response.message,
+                        //         type: "error"
+                        //     },
+                        //     function () {
+                        //         var pathName = window.document.location.pathname;
+                        //         var patrn = /.*index.html$/;
+                        //         if (patrn.exec(pathName)) {
+                        //             parent.location.href = 'login.html';
+                        //         } else {
+                        //             parent.location.href = '../login.html';
+                        //         }
+                        //         // parent.location.href = '../login.html';
+                        //     });
                         return;
                     }
 

@@ -15,6 +15,7 @@ import com.richstonedt.garnet.model.parm.UserParm;
 import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +36,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     private static final String STRING_ACCESSTOKEN = "#accessToken";
 
     private static final String STRING_REFRESHTOKEN = "#refreshToken";
+
+    private BeanCopier daoToViewCopier = BeanCopier.create(Resource.class, RefreshTokenResourceView.class,
+            false);
 
     @Autowired
     private UserMapper userMapper;
@@ -567,26 +571,36 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         loginMessage.setAccessToken(accessTokenReturn);
         loginMessage.setRefreshToken(refreshTokenReturn);
 
+        //取出资源列表
         LoginMessage loginMessage1 = this.getResourcesWhenRefreshToken(userCredential, appCode, loginMessage);
-        List<Resource> resourceList = loginMessage1.getResourceList();
+//        List<Resource> resourceList = loginMessage1.getResourceList();
+        List<RefreshTokenResourceView> refreshTokenResourceViewList = loginMessage1.getRefreshTokenResourceList();
 
-        //通过resource获取资源配置列表
+        //通过resource列表获取 ResourceDynamicProperty列表
         List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
-        for (Resource resource : resourceList) {
+        for (RefreshTokenResourceView refreshTokenResourceView : refreshTokenResourceViewList) {
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resource.getType());
+            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(refreshTokenResourceView.getType());
             List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
             resourceDynamicPropertyList.add(resourceDynamicProperties);
         }
 
         loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
-        loginMessage.setResourceList(resourceList);
+//        loginMessage.setResourceList(resourceList);
+        loginMessage.setRefreshTokenResourceList(refreshTokenResourceViewList);
         loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
         loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
 
         return loginMessage;
     }
 
+    /**
+     * 获取resource列表并分组返回
+     * @param userCredential
+     * @param appCode
+     * @param loginMessage
+     * @return
+     */
     private LoginMessage getResourcesWhenRefreshToken(UserCredential userCredential, String appCode, LoginMessage loginMessage) {
         //获取返回资源
         //根据appCode拿 application
@@ -659,14 +673,21 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return loginMessage;
         }
 
+        //对resource列表进行处理
         LoginMessage loginMessage1 = this.getResourcesDstinct(resourceList);
 
-        loginMessage.setResourceList(loginMessage1.getResourceList());
+//        loginMessage.setResourceList(loginMessage1.getResourceList());
+        loginMessage.setRefreshTokenResourceList(loginMessage1.getRefreshTokenResourceList());
         loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
         loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
         return loginMessage;
     }
 
+    /**
+     * 对resource列表进行去重
+     * @param resourceList
+     * @return
+     */
     private LoginMessage getResourcesDstinct(List<Resource> resourceList) {
         LoginMessage loginMessage = new LoginMessage();
 
@@ -684,6 +705,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         List<Resource> resourceListWithReadOnly = new ArrayList<>();
         List<Resource> resourceListWithEdit = new ArrayList<>();
         List<Resource> resourceList2 = new ArrayList<>();
+        List<RefreshTokenResourceView> refreshTokenResourceViews = new ArrayList<>();
+        RefreshTokenResourceView refreshTokenResourceView;
+
         String actions = "edit;readonly";
         for (Resource resource : resourceList1) {
             if ("readonly".equals(resource.getActions()) && !actions.equals(resource.getActions())) {
@@ -695,9 +719,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             if (actions.equals(resource.getActions())) {
                 resource.setActions("edit");
             }
+            refreshTokenResourceView = new RefreshTokenResourceView();
+            daoToViewCopier.copy(resource, refreshTokenResourceView, null);
+            refreshTokenResourceView.setAction(resource.getActions());
+            refreshTokenResourceViews.add(refreshTokenResourceView);
             resourceList2.add(resource);
         }
-        loginMessage.setResourceList(resourceList2);
+        loginMessage.setRefreshTokenResourceList(refreshTokenResourceViews);
+//        loginMessage.setResourceList(resourceList2);
         loginMessage.setGetResourceListWithEdit(resourceListWithEdit);
         loginMessage.setResourceListWithReadlyOnly(resourceListWithReadOnly);
 

@@ -50,7 +50,7 @@ function - function opint,对应的是功能项，例如用户查询；
     private Long modifiedTime;
 
     /**
-     * 资源类型例如， 
+     * 资源类型例如，
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等
@@ -137,16 +137,16 @@ function-功能项，如页面，菜单模块等
     private Integer int05;
 
     @ExcelVOAttribute(name = "", column = "AE")
-    private Integer boolean01;
+    private Boolean boolean01;
 
     @ExcelVOAttribute(name = "", column = "AF")
-    private Integer boolean02;
+    private Boolean boolean02;
 
     @ExcelVOAttribute(name = "", column = "AG")
-    private Integer boolean03;
+    private Boolean boolean03;
 
     @ExcelVOAttribute(name = "", column = "AH")
-    private Integer boolean04;
+    private Boolean boolean04;
 
     /**
      * 更新的人
@@ -270,7 +270,7 @@ function - function opint,对应的是功能项，例如用户查询；
     }
 
     /**
-     * 资源类型例如， 
+     * 资源类型例如，
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等<br>
@@ -287,7 +287,7 @@ function-功能项，如页面，菜单模块等<br>
     }
 
     /**
-     * 资源类型例如， 
+     * 资源类型例如，
 ui-UI组件，如button, input, textarea, table, drop down list等
 openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
 function-功能项，如页面，菜单模块等<br>
@@ -511,35 +511,35 @@ function-功能项，如页面，菜单模块等<br>
         this.int05 = int05;
     }
 
-    public Integer getBoolean01() {
+    public Boolean getBoolean01() {
         return boolean01;
     }
 
-    public void setBoolean01(Integer boolean01) {
+    public void setBoolean01(Boolean boolean01) {
         this.boolean01 = boolean01;
     }
 
-    public Integer getBoolean02() {
+    public Boolean getBoolean02() {
         return boolean02;
     }
 
-    public void setBoolean02(Integer boolean02) {
+    public void setBoolean02(Boolean boolean02) {
         this.boolean02 = boolean02;
     }
 
-    public Integer getBoolean03() {
+    public Boolean getBoolean03() {
         return boolean03;
     }
 
-    public void setBoolean03(Integer boolean03) {
+    public void setBoolean03(Boolean boolean03) {
         this.boolean03 = boolean03;
     }
 
-    public Integer getBoolean04() {
+    public Boolean getBoolean04() {
         return boolean04;
     }
 
-    public void setBoolean04(Integer boolean04) {
+    public void setBoolean04(Boolean boolean04) {
         this.boolean04 = boolean04;
     }
 

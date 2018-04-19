@@ -304,7 +304,7 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
         this.getAppList();
     }
 });

@@ -759,18 +759,18 @@
       <if test="int05 != null">
         INT_05 = #{int05,jdbcType=DECIMAL},
       </if>
-      <if test="boolean01 != null">
+      <!--<if test="boolean01 != null">-->
         BOOLEAN_01 = #{boolean01,jdbcType=DECIMAL},
-      </if>
-      <if test="boolean02 != null">
+      <!--</if>-->
+      <!--<if test="boolean02 != null">-->
         BOOLEAN_02 = #{boolean02,jdbcType=DECIMAL},
-      </if>
-      <if test="boolean03 != null">
+      <!--</if>-->
+      <!--<if test="boolean03 != null">-->
         BOOLEAN_03 = #{boolean03,jdbcType=DECIMAL},
-      </if>
-      <if test="boolean04 != null">
+      <!--</if>-->
+      <!--<if test="boolean04 != null">-->
         BOOLEAN_04 = #{boolean04,jdbcType=DECIMAL},
-      </if>
+      <!--</if>-->
       <if test="updatedByUserName != null">
         UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
       </if>

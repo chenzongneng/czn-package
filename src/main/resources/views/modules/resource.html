@@ -361,12 +361,21 @@
         $('input:radio').click(function(){
 
             var domName = $(this).attr('name');
-
             var $radio = $(this);
             // if this was previously checked
             if ($radio.data('waschecked') == true){
                 $radio.prop('checked', false);
                 $("input:radio[name='" + domName + "']").data('waschecked',false);
+
+                if ("boolean01" == domName) {
+                    vm.resource.boolean01 = null;
+                } else if ("boolean02" == domName) {
+                    vm.resource.boolean02 = null;
+                } else if ("boolean03" == domName) {
+                    vm.resource.boolean03 = null;
+                } else if ("boolean04" == domName) {
+                    vm.resource.boolean04 = null;
+                }
             } else {
                 $radio.prop('checked', true);
                 $("input:radio[name='" + domName + "']").data('waschecked',false);

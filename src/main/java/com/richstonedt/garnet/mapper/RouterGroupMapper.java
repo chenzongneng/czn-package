@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface RouterGroupMapper extends BaseMapper<RouterGroup, RouterGroupCriteria, Long> {
+
     RouterGroup selectSingleByCriteria(RouterGroupCriteria criteria);
 
     int insertBatchSelective(List<RouterGroup> records);

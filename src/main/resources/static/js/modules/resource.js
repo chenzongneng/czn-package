@@ -317,6 +317,8 @@ var vm = new Vue({
             vm.typeList.options = [];
             applicationList.appList.selectedApp = "";
             applicationList.appList.options = [];
+            vm.actionsEdit = null;
+            vm.actionsReadonly = null;
             vm.resource = {
                 id: null,
                 applicationId: null,
@@ -349,6 +351,8 @@ var vm = new Vue({
             vm.title = "修改";
             vm.typeList.options = [];
             vm.tenantList.options = [];
+            vm.actionsEdit = null;
+            vm.actionsReadonly = null;
             // vm.resource.apiIdList = [];
             // vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);
@@ -393,15 +397,21 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
+            console.log(JSON.stringify(vm.actionsEdit) + " - " + JSON.stringify(vm.actionsReadonly));
+
             if (vm.actionsEdit == true && vm.actionsReadonly == true) {
                 vm.resource.actions = "edit;readonly";
             }
-            if (vm.actionsReadonly == null && vm.actionsEdit == true) {
+            if (vm.actionsReadonly == false && vm.actionsEdit == true) {
                 vm.resource.actions = "edit";
             }
-            if (vm.actionsEdit == null && vm.actionsReadonly == true) {
+            if (vm.actionsEdit == false && vm.actionsReadonly == true) {
                 vm.resource.actions = "readonly";
             }
+            if (vm.actionsEdit == false && vm.actionsReadonly == false) {
+                vm.resource.actions = "";
+            }
+
 
             var obj = new Object();
             vm.resource.updatedByUserName = localStorage.getItem("userName");
@@ -508,6 +518,19 @@ var vm = new Vue({
                 vm.resource.boolean03 = response.boolean03;
                 vm.resource.boolean04 = response.boolean04;
 
+                var action = response.actions;
+                if ("edit" == action) {
+                    vm.actionsEdit = true;
+                } else if ("readonly" == action) {
+                    vm.actionsReadonly = true;
+                } else if (action == null || action == "") {
+                    vm.actionsReadonly = false;
+                    vm.actionsEdit = false;
+                }
+                else {
+                    vm.actionsReadonly = true;
+                    vm.actionsEdit = true;
+                }
                 // vm.initTreesToAdd();
                 // $.each(response.apiIdList, function (index, item) {
                 //     var node = apiTree.getNodeByParam("apiId", item);
@@ -553,6 +576,10 @@ var vm = new Vue({
         selectType: function () {
             var type = vm.typeList.selectedType;
             vm.getResourceDynamicPropertyByType(type);
+        },
+        radioChecked:function (value) {
+            console.log(value);
+            console.log(JSON.stringify(vm.resource.boolean01));
         },
         //通过type和appId返回resource
         getResourceByTypeAndApp: function () {

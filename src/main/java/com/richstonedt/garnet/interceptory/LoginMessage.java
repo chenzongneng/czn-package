@@ -3,6 +3,7 @@ package com.richstonedt.garnet.interceptory;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.User;
+import com.richstonedt.garnet.model.view.RefreshTokenResourceView;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
@@ -26,6 +27,9 @@ public class LoginMessage {
     @ApiModelProperty(value = "资源列表")
     private List<Resource> resourceList;
 
+    @ApiModelProperty(value = "刷新token时获取的资源列表")
+    private List<RefreshTokenResourceView> refreshTokenResourceList;
+
     @ApiModelProperty(value = "资源列表readonly组")
     private List<Resource> resourceListWithReadlyOnly;
 
@@ -34,6 +38,15 @@ public class LoginMessage {
 
     @ApiModelProperty(value = "资源类型配置列表")
     private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
+
+
+    public List<RefreshTokenResourceView> getRefreshTokenResourceList() {
+        return refreshTokenResourceList;
+    }
+
+    public void setRefreshTokenResourceList(List<RefreshTokenResourceView> refreshTokenResourceList) {
+        this.refreshTokenResourceList = refreshTokenResourceList;
+    }
 
     public List<Resource> getResourceListWithReadlyOnly() {
         return resourceListWithReadlyOnly;
