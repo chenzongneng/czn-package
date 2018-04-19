@@ -9,8 +9,6 @@ public class ResourceParm extends BaseParm{
 
     private Resource resource;
 
-    private String searchName;
-
     private String type;
 
     public String getType() {
@@ -21,13 +19,6 @@ public class ResourceParm extends BaseParm{
         this.type = type;
     }
 
-    public String getSearchName() {
-        return searchName;
-    }
-
-    public void setSearchName(String searchName) {
-        this.searchName = searchName;
-    }
 
     /**
      * Gets resource.

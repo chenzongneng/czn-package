@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
@@ -20,7 +20,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -54,7 +54,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -88,7 +88,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     ID, NAME, CREATED_TIME, MODIFIED_TIME, APPLICATION_ID, TENANT_ID, STATUS, UPDATED_BY_USER_NAME
   </sql>
@@ -96,7 +96,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select
     <if test="distinct">
@@ -118,7 +118,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select 
     <include refid="Base_Column_List" />
@@ -129,7 +129,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     delete from GAR_GROUPS
     where ID = #{id,jdbcType=DECIMAL}
@@ -138,7 +138,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     delete from GAR_GROUPS
     <if test="_parameter != null">
@@ -149,7 +149,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     insert into GAR_GROUPS (ID, NAME, CREATED_TIME, 
       MODIFIED_TIME, APPLICATION_ID, TENANT_ID, 
@@ -162,7 +162,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     insert into GAR_GROUPS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -222,7 +222,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select count(*) from GAR_GROUPS
     <if test="_parameter != null">
@@ -233,7 +233,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_GROUPS
     <set>
@@ -270,7 +270,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_GROUPS
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -289,7 +289,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_GROUPS
     <set>
@@ -321,7 +321,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     update GAR_GROUPS
     set NAME = #{name,jdbcType=VARCHAR},
@@ -337,7 +337,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     select
     <if test="distinct">
@@ -356,7 +356,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     insert into GAR_GROUPS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -419,7 +419,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 18:06
+      DATE: 2018-04-18 18:32
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_GROUPS

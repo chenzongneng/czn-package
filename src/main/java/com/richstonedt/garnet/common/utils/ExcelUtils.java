@@ -89,15 +89,12 @@ public class ExcelUtils<T> {
                                 .getAnnotation(ExcelVOAttribute.class);
                         int col = getExcelCol(attr.column());// 获得列号
                         maxCol = Math.max(col, maxCol);
-                        // System.out.println(col + "====" + field.getName());
                         field.setAccessible(true);// 设置类的私有字段属性可访问.
                         fieldsMap.put(col, field);
                     }
                 }
                 for (int i = 1; i < rows; i++) {// 从第2行开始取数据,默认第一行是表头.
                     Row row = sheet.getRow(i);
-                    // int cellNum = row.getPhysicalNumberOfCells();
-                    // int cellNum = row.getLastCellNum();
                     int cellNum = maxCol;
                     T entity = null;
                     for (int j = 0; j <= cellNum; j++) {
@@ -122,7 +119,6 @@ public class ExcelUtils<T> {
                             continue;
                         }
                         entity = (entity == null ? clazz.newInstance() : entity);// 如果不存在实例则新建.
-                        // System.out.println(cells[j].getContents());
                         Field field = fieldsMap.get(j);// 从map中得到对应列的field.
                         if (field == null) {
                             continue;
@@ -163,7 +159,6 @@ public class ExcelUtils<T> {
     public boolean exportExcel(List<T> lists[], String sheetNames[],
                                OutputStream output,ExcelVersion excelVersion) {
         if (lists.length != sheetNames.length) {
-            System.out.println("数组长度不一致");
             return false;
         }
 
@@ -255,8 +250,15 @@ public class ExcelUtils<T> {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Output is closed ");
             return false;
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }

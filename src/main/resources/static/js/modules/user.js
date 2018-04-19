@@ -10,13 +10,13 @@ $(function () {
         url: baseURL + 'users?userId=' + userId,
         datatype: "json",
         colModel: [
-            {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '账号', name: 'userName', align: 'center', width: 70},
-            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70},
-            {label: '邮箱', name: 'email', align: 'center', width: 100},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
+            {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            {label: '账号', name: 'userName', align: 'center', width: 70 ,sortable: false},
+            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70 ,sortable: false},
+            {label: '邮箱', name: 'email', align: 'center', width: 100 ,sortable: false},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
             // {
             //     label: '状态', align: 'center', name: 'status', width: 50, formatter: function (value, options, row) {
             //     return value === 0 ?
@@ -170,7 +170,7 @@ var vm = new Vue({
             //获取租户信息
             $.get(baseURL + "tenants?page=1&limit=1000", function (response) {
                 mySelf.multiple.originOptionsTenant = response.list;
-                console.log("originOptionsTenant" + JSON.stringify(vm.multiple.originOptionsTenant))
+                // console.log("originOptionsTenant" + JSON.stringify(vm.multiple.originOptionsTenant))
             });
             if (method == "update") {
                 //Todo 租户更新部分
@@ -265,15 +265,15 @@ var vm = new Vue({
                 function () {
                     $.ajax({
                         type: "DELETE",
-                        url: baseURL + "users?ids=" + userIds.toString(),
+                        url: baseURL + "users?loginUserId=" + userId +"&ids=" + userIds.toString(),
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
                             swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (response) {
+                            swal("删除失败!", getExceptionMessage(response), "error");
                         }
 
                     });
@@ -295,7 +295,6 @@ var vm = new Vue({
             if (!vm.checkValue()) {
                 return;
             }
-
 
             //获取选择的租户
             for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {
@@ -485,6 +484,15 @@ var vm = new Vue({
                     });
                     return false;
                 }
+                if (value.indexOf(",") != -1 && name == "账号") {
+                    swal({
+                        title: name + '不能包含特殊符号","',
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
             }
             return true;
         },
@@ -511,6 +519,6 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
     }
 });

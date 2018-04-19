@@ -10,15 +10,15 @@ $(function () {
         url: baseURL + 'roles',
         datatype: "json",
         colModel: [
-            {label: '角色ID', name: 'role.id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '角色名称', name: 'role.name', align: 'center', width: 70},
-            {label: '所属租户', name: 'tenantName', align: 'center', width: 70},
-            {label: '所属应用', name: 'applicationName', align: 'center', width: 70},
-            {label: '部门列表', name: 'groupNames', align: 'center', width: 100},
-            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100},
-            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更改人', name: 'role.updatedByUserName', align: 'center', width: 100}
+            {label: '角色ID', name: 'role.id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            {label: '角色名称', name: 'role.name', align: 'center', width: 70 ,sortable: false},
+            {label: '所属租户', name: 'tenantName', align: 'center', width: 70 ,sortable: false},
+            {label: '所属应用', name: 'applicationName', align: 'center', width: 70 ,sortable: false},
+            {label: '部门列表', name: 'groupNames', align: 'center', width: 100 ,sortable: false},
+            {label: '权限列表', name: 'permissionNames', align: 'center', width: 100 ,sortable: false},
+            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
+            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
+            {label: '更改人', name: 'role.updatedByUserName', align: 'center', width: 100 ,sortable: false}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
         viewrecords: true,
@@ -240,18 +240,23 @@ var vm = new Vue({
             obj.groupIds = groupIdList;
             obj.permissionIds = permissionIdList;
 
-            if(vm.role.name === null || vm.role.name === "") {
-                alert("角色名称不能为空");
+            if(vm.role.name == null || $.trim(vm.role.name) == "") {
+                swal("", "角色名称不能为空", "error");
                 return;
             }
-            if(vm.role.tenantId === null) {
-                alert("请选择租户");
+            if(vm.role.tenantId == null) {
+                swal("", "请选择租户", "error");
                 return;
             }
-            if(vm.role.applicationId === null) {
-                alert("请选择应用");
+            if(vm.role.applicationId == null) {
+                swal("", "请选择应用", "error");
                 return;
             }
+
+            if (vm.role.name.length > 30) {
+                swal("", "角色名称长度不能大于30", "");
+            }
+
             $.ajax({
                 type: vm.role.id === null ? "POST" : "PUT",
                 url: baseURL + "roles",
@@ -331,12 +336,12 @@ var vm = new Vue({
         initTree:function () {
         },
         /** 查询当前用户信息 */
-        getCurrentUser: function () {
-            $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
-                // vm.currentUser = response;
-                currentUser = response;
-            });
-        },
+        // getCurrentUser: function () {
+        //     $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
+        //         // vm.currentUser = response;
+        //         currentUser = response;
+        //     });
+        // },
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;
@@ -406,6 +411,6 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
     }
 });

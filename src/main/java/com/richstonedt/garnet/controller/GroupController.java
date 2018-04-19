@@ -105,21 +105,12 @@ public class GroupController {
     public ResponseEntity<?> deleteGroups(
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
-            /*List<Long> idslist = new ArrayList<>();
-            for (String id:
-                    ids.split(",")) {
-                idslist.add(Long.parseLong(id));
-            }
-            GroupCriteria groupCriteria = new GroupCriteria();
-            groupCriteria.createCriteria().andIdIn(idslist);
-            groupService.deleteByCriteria(groupCriteria);*/
 
             for (String id : ids.split(",")) {
                 Group group = new Group();
                 group.setId(Long.parseLong(id));
                 groupService.updateStatusById(group);
             }
-
 
             // 封装返回信息
             GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_DELETE_SUCCESS, null);
@@ -142,7 +133,6 @@ public class GroupController {
             @ApiParam(value = "用户组id", required = true) @RequestParam(value = "userId") long userId,
             @ApiParam(value = "用户组信息", required = true) @RequestBody GroupView groupView) {
         try {
-            //groupView.getGroup().setId(id);
             groupService.updateGroup(groupView);
             // 封装返回信息
             GarnetMessage<GroupView> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_UPDATE_SUCCESS, groupView);
@@ -163,9 +153,6 @@ public class GroupController {
     public ResponseEntity<?> getGroup(
             @ApiParam(value = "用户组id", required = true) @PathVariable(value = "id") long id) {
         try {
-//            Group group = groupService.selectByPrimaryKey(id);
-//            GroupView groupView = new GroupView();
-//            groupView.setGroup(group);
 
             GroupView groupView = groupService.selectGroupWithUserAndRole(id);
 
@@ -200,7 +187,6 @@ public class GroupController {
             groupParm.setSearchName(searchName);
             PageUtil pageInfo = groupService.queryGroupsByParms(groupParm);
             // 封装返回信息
-//            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
             return new ResponseEntity<>(pageInfo, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
@@ -224,7 +210,6 @@ public class GroupController {
             groupParm.setTenantId(tenantId);
             List<Group> groups = groupService.queryGroupsByTenantId(groupParm);
             // 封装返回信息
-//            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
             return new ResponseEntity<>(groups, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

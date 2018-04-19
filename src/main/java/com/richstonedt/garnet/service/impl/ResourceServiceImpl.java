@@ -1,10 +1,7 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.google.gson.JsonObject;
 import com.richstonedt.garnet.common.contants.GarnetContants;
-import com.richstonedt.garnet.common.utils.FileUtil;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
@@ -14,11 +11,8 @@ import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.ResourceParm;
 import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.*;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.naming.factory.ResourceLinkFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +85,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                  resourceView.getResourceDynamicProperties()) {
 
                 resourceDynamicProperty.setId(IdGeneratorUtil.generateId());
-                //resourceDynamicProperty.setType(resource.getType());
                 resourceDynamicPropertyService.insertSelective(resourceDynamicProperty);
 
             }
@@ -112,14 +105,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            //resourceDynamicPropertyCriteria.createCriteria().andResourceIdEqualTo(resource.getId());
             resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
 
             for (ResourceDynamicProperty resourceDynamicProperty:
                     resourceView.getResourceDynamicProperties()) {
 
                 resourceDynamicProperty.setId(IdGeneratorUtil.generateId());
-                //resourceDynamicProperty.setResourceId(resource.getId());
                 resourceDynamicPropertyService.insertSelective(resourceDynamicProperty);
 
             }
@@ -137,7 +128,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){
 
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            //resourceDynamicPropertyCriteria.createCriteria().andResourceIdEqualTo(resource.getId());
             resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
 
         }
@@ -150,7 +140,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm) {
 
         PageHelper.startPage(1, 10);
-        Resource resource = resourceParm.getResource();
         List<Resource> resourceList = null;
         ResourceCriteria resourceCriteria = new ResourceCriteria();
         ResourceCriteria.Criteria criteria =resourceCriteria.createCriteria();
@@ -176,15 +165,13 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
             //如果不是garnet的超级管理员，返回绑定tenantId下的resource
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(resourceParm.getUserId()))) {
-//                criteria.andTenantIdIn(tenantIds);
-                resourceList = this.getResourcesByUserId(resourceParm.getUserId());
+                criteria.andTenantIdIn(tenantIds);
             } else {
                 // 是超级管理员，返回所有resource
                 resourceList = this.selectByCriteria(resourceCriteria);
             }
         }
 
-//        PageInfo pageInfo = new PageInfo(resourceList,10);
         PageUtil result = new PageUtil(resourceList, (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
 
         return result;
@@ -198,9 +185,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             if (CollectionUtils.isEmpty(resourceList)) {
                 return "";
             }
-//            ResourceCriteria resourceCriteria = ne  w ResourceCriteria();
-//            resourceCriteria.createCriteria().andTypeEqualTo("garnet_appCode");
-//            List<Resource> resourceList = this.selectByCriteria(resourceCriteria);
+
             JSONObject jsonObject = new JSONObject();
             for (Resource resource : resourceList) {
                 jsonObject.put(resource.getVarchar00(), Boolean.parseBoolean(resource.getVarchar01()));
@@ -213,7 +198,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     }
 
     @Override
-    public String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException {
+    public String getGarnetSysMenuResources(ResourceParm resourceParm) {
         ResourceCriteria resourceCriteria = new ResourceCriteria();
         resourceCriteria.createCriteria().andTypeEqualTo("garnet_sysMenu").andVarchar07Like("garnetSysManagement%");
         List<Resource> resourceList1 = this.selectByCriteria(resourceCriteria);
@@ -222,84 +207,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         resourceCriteria.createCriteria().andTypeEqualTo("garnet_sysMenu").andVarchar07Like("garnetDevelopment%");
         List<Resource> resourceList2 = this.selectByCriteria(resourceCriteria1);
 
-
         //菜单管理一级
-        SySMenuJsonObject sySMenuJsonObject1 = new SySMenuJsonObject();
-        Resource resource1 = null;
-        List<SySMenuJsonObject> sySMenuJsonObjectList1 = new ArrayList<>();
-        for (Resource resource : resourceList1 ) {
-            if ("1".equals(resource.getVarchar05()) && "1".equals(resource.getVarchar01())) {
-                //菜单管理二级菜单
-                SySMenuJsonObject sySMenuJsonObject11 = new SySMenuJsonObject();
-                sySMenuJsonObject11.setMenuId(Integer.valueOf(resource.getVarchar00()));
-                sySMenuJsonObject11.setParentId(Integer.valueOf(resource.getVarchar01()));
-                sySMenuJsonObject11.setParentName(resource.getVarchar02() == "" ? null : resource.getVarchar00());
-                sySMenuJsonObject11.setName(resource.getVarchar03());
-                sySMenuJsonObject11.setUrl(resource.getVarchar04() == "" ? null : resource.getVarchar04());
-                sySMenuJsonObject11.setType(Integer.valueOf(resource.getVarchar05()));
-                sySMenuJsonObject11.setIcon(resource.getVarchar06());
-                sySMenuJsonObject11.setCode(resource.getVarchar07());
-                sySMenuJsonObject11.setOrderNum(Integer.valueOf(resource.getVarchar08()));
-                sySMenuJsonObject11.setOpen(resource.getVarchar09() == "" ? null : resource.getVarchar09());
-                sySMenuJsonObject11.setList(null);
-                //二级菜单的list
-                sySMenuJsonObjectList1.add(sySMenuJsonObject11);
-            } else if ("0".equals(resource.getVarchar05()) && "0".equals(resource.getVarchar01())) {
-                //菜单管理一级菜单
-                resource1 = resource;
-            }
-        }
-
-        sySMenuJsonObject1.setMenuId(Integer.valueOf(resource1.getVarchar00()));
-        sySMenuJsonObject1.setParentId(Integer.valueOf(resource1.getVarchar01()));
-        sySMenuJsonObject1.setParentName(resource1.getVarchar02() == "" ? null : resource1.getVarchar00());
-        sySMenuJsonObject1.setName(resource1.getVarchar03());
-        sySMenuJsonObject1.setUrl(resource1.getVarchar04() == "" ? null : resource1.getVarchar04());
-        sySMenuJsonObject1.setType(Integer.valueOf(resource1.getVarchar05()));
-        sySMenuJsonObject1.setIcon(resource1.getVarchar06());
-        sySMenuJsonObject1.setCode(resource1.getVarchar07());
-        sySMenuJsonObject1.setOrderNum(Integer.valueOf(resource1.getVarchar08()));
-        sySMenuJsonObject1.setOpen(resource1.getVarchar09() == "" ? null : resource1.getVarchar09());
-        sySMenuJsonObject1.setList(sySMenuJsonObjectList1);
+        SySMenuJsonObject sySMenuJsonObject1 = this.getSySMenuJsonObject(resourceList1, "1");
 
         //菜单管理二级
-        SySMenuJsonObject sySMenuJsonObject2 = new SySMenuJsonObject();
-        Resource resource2 = null;
-        List<SySMenuJsonObject> sySMenuJsonObjectList2 = new ArrayList<>();
-        for (Resource resource : resourceList2 ) {
-            if ("1".equals(resource.getVarchar05()) && "9".equals(resource.getVarchar01())) {
-                //菜单管理二级菜单
-                SySMenuJsonObject sySMenuJsonObject = new SySMenuJsonObject();
-                sySMenuJsonObject.setMenuId(Integer.valueOf(resource.getVarchar00()));
-                sySMenuJsonObject.setParentId(Integer.valueOf(resource.getVarchar01()));
-                sySMenuJsonObject.setParentName(resource.getVarchar02() == "" ? null : resource.getVarchar00());
-                sySMenuJsonObject.setName(resource.getVarchar03());
-                sySMenuJsonObject.setUrl(resource.getVarchar04() == "" ? null : resource.getVarchar04());
-                sySMenuJsonObject.setType(Integer.valueOf(resource.getVarchar05()));
-                sySMenuJsonObject.setIcon(resource.getVarchar06());
-                sySMenuJsonObject.setCode(resource.getVarchar07());
-                sySMenuJsonObject.setOrderNum(Integer.valueOf(resource.getVarchar08()));
-                sySMenuJsonObject.setOpen(resource.getVarchar09() == "" ? null : resource.getVarchar09());
-                sySMenuJsonObject.setList(null);
-                //二级菜单的list
-                sySMenuJsonObjectList2.add(sySMenuJsonObject);
-            } else if ("0".equals(resource.getVarchar05()) && "0".equals(resource.getVarchar01())) {
-                //菜单管理一级菜单
-                resource2 = resource;
-            }
-        }
-
-        sySMenuJsonObject2.setMenuId(Integer.valueOf(resource2.getVarchar00()));
-        sySMenuJsonObject2.setParentId(Integer.valueOf(resource2.getVarchar01()));
-        sySMenuJsonObject2.setParentName(resource2.getVarchar02() == "" ? null : resource2.getVarchar00());
-        sySMenuJsonObject2.setName(resource2.getVarchar03());
-        sySMenuJsonObject2.setUrl(resource2.getVarchar04() == "" ? null : resource1.getVarchar04());
-        sySMenuJsonObject2.setType(Integer.valueOf(resource1.getVarchar05()));
-        sySMenuJsonObject2.setIcon(resource2.getVarchar06());
-        sySMenuJsonObject2.setCode(resource2.getVarchar07());
-        sySMenuJsonObject2.setOrderNum(Integer.valueOf(resource2.getVarchar08()));
-        sySMenuJsonObject2.setOpen(resource2.getVarchar09() == "" ? null : resource2.getVarchar09());
-        sySMenuJsonObject2.setList(sySMenuJsonObjectList2);
+        SySMenuJsonObject sySMenuJsonObject2 = this.getSySMenuJsonObject(resourceList2, "9");
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(sySMenuJsonObject1);
@@ -307,6 +219,60 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         return jsonArray.toString();
     }
+
+    /**
+     * 根据 resourceList 获取 garnet菜单对象
+     * @param resourceList
+     * @param parentId
+     * @return
+     */
+    private SySMenuJsonObject getSySMenuJsonObject(List<Resource> resourceList, String parentId) {
+        //菜单管理一级
+        SySMenuJsonObject sySMenuJsonObject = new SySMenuJsonObject();
+        Resource resource1 = null;
+        List<SySMenuJsonObject> sySMenuJsonObjectList = new ArrayList<>();
+        for (Resource resource : resourceList) {
+            if ("1".equals(resource.getVarchar05()) && parentId.equals(resource.getVarchar01())) {
+                //菜单管理二级菜单
+                SySMenuJsonObject sySMenuJsonObject1 = new SySMenuJsonObject();
+                sySMenuJsonObject1.setMenuId(Integer.valueOf(resource.getVarchar00()));
+                sySMenuJsonObject1.setParentId(Integer.valueOf(resource.getVarchar01()));
+                sySMenuJsonObject1.setParentName(resource.getVarchar02() == "" ? null : resource.getVarchar00());
+                sySMenuJsonObject1.setName(resource.getVarchar03());
+                sySMenuJsonObject1.setUrl(resource.getVarchar04() == "" ? null : resource.getVarchar04());
+                sySMenuJsonObject1.setType(Integer.valueOf(resource.getVarchar05()));
+                sySMenuJsonObject1.setIcon(resource.getVarchar06());
+                sySMenuJsonObject1.setCode(resource.getVarchar07());
+                sySMenuJsonObject1.setOrderNum(Integer.valueOf(resource.getVarchar08()));
+                sySMenuJsonObject1.setOpen(resource.getVarchar09() == "" ? null : resource.getVarchar09());
+                sySMenuJsonObject1.setList(null);
+                //二级菜单的list
+                sySMenuJsonObjectList.add(sySMenuJsonObject1);
+            } else if ("0".equals(resource.getVarchar05()) && "0".equals(resource.getVarchar01())) {
+                //菜单管理一级菜单
+                resource1 = resource;
+            }
+        }
+
+        if (ObjectUtils.isEmpty(resource1)) {
+            return new SySMenuJsonObject();
+        }
+
+        sySMenuJsonObject.setMenuId(Integer.valueOf(resource1.getVarchar00()));
+        sySMenuJsonObject.setParentId(Integer.valueOf(resource1.getVarchar01()));
+        sySMenuJsonObject.setParentName(resource1.getVarchar02() == "" ? null : resource1.getVarchar00());
+        sySMenuJsonObject.setName(resource1.getVarchar03());
+        sySMenuJsonObject.setUrl(resource1.getVarchar04() == "" ? null : resource1.getVarchar04());
+        sySMenuJsonObject.setType(Integer.valueOf(resource1.getVarchar05()));
+        sySMenuJsonObject.setIcon(resource1.getVarchar06());
+        sySMenuJsonObject.setCode(resource1.getVarchar07());
+        sySMenuJsonObject.setOrderNum(Integer.valueOf(resource1.getVarchar08()));
+        sySMenuJsonObject.setOpen(resource1.getVarchar09() == "" ? null : resource1.getVarchar09());
+        sySMenuJsonObject.setList(sySMenuJsonObjectList);
+
+        return sySMenuJsonObject;
+    }
+
 
     /**
      * 根据userId获取permissions，根据permissions获取相匹配的resources并去重
@@ -321,7 +287,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
 
         if (CollectionUtils.isEmpty(groupUserList)) {
-            return null;
+            return new ArrayList<>();
         }
         //根据group 拿 role
         List<Long> groupIds = new ArrayList<>();
@@ -334,7 +300,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
         List<GroupRole> groupRoleList = groupRoleService.selectByCriteria(groupRoleCriteria);
         if (CollectionUtils.isEmpty(groupRoleList)) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<Long> roleIds = new ArrayList<>();
@@ -347,7 +313,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds);
         List<RolePermission> rolePermissionList = rolePermissionService.selectByCriteria(rolePermissionCriteria);
         if (CollectionUtils.isEmpty(rolePermissionList)) {
-            return null;
+            return new ArrayList<>();
         }
         List<Long> permissionIds = new ArrayList<>();
         for (RolePermission rolePermission : rolePermissionList) {
@@ -358,7 +324,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         permissionCriteria.createCriteria().andIdIn(permissionIds);
         List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
         if (CollectionUtils.isEmpty(permissionList)) {
-            return null;
+            return new ArrayList<>();
         }
 
         //通过权限的通配符 查询相对应的resource
@@ -373,7 +339,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             }
         }
         if (CollectionUtils.isEmpty(resourceList)) {
-            return null;
+            return new ArrayList<>();
         }
         //对resource去重
         Set<Resource> resourceSet = new HashSet<>();
@@ -426,98 +392,190 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                 jsonObject.put("action", resource.getActions());
 
                 for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList) {
-                    if ("varchar00".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar00());
+
+                    switch (resourceDynamicProperty.getFiledName()) {
+                        case "varchar00" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar00());
+                            break;
+                        case "varchar01" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar01());
+                            break;
+                        case "varchar02" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar02());
+                            break;
+                        case "varchar03" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar03());
+                            break;
+                        case "varchar04" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar04());
+                            break;
+                        case "varchar05" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar05());
+                            break;
+                        case "varchar06" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar06());
+                            break;
+                        case "varchar07" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar07());
+                            break;
+                        case "varchar08" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar08());
+                            break;
+                        case "varchar09" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar09());
+                            break;
+                        case "varchar10" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar10());
+                            break;
+                        case "varchar11" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar11());
+                            break;
+                        case "varchar12" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar12());
+                            break;
+                        case "varchar13" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar13());
+                            break;
+                        case "varchar14" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar14());
+                            break;
+                        case "varchar15" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar15());
+                            break;
+                        case "varchar16" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar16());
+                            break;
+                        case "varchar17" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar17());
+                            break;
+                        case "varchar18" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar18());
+                            break;
+                        case "varchar19" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar19());
+                            break;
+                        case "int01" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt01());
+                            break;
+                        case "int02" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt02());
+                            break;
+                        case "int03" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt03());
+                            break;
+                        case "int04" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt04());
+                            break;
+                        case "int05" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt05());
+                            break;
+                        case "boolean01" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean01());
+                            break;
+                        case "boolean02" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean02());
+                            break;
+                        case "boolean03" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean03());
+                            break;
+                        case "boolean04" :
+                            jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean04());
+                            break;
+                        default:
+                            break;
                     }
-                    if ("varchar01".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar01());
-                    }
-                    if ("varchar02".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar02());
-                    }
-                    if ("varchar03".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar03());
-                    }
-                    if ("varchar04".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar04());
-                    }
-                    if ("varchar05".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar05());
-                    }
-                    if ("varchar06".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar06());
-                    }
-                    if ("varchar07".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar07());
-                    }
-                    if ("varchar08".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar08());
-                    }
-                    if ("varchar09".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar09());
-                    }
-                    if ("varchar10".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar10());
-                    }
-                    if ("varchar11".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar11());
-                    }
-                    if ("varchar12".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar12());
-                    }
-                    if ("varchar13".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar13());
-                    }
-                    if ("varchar14".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar14());
-                    }
-                    if ("varchar15".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar15());
-                    }
-                    if ("varchar16".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar16());
-                    }
-                    if ("varchar17".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar17());
-                    }
-                    if ("varchar18".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar18());
-                    }
-                    if ("varchar19".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar19());
-                    }
-                    if ("int01".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt01());
-                    }
-                    if ("int02".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt02());
-                    }
-                    if ("int03".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt03());
-                    }
-                    if ("int04".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt04());
-                    }
-                    if ("int05".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt05());
-                    }
-                    if ("boolean01".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean01());
-                    }
-                    if ("boolean02".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean02());
-                    }
-                    if ("boolean03".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean03());
-                    }
-                    if ("boolean04".equals(resourceDynamicProperty.getFiledName())) {
-                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean04());
-                    }
+
+//                    if ("varchar00".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar00());
+//                    }
+//                    if ("varchar01".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar01());
+//                    }
+//                    if ("varchar02".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar02());
+//                    }
+//                    if ("varchar03".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar03());
+//                    }
+//                    if ("varchar04".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar04());
+//                    }
+//                    if ("varchar05".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar05());
+//                    }
+//                    if ("varchar06".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar06());
+//                    }
+//                    if ("varchar07".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar07());
+//                    }
+//                    if ("varchar08".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar08());
+//                    }
+//                    if ("varchar09".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar09());
+//                    }
+//                    if ("varchar10".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar10());
+//                    }
+//                    if ("varchar11".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar11());
+//                    }
+//                    if ("varchar12".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar12());
+//                    }
+//                    if ("varchar13".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar13());
+//                    }
+//                    if ("varchar14".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar14());
+//                    }
+//                    if ("varchar15".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar15());
+//                    }
+//                    if ("varchar16".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar16());
+//                    }
+//                    if ("varchar17".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar17());
+//                    }
+//                    if ("varchar18".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar18());
+//                    }
+//                    if ("varchar19".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar19());
+//                    }
+//                    if ("int01".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt01());
+//                    }
+//                    if ("int02".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt02());
+//                    }
+//                    if ("int03".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt03());
+//                    }
+//                    if ("int04".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt04());
+//                    }
+//                    if ("int05".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt05());
+//                    }
+//                    if ("boolean01".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean01());
+//                    }
+//                    if ("boolean02".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean02());
+//                    }
+//                    if ("boolean03".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean03());
+//                    }
+//                    if ("boolean04".equals(resourceDynamicProperty.getFiledName())) {
+//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean04());
+//                    }
                 }
 
                 result.append(jsonObject.toString());
                 jsonArray.add(jsonObject);
-//                result.append("\n");
             }
 
             return jsonArray.toString();
@@ -525,6 +583,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         return null;
     }
 
+    /**
+     * 上传excel，将数据保存到数据库中
+     * @param resourceExcelViews
+     */
     @Override
     public void saveResourcesExcel(List<ResourceExcelView> resourceExcelViews) {
 
@@ -611,92 +673,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             this.insertResource(resourceView);
         }
 
-    }
-
-    /**
-     * 根据userId 获取权限，根据权限的resource_path_wildcard和action匹配获取资源列表
-     * @param userId
-     * @return
-     */
-    private List<Resource> getResourcesByUserId(Long userId) {
-        //根据userId 拿 group
-        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-        groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
-        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
-
-        if (CollectionUtils.isEmpty(groupUserList)) {
-            return null;
-        }
-        //根据group 拿 role
-        List<Long> groupIds = new ArrayList<>();
-        for (GroupUser groupUser : groupUserList) {
-            Long groupId = groupUser.getGroupId();
-            groupIds.add(groupId);
-        }
-        //通过中间表拿关联的role
-        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
-        groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
-        List<GroupRole> groupRoleList = groupRoleService.selectByCriteria(groupRoleCriteria);
-        if (CollectionUtils.isEmpty(groupRoleList)) {
-            return null;
-        }
-
-        List<Long> roleIds = new ArrayList<>();
-        for (GroupRole groupRole : groupRoleList) {
-            Long roleId = groupRole.getRoleId();
-            roleIds.add(roleId);
-        }
-        //根据role拿permission
-        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
-        rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds);
-        List<RolePermission> rolePermissionList = rolePermissionService.selectByCriteria(rolePermissionCriteria);
-        if (CollectionUtils.isEmpty(rolePermissionList)) {
-            return null;
-        }
-        List<Long> permissionIds = new ArrayList<>();
-        for (RolePermission rolePermission : rolePermissionList) {
-            Long permissionId = rolePermission.getPermissionId();
-            permissionIds.add(permissionId);
-        }
-        PermissionCriteria permissionCriteria = new PermissionCriteria();
-        permissionCriteria.createCriteria().andIdIn(permissionIds);
-        List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
-        if (CollectionUtils.isEmpty(permissionList)) {
-            return null;
-        }
-
-        //通过权限的通配符 查询相对应的resource
-        List<Resource> resourceList = new ArrayList<>();
-        for (Permission permission : permissionList) {
-            String resourcePathWildcard = permission.getResourcePathWildcard();
-            if (!StringUtils.isEmpty(resourcePathWildcard)) {
-                ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andActionsLike(permission.getAction());
-                List<Resource> resources = this.selectByCriteria(resourceCriteria);
-                resourceList.addAll(resources);
-            }
-        }
-        if (CollectionUtils.isEmpty(resourceList)) {
-            return null;
-        }
-        //对resource去重
-        Set<Resource> resourceSet = new HashSet<>();
-        List<Resource> resourceList1 = new ArrayList<>();
-        for (Resource resource : resourceList) {
-            Long resourceId = resource.getId();
-            if (!resourceSet.contains(resourceId)) {
-                resourceList1.add(resource);
-            }
-        }
-
-        for (int i = 0; i < resourceList1.size(); i ++) {
-            //foreach 内部是调用iterator实现的，不能直接使用remove
-            if ("readonly".equals(resourceList1.get(i).getActions())) {
-                resourceList1.remove(i);
-            }
-        }
-
-        return resourceList1;
     }
 
 }

@@ -14,13 +14,13 @@ import com.richstonedt.garnet.model.view.RouterGroupView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.RouterGroupService;
-import com.sun.javafx.iio.common.RoughScaler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import springfox.documentation.service.ResourceGroup;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,7 +52,16 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
             throw new RuntimeException("routerGroup or appCode can not be null");
         }
 
+        RouterGroupCriteria routerGroupCriteria;
         for (String appCode : appCodeList) {
+
+            routerGroupCriteria = new RouterGroupCriteria();
+            routerGroupCriteria.createCriteria().andAppCodeEqualTo(appCode);
+            List<RouterGroup> routerGroupList = this.selectByCriteria(routerGroupCriteria);
+            if (!CollectionUtils.isEmpty(routerGroupList) && routerGroupList.size() > 0) {
+                throw new RuntimeException("一个应用不能被添加到多个应用组");
+            }
+
             RouterGroup routerGroup1 = new RouterGroup();
             routerGroup1.setId(IdGeneratorUtil.generateId());
             routerGroup1.setGroupName(routerGroup.getGroupName());
@@ -122,8 +131,6 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         List<RouterGroup> routerGroups = this.selectByCriteria(routerGroupCriteria);
         List<RouterGroup> routerGroupList = new ArrayList<>();
-        List<RouterGroupView> routerGroupViews = new ArrayList<>();
-        List<String> appCodes = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(routerGroups)) {
             //根据groupName进行去重
@@ -136,10 +143,49 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
                 }
             }
         }
-
+        //判断是否是超级管理员，进行处理
         List<RouterGroup> routerGroupList1 = this.dealRouterGroupListIfGarnet(routerGroupParm.getUserId(), routerGroupList);
-        PageUtil result = new PageUtil(routerGroupList1, (int)this.countByCriteria(routerGroupCriteria) ,routerGroupParm.getPageSize(),routerGroupParm.getPageNumber());
+
+        //添加应用名
+        List<RouterGroupView> routerGroupViewList = this.returnWithAppNames(routerGroupList1);
+
+        PageUtil result = new PageUtil(routerGroupViewList, (int)this.countByCriteria(routerGroupCriteria) ,routerGroupParm.getPageSize(),routerGroupParm.getPageNumber());
         return result;
+    }
+
+    private List<RouterGroupView> returnWithAppNames(List<RouterGroup> resourceGroupList) {
+        RouterGroupView routerGroupView = null;
+        List<String> appNames = null;
+        List<RouterGroupView> routerGroupViewList = new ArrayList<>();
+        ApplicationCriteria applicationCriteria = null;
+        RouterGroupCriteria routerGroupCriteria = null;
+
+        for (RouterGroup routerGroup : resourceGroupList) {
+
+            //根据应用组名查找所有记录，即查找所有绑定的appCode
+            String routerGroupName = routerGroup.getGroupName();
+            routerGroupCriteria = new RouterGroupCriteria();
+            routerGroupCriteria.createCriteria().andGroupNameEqualTo(routerGroupName);
+            List<RouterGroup> routerGroups = this.selectByCriteria(routerGroupCriteria);
+
+            //添加应用名称
+            appNames = new ArrayList<>();
+            for (RouterGroup routerGroup1 : routerGroups) {
+                String appCode = routerGroup1.getAppCode();
+                applicationCriteria = new ApplicationCriteria();
+                applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
+                Application application = applicationService.selectSingleByCriteria(applicationCriteria);
+                appNames.add(application.getName());
+            }
+
+            routerGroupView = new RouterGroupView();
+            routerGroupView.setRouterGroup(routerGroup);
+            routerGroupView.setApplicationNames(appNames);
+
+            routerGroupViewList.add(routerGroupView);
+        }
+
+        return routerGroupViewList;
     }
 
     @Override
@@ -194,7 +240,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         if (!isSuperAdmin) {
             //去除超级应用组
             for (RouterGroup routerGroup : routerGroups) {
-                if (routerGroup.getId() != GarnetContants.GARNET_SUPER_ROUTER_GROUP_ID) {
+                if (routerGroup.getId().longValue() != GarnetContants.GARNET_SUPER_ROUTER_GROUP_ID.longValue()) {
                     routerGroupList.add(routerGroup);
                 }
             }

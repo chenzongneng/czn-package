@@ -10,10 +10,12 @@ import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.UserMapper;
 import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.*;
+import com.richstonedt.garnet.model.message.MessageDescription;
 import com.richstonedt.garnet.model.parm.UserParm;
 import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +28,18 @@ import java.util.*;
 @Service
 @Transactional
 public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> implements UserService {
+
+    private static final String LOGINMESSAGE_STATUS_FALSE = "false";
+
+    private static final String LOGINMESSAGE_STATUS_SUCCESS = "success";
+
+    private static final String STRING_ACCESSTOKEN = "#accessToken";
+
+    private static final String STRING_REFRESHTOKEN = "#refreshToken";
+
+    private BeanCopier daoToViewCopier = BeanCopier.create(Resource.class, RefreshTokenResourceView.class,
+            false);
+
     @Autowired
     private UserMapper userMapper;
 
@@ -290,30 +304,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             //如果不是属于garnet的超级管理员，根据tenantId返回
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(userParm.getUserId()))) {
                 //根据tenantId获取user列表
-                UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-                userTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
-                List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria);
-                List<Long> userIds = new ArrayList<>();
-                if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
-                    for (UserTenant userTenant : userTenants1) {
-                        userIds.add(userTenant.getUserId());
-                    }
+                List<Long> userIdList = this.getUserIdsByTenantIds(tenantIds);
+
+                if(userIdList.size() == 0){
+                    userIdList.add(GarnetContants.NON_VALUE);
                 }
-                if (!CollectionUtils.isEmpty(userIds)) {
-                    List<Long> userIdList = new ArrayList<>();
-                    for (Long userId : userIds) { //隐藏admin
-                        if (userId.longValue() != GarnetContants.GARNET_USER_ID) {
-                            userIdList.add(userId);
-                        }
-                    }
-                    if(userIdList.size()==0){
-                        userIdList.add(GarnetContants.NON_VALUE);
-                    }
-                    criteria.andIdIn(userIdList);
-                } else {
-                    //没有关联的userId，返回空
-                    return new PageUtil(null, 0, userParm.getPageSize(), userParm.getPageNumber());
-                }
+
+                criteria.andIdIn(userIdList);
+
             } else {
                 //如果是garnet的超级管理员，直接返回所有user列表
                 PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
@@ -342,6 +340,32 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         return result;
     }
 
+    private List<Long> getUserIdsByTenantIds(List<Long> tenantIds) {
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
+        List<UserTenant> userTenants1 = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> userIds = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userTenants1) && userTenants1.size() > 0) {
+            for (UserTenant userTenant : userTenants1) {
+                userIds.add(userTenant.getUserId());
+            }
+        }
+        // 如果userIds 为空
+        if (!CollectionUtils.isEmpty(userIds)) {
+            List<Long> userIdList = new ArrayList<>();
+            //隐藏 admin
+            for (Long userId : userIds) {
+                if (userId.longValue() != GarnetContants.GARNET_USER_ID) {
+                    userIdList.add(userId);
+                }
+            }
+            return userIdList;
+
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
     /**
      * 1. 判断参数是否正确（userName, password, appCode）
      * 2. 账号密码核验正确，生成token并计算过期时间
@@ -356,26 +380,26 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         UserCriteria userCriteria = new UserCriteria();
         LoginMessage loginMessage = new LoginMessage();
-        userCriteria.createCriteria().andUserNameEqualTo(loginView.getUserName());
+        userCriteria.createCriteria().andUserNameEqualTo(loginView.getUserName()).andStatusEqualTo(1);
         User user = this.selectSingleByCriteria(userCriteria);
 
         if (StringUtils.isEmpty(loginView.getUserName()) || StringUtils.isEmpty(loginView.getPassword())) {
             loginMessage.setMessage("账号或密码为空");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
 
         if (ObjectUtils.isEmpty(user)) {
-            loginMessage.setMessage("用户不存在");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setMessage(MessageDescription.LOGIN_USERNAME_NOT_EXIST);
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
 
         if (StringUtils.isEmpty(loginView.getAppCode())) {
             loginMessage.setMessage("AppCode不能为空");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
@@ -386,7 +410,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
         if (!userCredential.getCredential().equals(loginView.getPassword())) {
             loginMessage.setMessage("密码不正确");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
@@ -394,28 +418,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //生成token返回
         String token = JwtToken.createToken(user.getUserName(),userCredential.getCredential(),loginView.getAppCode(), System.currentTimeMillis());
         loginMessage.setMessage("登录成功");
-//        loginMessage.setToken(token);
         loginMessage.setCode(201);
         loginMessage.setUser(user);
-        loginMessage.setLoginStatus("success");
+        loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_SUCCESS);
         //拼接返回前端的token
-        String accessTokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis() + "#accessToken";
-        String refreshTokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis() + "#refreshToken";
+        String accessTokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis() + STRING_ACCESSTOKEN;
+        String refreshTokenReturn = token + "#" + loginView.getAppCode() + "#" + loginView.getUserName() + "#" + System.currentTimeMillis() + STRING_REFRESHTOKEN;
         loginMessage.setAccessToken(accessTokenReturn);
         loginMessage.setRefreshToken(refreshTokenReturn);
 
-        //将token插入数据库
-//        if (StringUtils.isEmpty(loginView.getAppCode())) {
-//            loginMessage.setMessage("请选择要登录的应用");
-//            loginMessage.setLoginStatus("false");
-//            loginMessage.setCode(403);
-//            return loginMessage;
-//        }
-
-//        String routerGroupName = routerGroupService.getGroupNameByAppCode(loginView.getAppCode());
-//        TokenCriteria tokenCriteria = new TokenCriteria();
-//        tokenCriteria.createCriteria().andRouterGroupNameEqualTo(routerGroupName);
-//        Token tokenOld = tokenService.selectSingleByCriteria(tokenCriteria);
         TokenCriteria tokenCriteria = new TokenCriteria();
         tokenCriteria.createCriteria().andUserNameEqualTo(loginView.getUserName());
         Token tokenOld = tokenService.selectSingleByCriteria(tokenCriteria);
@@ -429,7 +440,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             token1.setExpireTime(expiredTime);
             token1.setId(IdGeneratorUtil.generateId());
             token1.setUserName(loginView.getUserName());
-//            token1.setRouterGroupName(routerGroupName);
             token1.setToken(token);
             tokenService.insertSelective(token1);
         } else {
@@ -471,7 +481,16 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     }
 
     @Override
-    public void updateStatusById(User user) {
+    public void updateStatusById(User user, Long loginUserId) {
+
+        if (user.getId().longValue() == GarnetContants.GARNET_USER_ID) {
+            throw new RuntimeException("不能删除超级管理员");
+        }
+
+        if (user.getId().longValue() == loginUserId) {
+            throw new RuntimeException("不能删除自己");
+        }
+
         Long currentTime = System.currentTimeMillis();
         user.setModifiedTime(currentTime);
         user.setStatus(0);
@@ -513,59 +532,29 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //取出token中携带的信息
         String tokenWithAppCode = tokenRefreshView.getRefreshToken();
+
+        if (StringUtils.isEmpty(tokenWithAppCode)) {
+            throw new RuntimeException("请输入token");
+        }
+
         String[] tokenParams = tokenWithAppCode.split("#");
-        System.out.println(tokenParams.length);
         String token = tokenParams[0];
         String appCode = tokenParams[1];
         String userName = tokenParams[2];
         String createTime = tokenParams[3];
 
-        //如果要跳转的appCode不存在，返回错误
-        if (StringUtils.isEmpty(tokenRefreshView.getAppCode())) {
-            loginMessage.setMessage("appCode不能为空");
-            loginMessage.setLoginStatus("false");
-            loginMessage.setCode(401);
-            return loginMessage;
-        }
+        //验证基础信息是否正确
+        this.checkRefreshTokenData(tokenRefreshView);
 
-        //根据username 查询密码，如果查不到则账号有误
+        //根据username 查询密码
         UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
-        if (ObjectUtils.isEmpty(userCredential)) {
-            loginMessage.setMessage("用户不存在");
-            loginMessage.setLoginStatus("false");
-            loginMessage.setCode(401);
-            return loginMessage;
-        }
-
         String password = userCredential.getCredential();
-        Map<String, Claim> tokenPlayload = null;
-        try {
-            //用密码解密token
-            tokenPlayload = JwtToken.verifyToken(token, password);
-        } catch (Exception e) {
-            loginMessage.setMessage("账号或密码错误");
-            loginMessage.setLoginStatus("false");
-            loginMessage.setCode(401);
-            return loginMessage;
-        }
-
-        //初始登录的应用 所在的组
-        String routerGroupName = routerGroupService.getGroupNameByAppCode(appCode);
-        //要跳转的应用 所在的组
-        String routerGroupNameGo = routerGroupService.getGroupNameByAppCode(tokenRefreshView.getAppCode());
-        //应用没有被添加进应用组或不在同一个应用组，无法访问
-        if (StringUtils.isEmpty(routerGroupName) || StringUtils.isEmpty(routerGroupNameGo) || !routerGroupName.equals(routerGroupNameGo)) {
-            loginMessage.setMessage("没有权限");
-            loginMessage.setLoginStatus("false");
-            loginMessage.setCode(403);
-            return loginMessage;
-        }
 
         //更新token
         Long currentTime = System.currentTimeMillis();
         String tokenNew = JwtToken.createToken(userName, password, appCode, currentTime);
-        String accessTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#accessToken";
-        String refreshTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#refreshToken";
+        String accessTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + STRING_ACCESSTOKEN;
+        String refreshTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + STRING_REFRESHTOKEN;
 
         //根据userName拿出token并更新到数据库
         TokenCriteria tokenCriteria = new TokenCriteria();
@@ -577,11 +566,42 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         tokenService.updateByPrimaryKeySelective(token1);
 
         loginMessage.setMessage("token刷新成功");
-        loginMessage.setLoginStatus("success");
+        loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_SUCCESS);
         loginMessage.setCode(201);
         loginMessage.setAccessToken(accessTokenReturn);
         loginMessage.setRefreshToken(refreshTokenReturn);
 
+        //取出资源列表
+        LoginMessage loginMessage1 = this.getResourcesWhenRefreshToken(userCredential, appCode, loginMessage);
+//        List<Resource> resourceList = loginMessage1.getResourceList();
+        List<RefreshTokenResourceView> refreshTokenResourceViewList = loginMessage1.getRefreshTokenResourceList();
+
+        //通过resource列表获取 ResourceDynamicProperty列表
+        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
+        for (RefreshTokenResourceView refreshTokenResourceView : refreshTokenResourceViewList) {
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(refreshTokenResourceView.getType());
+            List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
+            resourceDynamicPropertyList.add(resourceDynamicProperties);
+        }
+
+        loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
+//        loginMessage.setResourceList(resourceList);
+        loginMessage.setRefreshTokenResourceList(refreshTokenResourceViewList);
+        loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
+        loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
+
+        return loginMessage;
+    }
+
+    /**
+     * 获取resource列表并分组返回
+     * @param userCredential
+     * @param appCode
+     * @param loginMessage
+     * @return
+     */
+    private LoginMessage getResourcesWhenRefreshToken(UserCredential userCredential, String appCode, LoginMessage loginMessage) {
         //获取返回资源
         //根据appCode拿 application
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
@@ -644,7 +664,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId());
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId()).andActionsLike(permission.getAction());
                 List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
                 resourceList.addAll(resources);
             }
@@ -652,6 +672,25 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         if (CollectionUtils.isEmpty(resourceList)) {
             return loginMessage;
         }
+
+        //对resource列表进行处理
+        LoginMessage loginMessage1 = this.getResourcesDstinct(resourceList);
+
+//        loginMessage.setResourceList(loginMessage1.getResourceList());
+        loginMessage.setRefreshTokenResourceList(loginMessage1.getRefreshTokenResourceList());
+        loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
+        loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
+        return loginMessage;
+    }
+
+    /**
+     * 对resource列表进行去重
+     * @param resourceList
+     * @return
+     */
+    private LoginMessage getResourcesDstinct(List<Resource> resourceList) {
+        LoginMessage loginMessage = new LoginMessage();
+
         //对resource去重
         Set<Resource> resourceSet = new HashSet<>();
         List<Resource> resourceList1 = new ArrayList<>();
@@ -662,27 +701,41 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             }
         }
 
-        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
-        for (Resource resource : resourceList1) {
-            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resource.getType());
-            List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
-            resourceDynamicPropertyList.add(resourceDynamicProperties);
-        }
+        //根据actions筛选resource
+        List<Resource> resourceListWithReadOnly = new ArrayList<>();
+        List<Resource> resourceListWithEdit = new ArrayList<>();
+        List<Resource> resourceList2 = new ArrayList<>();
+        List<RefreshTokenResourceView> refreshTokenResourceViews = new ArrayList<>();
+        RefreshTokenResourceView refreshTokenResourceView;
 
-        loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
-        loginMessage.setResourceList(resourceList1);
+        String actions = "edit;readonly";
+        for (Resource resource : resourceList1) {
+            if ("readonly".equals(resource.getActions()) && !actions.equals(resource.getActions())) {
+                resourceListWithReadOnly.add(resource);
+            }
+            if ("edit".equals(resource.getActions()) && !actions.equals(resource.getActions())) {
+                resourceListWithEdit.add(resource);
+            }
+            if (actions.equals(resource.getActions())) {
+                resource.setActions("edit");
+            }
+            refreshTokenResourceView = new RefreshTokenResourceView();
+            daoToViewCopier.copy(resource, refreshTokenResourceView, null);
+            refreshTokenResourceView.setAction(resource.getActions());
+            refreshTokenResourceViews.add(refreshTokenResourceView);
+            resourceList2.add(resource);
+        }
+        loginMessage.setRefreshTokenResourceList(refreshTokenResourceViews);
+//        loginMessage.setResourceList(resourceList2);
+        loginMessage.setGetResourceListWithEdit(resourceListWithEdit);
+        loginMessage.setResourceListWithReadlyOnly(resourceListWithReadOnly);
 
         return loginMessage;
     }
 
-    @Override
-    public LoginMessage garnetRefreshToken(LoginView loginView) throws Exception {
-        //能通过拦截器，说明token是正确且有效的,故不再验证token是否正确
+    private LoginMessage checkRefreshTokenData(TokenRefreshView tokenRefreshView) {
         LoginMessage loginMessage = new LoginMessage();
-
-        //取出token中携带的信息
-        String tokenWithAppCode = loginView.getToken();
+        String tokenWithAppCode = tokenRefreshView.getRefreshToken();
         String[] tokenParams = tokenWithAppCode.split("#");
         System.out.println(tokenParams.length);
         String token = tokenParams[0];
@@ -691,9 +744,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String createTime = tokenParams[3];
 
         //如果要跳转的appCode不存在，返回错误
-        if (StringUtils.isEmpty(loginView.getAppCode())) {
+        if (StringUtils.isEmpty(tokenRefreshView.getAppCode())) {
             loginMessage.setMessage("appCode不能为空");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
@@ -701,8 +754,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //根据username 查询密码，如果查不到则账号有误
         UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
         if (ObjectUtils.isEmpty(userCredential)) {
-            loginMessage.setMessage("用户不存在");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setMessage(MessageDescription.LOGIN_USERNAME_NOT_EXIST);
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
@@ -714,7 +767,64 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             tokenPlayload = JwtToken.verifyToken(token, password);
         } catch (Exception e) {
             loginMessage.setMessage("账号或密码错误");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        //初始登录的应用 所在的组
+        String routerGroupName = routerGroupService.getGroupNameByAppCode(appCode);
+        //要跳转的应用 所在的组
+        String routerGroupNameGo = routerGroupService.getGroupNameByAppCode(tokenRefreshView.getAppCode());
+        //应用没有被添加进应用组或不在同一个应用组，无法访问
+        if (StringUtils.isEmpty(routerGroupName) || StringUtils.isEmpty(routerGroupNameGo) || !routerGroupName.equals(routerGroupNameGo)) {
+            loginMessage.setMessage("没有权限");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(403);
+            return loginMessage;
+        }
+        return loginMessage;
+    }
+
+
+    @Override
+    public LoginMessage garnetRefreshToken(LoginView loginView) throws Exception {
+        //能通过拦截器，说明token是正确且有效的,故不再验证token是否正确
+        LoginMessage loginMessage = new LoginMessage();
+
+        //取出token中携带的信息
+        String tokenWithAppCode = loginView.getToken();
+        String[] tokenParams = tokenWithAppCode.split("#");
+        String token = tokenParams[0];
+        String appCode = tokenParams[1];
+        String userName = tokenParams[2];
+        String createTime = tokenParams[3];
+
+        //如果要跳转的appCode不存在，返回错误
+        if (StringUtils.isEmpty(loginView.getAppCode())) {
+            loginMessage.setMessage("appCode不能为空");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        //根据username 查询密码，如果查不到则账号有误
+        UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
+        if (ObjectUtils.isEmpty(userCredential)) {
+            loginMessage.setMessage("用户不存在");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+        String password = userCredential.getCredential();
+        Map<String, Claim> tokenPlayload = null;
+        try {
+            //用密码解密token
+            tokenPlayload = JwtToken.verifyToken(token, password);
+        } catch (Exception e) {
+            loginMessage.setMessage("账号或密码错误");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
@@ -724,7 +834,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //应用没有被添加进应用组或不在同一个应用组，无法访问
         if (StringUtils.isEmpty(routerGroupName)) {
             loginMessage.setMessage("没有权限");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(403);
             return loginMessage;
         }
@@ -732,8 +842,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //更新token
         Long currentTime = System.currentTimeMillis();
         String tokenNew = JwtToken.createToken(userName, password, appCode, currentTime);
-        String accessTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#accessToken";
-        String refreshTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + "#refreshToken";
+        String accessTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + STRING_ACCESSTOKEN;
+        String refreshTokenReturn = tokenNew + "#" + appCode + "#" + userName + "#" + currentTime + STRING_REFRESHTOKEN;
 
         //根据userName拿出token并更新到数据库
         TokenCriteria tokenCriteria = new TokenCriteria();
@@ -745,7 +855,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         tokenService.updateByPrimaryKeySelective(token1);
 
         loginMessage.setMessage("token刷新成功");
-        loginMessage.setLoginStatus("success");
+        loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_SUCCESS);
         loginMessage.setCode(201);
         loginMessage.setAccessToken(accessTokenReturn);
         loginMessage.setRefreshToken(refreshTokenReturn);
@@ -757,29 +867,22 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     public LoginMessage garLogin(GarLoginView garLoginView) throws Exception {
         UserCriteria userCriteria = new UserCriteria();
         LoginMessage loginMessage = new LoginMessage();
-        userCriteria.createCriteria().andUserNameEqualTo(garLoginView.getUserName());
+        userCriteria.createCriteria().andUserNameEqualTo(garLoginView.getUserName()).andStatusEqualTo(1);
         User user = this.selectSingleByCriteria(userCriteria);
 
         if (StringUtils.isEmpty(garLoginView.getUserName()) || StringUtils.isEmpty(garLoginView.getPassword())) {
             loginMessage.setMessage("账号或密码为空");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
 
         if (ObjectUtils.isEmpty(user)) {
             loginMessage.setMessage("用户不存在");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
-
-//        if (StringUtils.isEmpty(garLoginView.getAppCode())) {
-//            loginMessage.setMessage("AppCode不能为空");
-//            loginMessage.setLoginStatus("false");
-//            loginMessage.setCode(401);
-//            return loginMessage;
-//        }
 
         //获取密码,验证密码是否正确
         UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
@@ -787,7 +890,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
         if (!userCredential.getCredential().equals(garLoginView.getPassword())) {
             loginMessage.setMessage("密码不正确");
-            loginMessage.setLoginStatus("false");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
         }
@@ -795,10 +898,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //生成token返回
         String token = JwtToken.createToken(user.getUserName(),userCredential.getCredential(),garLoginView.getAppCode(), System.currentTimeMillis());
         loginMessage.setMessage("登录成功");
-//        loginMessage.setToken(token);
         loginMessage.setCode(201);
         loginMessage.setUser(user);
-        loginMessage.setLoginStatus("success");
+        loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_SUCCESS);
         //拼接返回前端的token
         String accessTokenReturn = token + "#" + garLoginView.getAppCode() + "#" + garLoginView.getUserName() + "#" + System.currentTimeMillis() + "#access_token";
         String refreshTokenReturn = token + "#" + garLoginView.getAppCode() + "#" + garLoginView.getUserName() + "#" + System.currentTimeMillis() + "#refresh_token";
@@ -818,7 +920,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             token1.setExpireTime(expiredTime);
             token1.setId(IdGeneratorUtil.generateId());
             token1.setUserName(garLoginView.getUserName());
-//            token1.setRouterGroupName(routerGroupName);
             token1.setToken(token);
             tokenService.insertSelective(token1);
         } else {
@@ -898,18 +999,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         List<Resource> resourceList = new ArrayList<>();
 
         for(Permission permission : permissions){
-
-            System.out.println("资源wildCard: "+ permission.getResourcePathWildcard());
             ResourceCriteria resourceCriteria = new ResourceCriteria();
             resourceCriteria.createCriteria().andTenantIdIn(tenantIds).andPathLike(permission.getResourcePathWildcard());
             resourceList.addAll(resourceService.selectByCriteria(resourceCriteria));
         }
 
-//        resourceList = resourceService.selectByCriteria(resourceCriteria);
-        boolean flag = false; //判断是否拥有超级权限
+        //判断是否拥有超级权限
+        boolean flag = false;
         for (Resource resource : resourceList) {
             if (GarnetContants.RESOURCE_PERMISSION.equals(resource.getVarchar00())) {
-                System.out.println("资源存在超级权限");
                 flag = true;
             }
         }

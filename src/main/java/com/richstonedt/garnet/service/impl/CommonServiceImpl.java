@@ -38,20 +38,13 @@ public class CommonServiceImpl implements CommonService {
 
         UserView userView = userService.getUserById(userId);
 
-        System.out.println("userId: "+userId+" , tenantIds: "+tenantIds.size());
-
         if (("N").equals(userView.getUser().getBelongToGarnet())) {
 
             List<Long> tempIds = new ArrayList<>();
 
-            for (Long tenantId :
-                    tenantIds) {
-                System.out.println("tenantID: "+tenantId);
-                if(tenantId != GarnetContants.GARNET_TENANT_ID){
-
-                    System.out.println("tenantAdd: "+tenantId);
+            for (Long tenantId : tenantIds) {
+                if(tenantId.longValue() != GarnetContants.GARNET_TENANT_ID.longValue()){
                     tempIds.add(tenantId);
-
                 }
             }
 
@@ -67,25 +60,10 @@ public class CommonServiceImpl implements CommonService {
 
         boolean b = this.superAdminBelongGarnet(userId);
 
-        List<Long> groupIdList = new ArrayList<>();
         List<Long> returnGroupIds = new ArrayList<>();
 
         //如果不是超级管理员
         if (!b) {
-
-//            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-//            groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
-//            List<GroupUser> groupUsers =  groupUserService.selectByCriteria(groupUserCriteria);
-//
-//            for (GroupUser groupUser:
-//                 groupUsers ) {
-//                groupIdList.add(groupUser.getGroupId());
-//            }
-//
-//            GroupCriteria groupCriteria = new GroupCriteria();
-//            groupCriteria.createCriteria().andIdIn(groupIdList);
-//
-//           List<Group> groups = groupService.selectByCriteria(groupCriteria);
             GroupCriteria groupCriteria = new GroupCriteria();
             groupCriteria.createCriteria().andIdIn(groupIds);
             List<Group> groups = groupService.selectByCriteria(groupCriteria);

@@ -65,7 +65,7 @@ public class PageUtil<T> implements Serializable {
      *
      * @since garnet-core-be-fe 1.0.0
      */
-    private List<T> list;
+    private List<T>     list;
 
     /**
      * 分页
@@ -81,7 +81,7 @@ public class PageUtil<T> implements Serializable {
         //(currPage+1-1)*pageSize
         int startPage = currPage;
 
-       List<T> tmp = new LinkedList<>();
+        List<T> tmp = new LinkedList<>();
 
         if (!CollectionUtils.isEmpty(list)) {
             int count= 0;
@@ -102,7 +102,11 @@ public class PageUtil<T> implements Serializable {
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.currPage = currPage;
-        this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
+        if (pageSize != 0) {
+            this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
+        }else {
+            this.totalPage = 0;
+        }
     }
 
     /**

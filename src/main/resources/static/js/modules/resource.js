@@ -11,12 +11,12 @@ $(function () {
         url: baseURL + 'resources',
         datatype: "json",
         colModel: [
-            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
-            {label: '资源名称', name: 'name', align: 'center', width: 40},
-            {label: '路径标识', name: 'path', align: 'center',  width: 70},
-            {label: 'actions', name: 'actions', align: 'center',  width: 70},
-            {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70}
+            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            // {label: '应用名称', name: 'applicationName', align: 'center', width: 40 ,sortable: false},
+            {label: '资源名称', name: 'name', align: 'center', width: 40 ,sortable: false},
+            {label: '路径标识', name: 'path', align: 'center',  width: 70 ,sortable: false},
+            {label: 'actions', name: 'actions', align: 'center',  width: 70 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70 }
         ],
         viewrecords: true,
         height: 385,
@@ -317,6 +317,8 @@ var vm = new Vue({
             vm.typeList.options = [];
             applicationList.appList.selectedApp = "";
             applicationList.appList.options = [];
+            vm.actionsEdit = null;
+            vm.actionsReadonly = null;
             vm.resource = {
                 id: null,
                 applicationId: null,
@@ -349,6 +351,8 @@ var vm = new Vue({
             vm.title = "修改";
             vm.typeList.options = [];
             vm.tenantList.options = [];
+            vm.actionsEdit = null;
+            vm.actionsReadonly = null;
             // vm.resource.apiIdList = [];
             // vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);
@@ -384,8 +388,8 @@ var vm = new Vue({
                             }
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (result) {
+                            swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -393,20 +397,21 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
-            console.log("vm.actionEdit: " + JSON.stringify(vm.actionsEdit));
-            console.log("vm.actionReadonly: " + JSON.stringify(vm.actionsReadonly));
+            console.log(JSON.stringify(vm.actionsEdit) + " - " + JSON.stringify(vm.actionsReadonly));
 
             if (vm.actionsEdit == true && vm.actionsReadonly == true) {
                 vm.resource.actions = "edit;readonly";
             }
-            if (vm.actionsReadonly == null && vm.actionsEdit == true) {
+            if (vm.actionsReadonly == false && vm.actionsEdit == true) {
                 vm.resource.actions = "edit";
             }
-            if (vm.actionsEdit == null && vm.actionsReadonly == true) {
+            if (vm.actionsEdit == false && vm.actionsReadonly == true) {
                 vm.resource.actions = "readonly";
             }
+            if (vm.actionsEdit == false && vm.actionsReadonly == false) {
+                vm.resource.actions = "";
+            }
 
-            console.log("actions == " + JSON.stringify(vm.resource.actions));
 
             var obj = new Object();
             vm.resource.updatedByUserName = localStorage.getItem("userName");
@@ -417,18 +422,26 @@ var vm = new Vue({
             obj.resource.applicationId = applicationList.appList.selectedApp;
 
 
-            if(vm.resource.name == null || vm.resource.name == "") {
+            if(vm.resource.name == null || $.trim(vm.resource.name) == "") {
                 swal("资源名称不能为空", "", "error");
                 return;
-            } else if(vm.resource.type == null || vm.resource.type == "") {
+            } else if(vm.resource.type == null || $.trim(vm.resource.type) == "") {
                 swal("资源类型不能为空", "", "error");
                 return;
-            } else if(vm.resource.path == null || vm.resource.path == "") {
+            } else if(vm.resource.path == null || $.trim(vm.resource.path) == "") {
                 swal("路径标识不能为空", "", "error");
                 return;
             }
 
-            console.log("resource actions == " + JSON.stringify(obj));
+            if (vm.resource.name.length > 30) {
+                swal("", "资源名称长度不能大于30", "error");
+                return;
+            }
+
+            if (vm.resource.path.length > 30) {
+                swal("", "路径标识长度不能大于30", "error");
+                return;
+            }
 
             $.ajax({
                 type: vm.resource.id === null ? "POST" : "PUT",
@@ -505,6 +518,19 @@ var vm = new Vue({
                 vm.resource.boolean03 = response.boolean03;
                 vm.resource.boolean04 = response.boolean04;
 
+                var action = response.actions;
+                if ("edit" == action) {
+                    vm.actionsEdit = true;
+                } else if ("readonly" == action) {
+                    vm.actionsReadonly = true;
+                } else if (action == null || action == "") {
+                    vm.actionsReadonly = false;
+                    vm.actionsEdit = false;
+                }
+                else {
+                    vm.actionsReadonly = true;
+                    vm.actionsEdit = true;
+                }
                 // vm.initTreesToAdd();
                 // $.each(response.apiIdList, function (index, item) {
                 //     var node = apiTree.getNodeByParam("apiId", item);
@@ -550,6 +576,10 @@ var vm = new Vue({
         selectType: function () {
             var type = vm.typeList.selectedType;
             vm.getResourceDynamicPropertyByType(type);
+        },
+        radioChecked:function (value) {
+            console.log(value);
+            console.log(JSON.stringify(vm.resource.boolean01));
         },
         //通过type和appId返回resource
         getResourceByTypeAndApp: function () {
@@ -689,7 +719,7 @@ var vm = new Vue({
     },
     /**  初始化页面时执行该方法 */
     created: function () {
-        this.getCurrentUser();
+        // this.getCurrentUser();
         this.getAppList();
         this.getSearchTypeList();
     }

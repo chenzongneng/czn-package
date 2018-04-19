@@ -21,6 +21,12 @@ public interface CommonService{
      */
     boolean superAdminBelongGarnet(Long userId);
 
+    /**
+     * 根据是不是Garnet超级管理员，对组id列表进行处理
+     * @param userId
+     * @param groupIds
+     * @return
+     */
     List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds);
 
 }

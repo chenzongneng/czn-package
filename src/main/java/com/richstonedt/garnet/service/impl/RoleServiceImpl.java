@@ -303,24 +303,19 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         }
 
         //设置部门名称列表
-        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
-        groupRoleCriteria.createCriteria().andRoleIdEqualTo(role.getId());
-        List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
-        List<String> groupNames = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(groupRoles)) {
-            for (GroupRole groupRole : groupRoles) {
-                Long groupId = groupRole.getGroupId();
-                Group group = groupService.selectByPrimaryKey(groupId);
-                if (!ObjectUtils.isEmpty(group) && !StringUtils.isEmpty(group.getName())) {
-                    groupNames.add(group.getName());
-                }
-            }
-            roleView.setGroupNames(groupNames);
-        }
+        List<String> groupName = this.getGroupNamesByRoleId(role.getId());
+        roleView.setPermissionNames(groupName);
 
         //设置权限名称列表
+        List<String> perminssionNames = this.getPermissionNamesByRoleId(role.getId());
+        roleView.setPermissionNames(perminssionNames);
+
+        return roleView;
+    }
+
+    private List<String> getPermissionNamesByRoleId(Long roleId) {
         RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
-        rolePermissionCriteria.createCriteria().andRoleIdEqualTo(role.getId());
+        rolePermissionCriteria.createCriteria().andRoleIdEqualTo(roleId);
         List<RolePermission> rolePermissions = rolePermissionService.selectByCriteria(rolePermissionCriteria);
         List<String> permissionNames = new ArrayList<>();
         if (!CollectionUtils.isEmpty(rolePermissions)) {
@@ -331,10 +326,30 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
                     permissionNames.add(permission.getName());
                 }
             }
-            roleView.setPermissionNames(permissionNames);
+            return permissionNames;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    private List<String> getGroupNamesByRoleId(Long roleId) {
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andRoleIdEqualTo(roleId);
+        List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
+        List<String> groupNames = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(groupRoles)) {
+            for (GroupRole groupRole : groupRoles) {
+                Long groupId = groupRole.getGroupId();
+                Group group = groupService.selectByPrimaryKey(groupId);
+                if (!ObjectUtils.isEmpty(group) && !StringUtils.isEmpty(group.getName())) {
+                    groupNames.add(group.getName());
+                }
+            }
+            return groupNames;
+        } else {
+            return new ArrayList<>();
         }
 
-        return roleView;
     }
 
 }

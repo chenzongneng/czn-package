@@ -1,129 +1,103 @@
 package com.richstonedt.garnet.model.view;
 
-import com.richstonedt.garnet.common.utils.ExcelVOAttribute;
+import java.io.Serializable;
 
+public class RefreshTokenResourceView implements Serializable {
 
-public class ResourceExcelView {
+    private static final long serialVersionUID = 1L;
 
-    @ExcelVOAttribute(name = "", column = "F")
-    private String tenantName;
+    private Long id;
 
-    @ExcelVOAttribute(name = "", column = "E")
-    private String applicationName;
+    private Long applicationId;
 
-    @ExcelVOAttribute(name = "", column = "B")
     private String path;
 
-    @ExcelVOAttribute(name = "", column = "C")
-    private String actions;
+    private String action;
 
-    @ExcelVOAttribute(name = "", column = "A")
     private String name;
 
-    @ExcelVOAttribute(name = "", column = "D")
+    private Long createdTime;
+
+    private Long modifiedTime;
+
     private String type;
 
-    @ExcelVOAttribute(name = "", column = "G")
+    private Long tenantId;
+
     private String varchar00;
 
-    @ExcelVOAttribute(name = "", column = "H")
     private String varchar01;
 
-    @ExcelVOAttribute(name = "", column = "I")
     private String varchar02;
 
-    @ExcelVOAttribute(name = "", column = "J")
     private String varchar03;
 
-    @ExcelVOAttribute(name = "", column = "K")
     private String varchar04;
 
-    @ExcelVOAttribute(name = "", column = "L")
     private String varchar05;
 
-    @ExcelVOAttribute(name = "", column = "M")
     private String varchar06;
 
-    @ExcelVOAttribute(name = "", column = "N")
     private String varchar07;
 
-    @ExcelVOAttribute(name = "", column = "O")
     private String varchar08;
 
-    @ExcelVOAttribute(name = "", column = "P")
     private String varchar09;
 
-    @ExcelVOAttribute(name = "", column = "Q")
     private String varchar10;
 
-    @ExcelVOAttribute(name = "", column = "R")
     private String varchar11;
 
-    @ExcelVOAttribute(name = "", column = "S")
     private String varchar12;
 
-    @ExcelVOAttribute(name = "", column = "T")
     private String varchar13;
 
-    @ExcelVOAttribute(name = "", column = "U")
     private String varchar14;
 
-    @ExcelVOAttribute(name = "", column = "V")
     private String varchar15;
 
-    @ExcelVOAttribute(name = "", column = "W")
     private String varchar16;
 
-    @ExcelVOAttribute(name = "", column = "X")
     private String varchar17;
 
-    @ExcelVOAttribute(name = "", column = "Y")
     private String varchar18;
 
-    @ExcelVOAttribute(name = "", column = "Z")
     private String varchar19;
 
-    @ExcelVOAttribute(name = "", column = "AA")
     private Integer int01;
 
-    @ExcelVOAttribute(name = "", column = "AB")
     private Integer int02;
 
-    @ExcelVOAttribute(name = "", column = "AC")
     private Integer int03;
 
-    @ExcelVOAttribute(name = "", column = "AD")
     private Integer int04;
 
-    @ExcelVOAttribute(name = "", column = "AE")
     private Integer int05;
 
-    @ExcelVOAttribute(name = "", column = "AF")
-    private Boolean boolean01;
+    private boolean boolean01;
 
-    @ExcelVOAttribute(name = "", column = "AG")
-    private Boolean boolean02;
+    private boolean boolean02;
 
-    @ExcelVOAttribute(name = "", column = "AH")
-    private Boolean boolean03;
+    private boolean boolean03;
 
-    @ExcelVOAttribute(name = "", column = "AI")
-    private Boolean boolean04;
+    private boolean boolean04;
 
-    public String getTenantName() {
-        return tenantName;
+    private String updatedByUserName;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setTenantName(String tenantName) {
-        this.tenantName = tenantName;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getApplicationName() {
-        return applicationName;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public String getPath() {
@@ -134,12 +108,12 @@ public class ResourceExcelView {
         this.path = path;
     }
 
-    public String getActions() {
-        return actions;
+    public String getAction() {
+        return action;
     }
 
-    public void setActions(String actions) {
-        this.actions = actions;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public String getName() {
@@ -150,12 +124,36 @@ public class ResourceExcelView {
         this.name = name;
     }
 
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(Long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getVarchar00() {
@@ -358,35 +356,43 @@ public class ResourceExcelView {
         this.int05 = int05;
     }
 
-    public Boolean getBoolean01() {
+    public boolean getBoolean01() {
         return boolean01;
     }
 
-    public void setBoolean01(Boolean boolean01) {
+    public void setBoolean01(boolean boolean01) {
         this.boolean01 = boolean01;
     }
 
-    public Boolean getBoolean02() {
+    public boolean getBoolean02() {
         return boolean02;
     }
 
-    public void setBoolean02(Boolean boolean02) {
+    public void setBoolean02(boolean boolean02) {
         this.boolean02 = boolean02;
     }
 
-    public Boolean getBoolean03() {
+    public boolean getBoolean03() {
         return boolean03;
     }
 
-    public void setBoolean03(Boolean boolean03) {
+    public void setBoolean03(boolean boolean03) {
         this.boolean03 = boolean03;
     }
 
-    public Boolean getBoolean04() {
+    public boolean getBoolean04() {
         return boolean04;
     }
 
-    public void setBoolean04(Boolean boolean04) {
+    public void setBoolean04(boolean boolean04) {
         this.boolean04 = boolean04;
+    }
+
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName;
     }
 }

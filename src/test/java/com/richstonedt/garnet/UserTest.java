@@ -89,7 +89,7 @@ public class UserTest {
         User user = userService.selectSingleByCriteria(userCriteria);
         Assert.assertNotNull(user);
 
-        userService.updateStatusById(user);
+        userService.updateStatusById(user, 1L);
 
         UserCriteria userCriteria1 = new UserCriteria();
         userCriteria1.createCriteria().andUserNameEqualTo("test_user_update");

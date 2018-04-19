@@ -9,8 +9,6 @@ public class ApplicationParm extends BaseParm{
 
     private Application application;
 
-    private String searchName;
-
     private String mode;
 
     private Integer modeId;
@@ -29,14 +27,6 @@ public class ApplicationParm extends BaseParm{
 
     public void setModeId(Integer modeId) {
         this.modeId = modeId;
-    }
-
-    public String getSearchName() {
-        return searchName;
-    }
-
-    public void setSearchName(String searchName) {
-        this.searchName = searchName;
     }
 
     /**

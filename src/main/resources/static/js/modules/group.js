@@ -31,11 +31,11 @@ $(function () {
         url: baseURL + 'groups?userId=' + userId,
         datatype: "json",
         colModel: [
-            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '组名称', name: 'name', align: 'center', width: 40},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 100},
-            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 100},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80}
+            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false ,sortable: false},
+            {label: '组名称', name: 'name', align: 'center', width: 40 ,sortable: false ,sortable: false},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 150 ,sortable: false ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: true,
         height: 385,
@@ -264,9 +264,13 @@ var vm = new Vue({
             //change by ming
             var LoginUserId = localStorage.getItem("userId");
 
-            if(vm.group.name === null || vm.group.name === ""){
-                alert("部门名称不能为空");
+            if(vm.group.name == null || $.trim(vm.group.name) == ""){
+                swal("", "组名称不能为空", "error");
                 return;
+            }
+
+            if (vm.group.name.length > 30) {
+                swal("", "组名称不能为空", "error");
             }
 
             // 获取用户树选择的用户
@@ -422,7 +426,7 @@ var vm = new Vue({
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                 userTree.expandAll(true);
 
-                for (i = 0; i<response.length; i++) {
+                for (var i = 0; i<response.length; i++) {
                     var userId1 = JSON.stringify(response[i].id);
                     if (userId1 == userId) {
                     //勾选登录用户

@@ -3,6 +3,7 @@ package com.richstonedt.garnet.interceptory;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.User;
+import com.richstonedt.garnet.model.view.RefreshTokenResourceView;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
@@ -23,12 +24,45 @@ public class LoginMessage {
 
     private int code;
 
+    @ApiModelProperty(value = "资源列表")
     private List<Resource> resourceList;
 
-    @ApiModelProperty(value = "资源类型配置列表")
+    @ApiModelProperty(value = "刷新token时获取的资源列表")
+    private List<RefreshTokenResourceView> refreshTokenResourceList;
 
+    @ApiModelProperty(value = "资源列表readonly组")
+    private List<Resource> resourceListWithReadlyOnly;
+
+    @ApiModelProperty(value = "资源列表edit组")
+    private List<Resource> getResourceListWithEdit;
+
+    @ApiModelProperty(value = "资源类型配置列表")
     private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
 
+
+    public List<RefreshTokenResourceView> getRefreshTokenResourceList() {
+        return refreshTokenResourceList;
+    }
+
+    public void setRefreshTokenResourceList(List<RefreshTokenResourceView> refreshTokenResourceList) {
+        this.refreshTokenResourceList = refreshTokenResourceList;
+    }
+
+    public List<Resource> getResourceListWithReadlyOnly() {
+        return resourceListWithReadlyOnly;
+    }
+
+    public void setResourceListWithReadlyOnly(List<Resource> resourceListWithReadlyOnly) {
+        this.resourceListWithReadlyOnly = resourceListWithReadlyOnly;
+    }
+
+    public List<Resource> getGetResourceListWithEdit() {
+        return getResourceListWithEdit;
+    }
+
+    public void setGetResourceListWithEdit(List<Resource> getResourceListWithEdit) {
+        this.getResourceListWithEdit = getResourceListWithEdit;
+    }
 
     public List<List<ResourceDynamicProperty>> getResourceDynamicPropertyList() {
         return resourceDynamicPropertyList;

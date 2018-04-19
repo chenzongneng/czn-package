@@ -76,15 +76,15 @@ public class MessageDescription {
     /**
      * 登陆密码错误
      */
-    public static final String LOGIN_WRONG_PASSWORD = "用户密码错误";
+//    public static final String LOGIN_WRONG_PASSWORD = "用户密码错误";
 
     /**
-     * 登陆密码错误
+     * 用户名已存在
      */
     public static final String LOGIN_USERNAME_EXIST = "用户名已存在";
 
     /**
-     * 登陆密码错误
+     * 用户名不存在
      */
     public static final String LOGIN_USERNAME_NOT_EXIST = "用户名不存在";
 }

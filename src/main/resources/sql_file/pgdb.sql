@@ -100,7 +100,7 @@ CREATE TABLE gar_permissions
 	modified_time bigint DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	tenant_id bigint DEFAULT 0 NOT NULL,
-	action VARCHAR(100) NOT NULL ,
+	action VARCHAR(100) NOT NULL,
 	status int DEFAULT 1 NOT NULL,
 	-- 更新的人
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
@@ -536,7 +536,8 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('56', '1', '/garnet',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '10', '9', '', '资源管理', 'modules/resource.html', '1', 'fa fa-th-list', 'garnetDevelopmentResource', '1', '', '');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('57', '1', '/garnet',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '11', '9', '', 'API', 'modules/api.html', '1', 'fa fa-th-list', 'garnetDevelopmentApi', '2', '', '');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('58', '1', '/garnet',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '12', '9', '', '资源类型配置', 'modules/resourceDynamicProperty.html', '1', 'fa fa-th-list', 'garnetDevelopmentresourceDynamicProperty', '3', '', '');
-INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('59', '1', '/garnet',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '13', '9', '', '应用白名单管理', 'modules/routerGroup.html', '1', 'fa fa-th-list', 'garnetDevelopmentRouterGroup', '4', '', '');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('59', '1', '/garnet',  '', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '13', '9', '', '单点登录应用组', 'modules/routerGroup.html', '1', 'fa fa-th-list', 'garnetDevelopmentRouterGroup', '4', '', '');
 
 -- gar_router_group
 INSERT INTO gar_router_group (id, group_name, app_code) VALUES ('1', '超级应用组', 'garnet');
+

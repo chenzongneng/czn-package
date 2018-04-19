@@ -17,16 +17,17 @@ $(function () {
                 hidden: true,
                 index: "permission_id",
                 width: 20,
-                key: true
+                key: true,
+                sortable: false
             },
-            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true},
-            {label: '权限名称', name: 'name', align: 'center', width: 60},
+            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true, sortable: false},
+            {label: '权限名称', name: 'name', align: 'center', width: 60, sortable: false},
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 30},
-            {label: '通配符', name: 'resourcePathWildcard', align: 'center', width: 80},
-            {label: '详细说明', name: 'description', align: 'center', width: 70},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 80},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 70},
+            {label: '通配符', name: 'resourcePathWildcard', align: 'center', width: 80, sortable: false},
+            {label: '详细说明', name: 'description', align: 'center', width: 70,sortable: false},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 70 ,sortable: false},
             // {
             //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
             //     return value === 0 ?
@@ -160,6 +161,7 @@ var vm = new Vue({
                 id: null,
                 applicationId: "",
                 tenantId: "",
+                action: null,
                 status: 1
             };
             vm.tenantList.options = [];
@@ -223,13 +225,25 @@ var vm = new Vue({
             vm.permission.updatedByUserName = localStorage.getItem("userName");
             obj.permission = vm.permission;
 
-            if(vm.permission.name === null || vm.permission.name === ""){
-                alert("权限名称不能为空");
+            if(vm.permission.name == null || $.trim(vm.permission.name) == ""){
+                swal("", "权限名称不能为空", "error");
                 return;
             }
 
-            if (vm.permission.action == null) {
+
+            if (vm.permission.action == null || $.trim(vm.permission.action) == "") {
                 swal("", "行为不能为空", "error");
+                return;
+            }
+
+            if (vm.permission.name.length > 30) {
+                swal("", "权限名称不能大于30", "");
+                return;
+            }
+
+            if (!(vm.permission.action == "edit" || vm.permission.action == "readonly")) {
+                swal("", "行为只能填写 edit 或 readonly ", "error");
+                return;
             }
 
             // 获取菜单树选择的菜单

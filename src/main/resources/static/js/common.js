@@ -8,8 +8,8 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+// var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
 /** token */
 // var garnetToken = localStorage.getItem("garnetToken");
 var accessToken = localStorage.getItem("accessToken");
@@ -25,7 +25,15 @@ var userId = localStorage.getItem("userId");
 
 function getExceptionMessage(value) {
 
-    var exception = value.responseJSON.data.errorResponseMessage;
+    console.log("getExceptionMessage: " + JSON.stringify(value));
+
+    var exception;
+    if (typeof(value.responseJSON.data) == "undefined") {
+        exception = value.responseJSON.message;
+    } else {
+        exception = value.responseJSON.data.errorResponseMessage;
+    }
+
     var message = exception.match(/java.lang.RuntimeException:(.*)/)
     if (message != null) {
         message = message[1];
@@ -33,6 +41,21 @@ function getExceptionMessage(value) {
         message = "操作失败，请检查您的参数是否正确";
     }
     return message;
+}
+
+function checkValueNull(value) {
+
+    if (value == null || value.length == 0) {
+        return false;
+    }
+
+    for (var i = 0; i < value.length; i++) {
+        if (value[i] == null) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /** jquery全局配置 */
@@ -54,8 +77,12 @@ $.ajaxSetup({
 
         // token过期，则跳转到登录页面
         if (response.code == 401) {
+
+            var text = response.message;
+
             swal({
                     title: response.message,
+                    // text: text,
                     type: "error"
                 },
                 function () {

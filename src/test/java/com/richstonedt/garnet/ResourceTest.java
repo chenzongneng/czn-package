@@ -91,6 +91,7 @@ public class ResourceTest {
         resource.setActions("test");
         resource.setName("test_resource");
         resource.setVarchar00("true");
+        resource.setBoolean01(true);
         resourceView.setResource(resource);
 
         Long resourceId = resourceService.insertResource(resourceView);
@@ -109,7 +110,7 @@ public class ResourceTest {
         resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
 
         if (!ObjectUtils.isEmpty(resourceId)) {
-            resourceService.deleteByPrimaryKey(resourceId);
+//            resourceService.deleteByPrimaryKey(resourceId);
         }
     }
 
@@ -152,6 +153,7 @@ public class ResourceTest {
     public void test3updateResource() {
         Resource resource = resourceService.selectByPrimaryKey(resourceId);
         resource.setName("test_resource_update");
+        resource.setBoolean01(null);
         ResourceView resourceView = new ResourceView();
         resourceView.setResource(resource);
 
@@ -162,10 +164,10 @@ public class ResourceTest {
         List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
         Assert.assertNotNull(resources);
 
-        resourceService.deleteByCriteria(resourceCriteria);
-        List<Resource> resourceList = resourceService.selectByCriteria(resourceCriteria);
-
-        Assert.assertEquals(resourceList.size(), 0);
+//        resourceService.deleteByCriteria(resourceCriteria);
+//        List<Resource> resourceList = resourceService.selectByCriteria(resourceCriteria);
+//
+//        Assert.assertEquals(resourceList.size(), 0);
     }
 
     @Test
@@ -174,5 +176,23 @@ public class ResourceTest {
         ResourceView resourceView = new ResourceView();
         resourceView.setResource(resource);
         resourceService.deleteResource(resourceView);
+    }
+
+    @Test
+    public void testInsert() {
+        Resource resource = new Resource();
+        ResourceView resourceView = new ResourceView();
+        resource.setApplicationId(this.applicationId);
+        resource.setTenantId(this.tenantId);
+        resource.setType("test_resource");
+        resource.setActions("edit");
+        resource.setName("test_resource_insert");
+        resource.setVarchar00("true");
+        resource.setBoolean01(null);
+        resourceView.setResource(resource);
+
+        Long resourceId = resourceService.insertResource(resourceView);
+        Resource resource1 = resourceService.selectByPrimaryKey(resourceId);
+        Assert.assertNotNull(resource1);
     }
 }

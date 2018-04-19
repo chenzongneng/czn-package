@@ -15,12 +15,12 @@ $(function () {
             "token": accessToken
         },
         colModel: [
-            {label: '租户ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
-            {label: '租户名称', name: 'name', align: 'center', width: 80},
-            {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 100},
-            {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 100},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80},
-            {label: '备注', name: 'description', align: 'center', width: 80}
+            {label: '租户ID', name: 'id', align: 'center', hidden: true, width: 20, key: true ,sortable: false},
+            {label: '租户名称', name: 'name', align: 'center', width: 80 ,sortable: false},
+            {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
+            {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false},
+            {label: '备注', name: 'description', align: 'center', width: 80 ,sortable: false}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
         viewrecords: false,
@@ -95,6 +95,7 @@ var vm = new Vue({
         showList: true,
         title: null,
         userName:null,
+        userNames:null,
         hidden:false,
         tips:null,
         // placeholder:false, //选择应用框，根据选择模式的不同给出相对应的提示
@@ -147,8 +148,6 @@ var vm = new Vue({
         } else if (localStorage.getItem("mode") == "paas") {
             $("#selectModeId option[value='all']").remove();
             $("#selectModeId option[value='saas']").remove();
-        } else if (localStorage.getItem("mode") == "all") {
-
         }
 
     },
@@ -176,6 +175,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.hidden = false;
             vm.title = "新增";
+            vm.userNames = null;
             vm.tenant = {
                 id: null,
                 name: null,
@@ -220,6 +220,7 @@ var vm = new Vue({
             vm.tenant.appIds = null;
             vm.tenant.appNames = [];
             vm.userName = null;
+            vm.userNames = null;
 
             vm.getTenant(tenantId);
         },
@@ -248,8 +249,8 @@ var vm = new Vue({
                             swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (response) {
+                            swal("删除失败!", getExceptionMessage(response), "error");
                         }
 
                     });
@@ -271,11 +272,12 @@ var vm = new Vue({
             obj.appIds =vm.tenant.appIds;
             obj.userTenants = [];
             obj.userName = userName;
+            obj.userNames = vm.userNames;
             var appIdList = vm.tenant.appIdList;
 
             // alert(JSON.stringify(obj));
-            if(vm.tenant.name === null){
-                alert("租户名称不能为空");
+            if(vm.tenant.name == null || $.trim(vm.tenant.name) == ""){
+                swal("", "租户名称不能为空", "error");
                 return;
             }
 
@@ -293,8 +295,8 @@ var vm = new Vue({
 
             if(mode == "saas") {  //saas
                 vm.tenant.serviceMode = "saas";
-                if (appIdList.length > 1) {
-                    swal("当前模式不能添加多个应用", "", "error");
+                if (appIdList != null && appIdList.length > 1) {
+                    swal("", "当前模式不能添加多个应用", "error");
                     return;
                 }
                 // console.log("my modeId is : " + vm.modeId);
@@ -325,7 +327,7 @@ var vm = new Vue({
                 //         }
                 //     });
                 // });
-                swal("请选择正确模式", "", "error");
+                swal("", "请选择正确模式", "error");
                 return;
             }
 
@@ -396,13 +398,23 @@ var vm = new Vue({
                 }
                 appTree.checkNode(node, true, false);
             });
+
+            var title;
+            console.log("vm.mode : " + JSON.stringify(vm.modeList2.selectedMode));
+            if (vm.modeList2.selectedMode == "paas") {
+                title = "选择应用（可选多个）";
+                console.log(title);
+            } else if (vm.modeList2.selectedMode == "saas") {
+                title = "选择应用（只能选择一个）";
+            }
+
             layer.open({
                 type: 1,
                 offset: '50px',
                 skin: 'layui-layer-molv',
-                title: "选择应用",
+                title: title,
                 area: ['300px', '450px'],
-                shade: 0,
+                shade: 0.3,
                 shadeClose: false,
                 content: jQuery("#appLayer"),
                 btn: ['确定', '取消'],
@@ -413,6 +425,7 @@ var vm = new Vue({
                     var appIdList = [];
                     vm.tenant.appNames = [];
                     vm.tenant.appIds = null;
+
                     for (var i = 0; i < appNodes.length; i++) {
                         appIdList.push(appNodes[i].id);
                         vm.tenant.appNames.push(appNodes[i].name);

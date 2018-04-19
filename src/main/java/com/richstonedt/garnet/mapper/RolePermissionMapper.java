@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Repository
 @Mapper
 public interface RolePermissionMapper extends BaseMapper<RolePermission, RolePermissionCriteria, Long> {
+
     RolePermission selectSingleByCriteria(RolePermissionCriteria criteria);
 
     int insertBatchSelective(List<RolePermission> records);

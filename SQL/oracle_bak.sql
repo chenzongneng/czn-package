@@ -27,15 +27,15 @@ DROP TABLE  gar_user_tenant_applications;
 CREATE TABLE gar_applications
 (
   id number(15) not null primary key,
-  name varchar(256) NOT NULL ,
+  name varchar(256),
   company varchar(256),
   -- 调用接口时应用唯一标识
   app_code varchar(256) NOT NULL,
-  refresh_resources_api varchar(256),
+  refresh_resources_api varchar(256) DEFAULT ' ' NOT NULL,
   -- 此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
   --
   -- 加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。
-  hosts varchar(256),
+  hosts varchar(256) DEFAULT ' ' NOT NULL,
   created_time number(15) DEFAULT 0 NOT NULL,
   modified_time number(15) DEFAULT 0 NOT NULL,
   status int DEFAULT 1 NOT NULL,
@@ -89,15 +89,14 @@ CREATE TABLE gar_permissions
   id number(15) not null primary key,
   resource_path_wildcard varchar(256) DEFAULT ' ' NOT NULL,
   name varchar(256) DEFAULT ' ' NOT NULL,
-  description varchar(250),
+  description varchar(250) DEFAULT ' ' NOT NULL,
   created_time number(15) DEFAULT 0 NOT NULL,
   modified_time number(15) DEFAULT 0 NOT NULL,
   application_id number(15) DEFAULT 0 NOT NULL,
   tenant_id number(15) DEFAULT 0 NOT NULL,
   status int DEFAULT 1 NOT NULL,
   -- 更新的人
-  updated_by_user_name varchar(100) DEFAULT ' ' NOT NULL,
-  action VARCHAR(100) NOT NULL
+  updated_by_user_name varchar(100) DEFAULT ' ' NOT NULL
 ) ;
 
 
@@ -133,25 +132,25 @@ CREATE TABLE gar_resources
   type varchar(50) DEFAULT ' ' NOT NULL,
   tenant_id number(15) DEFAULT 0 NOT NULL,
   varchar_00 varchar(256) DEFAULT ' ' NOT NULL,
-  varchar_01 varchar(256),
-  varchar_02 varchar(256),
-  varchar_03 varchar(256),
-  varchar_04 varchar(256),
-  varchar_05 varchar(256),
-  varchar_06 varchar(256),
-  varchar_07 varchar(256),
-  varchar_08 varchar(256),
-  varchar_09 varchar(256),
-  varchar_10 varchar(256),
-  varchar_11 varchar(256),
-  varchar_12 varchar(256),
-  varchar_13 varchar(256),
-  varchar_14 varchar(256),
-  varchar_15 varchar(256),
-  varchar_16 varchar(256),
-  varchar_17 varchar(256),
-  varchar_18 varchar(256),
-  varchar_19 varchar(256),
+  varchar_01 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_02 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_03 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_04 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_05 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_06 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_07 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_08 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_09 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_10 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_11 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_12 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_13 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_14 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_15 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_16 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_17 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_18 varchar(256) DEFAULT ' ' NOT NULL,
+  varchar_19 varchar(256) DEFAULT ' ' NOT NULL,
   int_01 int,
   int_02 int,
   int_03 int,
@@ -180,7 +179,7 @@ CREATE TABLE gar_roles
 (
   id number(15) not null primary key,
   name varchar(256) DEFAULT ' ' NOT NULL,
-  remark varchar(256),
+  remark varchar(256) DEFAULT ' ' NOT NULL,
   created_time number(15) DEFAULT 0 NOT NULL,
   modified_time number(15) DEFAULT 0 NOT NULL,
   tenant_id number(15) DEFAULT 0 NOT NULL,
@@ -221,7 +220,7 @@ CREATE TABLE gar_tenants
   name varchar(256) NOT NULL ,
   created_time number(15) DEFAULT 0 NOT NULL,
   modified_time number(15) DEFAULT 0 NOT NULL,
-  description varchar(250),
+  description varchar(250) DEFAULT ' ' NOT NULL,
   status int DEFAULT 1 NOT NULL,
   -- 属于paas服务还是saas服务
   service_mode varchar(5) DEFAULT 'paas' NOT NULL,
@@ -248,8 +247,8 @@ CREATE TABLE gar_users
   user_name varchar(256) NOT NULL ,
   created_time number(15) DEFAULT 0 NOT NULL,
   modified_time number(15) DEFAULT 0 NOT NULL,
-  mobile_number varchar(256),
-  email varchar(256),
+  mobile_number varchar(256) DEFAULT ' ' NOT NULL,
+  email varchar(256) DEFAULT ' ' NOT NULL,
   status int DEFAULT 1 NOT NULL,
   belong_to_garnet varchar(5) NOT NULL,
   -- 更新的人
@@ -318,7 +317,7 @@ INSERT INTO gar_groups(id, name, created_time, modified_time, application_id, te
 INSERT INTO gar_roles(id, name, remark, created_time, modified_time, tenant_id, application_id, status) VALUES('1', '超级角色', '超级角色', '1522252800000', '1522252800000', '1', '1', '1');
 
 -- gar_permissions
-INSERT INTO gar_permissions(id, resource_path_wildcard, name, description, created_time, modified_time, application_id, tenant_id, action, status) VALUES ('1', '%', '超级权限', '超级权限', '1522252800000', '1522252800000', '1', '1','readonly', '1');
+INSERT INTO gar_permissions(id, resource_path_wildcard, name, description, created_time, modified_time, application_id, tenant_id, status) VALUES ('1', '%', '超级权限', '超级权限', '1522252800000', '1522252800000', '1', '1','1');
 
 -- gar_role_permissions
 INSERT INTO gar_role_permissions(role_id, permission_id, id) VALUES ('1', '1', '1');
@@ -484,7 +483,7 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('56', '1', '/garnet',  ' ', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '10', '9', ' ', '资源管理', 'modules/resource.html', '1', 'fa fa-th-list', 'garnetDevelopmentResource', '1', ' ', ' ');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('57', '1', '/garnet',  ' ', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '11', '9', ' ', 'API', 'modules/api.html', '1', 'fa fa-th-list', 'garnetDevelopmentApi', '2', ' ', ' ');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('58', '1', '/garnet',  ' ', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '12', '9', ' ', '资源类型配置', 'modules/resourceDynamicProperty.html', '1', 'fa fa-th-list', 'garnetDevelopmentresourceDynamicProperty', '3', ' ', ' ');
-INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('59', '1', '/garnet',  ' ', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '13', '9', ' ', '单点登录应用组', 'modules/routerGroup.html', '1', 'fa fa-th-list', 'garnetDevelopmentRouterGroup', '4', ' ', ' ');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10) VALUES ('59', '1', '/garnet',  ' ', '菜单配置', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '13', '9', ' ', '应用白名单管理', 'modules/routerGroup.html', '1', 'fa fa-th-list', 'garnetDevelopmentRouterGroup', '4', ' ', ' ');
 
 -- gar_router_group
 INSERT INTO gar_router_group (id, group_name, app_code) VALUES ('1', '超级应用组', 'garnet');

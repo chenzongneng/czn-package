@@ -47,12 +47,12 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
     /**
      * 登录验证
      */
-    public LoginMessage userLogin(LoginView loginView) throws Exception;
+    LoginMessage userLogin(LoginView loginView) throws Exception;
 
     /**
      * 通过id获取User
      */
-    public UserView getUserById(Long userId);
+    UserView getUserById(Long userId);
 
     /**
      * 通过账号拿user
@@ -65,9 +65,9 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * 当用户点击删除时，将其状态设为禁用
      * @param user
      */
-    public void updateStatusById(User user);
+    void updateStatusById(User user, Long loginUserId);
 
-    public List<User> queryUserByTenantId(UserParm userParm);
+    List<User> queryUserByTenantId(UserParm userParm);
 
     LoginMessage refreshToken(TokenRefreshView tokenRefreshView) throws Exception;
 
