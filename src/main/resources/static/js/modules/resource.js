@@ -269,7 +269,6 @@ var vm = new Vue({
         },
         //导入Excel
         inputExcel: function () {
-          console.log("导入Excel");
           $('#file').click();
         },
         importFile: function (ele) {
@@ -291,13 +290,13 @@ var vm = new Vue({
                 },
                 error: function (result) {
 
-                    console.log("import result == " + JSON.stringify(result));
+                    // console.log("import result == " + JSON.stringify(result));
 
                     if (result.status == 200 && result.readyState == 4) {
                         swal("导入Resource成功", "", "success");
                         vm.reload(false);
                     } else {
-                        swal("导入Resource失败", result.responseJSON.data.errorResponseMessage, "error");
+                        swal("导入Resource失败", getExceptionMessage(result), "error");
                         // swal("导入Resource失败", "", "error");
                     }
                 }
@@ -409,7 +408,7 @@ var vm = new Vue({
                 vm.resource.actions = "readonly";
             }
             if (vm.actionsEdit == false && vm.actionsReadonly == false) {
-                vm.resource.actions = "";
+                swal("", "行为组不能为空", "warning");
             }
 
 
@@ -423,23 +422,23 @@ var vm = new Vue({
 
 
             if(vm.resource.name == null || $.trim(vm.resource.name) == "") {
-                swal("资源名称不能为空", "", "error");
+                swal("资源名称不能为空", "", "warning");
                 return;
             } else if(vm.resource.type == null || $.trim(vm.resource.type) == "") {
-                swal("资源类型不能为空", "", "error");
+                swal("资源类型不能为空", "", "warning");
                 return;
             } else if(vm.resource.path == null || $.trim(vm.resource.path) == "") {
-                swal("路径标识不能为空", "", "error");
+                swal("路径标识不能为空", "", "warning");
                 return;
             }
 
             if (vm.resource.name.length > 30) {
-                swal("", "资源名称长度不能大于30", "error");
+                swal("", "资源名称长度不能大于30", "warning");
                 return;
             }
 
             if (vm.resource.path.length > 30) {
-                swal("", "路径标识长度不能大于30", "error");
+                swal("", "路径标识长度不能大于30", "warning");
                 return;
             }
 

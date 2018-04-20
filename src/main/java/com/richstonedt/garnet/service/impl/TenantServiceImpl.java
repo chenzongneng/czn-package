@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.service.impl;
 
 import com.github.pagehelper.StringUtil;
+import com.google.gson.JsonArray;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
@@ -12,6 +13,7 @@ import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.model.view.TenantView;
 import com.richstonedt.garnet.service.*;
+import net.sf.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -324,6 +326,45 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         return applicationIds;
     }
 
+    @Override
+    public String getRelatedUserNamesByTenantId(Long tenantId) {
+        List<Long> userIds = getUserIdsByTenantId(tenantId);
+
+        if (userIds.size() == 0) {
+            userIds.add(GarnetContants.NON_VALUE);
+        }
+
+        UserCriteria userCredentia = new UserCriteria();
+        userCredentia.createCriteria().andIdIn(userIds).andStatusEqualTo(1);
+        List<User> users = userService.selectByCriteria(userCredentia);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (User user : users) {
+            stringBuilder.append(user.getUserName());
+            stringBuilder.append("\n");
+        }
+        String result = stringBuilder.toString();
+        return result;
+    }
+
+    /**
+     * 查询租户关联的所有userIds
+     * @param tenantId
+     * @return
+     */
+    private List<Long> getUserIdsByTenantId(Long tenantId) {
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> userIds = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() != 0) {
+            for (UserTenant userTenant : userTenants) {
+                userIds.add(userTenant.getUserId());
+            }
+        }
+        return userIds;
+    }
+
     /**
      * 根据userName 处理关联的用户
      * @param tenantView
@@ -334,6 +375,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
         if (!StringUtils.isEmpty(userNames) && !ObjectUtils.isEmpty(tenantId)) {
             for (String userName : userNames.split(",")) {
+                //完成外键的绑定
                 executeForeignUsers(tenantId, userName);
             }
         }

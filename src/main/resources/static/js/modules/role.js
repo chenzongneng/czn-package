@@ -151,6 +151,10 @@ var vm = new Vue({
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
+            vm.role.groupIds = [];
+            vm.role.permissionIds = [];
+            vm.groupIds = [];
+            vm.permissionIds = [];
             vm.appList.selectedApp = "";
             vm.appList.options = [];
             vm.role = {
@@ -162,7 +166,7 @@ var vm = new Vue({
                 groupIds: null,
                 permissionIdList:null
             };
-            // vm.initTreesToAdd();
+            vm.initTreesToAdd();
             vm.getTenantList();
             vm.getAppList();
         },
@@ -241,20 +245,25 @@ var vm = new Vue({
             obj.permissionIds = permissionIdList;
 
             if(vm.role.name == null || $.trim(vm.role.name) == "") {
-                swal("", "角色名称不能为空", "error");
+                swal("", "角色名称不能为空", "warning");
                 return;
             }
             if(vm.role.tenantId == null) {
-                swal("", "请选择租户", "error");
+                swal("", "请选择租户", "warning");
                 return;
             }
             if(vm.role.applicationId == null) {
-                swal("", "请选择应用", "error");
+                swal("", "请选择应用", "warning");
+                return;
+            }
+            if(permissionIdList == null || permissionIdList.length == 0) {
+                swal("", "请选择权限", "warning");
                 return;
             }
 
             if (vm.role.name.length > 30) {
                 swal("", "角色名称长度不能大于30", "");
+                return;
             }
 
             $.ajax({
@@ -277,13 +286,14 @@ var vm = new Vue({
             //加载部门树
             // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
             $.get(baseURL + "groups?page=1&limit=1000", function (response) {
-                groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response.list);
+                groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, []);
                 groupTree.expandAll(true);
             });
             //加载权限树
             // $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
             $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
-                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response.list);
+                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, []
+                );
                 permissionTree.expandAll(true);
             })
             // $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
@@ -299,9 +309,10 @@ var vm = new Vue({
         /** 通过id 得到一个role对象 */
         getRoleById: function (roleId) {
             $.get(baseURL + "roles/" + roleId, function (response) {
+
                 response = response.data;
                 vm.role.id = response.role.id;
-                vm.role.applicationId = response.applicationId;
+                vm.role.applicationId = response.role.applicationId;
                 vm.role.tenantId = response.role.tenantId;
                 vm.role.name = response.role.name;
                 vm.role.remark = response.role.remark;
@@ -358,8 +369,9 @@ var vm = new Vue({
         },
         /** 租户列表onchange 事件*/
         selectTenant: function () {
-            vm.initTreesToAdd();
+            // vm.initTreesToAdd();
             vm.role.tenantId = vm.tenantList.selectedTenant;
+            //重新加载权限
             vm.roadPermissionTree();
         },
         /** 应用列表onchange 事件*/
@@ -389,10 +401,7 @@ var vm = new Vue({
                 groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
                 groupTree.expandAll(true);
             })
-            // $.each(vm.role.groupIds, function (index, item) {
-            //     var node = groupTree.getNodeByParam("id", item);
-            //     groupTree.checkNode(node, true, false);
-            // });
+
         },
         /** 加载权限树 */
         roadPermissionTree:function () {
@@ -401,12 +410,9 @@ var vm = new Vue({
                 permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                 permissionTree.expandAll(true);
 
+                //加载组
                 vm.roadGroupTree();
             })
-            // $.each(vm.role.permissionIds, function (index, item) {
-            //     var node = permissionTree.getNodeByParam("id", item);
-            //     permissionTree.checkNode(node, true, false);
-            // });
         }
     },
     /**  初始化页面时执行该方法 */

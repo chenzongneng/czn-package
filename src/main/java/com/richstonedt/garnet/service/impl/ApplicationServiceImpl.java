@@ -6,14 +6,8 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.ApplicationMapper;
 import com.richstonedt.garnet.mapper.BaseMapper;
-import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.ApplicationTenant;
-import com.richstonedt.garnet.model.Tenant;
-import com.richstonedt.garnet.model.UserTenant;
-import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
-import com.richstonedt.garnet.model.criteria.ApplicationTenantCriteria;
-import com.richstonedt.garnet.model.criteria.TenantCriteria;
-import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
+import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
@@ -49,6 +43,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     @Autowired
     private TenantService tenantService;
+
+    @Autowired
+    private RouterGroupService routerGroupService;
+
 
     private static final String SERVICE_MODE_SAAS = "saas";
 
@@ -303,10 +301,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     @Override
     public void updateStatusById(Application application) {
-        Long currentTime = System.currentTimeMillis();
-        application.setModifiedTime(currentTime);
-        application.setStatus(0);
-        this.updateByPrimaryKeySelective(application);
 
         if (!ObjectUtils.isEmpty(application) && !ObjectUtils.isEmpty(application.getId())) {
             //删除关联外键
@@ -314,7 +308,19 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
+            //如果有关联到应用组，一起删除
+            if (hasRelated(String.valueOf(application.getId()))) {
+                Application application1 = this.selectByPrimaryKey(application.getId());
+                RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+                routerGroupCriteria.createCriteria().andAppCodeEqualTo(application1.getAppCode());
+                routerGroupService.deleteByCriteria(routerGroupCriteria);
+            }
         }
+
+        Long currentTime = System.currentTimeMillis();
+        application.setModifiedTime(currentTime);
+        application.setStatus(0);
+        this.updateByPrimaryKeySelective(application);
     }
 
     @Override
@@ -324,11 +330,18 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             idList.add(Long.parseLong(id));
         }
 
-        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-        applicationTenantCriteria.createCriteria().andApplicationIdIn(idList);
-        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
-        //如果应用有关联的租户，返回true
-        if (!CollectionUtils.isEmpty(applicationTenants)) {
+        ApplicationCriteria  applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andIdIn(idList).andStatusEqualTo(1);
+        List<Application> applications = this.selectByCriteria(applicationCriteria);
+        List<String> appCodes = new ArrayList<>();
+        for (Application application : applications) {
+            appCodes.add(application.getAppCode());
+        }
+
+        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.createCriteria().andAppCodeIn(appCodes);
+        List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
+        if (!CollectionUtils.isEmpty(routerGroupList) && routerGroupList.size() > 0) {
             return true;
         }
 

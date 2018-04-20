@@ -16,11 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,6 +55,8 @@ public class UserController {
 
 
     private static final Map<String, String> kaptchaMap = new HashMap<>();
+
+    private static final Map<String, Object> loginMap = new HashMap<>();
 
 
     /** The service. */
@@ -386,6 +390,27 @@ public class UserController {
             } else {
                 loginMessage = userService.garLogin(garLoginView);
             }
+
+            //判断是否是同一个人登录
+            String userName = garLoginView.getUserName();
+            Long loginTime = System.currentTimeMillis();
+
+            Cookie[] cookies = request.getCookies();
+            if (null != cookies) {
+                //之前已经有人登录, 删除cookie
+                for(Cookie cookie : cookies) {
+                    if (cookie.getName().equals(userName)) {
+                        cookie.setValue(null);
+                        // 立即销毁cookie
+                        cookie.setMaxAge(0);
+                        break;
+                    }
+                }
+            }
+
+            //设置新的cookie
+            Cookie cookie = new Cookie(userName, String.valueOf(loginTime));
+            response.addCookie(cookie);
 
             response.setHeader("accessToken", loginMessage.getAccessToken());
             response.setHeader("refreshToken", loginMessage.getRefreshToken());

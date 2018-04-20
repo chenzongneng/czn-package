@@ -125,14 +125,22 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         Resource resource = resourceView.getResource();
 
-        if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){
+//        if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){
+//            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+//            resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
+//
+//        }
 
-            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyService.deleteByCriteria(resourceDynamicPropertyCriteria);
+        if (!ObjectUtils.isEmpty(resource) && !ObjectUtils.isEmpty(resource.getId())) {
+            Long id = resource.getId();
 
+            if (id.longValue() == 60L) {
+                throw new RuntimeException("不能删除超级权限资源");
+            }
+
+            this.deleteByPrimaryKey(id);
         }
 
-        this.deleteByPrimaryKey(resource.getId());
 
     }
 
@@ -321,7 +329,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             permissionIds.add(permissionId);
         }
         PermissionCriteria permissionCriteria = new PermissionCriteria();
-        permissionCriteria.createCriteria().andIdIn(permissionIds);
+        permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
         List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
         if (CollectionUtils.isEmpty(permissionList)) {
             return new ArrayList<>();
@@ -606,7 +614,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                 } else {
                     throw new RuntimeException("应用："+ resourceExcel.getApplicationName() +" 不存在");
                 }
+            } else {
+                throw new RuntimeException("应用不能为空");
             }
+
             if (!StringUtils.isEmpty(resourceExcel.getTenantName())) {
                 //设置appId'
                 TenantCriteria tenantCriteria = new TenantCriteria();
@@ -617,6 +628,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                 } else {
                     throw new RuntimeException("租户：" + resourceExcel.getTenantName() + " 不存在");
                 }
+            } else {
+                throw new RuntimeException("租户不能为空");
             }
 
             if (!StringUtils.isEmpty(resourceExcel.getType())) {
@@ -634,6 +647,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                 resource.setName(resourceExcel.getName());
             } else {
                 throw new RuntimeException("资源名称不能为空");
+            }
+
+            if (StringUtils.isEmpty(resourceExcel.getApplicationName()) || StringUtils.isEmpty(resourceExcel.getPath())) {
+                throw new RuntimeException("路径标识和行为组不能为空");
             }
 
             resource.setActions(resourceExcel.getActions());
@@ -674,5 +691,29 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         }
 
     }
+
+    @Override
+    public boolean hasRelated(String ids) {
+
+        List<Long> idList = new ArrayList<>();
+        for (String id : ids.split(",")) {
+            idList.add(Long.parseLong(id));
+        }
+
+        for (Long id : idList) {
+            ResourceDynamicProperty resourceDynamicProperty = resourceDynamicPropertyService.selectByPrimaryKey(id);
+            String type = resourceDynamicProperty.getType();
+
+            ResourceCriteria resourceCriteria = new ResourceCriteria();
+            resourceCriteria.createCriteria().andTypeEqualTo(type);
+            List<Resource> resources = this.selectByCriteria(resourceCriteria);
+            if (!CollectionUtils.isEmpty(resources) || resources.size() > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
 }

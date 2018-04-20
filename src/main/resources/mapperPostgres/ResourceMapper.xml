@@ -325,18 +325,18 @@
       <if test="int05 != null">
         int_05,
       </if>
-      <!--<if test="boolean01 != null">-->
+      <if test="boolean01 != null">
         boolean_01,
-      <!--</if>-->
-      <!--<if test="boolean02 != null">-->
+      </if>
+      <if test="boolean02 != null">
         boolean_02,
-      <!--</if>-->
-      <!--<if test="boolean03 != null">-->
+      </if>
+      <if test="boolean03 != null">
         boolean_03,
-      <!--</if>-->
-      <!--<if test="boolean04 != null">-->
+      </if>
+      <if test="boolean04 != null">
         boolean_04,
-      <!--</if>-->
+      </if>
       <if test="updatedByUserName != null">
         updated_by_user_name,
       </if>

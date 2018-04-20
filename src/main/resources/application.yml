@@ -10,8 +10,8 @@ server:
 spring:
     profiles:
 #        active: local
-#        active: dev
-        active: oracle
+        active: dev
+#        active: oracle
     # AOP config
     aop:
       auto: true
@@ -25,7 +25,7 @@ spring:
 #    configLocation: classpath:mybatis.xml
 
 mybatis:
-    mapper-locations: classpath:mapperOracle/*.xml
-#    mapper-locations: classpath:mapperPostgres/*.xml
+#    mapper-locations: classpath:mapperOracle/*.xml
+    mapper-locations: classpath:mapperPostgres/*.xml
     type-aliases-packag: com.richstonedt.garnet.model
 

@@ -8,10 +8,10 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-// var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+
 /** token */
-// var garnetToken = localStorage.getItem("garnetToken");
 var accessToken = localStorage.getItem("accessToken");
 if (!accessToken) {
     // parent.location.href = 'login.html';
@@ -25,7 +25,7 @@ var userId = localStorage.getItem("userId");
 
 function getExceptionMessage(value) {
 
-    console.log("getExceptionMessage: " + JSON.stringify(value));
+    // console.log("getExceptionMessage: " + JSON.stringify(value));
 
     var exception;
     if (typeof(value.responseJSON.data) == "undefined") {
@@ -78,11 +78,35 @@ $.ajaxSetup({
         // token过期，则跳转到登录页面
         if (response.code == 401) {
 
-            var text = response.message;
+            if ("请先登录" == response.message) {
+                var pathName = window.document.location.pathname;
+                var patrn = /.*index.html$/;
+                if (patrn.exec(pathName)) {
+                    parent.location.href = 'login.html';
+                } else {
+                    parent.location.href = '../login.html';
+                }
+            } else {
+                swal({
+                        title: response.message,
+                        // text:  response.message,
+                        type: "error"
+                    },
+                    function () {
+                        var pathName = window.document.location.pathname;
+                        var patrn = /.*index.html$/;
+                        if (patrn.exec(pathName)) {
+                            parent.location.href = 'login.html';
+                        } else {
+                            parent.location.href = '../login.html';
+                        }
+                    });
+            }
 
+        } else if (response.code == 403) {
             swal({
-                    title: response.message,
-                    // text: text,
+                    title: "没有权限",
+                    text: response.message,
                     type: "error"
                 },
                 function () {
@@ -93,17 +117,7 @@ $.ajaxSetup({
                     } else {
                         parent.location.href = '../login.html';
                     }
-                    // parent.location.href = '../login.html';
-                });
-            // parent.location.href = '../login.html';
-        } else if (response.code == 403) {
-            swal({
-                    // title: "没有权限",
-                    title: response.message,
-                    type: "error"
-                },
-                function () {
-                    parent.location.href = '../index.html';
+                    // parent.location.href = '../index.html';
                 });
         }
     }

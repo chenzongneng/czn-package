@@ -54,7 +54,7 @@ public interface ApplicationService extends BaseService<Application, Application
     public void updateStatusById(Application application);
 
     /**
-     * 查看该应用是否有关联
+     * 查看该应用是否有关联到应用组
      * @return
      */
     boolean hasRelated(String ids);

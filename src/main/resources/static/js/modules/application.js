@@ -237,18 +237,18 @@ var vm = new Vue({
                 return;
             }
 
-            // $.get(baseURL + "applications/relate?ids=" + applicationIds + "&token=" + accessToken, function (response) {
-            //     if (response == Boolean(true)) {
-            //         title = "应用仍被其他租户关联，若确定则将关联租户一并删除，是否确定删除？";
-            //     } else {
-            //         title = "确定要删除选中的记录";
-            //     }
-            // });
-
-            title = "确定要删除选中的记录";
+            $.get(baseURL + "applications/relate?ids=" + applicationIds + "&token=" + accessToken, function (response) {
+                if (response == Boolean(true)) {
+                    title = "应用已被添加到应用组，是否确认删除？";
+                } else {
+                    title = "确定要删除选中的记录";
+                }
+            });
 
             swal({
-                    title: title,
+                    title:title,
+                    // title: "删除应用",
+                    // text:title,
                     type: "warning",
                     showCancelButton: true,
                     closeOnConfirm: false,
@@ -284,18 +284,18 @@ var vm = new Vue({
 
             if(vm.application.name == null || $.trim(vm.application.name) == ""){
                 // alert("应用名称不能为空");
-                swal("", "应用名称不能为空", "error");
+                swal("", "应用名称不能为空", "warning");
                 return;
             }
 
             if (vm.application.appCode == null || $.trim(vm.application.name) == "") {
-                swal("", "应用标识不能为空", "error");
+                swal("", "应用标识不能为空", "warning");
                 return;
             }
 
 
             if (vm.application.company == null || $.trim(vm.application.name) == "") {
-                swal("", "公司名称不能为空", "error");
+                swal("", "公司名称不能为空", "warning");
                 return;
             }
 
@@ -309,8 +309,18 @@ var vm = new Vue({
             //     return;
             // }
 
-            if (vm.application.name.length > 30 || vm.application.appCode.length > 30 || vm.application.company > 30) {
-                swal("", "参数长度不能大于30", "error");
+            if (vm.application.name.length > 30) {
+                swal("", "应用名称长度不能大于30", "warning");
+                return;
+            }
+
+            if (vm.application.appCode.length > 30) {
+                swal("", "应用标识长度不能大于30", "warning");
+                return;
+            }
+
+            if (vm.application.company.length > 30) {
+                swal("", "公司长度不能大于30", "warning");
                 return;
             }
 
@@ -327,40 +337,11 @@ var vm = new Vue({
             } else if(mode == "paas") {
                 vm.application.serviceMode = "paas";
                 if (tenantIdList!=null && tenantIdList.length > 1) {
-                    swal("", "当前模式不能添加多个租户", "error");
+                    swal("", "当前模式不能添加多个租户", "warning");
                     return;
                 }
             } else {
-                // vm.application.serviceMode = "paas";
-                // if (tenantIdList!=null && tenantIdList.length > 1) {
-                //     swal("当前模式不能添加多个租户", "", "error");
-                //     return;
-                // }
-                // swal({
-                //     title: "当前默认为PAAS模式，是否确认添加",
-                //     type: "warning",
-                //     showCancelButton: true,
-                //     closeOnConfirm: false,
-                //     confirmButtonText: "确认",
-                //     cancelButtonText: "取消",
-                //     confirmButtonColor: "#DD6B55"
-                // }, function () {
-                //     $.ajax({
-                //         type: vm.application.id === null ? "POST" : "PUT",
-                //         url: baseURL + "applications?token=" + accessToken,
-                //         contentType: "application/json",
-                //         data:JSON.stringify(obj),
-                //         dataType: "",
-                //         success: function () {
-                //             vm.reload(false);
-                //             swal("操作成功!", "", "success");
-                //         },
-                //         error: function (response) {
-                //             swal(response.responseJSON.data.errorResponseMessage, "", "error");
-                //         }
-                //     });
-                // });
-                swal("", "请选择正确模式", "error");
+                swal("", "请选择正确模式", "warning");
                 return;
             }
 
@@ -481,6 +462,51 @@ var vm = new Vue({
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
+        },
+        /**
+         * 验证应用标识
+         */
+        checkAppCode: function () {
+
+            console.log("ocming...");
+
+            var chineseReg = /^[\u4e00-\u9fa5]{0,}$/; // 中文正则
+            var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
+
+
+            var appCode = document.getElementById("appCode").value;
+            var appCodeErr = document.getElementById("appCodeErr").value;
+            if (appCode == null || $.trim(appCode) == "") {
+                appCodeErr.innerHTML="应用标识不能为空";
+                appCodeErr.style.display = "";
+                return false;
+            } else {
+                appCodeErr.style.display="none"
+            }
+
+            if (chineseReg.test(appCode)) {
+                appCodeErr.innerHTML="应用标识不能为中文";
+                appCodeErr.style.display="";
+                return false;
+            } else {
+                appCodeErr.style.display="none"
+            }
+            if (!specialReg.test(appCode)) {
+                appCodeErr.innerHTML="应用标识只能使用英文、数字、下划线或者连字符";
+                appCodeErr.style.display="";
+                return false;
+            } else {
+                appCodeErr.style.display="none"
+            }
+
+            if (appCode.length < 4 || appCode.length > 20) {
+
+                appCodeErr.innerHTML="应用标识长度不能大于30";
+                appCodeErr.style.display="";
+                return false;
+            } else {
+                appCodeErr.style.display="none"
+            }
         },
         reload: function (backFirst) {
             vm.showList = true;

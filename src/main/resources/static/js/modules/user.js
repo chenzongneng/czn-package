@@ -14,6 +14,7 @@ $(function () {
             {label: '账号', name: 'userName', align: 'center', width: 70 ,sortable: false},
             {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70 ,sortable: false},
             {label: '邮箱', name: 'email', align: 'center', width: 100 ,sortable: false},
+            {label: '是否属于garnet', name: 'belongToGarnet', align: 'center', width: 150 ,sortable: false},
             {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
             {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
@@ -212,7 +213,7 @@ var vm = new Vue({
             vm.appList.options = [];
             vm.user = {
                 id: null,
-                belongToGarnet:''
+                belongToGarnet : 'N'
             };
             this.queryData("add");
             if ("Y" == localStorage.getItem("belongToGarnet")) {
@@ -230,10 +231,12 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.title = "修改";
+            vm.readusername = true;
             vm.tenantList.options = [];
             vm.appList.options = [];
             vm.user.applicationIdList = [];
             vm.user.deptIdList = [];
+            vm.belongToGarnet = false;
 
             vm.getUser(userId);
             this.queryData("update");
@@ -317,39 +320,6 @@ var vm = new Vue({
                     swal("", getExceptionMessage(response), "error");
                 }
             });
-
-            // 获取应用树选择的部门
-            // var nodes = applicationTree.getCheckedNodes(true);
-            // var applicationIdList = [];
-            // for (var i = 0; i < nodes.length; i++) {
-            //     applicationIdList.push(nodes[i].applicationId);
-            // }
-            // vm.user.applicationIds = applicationIdList.join(",");
-            // // 获取部门树选择的部门
-            // var nodes = deptTree.getCheckedNodes(true);
-            // var deptIdList = [];
-            // for (var i = 0; i < nodes.length; i++) {
-            //     deptIdList.push(nodes[i].departmentId);
-            // }
-            // vm.user.deptIds = deptIdList.join(",");
-            // // 校验字段
-            // if (!vm.checkValue()) {
-            //     return;
-            // }
-            // $.ajax({
-            //     type: vm.user.userId === null ? "POST" : "PUT",
-            //     url: baseURL + "user",
-            //     contentType: "application/json",
-            //     data: JSON.stringify(vm.user),
-            //     dataType: "",
-            //     success: function () {
-            //         vm.reload(false);
-            //         swal("操作成功!", "", "success");
-            //     },
-            //     error: function (response) {
-            //         swal(response.responseJSON.errorMessage, "", "error");
-            //     }
-            // });
         },
         /** 添加按钮初始化数据 */
         initTreeToAdd: function () {

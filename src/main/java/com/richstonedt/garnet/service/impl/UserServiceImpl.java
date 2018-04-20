@@ -303,6 +303,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
             //如果不是属于garnet的超级管理员，根据tenantId返回
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(userParm.getUserId()))) {
+
+                if (tenantIds.size() == 0) {
+                    tenantIds.add(GarnetContants.NON_VALUE);
+                }
+
                 //根据tenantId获取user列表
                 List<Long> userIdList = this.getUserIdsByTenantIds(tenantIds);
 
@@ -491,17 +496,17 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             throw new RuntimeException("不能删除自己");
         }
 
-        Long currentTime = System.currentTimeMillis();
-        user.setModifiedTime(currentTime);
-        user.setStatus(0);
-        this.updateByPrimaryKeySelective(user);
-
         //删除关联外键
         if (!ObjectUtils.isEmpty(user) && !ObjectUtils.isEmpty(user.getId())) {
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
             userTenantCriteria.createCriteria().andUserIdEqualTo(user.getId());
             userTenantService.deleteByCriteria(userTenantCriteria);
         }
+
+        Long currentTime = System.currentTimeMillis();
+        user.setModifiedTime(currentTime);
+        user.setStatus(0);
+        this.updateByPrimaryKeySelective(user);
 
     }
 
@@ -652,7 +657,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             permissionIds.add(permissionId);
         }
         PermissionCriteria permissionCriteria = new PermissionCriteria();
-        permissionCriteria.createCriteria().andIdIn(permissionIds);
+        permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
         List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
         if (CollectionUtils.isEmpty(permissionList)) {
             return loginMessage;
@@ -961,6 +966,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             groupIds.add(groupUser.getGroupId());
         }
 
+        if (groupIds.size() == 0) {
+            groupIds.add(GarnetContants.NON_VALUE);
+        }
+
          groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
 
          List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
@@ -971,6 +980,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         for(GroupRole groupRole : groupRoles){
 
             roleIds.add(groupRole.getRoleId());
+        }
+
+        if (roleIds.size() == 0) {
+            roleIds.add(GarnetContants.NON_VALUE);
         }
 
         RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
@@ -986,8 +999,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         }
 
+        if (permissionIds.size() == 0) {
+            permissionIds.add(GarnetContants.NON_VALUE);
+        }
+
         PermissionCriteria permissionCriteria = new PermissionCriteria();
-        permissionCriteria.createCriteria().andIdIn(permissionIds);
+        permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
 
        List<Permission> permissions = permissionService.selectByCriteria(permissionCriteria);
 

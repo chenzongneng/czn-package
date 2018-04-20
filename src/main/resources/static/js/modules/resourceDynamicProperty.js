@@ -168,11 +168,24 @@ var vm = new Vue({
         /**  删除按钮点击事件 */
         del: function () {
             var resourceIds = getSelectedRows();
+            var title;
             if (!resourceIds) {
                 return;
             }
+
+            $.get(baseURL + "resources/relate?ids=" + resourceIds + "&token=" + accessToken, function (response) {
+
+                console.log("response == " + response);
+
+                if (response == Boolean(true)) {
+                    title = "部分资源配置已被资源关联，是否确认删除？";
+                } else {
+                    title = "确定要删除选中的记录";
+                }
+            });
+
             swal({
-                    title: "确定要删除选中的记录？",
+                    title: title,
                     type: "warning",
                     showCancelButton: true,
                     closeOnConfirm: false,
@@ -195,8 +208,10 @@ var vm = new Vue({
                             }
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (result) {
+
+                            console.log(JSON.stringify(result));
+                            swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -210,12 +225,12 @@ var vm = new Vue({
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
             if(vm.resourceDynamicProperty.type == null || $.trim(vm.resourceDynamicProperty.type) == "") {
-                swal("", "资源类型配置名称不能为空", "error");
+                swal("", "资源类型配置名称不能为空", "warning");
                 return;
             }
 
             if (vm.resourceDynamicProperty.type.length > 30) {
-                swal("", "资源类型配置名称长度不能大于30", "error");
+                swal("", "资源类型配置名称长度不能大于30", "warning");
                 return;
             }
 

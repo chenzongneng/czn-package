@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.service.impl;
 
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
@@ -69,9 +70,13 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         Role role = roleView.getRole();
         role.setId(IdGeneratorUtil.generateId());
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         role.setCreatedTime(currentTime);
         role.setModifiedTime(currentTime);
+
+        //检查角色名称是否已被使用
+        checkDuplicateName(role);
+
         this.insertSelective(role);
 
         if(!ObjectUtils.isEmpty(roleView.getGroupIds())){
@@ -104,8 +109,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         }
 
         Role role = roleView.getRole();
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         role.setModifiedTime(currentTime);
+
+        //检查角色名称是否已经存在
+        checkDuplicateName(role);
+
         this.updateByPrimaryKeySelective(role);
 
         //删除关联的组
@@ -214,6 +223,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
     @Override
     public void updateStatusById(Role role) {
+
+        if (GarnetContants.GARNET_ROLE_ID.longValue() == role.getId().longValue()) {
+            throw new RuntimeException("不能删除超级角色");
+        }
+
         //先删除关联外键
         GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
         groupRoleCriteria.createCriteria().andRoleIdEqualTo(role.getId());
@@ -223,7 +237,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         rolePermissionCriteria.createCriteria().andRoleIdEqualTo(role.getId());
         rolePermissionService.deleteByCriteria(rolePermissionCriteria);
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         role.setModifiedTime(currentTime);
         role.setStatus(0);
         this.updateByPrimaryKeySelective(role);
@@ -332,6 +346,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         }
     }
 
+    /**
+     * 获取角色绑定的所有 组名称
+     * @param roleId
+     * @return
+     */
     private List<String> getGroupNamesByRoleId(Long roleId) {
         GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
         groupRoleCriteria.createCriteria().andRoleIdEqualTo(roleId);
@@ -351,5 +370,20 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         }
 
     }
+
+    private void  checkDuplicateName(Role role) {
+
+        String name = role.getName();
+        Long id = role.getId();
+
+        RoleCriteria roleCriteria = new RoleCriteria();
+        roleCriteria.createCriteria().andNameEqualTo(name).andStatusEqualTo(1);
+        Role role1 = this.selectSingleByCriteria(roleCriteria);
+        if (!ObjectUtils.isEmpty(role1) && role1.getId().longValue() != id.longValue()) {
+            throw new RuntimeException("角色名称已被使用");
+        }
+
+    }
+
 
 }

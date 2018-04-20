@@ -102,7 +102,13 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
             throw new RuntimeException("routerGroup or id can not be null");
         }
 
-        //拿到旧的groupName
+        //如果是超级应用组，不能删除
+        if (routerGroup.getId().longValue() == GarnetContants.GARNET_SUPER_ROUTER_GROUP_ID.longValue()) {
+            throw new RuntimeException("不能删除超级应用组");
+        }
+
+
+        //拿到应用组名
         RouterGroup routerGroup1 = this.selectByPrimaryKey(routerGroup.getId());
         if (ObjectUtils.isEmpty(routerGroup1)) {
             throw new RuntimeException("routerGroup not exist");
@@ -156,6 +162,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
     private List<RouterGroupView> returnWithAppNames(List<RouterGroup> resourceGroupList) {
         RouterGroupView routerGroupView = null;
         List<String> appNames = null;
+        List<String> appCodeList = null;
         List<RouterGroupView> routerGroupViewList = new ArrayList<>();
         ApplicationCriteria applicationCriteria = null;
         RouterGroupCriteria routerGroupCriteria = null;
@@ -170,17 +177,23 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
             //添加应用名称
             appNames = new ArrayList<>();
+            appCodeList = new ArrayList<>();
             for (RouterGroup routerGroup1 : routerGroups) {
                 String appCode = routerGroup1.getAppCode();
                 applicationCriteria = new ApplicationCriteria();
                 applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
                 Application application = applicationService.selectSingleByCriteria(applicationCriteria);
-                appNames.add(application.getName());
+
+                if (!ObjectUtils.isEmpty(application)) {
+                    appNames.add(application.getName());
+                    appCodeList.add(application.getAppCode());
+                }
             }
 
             routerGroupView = new RouterGroupView();
             routerGroupView.setRouterGroup(routerGroup);
             routerGroupView.setApplicationNames(appNames);
+            routerGroupView.setAppCodeList(appCodeList);
 
             routerGroupViewList.add(routerGroupView);
         }
@@ -200,6 +213,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         List<Long> applicationIdList = new ArrayList<>();
         List<String> applicationNames = new ArrayList<>();
+        List<String> appCodeList = new ArrayList<>();
 
 
         for (RouterGroup routerGroup1 : routerGroups) {
@@ -208,12 +222,14 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
             applicationCriteria.createCriteria().andAppCodeEqualTo(appCode);
             List<Application> applications = applicationService.selectByCriteria(applicationCriteria);
             for (Application application : applications) {
+                appCodeList.add(application.getAppCode());
                 applicationIdList.add(application.getId());
                 applicationNames.add(application.getName());
             }
         }
         routerGroupView.setApplicationIdList(applicationIdList);
         routerGroupView.setApplicationNames(applicationNames);
+        routerGroupView.setAppCodeList(appCodeList);
         return routerGroupView;
     }
 

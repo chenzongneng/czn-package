@@ -3,6 +3,7 @@ package com.richstonedt.garnet.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
@@ -60,9 +61,12 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         Permission permission = permissionView.getPermission();
         permission.setId(IdGeneratorUtil.generateId());
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         permission.setCreatedTime(currentTime);
         permission.setModifiedTime(currentTime);
+
+        //检查权限名称是否已被使用
+        checkDuplicateName(permission);
 
         this.insertSelective(permission);
 
@@ -88,9 +92,11 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         Permission permission = permissionView.getPermission();
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
 
         permission.setModifiedTime(currentTime);
+
+        checkDuplicateName(permission);
 
         this.updateByPrimaryKeySelective(permission);
 
@@ -240,6 +246,11 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     @Override
     public void updateStatusById(Permission permission) {
 
+        //判断是否是超级权限，如果是，不能删除
+        if (permission.getId().longValue() == GarnetContants.GARNET_PERMISSION_ID) {
+            throw new RuntimeException("不能删除超级权限");
+        }
+
         Long currentTime = System.currentTimeMillis();
         permission.setModifiedTime(currentTime);
         permission.setStatus(0);
@@ -257,4 +268,19 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         return permissions;
     }
+
+    private void checkDuplicateName(Permission permission) {
+
+        Long id = permission.getId();
+        String name = permission.getName();
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andNameEqualTo(name).andStatusEqualTo(1);
+        Permission permission1 = this.selectSingleByCriteria(permissionCriteria);
+        if (!ObjectUtils.isEmpty(permission1) && permission1.getId().longValue() != id.longValue()) {
+            throw new RuntimeException("权限名称已被使用");
+        }
+
+    }
+
 }

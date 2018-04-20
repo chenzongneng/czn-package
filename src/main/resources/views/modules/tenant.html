@@ -113,7 +113,8 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">关联用户</div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="userNames" placeholder="关联用户"/>
+                        <input class="form-control" v-model="userNames" placeholder="可用“,”分隔，一次性关联多个用户"/>
+                        <a href="javascript:void(0);" @click="reviewUser"  v-bind:hidden="reviewHidden"><i class="fa fa fa-user"></i>&nbsp;查看已关联用户</a>
                 </div>
             </div>
 

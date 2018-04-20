@@ -161,6 +161,7 @@ var vm = new Vue({
                 id: null,
                 applicationId: "",
                 tenantId: "",
+                wildcard: null,
                 action: null,
                 status: 1
             };
@@ -225,24 +226,40 @@ var vm = new Vue({
             vm.permission.updatedByUserName = localStorage.getItem("userName");
             obj.permission = vm.permission;
 
+            if (vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") {
+                swal("", "应用不能为空", "warning");
+                return;
+            }
+
+            if (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "") {
+                swal("", "租户不能为空", "warning");
+                return;
+            }
+
             if(vm.permission.name == null || $.trim(vm.permission.name) == ""){
-                swal("", "权限名称不能为空", "error");
+                swal("", "权限名称不能为空", "warning");
                 return;
             }
 
 
             if (vm.permission.action == null || $.trim(vm.permission.action) == "") {
-                swal("", "行为不能为空", "error");
+                swal("", "行为不能为空", "warning");
                 return;
             }
 
             if (vm.permission.name.length > 30) {
-                swal("", "权限名称不能大于30", "");
+                swal("", "权限名称不能大于30", "warning");
                 return;
             }
 
+            if (vm.permission.resourcePathWildcard == null || $.trim(vm.permission.resourcePathWildcard) == "") {
+                swal("", "通配符不能为空", "warning");
+                return;
+            }
+
+
             if (!(vm.permission.action == "edit" || vm.permission.action == "readonly")) {
-                swal("", "行为只能填写 edit 或 readonly ", "error");
+                swal("", "行为只能填写 edit 或 readonly ", "warning");
                 return;
             }
 

@@ -164,17 +164,17 @@ var vm = new Vue({
             obj.appCodeList = vm.appCodeList;
             // alert(JSON.stringify(obj));
             if(vm.routerGroup.groupName === null || $.trim(vm.routerGroup.groupName) == ""){
-                swal("", "名称不能为空", "error");
+                swal("", "名称不能为空", "warning");
                 return;
             }
 
             if (vm.routerGroup.groupName.length > 30) {
-                swal("", "名称长度不能大于30", "error");
+                swal("", "名称长度不能大于30", "warning");
                 return;
             }
 
             if (vm.appCodeList == null || vm.appCodeList.length == 0) {
-                swal("", "请添加应用", "error")
+                swal("", "请添加应用", "warning")
                 return;
             }
 
@@ -198,21 +198,25 @@ var vm = new Vue({
         getrouterGroup: function (routerGroupId) {
             $.get(baseURL + "routergroups/" + routerGroupId, function (response) {
 
-                response=response.data;
+                response = response.data;
 
                 if (response) {
                     vm.routerGroup.id = response.routerGroup.id;
                     vm.routerGroup.groupName = response.routerGroup.groupName;
                     vm.routerGroup.appCode = response.routerGroup.appCode;
                     vm.applicationList = response.applicationIdList;
+                    vm.appCodeList = response.appCodeList;
+                    vm.applicationNames = response.applicationNames;
+
                     // 勾选已有应用
                     $.each(response.applicationIdList, function (index, item) {
+
                         var node = applicationTree.getNodeByParam("id", item);
                         applicationTree.checkNode(node, true, false);
                     });
-                    $.each(response.applicationNames, function (index, item) {
-                        vm.applicationNames.push(item);
-                    })
+                    // $.each(response.applicationNames, function (index, item) {
+                    //     vm.applicationNames.push(item);
+                    // })
                 }
             });
         },
