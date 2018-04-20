@@ -10,8 +10,8 @@ server:
 spring:
     profiles:
 #        active: local
-#        active: dev
-        active: oracle
+        active: dev
+#        active: oracle
     # AOP config
     aop:
       auto: true
