@@ -49,4 +49,19 @@ public class GarnetContants {
      */
     public static final String RESOURCE_PERMISSION = "all_permission";
 
+    /**
+     * 根据创建时间排序
+     */
+    public static final String ORDER_BY_CREATED_TIME = "created_time";
+
+    /**
+     * 根据资源配置类型名称排序
+     */
+    public static final String ORDER_BY_TYPE = "type";
+
+    /**
+     * 根据应用组名称排序
+     */
+    public static final String ORDER_BY_GROUP_NAME = "group_name";
+
 }

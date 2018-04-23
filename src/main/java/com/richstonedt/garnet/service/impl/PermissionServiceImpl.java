@@ -8,9 +8,8 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.PermissionMapper;
-import com.richstonedt.garnet.model.Permission;
-import com.richstonedt.garnet.model.Resource;
-import com.richstonedt.garnet.model.RolePermission;
+import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.criteria.PermissionCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.RolePermissionCriteria;
@@ -49,6 +48,12 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
     @Autowired
     private CommonService commonService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private TenantService tenantService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -215,6 +220,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm) {
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
         criteria.andStatusEqualTo(1); //查询没被删除的
 
@@ -238,7 +244,22 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
             criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
         }
 
-        PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
+        List<PermissionView> permissionViewList = new ArrayList<>();
+        List<Permission> permissionList = this.selectByCriteria(permissionCriteria);
+        PermissionView permissionView;
+        Application application;
+        Tenant tenant;
+        for (Permission permission : permissionList) {
+            permissionView = new PermissionView();
+            permissionView.setPermission(permission);
+            application = applicationService.selectByPrimaryKey(permission.getApplicationId());
+            permissionView.setApplicationName(application.getName());
+            tenant = tenantService.selectByPrimaryKey(permission.getTenantId());
+            permissionView.setTenantName(tenant.getName());
+            permissionViewList.add(permissionView);
+        }
+
+        PageUtil result = new PageUtil(permissionViewList, (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
 
         return result;
     }

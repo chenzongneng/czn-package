@@ -72,13 +72,13 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group">
-                <div class="col-sm-2 control-label">资源名称</div>
+                <div class="col-sm-2 control-label">资源名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="resource.name" placeholder="资源名称"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">所属应用</div>
+                <div class="col-sm-2 control-label">所属应用<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="applicationList.appList.selectedApp">
                         <option disabled value="">--请选择--</option>
@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">所属租户</div>
+                <div class="col-sm-2 control-label">所属租户<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="tenantList.selectedTenant" @change="selectTenant">
                         <option disabled value="">--请选择--</option>
@@ -111,13 +111,13 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="form-group">
-                <div class="col-sm-2 control-label">路径标识</div>
+                <div class="col-sm-2 control-label">路径标识<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="resource.path" placeholder="路径标识"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">类型</div>
+                <div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <!--@change="selectType"-->
                     <select class="form-control" v-model="typeList.selectedType" @change="selectType">
@@ -136,7 +136,7 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="form-group">
-                <div class="col-sm-2 control-label">行为组</div>
+                <div class="col-sm-2 control-label">行为组<span style="color: #d7220a">*</span></div>
                 <label>
                     <input type="checkbox" v-model="actionsEdit" value="edit"/> edit
                 </label>

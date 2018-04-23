@@ -326,6 +326,9 @@ var vm = new Vue({
                 success: function () {
                     vm.reload(false);
                     swal("操作成功!", "", "success");
+                },
+                error: function (result) {
+                    swal("操作失败!", getExceptionMessage(result), "error");
                 }
             });
         },

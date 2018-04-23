@@ -6,13 +6,16 @@ import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.RouterGroupMapper;
 import com.richstonedt.garnet.model.Application;
+import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.RouterGroup;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
+import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.RouterGroupCriteria;
 import com.richstonedt.garnet.model.parm.RouterGroupParm;
 import com.richstonedt.garnet.model.view.RouterGroupView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.CommonService;
+import com.richstonedt.garnet.service.ResourceService;
 import com.richstonedt.garnet.service.RouterGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import springfox.documentation.service.ResourceGroup;
 
+import javax.annotation.Resources;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -125,6 +129,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         RouterGroup routerGroup = routerGroupParm.getRouterGroup();
         RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.setOrderByClause(GarnetContants.ORDER_BY_GROUP_NAME);
         RouterGroupCriteria.Criteria criteria = routerGroupCriteria.createCriteria();
 
         if (!StringUtils.isEmpty(routerGroupParm.getSearchName())) {

@@ -12,9 +12,9 @@ $(function () {
         colModel: [
             {label: '用户ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
             {label: '账号', name: 'userName', align: 'center', width: 70 ,sortable: false},
-            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 70 ,sortable: false},
+            {label: '手机号码', name: 'mobileNumber', align: 'center', width: 100 ,sortable: false},
             {label: '邮箱', name: 'email', align: 'center', width: 100 ,sortable: false},
-            {label: '是否属于garnet', name: 'belongToGarnet', align: 'center', width: 150 ,sortable: false},
+            {label: '是否属于garnet', name: 'belongToGarnet', align: 'center', width: 120 ,sortable: false},
             {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
             {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}

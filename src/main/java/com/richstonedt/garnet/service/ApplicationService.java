@@ -6,6 +6,8 @@ import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 
+import java.util.List;
+
 /**
  * The interface Application service.
  */
@@ -58,5 +60,11 @@ public interface ApplicationService extends BaseService<Application, Application
      * @return
      */
     boolean hasRelated(String ids);
+
+    /**
+     * 获取未被应用组选中的所有应用
+     * @return
+     */
+    List<Application> getApplicatinsWithoutRouterGroup(ApplicationParm applicationParm);
 
 }

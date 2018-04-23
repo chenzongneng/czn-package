@@ -228,4 +228,28 @@ public class ApplicationController {
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }
     }
+
+    @ApiOperation(value = "[Garnet]获取未被应用组选中的应用列表", notes = "获取未被应用组选中的应用列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/applications/withoutroutergroup", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getApplicationsWithoutRouterGroup(
+            @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
+            @ApiParam(value = "应用组id", defaultValue = "", required = false) @RequestParam(value = "routerGroupId", defaultValue = "", required = false) Long routerGroupId,
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
+        try {
+            ApplicationParm applicationParm = new ApplicationParm();
+            applicationParm.setUserId(userId);
+            applicationParm.setRouterGroupId(routerGroupId);
+            List<Application> applications = applicationService.getApplicatinsWithoutRouterGroup(applicationParm);
+            // 封装返回信息
+            return new ResponseEntity<>(applications, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
 }

@@ -101,8 +101,10 @@ var vm = new Vue({
             vm.applicationNames = null;
 
             // 加载应用树
-            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
-                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+
+            // $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications/withoutroutergroup?userId=" + userId , function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response);
                 applicationTree.expandAll(true);
             });
         },
@@ -119,8 +121,9 @@ var vm = new Vue({
             vm.applicationNames = [];
             vm.appCodeList = [];
             // 加载应用树
-            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
-                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+            // $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications/withoutroutergroup?userId=" + userId + "&routerGroupId=" + routerGroupId , function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response);
                 applicationTree.expandAll(true);
                 vm.getrouterGroup(routerGroupId);
             });
@@ -246,8 +249,8 @@ var vm = new Vue({
                     }
 
                     vm.applicationIds = applicationIdList.join(",");
-                    console.log("routerGroup Id == " + JSON.stringify(vm.applicationIds));
-                    console.log("routerGroup appCode == " + JSON.stringify(vm.appCodeList));
+                    // console.log("routerGroup Id == " + JSON.stringify(vm.applicationIds));
+                    // console.log("routerGroup appCode == " + JSON.stringify(vm.appCodeList));
                     layer.close(index);
                 }
             });

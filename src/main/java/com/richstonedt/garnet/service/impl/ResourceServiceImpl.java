@@ -150,6 +150,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         PageHelper.startPage(1, 10);
         List<Resource> resourceList = null;
         ResourceCriteria resourceCriteria = new ResourceCriteria();
+        resourceCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         ResourceCriteria.Criteria criteria =resourceCriteria.createCriteria();
 
         if (!StringUtils.isEmpty(resourceParm.getSearchName())) {

@@ -235,6 +235,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     public PageUtil queryGroupsByParms(GroupParm groupParm) {
 
         GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
         //只查询状态为1，即可见的
         criteria.andStatusEqualTo(1);

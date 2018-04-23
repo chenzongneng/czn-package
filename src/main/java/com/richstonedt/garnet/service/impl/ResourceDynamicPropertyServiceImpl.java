@@ -5,11 +5,13 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceDynamicPropertyMapper;
+import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.parm.ResourceDynamicPropertyParm;
 import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
+import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
 import com.richstonedt.garnet.service.ResourceService;
@@ -81,6 +83,27 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
                 this.insertSelective(resourceDynamicProperty);
                 l += 1;
             }
+            updateResourcesWhenTypeChange(resourceDynamicPropertyView, type);
+
+        }
+    }
+
+    /**
+     * 当资源配置类型名称改变时，级联更新资源
+     * @param resourceDynamicPropertyView
+     * @param type
+     */
+    private void updateResourcesWhenTypeChange(ResourceDynamicPropertyView resourceDynamicPropertyView, String type) {
+        ResourceCriteria resourceCriteria = new ResourceCriteria();
+        resourceCriteria.createCriteria().andTypeEqualTo(type);
+        List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
+        if (!CollectionUtils.isEmpty(resources) && resources.size() > 0) {
+            ResourceView resourceView = new ResourceView();
+            for (Resource resource : resources) {
+                resource.setType(resourceDynamicPropertyView.getResourceDynamicProperty().getType());
+                resourceView.setResource(resource);
+                resourceService.updateResource(resourceView);
+            }
         }
     }
 
@@ -89,6 +112,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
         String type = resourceDynamicPropertyParm.getType();
         ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.setOrderByClause(GarnetContants.ORDER_BY_TYPE);
         ResourceDynamicPropertyCriteria.Criteria criteria = resourceDynamicPropertyCriteria.createCriteria();
 
         if (!StringUtils.isEmpty(type)) {

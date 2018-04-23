@@ -288,6 +288,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     public PageUtil queryUsersByParms(UserParm userParm) {
 
         UserCriteria userCriteria = new UserCriteria();
+        userCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         UserCriteria.Criteria criteria = userCriteria.createCriteria();
         //查询没被删除的user
         criteria.andStatusEqualTo(1);
@@ -311,7 +312,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                 //根据tenantId获取user列表
                 List<Long> userIdList = this.getUserIdsByTenantIds(tenantIds);
 
-                if(userIdList.size() == 0){
+                if (userIdList.size() == 0) {
                     userIdList.add(GarnetContants.NON_VALUE);
                 }
 
@@ -376,6 +377,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
      * 2. 账号密码核验正确，生成token并计算过期时间
      * 3. 查询数据库，判断用户在数据库中是否已有token,有则更新，无则添加
      * 4. 返回状态码 201 给前端
+     *
      * @param loginView
      * @return
      * @throws Exception
@@ -421,7 +423,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         //生成token返回
-        String token = JwtToken.createToken(user.getUserName(),userCredential.getCredential(),loginView.getAppCode(), System.currentTimeMillis());
+        String token = JwtToken.createToken(user.getUserName(), userCredential.getCredential(), loginView.getAppCode(), System.currentTimeMillis());
         loginMessage.setMessage("登录成功");
         loginMessage.setCode(201);
         loginMessage.setUser(user);
@@ -567,7 +569,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         Token token1 = tokenService.selectSingleByCriteria(tokenCriteria);
         token1.setToken(tokenNew);
         token1.setModifiedTime(currentTime);
-        token1.setExpireTime((long)currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
+        token1.setExpireTime((long) currentTime + GarnetContants.TOKEN_EXPIRED_TIME);
         tokenService.updateByPrimaryKeySelective(token1);
 
         loginMessage.setMessage("token刷新成功");
@@ -601,6 +603,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     /**
      * 获取resource列表并分组返回
+     *
      * @param userCredential
      * @param appCode
      * @param loginMessage
@@ -690,6 +693,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     /**
      * 对resource列表进行去重
+     *
      * @param resourceList
      * @return
      */
@@ -901,7 +905,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         //生成token返回
-        String token = JwtToken.createToken(user.getUserName(),userCredential.getCredential(),garLoginView.getAppCode(), System.currentTimeMillis());
+        String token = JwtToken.createToken(user.getUserName(), userCredential.getCredential(), garLoginView.getAppCode(), System.currentTimeMillis());
         loginMessage.setMessage("登录成功");
         loginMessage.setCode(201);
         loginMessage.setUser(user);
@@ -961,7 +965,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
 
         List<Long> groupIds = new ArrayList<>();
-        for(GroupUser groupUser : groupUsers){
+        for (GroupUser groupUser : groupUsers) {
 
             groupIds.add(groupUser.getGroupId());
         }
@@ -970,14 +974,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             groupIds.add(GarnetContants.NON_VALUE);
         }
 
-         groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
+        groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
 
-         List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
+        List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
 
 
-         List<Long> roleIds = new ArrayList<>();
+        List<Long> roleIds = new ArrayList<>();
 
-        for(GroupRole groupRole : groupRoles){
+        for (GroupRole groupRole : groupRoles) {
 
             roleIds.add(groupRole.getRoleId());
         }
@@ -989,11 +993,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
         rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds);
 
-        List<RolePermission> rolePermissions =  rolePermissionService.selectByCriteria(rolePermissionCriteria);
+        List<RolePermission> rolePermissions = rolePermissionService.selectByCriteria(rolePermissionCriteria);
 
         List<Long> permissionIds = new ArrayList<>();
 
-        for(RolePermission rolePermission : rolePermissions){
+        for (RolePermission rolePermission : rolePermissions) {
 
             permissionIds.add(rolePermission.getPermissionId());
 
@@ -1006,16 +1010,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         PermissionCriteria permissionCriteria = new PermissionCriteria();
         permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
 
-       List<Permission> permissions = permissionService.selectByCriteria(permissionCriteria);
-
-
+        List<Permission> permissions = permissionService.selectByCriteria(permissionCriteria);
 
 
         //====================
 
         List<Resource> resourceList = new ArrayList<>();
 
-        for(Permission permission : permissions){
+        for (Permission permission : permissions) {
             ResourceCriteria resourceCriteria = new ResourceCriteria();
             resourceCriteria.createCriteria().andTenantIdIn(tenantIds).andPathLike(permission.getResourcePathWildcard());
             resourceList.addAll(resourceService.selectByCriteria(resourceCriteria));
@@ -1041,11 +1043,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                 teantIdList.add(tenant.getId());
             }
 
-            teantIdList =  commonService.dealTenantIdsIfGarnet(userId, teantIdList);
+            teantIdList = commonService.dealTenantIdsIfGarnet(userId, teantIdList);
             returnTenantIdView.setTenantIds(teantIdList);
             return returnTenantIdView;
         } else {
-            tenantIds =  commonService.dealTenantIdsIfGarnet(userId, tenantIds);
+            tenantIds = commonService.dealTenantIdsIfGarnet(userId, tenantIds);
 
             returnTenantIdView.setTenantIds(tenantIds);
             return returnTenantIdView;

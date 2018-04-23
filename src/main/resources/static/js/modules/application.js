@@ -293,21 +293,19 @@ var vm = new Vue({
                 return;
             }
 
+            // vm.checkAppCodeForm(vm.application.appCode);
+
+            var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
+            if (!specialReg.test(vm.application.appCode)) {
+                console.log("nonono");
+                swal("", "应用标识只能使用英文、数字、下划线或者连字符！", "warning");
+                return;
+            }
 
             if (vm.application.company == null || $.trim(vm.application.name) == "") {
                 swal("", "公司名称不能为空", "warning");
                 return;
             }
-
-            // if (vm.application.refreshResourcesApi == null) {
-            //     swal("", "刷新资源Api不能为空", "error");
-            //     return;
-            // }
-            //
-            // if (vm.application.hosts == null) {
-            //     swal("", "主机不能为空", "error");
-            //     return;
-            // }
 
             if (vm.application.name.length > 30) {
                 swal("", "应用名称长度不能大于30", "warning");
@@ -466,47 +464,8 @@ var vm = new Vue({
         /**
          * 验证应用标识
          */
-        checkAppCode: function () {
+        checkAppCodeForm: function (value) {
 
-            console.log("ocming...");
-
-            var chineseReg = /^[\u4e00-\u9fa5]{0,}$/; // 中文正则
-            var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
-
-
-            var appCode = document.getElementById("appCode").value;
-            var appCodeErr = document.getElementById("appCodeErr").value;
-            if (appCode == null || $.trim(appCode) == "") {
-                appCodeErr.innerHTML="应用标识不能为空";
-                appCodeErr.style.display = "";
-                return false;
-            } else {
-                appCodeErr.style.display="none"
-            }
-
-            if (chineseReg.test(appCode)) {
-                appCodeErr.innerHTML="应用标识不能为中文";
-                appCodeErr.style.display="";
-                return false;
-            } else {
-                appCodeErr.style.display="none"
-            }
-            if (!specialReg.test(appCode)) {
-                appCodeErr.innerHTML="应用标识只能使用英文、数字、下划线或者连字符";
-                appCodeErr.style.display="";
-                return false;
-            } else {
-                appCodeErr.style.display="none"
-            }
-
-            if (appCode.length < 4 || appCode.length > 20) {
-
-                appCodeErr.innerHTML="应用标识长度不能大于30";
-                appCodeErr.style.display="";
-                return false;
-            } else {
-                appCodeErr.style.display="none"
-            }
         },
         reload: function (backFirst) {
             vm.showList = true;

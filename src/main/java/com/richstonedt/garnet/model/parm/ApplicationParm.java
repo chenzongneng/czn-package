@@ -13,6 +13,16 @@ public class ApplicationParm extends BaseParm{
 
     private Integer modeId;
 
+    private Long routerGroupId;
+
+    public Long getRouterGroupId() {
+        return routerGroupId;
+    }
+
+    public void setRouterGroupId(Long routerGroupId) {
+        this.routerGroupId = routerGroupId;
+    }
+
     public String getMode() {
         return mode;
     }

@@ -195,8 +195,10 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     public PageUtil queryTenantssByParms(TenantParm tenantParm) {
 
         TenantCriteria tenantCriteria = new TenantCriteria();
+        tenantCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         TenantCriteria.Criteria criteria = tenantCriteria.createCriteria();
         criteria.andStatusEqualTo(1);
+
 
         if (!StringUtils.isEmpty(tenantParm.getSearchName())) {
             criteria.andNameLike("%" + tenantParm.getSearchName() + "%");

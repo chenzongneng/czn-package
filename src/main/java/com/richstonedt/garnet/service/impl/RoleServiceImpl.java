@@ -187,6 +187,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         Role role = roleParm.getRole();
         RoleCriteria roleCriteria = new RoleCriteria();
+        roleCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         RoleCriteria.Criteria criteria = roleCriteria.createCriteria();
         //只查询status为1，即没被删除的
         criteria.andStatusEqualTo(1);

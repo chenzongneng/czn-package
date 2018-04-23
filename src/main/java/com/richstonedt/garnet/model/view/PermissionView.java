@@ -14,6 +14,26 @@ public class PermissionView {
 
     private List<RolePermission> rolePermissions;
 
+    private String applicationName;
+
+    private String tenantName;
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
+
     /**
      * Gets permission.
      *

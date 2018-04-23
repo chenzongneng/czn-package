@@ -21,7 +21,6 @@ $(function () {
             {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false},
             {label: '备注', name: 'description', align: 'center', width: 80 ,sortable: false}
-            // {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
         viewrecords: false,
         height: 385,
@@ -475,11 +474,9 @@ var vm = new Vue({
         reviewUser: function () {
             var userNames;
             $.get(baseURL + "tenants/usernames/" + vm.tenant.id, function (response) {
-
                 if (!response) {
                     userNames = "";
                 }
-
                 userNames = response.data;
             });
 
@@ -494,12 +491,10 @@ var vm = new Vue({
                 skin: 'layui-layer-molv',
                 content:
                 '<div style="padding:18px;">' +
-                '   <textarea id="relatedUser" style="width: 250px; height: 500px" disabled>' + userNames + '</textarea>' +
+                '   <textarea id="relatedUser" style="width: 250px; height: 500px;background-color: whitesmoke;" disabled>' + userNames + '</textarea>' +
                 '</div>',
-                btn: ['确定', '取消'],
+                btn: ['返回'],
                 btn1: function (index) {
-
-
                     layer.close(index);
                 }
             });
