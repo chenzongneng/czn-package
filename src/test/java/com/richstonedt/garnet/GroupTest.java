@@ -129,6 +129,9 @@ public class GroupTest {
         applicationCriteria.createCriteria().andAppCodeEqualTo("test_group_appliction");
         List<Application> applications = applicationService.selectByCriteria(applicationCriteria);
         applicationService.deleteByPrimaryKey(applications.get(0).getId());
+
+        //删除group
+        groupService.deleteByCriteria(groupCriteria1);
     }
 
 }

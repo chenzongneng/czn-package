@@ -3,13 +3,13 @@ package com.richstonedt.garnet.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
+import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.PermissionMapper;
-import com.richstonedt.garnet.model.Permission;
-import com.richstonedt.garnet.model.Resource;
-import com.richstonedt.garnet.model.RolePermission;
+import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.criteria.PermissionCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.RolePermissionCriteria;
@@ -49,6 +49,12 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private TenantService tenantService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.permissionMapper;
@@ -60,9 +66,12 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         Permission permission = permissionView.getPermission();
         permission.setId(IdGeneratorUtil.generateId());
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         permission.setCreatedTime(currentTime);
         permission.setModifiedTime(currentTime);
+
+        //检查权限名称是否已被使用
+        checkDuplicateName(permission);
 
         this.insertSelective(permission);
 
@@ -88,9 +97,11 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         Permission permission = permissionView.getPermission();
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
 
         permission.setModifiedTime(currentTime);
+
+        checkDuplicateName(permission);
 
         this.updateByPrimaryKeySelective(permission);
 
@@ -209,6 +220,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm) {
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
         criteria.andStatusEqualTo(1); //查询没被删除的
 
@@ -232,13 +244,33 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
             criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
         }
 
-        PageUtil result = new PageUtil(this.selectByCriteria(permissionCriteria), (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
+        List<PermissionView> permissionViewList = new ArrayList<>();
+        List<Permission> permissionList = this.selectByCriteria(permissionCriteria);
+        PermissionView permissionView;
+        Application application;
+        Tenant tenant;
+        for (Permission permission : permissionList) {
+            permissionView = new PermissionView();
+            permissionView.setPermission(permission);
+            application = applicationService.selectByPrimaryKey(permission.getApplicationId());
+            permissionView.setApplicationName(application.getName());
+            tenant = tenantService.selectByPrimaryKey(permission.getTenantId());
+            permissionView.setTenantName(tenant.getName());
+            permissionViewList.add(permissionView);
+        }
+
+        PageUtil result = new PageUtil(permissionViewList, (int)this.countByCriteria(permissionCriteria) ,permissionParm.getPageSize(), permissionParm.getPageNumber());
 
         return result;
     }
 
     @Override
     public void updateStatusById(Permission permission) {
+
+        //判断是否是超级权限，如果是，不能删除
+        if (permission.getId().longValue() == GarnetContants.GARNET_PERMISSION_ID) {
+            throw new RuntimeException("不能删除超级权限");
+        }
 
         Long currentTime = System.currentTimeMillis();
         permission.setModifiedTime(currentTime);
@@ -257,4 +289,19 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         return permissions;
     }
+
+    private void checkDuplicateName(Permission permission) {
+
+        Long id = permission.getId();
+        String name = permission.getName();
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andNameEqualTo(name).andStatusEqualTo(1);
+        Permission permission1 = this.selectSingleByCriteria(permissionCriteria);
+        if (!ObjectUtils.isEmpty(permission1) && permission1.getId().longValue() != id.longValue()) {
+            throw new RuntimeException("权限名称已被使用");
+        }
+
+    }
+
 }

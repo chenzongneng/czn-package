@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="form-group" v-show="!hidden">
-                <div class="col-sm-2 control-label">平台模式</div>
+                <div class="col-sm-2 control-label">平台模式<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="modeList2.selectedMode" @change="selectMode2">
                         <option v-for="option in modeList2.options" v-bind:value="option.id" >
@@ -77,15 +77,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">应用名称</div>
+                <div class="col-sm-2 control-label">应用名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="application.name" placeholder="应用名称"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">应用标识</div>
+                <div class="col-sm-2 control-label">应用标识<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="application.appCode" placeholder="应用标识"/>
+                    <input class="form-control" id="appCode" v-model="application.appCode" placeholder="应用标识"/>
+                    <!--<span id="appCodeErr" style="color: #d73925">应用标识</span>-->
                 </div>
             </div>
             <div class="form-group">
@@ -96,7 +97,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">所属公司</div>
+                <div class="col-sm-2 control-label">所属公司<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="application.company" placeholder="所属公司"/>
                 </div>
@@ -141,6 +142,51 @@
     <ul id="tenantTree" class="ztree"></ul>
 </div>
 
+<script type="text/javascript">
+    function checkAppCode() {
+        console.log("ocming...");
+
+        var chineseReg = /^[\u4e00-\u9fa5]{0,}$/; // 中文正则
+        var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
+
+
+        var appCode = document.getElementById("appCode");
+        var appCodeErr = document.getElementById("appCodeErr");
+
+        if (appCode == null || $.trim(appCode) == "") {
+            appCodeErr.innerHTML="应用标识不能为空";
+            // appCodeErr.style.display = "";
+            return false;
+        } else {
+            // appCodeErr.style.display="none"
+        }
+
+        if (chineseReg.test(appCode)) {
+            appCodeErr.innerHTML="应用标识不能为中文";
+            // appCodeErr.style.display="";
+            return false;
+        } else {
+            // appCodeErr.style.display="none"
+        }
+        if (!specialReg.test(appCode)) {
+            appCodeErr.innerHTML = "应用标识只能使用英文、数字、下划线或者连字符";
+            // appCodeErr.style.display="";
+            return false;
+        } else {
+            // appCodeErr.style.display="none"
+        }
+
+        if (appCode.length < 4 || appCode.length > 20) {
+
+            appCodeErr.innerHTML="应用标识长度不能大于30";
+            // appCodeErr.style.display="";
+            return false;
+        } else {
+            // appCodeErr.style.display="none"
+        }
+    }
+
+</script>
 
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>

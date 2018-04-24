@@ -21,7 +21,6 @@ $(function () {
             {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false},
             {label: '备注', name: 'description', align: 'center', width: 80 ,sortable: false}
-            // {label: '创建时间', name: 'createTime', align: 'center', width: 80}
         ],
         viewrecords: false,
         height: 385,
@@ -97,6 +96,7 @@ var vm = new Vue({
         userName:null,
         userNames:null,
         hidden:false,
+        reviewHidden:true,
         tips:null,
         // placeholder:false, //选择应用框，根据选择模式的不同给出相对应的提示
         modeId: 1,// SAAS为0，PAAS为1
@@ -176,6 +176,7 @@ var vm = new Vue({
             vm.hidden = false;
             vm.title = "新增";
             vm.userNames = null;
+            vm.reviewHidden = true;
             vm.tenant = {
                 id: null,
                 name: null,
@@ -215,12 +216,14 @@ var vm = new Vue({
             var tenantId = getSelectedRow();
             if (!tenantId) {return;}
             vm.showList = false;
+            vm.reviewHidden = false;
             vm.title = "修改";
             vm.tenant.description = null,
             vm.tenant.appIds = null;
             vm.tenant.appNames = [];
             vm.userName = null;
             vm.userNames = null;
+            vm.tenant.id = tenantId;
 
             vm.getTenant(tenantId);
         },
@@ -277,12 +280,12 @@ var vm = new Vue({
 
             // alert(JSON.stringify(obj));
             if(vm.tenant.name == null || $.trim(vm.tenant.name) == ""){
-                swal("", "租户名称不能为空", "error");
+                swal("", "租户名称不能为空", "warning");
                 return;
             }
 
             if (vm.tenant.name.length > 30) {
-                swal("", "租户名称长度不能大于30", "error");
+                swal("", "租户名称长度不能大于30", "warning");
                 return;
             }
 
@@ -296,7 +299,7 @@ var vm = new Vue({
             if(mode == "saas") {  //saas
                 vm.tenant.serviceMode = "saas";
                 if (appIdList != null && appIdList.length > 1) {
-                    swal("", "当前模式不能添加多个应用", "error");
+                    swal("", "当前模式不能添加多个应用", "warning");
                     return;
                 }
                 // console.log("my modeId is : " + vm.modeId);
@@ -327,7 +330,7 @@ var vm = new Vue({
                 //         }
                 //     });
                 // });
-                swal("", "请选择正确模式", "error");
+                swal("", "请选择正确模式", "warning");
                 return;
             }
 
@@ -403,7 +406,6 @@ var vm = new Vue({
             console.log("vm.mode : " + JSON.stringify(vm.modeList2.selectedMode));
             if (vm.modeList2.selectedMode == "paas") {
                 title = "选择应用（可选多个）";
-                console.log(title);
             } else if (vm.modeList2.selectedMode == "saas") {
                 title = "选择应用（只能选择一个）";
             }
@@ -446,7 +448,6 @@ var vm = new Vue({
             vm.mode = vm.modeList.selectedMode
             localStorage.setItem("mode", vm.mode);
             vm.reload(true);
-            console.log("vm.mode == " + vm.mode);
         },
         //模式选择事件
         selectMode2: function () {
@@ -469,6 +470,35 @@ var vm = new Vue({
                 appTree.expandAll(true);
 
             });
+        },
+        reviewUser: function () {
+            var userNames;
+            $.get(baseURL + "tenants/usernames/" + vm.tenant.id, function (response) {
+                if (!response) {
+                    userNames = "";
+                }
+                userNames = response.data;
+            });
+
+            layer.open({
+                type: 1,
+                title: "已绑定的账号",
+                area: ['300px', '500px'],
+                closeBtn: 0,
+                shade: 0.3,
+                shadeClose: false,
+                // anim: 1,
+                skin: 'layui-layer-molv',
+                content:
+                '<div style="padding:18px;">' +
+                '   <textarea id="relatedUser" style="width: 250px; height: 500px;background-color: whitesmoke;" disabled>' + userNames + '</textarea>' +
+                '</div>',
+                btn: ['返回'],
+                btn1: function (index) {
+                    layer.close(index);
+                }
+            });
+
         },
         reload: function (backFirst) {
             vm.showList = true;

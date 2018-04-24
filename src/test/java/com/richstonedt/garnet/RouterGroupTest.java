@@ -98,9 +98,21 @@ public class RouterGroupTest {
 
     @Test
     public void test2InsertRouterGroup() {
+        com.richstonedt.garnet.model.Application application = new Application();
+        ApplicationView applicationView = new ApplicationView();
+        application.setName("test_routerGroup_appliction3");
+        application.setAppCode("test_routerGroup_appliction3");
+        applicationView.setApplication(application);
+        Long applictionId3 = applicationService.insertApplication(applicationView);
+
+        application.setName("test_routerGroup_appliction4");
+        application.setAppCode("test_routerGroup_appliction4");
+        applicationView.setApplication(application);
+        Long applictionId4 = applicationService.insertApplication(applicationView);
+
         List<String> appCodeList = new ArrayList<>();
-        appCodeList.add(this.appCode1);
-        appCodeList.add(this.appCode2);
+        appCodeList.add("test_routerGroup_appliction3");
+        appCodeList.add("test_routerGroup_appliction4");
         RouterGroup routerGroup = new RouterGroup();
         RouterGroupView routerGroupView = new RouterGroupView();
         routerGroupView.setAppCodeList(appCodeList);
@@ -116,6 +128,10 @@ public class RouterGroupTest {
         routerGroupService.deleteByCriteria(routerGroupCriteria);
         List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
         Assert.assertEquals(routerGroupList.size(), 0);
+
+        applicationService.deleteByPrimaryKey(applictionId3);
+        applicationService.deleteByPrimaryKey(applictionId4);
+
     }
 
     @Test
@@ -163,14 +179,6 @@ public class RouterGroupTest {
 
         List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
         Assert.assertEquals(routerGroupList.size(), 0);
-    }
-
-    @Test
-    public void testSearch() {
-        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
-        routerGroupCriteria.createCriteria().andAppCodeEqualTo("garnet");
-        RouterGroup routerGroup = routerGroupService.selectSingleByCriteria(routerGroupCriteria);
-        System.out.println(routerGroup);
     }
 
 }

@@ -11,12 +11,21 @@ $(function () {
         url: baseURL + 'resources',
         datatype: "json",
         colModel: [
-            {label: '资源ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
+            {
+                label: '资源ID',
+                name: 'id',
+                align: 'center',
+                hidden: true,
+                index: "id",
+                width: 20,
+                key: true,
+                sortable: false
+            },
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40 ,sortable: false},
-            {label: '资源名称', name: 'name', align: 'center', width: 40 ,sortable: false},
-            {label: '路径标识', name: 'path', align: 'center',  width: 70 ,sortable: false},
-            {label: 'actions', name: 'actions', align: 'center',  width: 70 ,sortable: false},
-            {label: '更改人', name: 'updatedByUserName', align: 'center',  width: 70 }
+            {label: '资源名称', name: 'name', align: 'center', width: 40, sortable: false},
+            {label: '路径标识', name: 'path', align: 'center', width: 70, sortable: false},
+            {label: 'actions', name: 'actions', align: 'center', width: 70, sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 70}
         ],
         viewrecords: true,
         height: 385,
@@ -119,7 +128,7 @@ var typeList = {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
-        test:null,
+        test: null,
         actionsEdit: null,
         actionsReadonly: null,
         showResourceDetail: false,
@@ -132,7 +141,7 @@ var vm = new Vue({
         showList1: true,
         showParentCode: false,
         title: null,
-        resourceDynamicPropertyList : [],
+        resourceDynamicPropertyList: [],
         resource: {
             id: null,
             name: null,
@@ -142,7 +151,7 @@ var vm = new Vue({
             parentName: null,
             applicationId: null,
             tenantId: null,
-            type:null,
+            type: null,
             updatedByUserName: null,
             varchar00: null,
             varchar01: null,
@@ -222,27 +231,27 @@ var vm = new Vue({
             searchType: ""
         }
     },
-    mounted:function () {
+    mounted: function () {
 
-        for(var i=0; i<20;i++){
+        for (var i = 0; i < 20; i++) {
             var p = new Object();
             p.description = '';
-            p.filedName= 'varchar0'+i;
+            p.filedName = 'varchar0' + i;
             this.resourceDynamicPropertyList.push(p);
 
         }
 
-        for(var i=1; i<6; i ++) {
+        for (var i = 1; i < 6; i++) {
             var property = new Object();
             property.description = '';
-            property.filedName= 'int0'+i;
+            property.filedName = 'int0' + i;
             this.resourceDynamicPropertyList.push(property);
         }
 
-        for(var i=1; i<5; i ++) {
+        for (var i = 1; i < 5; i++) {
             var property = new Object();
             property.description = '';
-            property.filedName= 'boolean0'+i;
+            property.filedName = 'boolean0' + i;
             this.resourceDynamicPropertyList.push(property);
         }
     },
@@ -254,8 +263,8 @@ var vm = new Vue({
         //查看按钮
         view: function () {
 
-            if (vm.searchType == null || vm.searchType =="" || vm.searchApp == null || vm.searchApp == "") {
-                swal("应用和类型都不能为空", "", "error");
+            if (vm.searchType == null || vm.searchType == "" || vm.searchApp == null || vm.searchApp == "") {
+                swal("", "应用和类型都不能为空", "error");
                 return;
             }
 
@@ -269,35 +278,34 @@ var vm = new Vue({
         },
         //导入Excel
         inputExcel: function () {
-          console.log("导入Excel");
-          $('#file').click();
+            $('#file').click();
         },
         importFile: function (ele) {
 
             var file = document.getElementById("file").files[0];
             var formData = new FormData();
-            formData.append('file',file);    // 将文件转成二进制形式
+            formData.append('file', file);    // 将文件转成二进制形式
 
             $.ajax({
                 type: "POST",
                 url: baseURL + "/upload/resourceexcel",
-                processData : false,
-                contentType : false,
-                data: formData ,
+                processData: false,
+                contentType: false,
+                data: formData,
                 // dataType: "",
                 success: function (result) {
                     vm.reload(false);
-                    swal("导入Resource成功", "", "success");
+                    swal("", "导入Resource成功", "success");
                 },
                 error: function (result) {
 
-                    console.log("import result == " + JSON.stringify(result));
+                    // console.log("import result == " + JSON.stringify(result));
 
                     if (result.status == 200 && result.readyState == 4) {
-                        swal("导入Resource成功", "", "success");
+                        swal("", "导入Resource成功", "success");
                         vm.reload(false);
                     } else {
-                        swal("导入Resource失败", result.responseJSON.data.errorResponseMessage, "error");
+                        swal("导入Resource失败", getExceptionMessage(result), "error");
                         // swal("导入Resource失败", "", "error");
                     }
                 }
@@ -317,8 +325,8 @@ var vm = new Vue({
             vm.typeList.options = [];
             applicationList.appList.selectedApp = "";
             applicationList.appList.options = [];
-            vm.actionsEdit = null;
-            vm.actionsReadonly = null;
+            vm.actionsEdit = false;
+            vm.actionsReadonly = false;
             vm.resource = {
                 id: null,
                 applicationId: null,
@@ -328,7 +336,7 @@ var vm = new Vue({
                 orderNum: 0,
                 status: 1
             };
-            if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
+            if (vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== "") {
                 vm.resource.applicationId = vm.option.appSearchId;
             }
             vm.getAppList();
@@ -351,8 +359,9 @@ var vm = new Vue({
             vm.title = "修改";
             vm.typeList.options = [];
             vm.tenantList.options = [];
-            vm.actionsEdit = null;
-            vm.actionsReadonly = null;
+            vm.actionsEdit = false;
+            vm.actionsReadonly = false;
+            vm.resource.type = null;
             // vm.resource.apiIdList = [];
             // vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);
@@ -399,6 +408,11 @@ var vm = new Vue({
 
             console.log(JSON.stringify(vm.actionsEdit) + " - " + JSON.stringify(vm.actionsReadonly));
 
+            if ((vm.actionsEdit == false && vm.actionsReadonly == false) || (vm.actionsEdit == null && vm.actionsReadonly == null)) {
+                swal("", "行为组不能为空", "warning");
+                return;
+            }
+
             if (vm.actionsEdit == true && vm.actionsReadonly == true) {
                 vm.resource.actions = "edit;readonly";
             }
@@ -408,38 +422,50 @@ var vm = new Vue({
             if (vm.actionsEdit == false && vm.actionsReadonly == true) {
                 vm.resource.actions = "readonly";
             }
-            if (vm.actionsEdit == false && vm.actionsReadonly == false) {
-                vm.resource.actions = "";
-            }
 
 
             var obj = new Object();
             vm.resource.updatedByUserName = localStorage.getItem("userName");
-           // obj.typeId = vm.typeList.selectedType;
+            // obj.typeId = vm.typeList.selectedType;
             obj.resource = vm.resource;
             obj.resource.type = vm.typeList.selectedType;
             obj.resource.tenantId = vm.tenantList.selectedTenant;
             obj.resource.applicationId = applicationList.appList.selectedApp;
 
 
-            if(vm.resource.name == null || $.trim(vm.resource.name) == "") {
-                swal("资源名称不能为空", "", "error");
-                return;
-            } else if(vm.resource.type == null || $.trim(vm.resource.type) == "") {
-                swal("资源类型不能为空", "", "error");
-                return;
-            } else if(vm.resource.path == null || $.trim(vm.resource.path) == "") {
-                swal("路径标识不能为空", "", "error");
+            if (vm.resource.name == null || $.trim(vm.resource.name) == "") {
+                swal("", "资源名称不能为空", "warning");
                 return;
             }
 
+            if (obj.resource.applicationId == null || $.trim(obj.resource.applicationId) == "") {
+                swal("", "应用不能为空", "warning");
+                return;
+            }
+
+            if (obj.resource.tenantId == null || $.trim(obj.resource.tenantId) == "") {
+                swal("", "租户不能为空", "warning");
+                return;
+            }
+
+            if (vm.resource.type == null || $.trim(vm.resource.type) == "") {
+                swal("", "资源类型不能为空", "warning");
+                return;
+            }
+
+            if (vm.resource.path == null || $.trim(vm.resource.path) == "") {
+                swal("", "路径标识不能为空", "warning");
+                return;
+            }
+
+
             if (vm.resource.name.length > 30) {
-                swal("", "资源名称长度不能大于30", "error");
+                swal("", "资源名称长度不能大于30", "warning");
                 return;
             }
 
             if (vm.resource.path.length > 30) {
-                swal("", "路径标识长度不能大于30", "error");
+                swal("", "路径标识长度不能大于30", "warning");
                 return;
             }
 
@@ -552,9 +578,9 @@ var vm = new Vue({
             vm.showList = true;
             vm.showList1 = true;
             var page;
-            if(backFirst) {
+            if (backFirst) {
                 page = 1;
-            }else {
+            } else {
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
@@ -577,7 +603,7 @@ var vm = new Vue({
             var type = vm.typeList.selectedType;
             vm.getResourceDynamicPropertyByType(type);
         },
-        radioChecked:function (value) {
+        radioChecked: function (value) {
             console.log(value);
             console.log(JSON.stringify(vm.resource.boolean01));
         },
@@ -591,14 +617,14 @@ var vm = new Vue({
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?userId=" + userId +"&page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
                     applicationList.appList.options.push(item);
                     applicationList.appSearchList.options.push(item);
                 })
             });
 
-           // console.log("aaaa == " + JSON.stringify(applicationList.appList.options));
+            // console.log("aaaa == " + JSON.stringify(applicationList.appList.options));
 
         },
         /**  获取租户列表 */
@@ -609,7 +635,7 @@ var vm = new Vue({
                 })
             });
 
-           // console.log("bbbb == " + JSON.stringify(vm.tenantList.options));
+            // console.log("bbbb == " + JSON.stringify(vm.tenantList.options));
 
         },
         /**  获取类型列表 */
@@ -645,7 +671,7 @@ var vm = new Vue({
         //通过type获取动态资源列表的description
         getResourceDynamicPropertyByType: function () {
             var type = vm.typeList.selectedType;
-            if(type == null || type == "") {
+            if (type == null || type == "") {
                 return;
             }
 
@@ -654,35 +680,93 @@ var vm = new Vue({
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
 
                 $.each(response.resourceDynamicPropertyList, function (index, item) {
-                    if (""+ item.filedName == "varchar00") {vm.resource.varchar00description = item.description;}
-                    if (""+ item.filedName == "varchar01") {vm.resource.varchar01description = item.description;}
-                    if (""+ item.filedName == "varchar02") {vm.resource.varchar02description = item.description;}
-                    if (""+ item.filedName == "varchar03") {vm.resource.varchar03description = item.description;}
-                    if (""+ item.filedName == "varchar04") {vm.resource.varchar04description = item.description;}
-                    if (""+ item.filedName == "varchar05") {vm.resource.varchar05description = item.description;}
-                    if (""+ item.filedName == "varchar06") {vm.resource.varchar06description = item.description;}
-                    if (""+ item.filedName == "varchar07") {vm.resource.varchar07description = item.description;}
-                    if (""+ item.filedName == "varchar08") {vm.resource.varchar08description = item.description;}
-                    if (""+ item.filedName == "varchar09") {vm.resource.varchar09description = item.description;}
-                    if (""+ item.filedName == "varchar10") {vm.resource.varchar10description = item.description;}
-                    if (""+ item.filedName == "varchar11") {vm.resource.varchar11description = item.description;}
-                    if (""+ item.filedName == "varchar12") {vm.resource.varchar12description = item.description;}
-                    if (""+ item.filedName == "varchar13") {vm.resource.varchar13description = item.description;}
-                    if (""+ item.filedName == "varchar14") {vm.resource.varchar14description = item.description;}
-                    if (""+ item.filedName == "varchar15") {vm.resource.varchar15description = item.description;}
-                    if (""+ item.filedName == "varchar16") {vm.resource.varchar16description = item.description;}
-                    if (""+ item.filedName == "varchar17") {vm.resource.varchar17description = item.description;}
-                    if (""+ item.filedName == "varchar18") {vm.resource.varchar18description = item.description;}
-                    if (""+ item.filedName == "varchar19") {vm.resource.varchar19description = item.description;}
-                    if (""+ item.filedName == "int01") {vm.resource.int01description = item.description;}
-                    if (""+ item.filedName == "int02") {vm.resource.int02description = item.description;}
-                    if (""+ item.filedName == "int03") {vm.resource.int03description = item.description;}
-                    if (""+ item.filedName == "int04") {vm.resource.int04description = item.description;}
-                    if (""+ item.filedName == "int05") {vm.resource.int05description = item.description;}
-                    if (""+ item.filedName == "boolean01") {vm.resource.boolean01description = item.description;}
-                    if (""+ item.filedName == "boolean02") {vm.resource.boolean02description = item.description;}
-                    if (""+ item.filedName == "boolean03") {vm.resource.boolean03description = item.description;}
-                    if (""+ item.filedName == "boolean04") {vm.resource.boolean04description = item.description;}
+                    if ("" + item.filedName == "varchar00") {
+                        vm.resource.varchar00description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar01") {
+                        vm.resource.varchar01description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar02") {
+                        vm.resource.varchar02description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar03") {
+                        vm.resource.varchar03description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar04") {
+                        vm.resource.varchar04description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar05") {
+                        vm.resource.varchar05description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar06") {
+                        vm.resource.varchar06description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar07") {
+                        vm.resource.varchar07description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar08") {
+                        vm.resource.varchar08description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar09") {
+                        vm.resource.varchar09description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar10") {
+                        vm.resource.varchar10description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar11") {
+                        vm.resource.varchar11description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar12") {
+                        vm.resource.varchar12description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar13") {
+                        vm.resource.varchar13description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar14") {
+                        vm.resource.varchar14description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar15") {
+                        vm.resource.varchar15description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar16") {
+                        vm.resource.varchar16description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar17") {
+                        vm.resource.varchar17description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar18") {
+                        vm.resource.varchar18description = item.description;
+                    }
+                    if ("" + item.filedName == "varchar19") {
+                        vm.resource.varchar19description = item.description;
+                    }
+                    if ("" + item.filedName == "int01") {
+                        vm.resource.int01description = item.description;
+                    }
+                    if ("" + item.filedName == "int02") {
+                        vm.resource.int02description = item.description;
+                    }
+                    if ("" + item.filedName == "int03") {
+                        vm.resource.int03description = item.description;
+                    }
+                    if ("" + item.filedName == "int04") {
+                        vm.resource.int04description = item.description;
+                    }
+                    if ("" + item.filedName == "int05") {
+                        vm.resource.int05description = item.description;
+                    }
+                    if ("" + item.filedName == "boolean01") {
+                        vm.resource.boolean01description = item.description;
+                    }
+                    if ("" + item.filedName == "boolean02") {
+                        vm.resource.boolean02description = item.description;
+                    }
+                    if ("" + item.filedName == "boolean03") {
+                        vm.resource.boolean03description = item.description;
+                    }
+                    if ("" + item.filedName == "boolean04") {
+                        vm.resource.boolean04description = item.description;
+                    }
                 });
             });
         },

@@ -6,14 +6,8 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.ApplicationMapper;
 import com.richstonedt.garnet.mapper.BaseMapper;
-import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.ApplicationTenant;
-import com.richstonedt.garnet.model.Tenant;
-import com.richstonedt.garnet.model.UserTenant;
-import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
-import com.richstonedt.garnet.model.criteria.ApplicationTenantCriteria;
-import com.richstonedt.garnet.model.criteria.TenantCriteria;
-import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
+import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
@@ -50,6 +44,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     @Autowired
     private TenantService tenantService;
 
+    @Autowired
+    private RouterGroupService routerGroupService;
+
+
     private static final String SERVICE_MODE_SAAS = "saas";
 
     private static final String SERVICE_MODE_PAAS = "paas";
@@ -68,14 +66,14 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     public Long insertApplication(ApplicationView applicationView) {
 
         Application application = applicationView.getApplication();
-
+        String message = " 已经存在";
         //检查appCode是否已存在
         String appCode = application.getAppCode();
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
         applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
         Application application1 = this.selectSingleByCriteria(applicationCriteria);
         if (!ObjectUtils.isEmpty(application1)) {
-            throw new RuntimeException("appCode: " + appCode + " 已经存在");
+            throw new RuntimeException("appCode: " + appCode + message);
         }
 
         //检查appName是否已存在
@@ -84,7 +82,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         applicationCriteria1.createCriteria().andNameEqualTo(name).andStatusEqualTo(1);
         Application application2 = this.selectSingleByCriteria(applicationCriteria1);
         if (!ObjectUtils.isEmpty(application2)) {
-            throw new RuntimeException("应用名称: " + name + " 已经存在");
+            throw new RuntimeException("应用名称: " + name + message);
         }
 
         application.setId(IdGeneratorUtil.generateId());
@@ -209,6 +207,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     public PageUtil queryApplicationsByParms(ApplicationParm applicationParm) {
 
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         ApplicationCriteria.Criteria criteria = applicationCriteria.createCriteria();
 
         List<UserTenant> userTenants = null;
@@ -303,10 +302,6 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     @Override
     public void updateStatusById(Application application) {
-        Long currentTime = System.currentTimeMillis();
-        application.setModifiedTime(currentTime);
-        application.setStatus(0);
-        this.updateByPrimaryKeySelective(application);
 
         if (!ObjectUtils.isEmpty(application) && !ObjectUtils.isEmpty(application.getId())) {
             //删除关联外键
@@ -314,7 +309,19 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
+            //如果有关联到应用组，一起删除
+            if (hasRelated(String.valueOf(application.getId()))) {
+                Application application1 = this.selectByPrimaryKey(application.getId());
+                RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+                routerGroupCriteria.createCriteria().andAppCodeEqualTo(application1.getAppCode());
+                routerGroupService.deleteByCriteria(routerGroupCriteria);
+            }
         }
+
+        Long currentTime = System.currentTimeMillis();
+        application.setModifiedTime(currentTime);
+        application.setStatus(0);
+        this.updateByPrimaryKeySelective(application);
     }
 
     @Override
@@ -324,15 +331,105 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             idList.add(Long.parseLong(id));
         }
 
-        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-        applicationTenantCriteria.createCriteria().andApplicationIdIn(idList);
-        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
-        //如果应用有关联的租户，返回true
-        if (!CollectionUtils.isEmpty(applicationTenants)) {
+        ApplicationCriteria  applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andIdIn(idList).andStatusEqualTo(1);
+        List<Application> applications = this.selectByCriteria(applicationCriteria);
+        List<String> appCodes = new ArrayList<>();
+        for (Application application : applications) {
+            appCodes.add(application.getAppCode());
+        }
+
+        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.createCriteria().andAppCodeIn(appCodes);
+        List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
+        if (!CollectionUtils.isEmpty(routerGroupList) && routerGroupList.size() > 0) {
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public List<Application> getApplicatinsWithoutRouterGroup(ApplicationParm applicationParm) {
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        ApplicationCriteria.Criteria criteria = applicationCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+        List<UserTenant> userTenants = null;
+
+        //根据用户id拿应用
+        if (!ObjectUtils.isEmpty(applicationParm.getUserId())) {
+
+            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(applicationParm.getUserId());
+            List<Long> tenantIds = returnTenantIdView.getTenantIds();
+
+            //如果不是garnet的超级管理员,返回绑定tenantId下的应用
+            if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(applicationParm.getUserId()))) {
+
+                //通过租户id拿应用id
+                ApplicationTenantCriteria applicationTenantCriteria1 = new ApplicationTenantCriteria();
+                applicationTenantCriteria1.createCriteria().andTenantIdIn(tenantIds);
+                List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria1);
+
+                List<Long> applicationIds = new ArrayList<>();
+                for (ApplicationTenant applicationTenant : applicationTenantList) {
+                    applicationIds.add(applicationTenant.getApplicationId());
+                }
+                criteria.andIdIn(applicationIds);
+            }
+
+        }
+
+        List<Application> applications = this.selectByCriteria(applicationCriteria);
+
+        if (CollectionUtils.isEmpty(applications) || applications.size() == 0) {
+            return new ArrayList<>();
+        }
+        List<Application> applicationList = dealApplications(applicationParm, applications);
+
+
+        return applicationList;
+    }
+
+    /**
+     * 处理应用组中显示的应用树
+     * @param applicationParm
+     * @param applications
+     */
+    private List<Application> dealApplications(ApplicationParm applicationParm, List<Application> applications) {
+        //将已经被选中的应用去掉
+        RouterGroupCriteria routerGroupCriteria;
+        List<Application> applications1 = new ArrayList<>();
+        for (int i = 0; i < applications.size(); i ++) {
+            Application application = applications.get(i);
+            String appCode = application.getAppCode();
+            routerGroupCriteria = new RouterGroupCriteria();
+            routerGroupCriteria.createCriteria().andAppCodeEqualTo(appCode);
+            List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
+            if (!CollectionUtils.isEmpty(routerGroupList) && routerGroupList.size() > 0) {
+                applications1.add(applications.get(i));
+            }
+        }
+
+        applications.removeAll(applications1);
+
+        if (!ObjectUtils.isEmpty(applicationParm.getRouterGroupId())) {
+            Long routerGroupId = applicationParm.getRouterGroupId();
+            RouterGroup routerGroup = routerGroupService.selectByPrimaryKey(routerGroupId);
+            routerGroupCriteria = new RouterGroupCriteria();
+            routerGroupCriteria.createCriteria().andGroupNameEqualTo(routerGroup.getGroupName());
+            List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
+            List<Application> applications2 = new ArrayList<>();
+            Application application;
+            ApplicationCriteria applicationCriteria1;
+            for (RouterGroup routerGroup1 : routerGroupList) {
+                applicationCriteria1 = new ApplicationCriteria();
+                applicationCriteria1.createCriteria().andAppCodeEqualTo(routerGroup1.getAppCode()).andStatusEqualTo(1);
+                application = this.selectSingleByCriteria(applicationCriteria1);
+                applications2.add(application);
+            }
+            applications.addAll(applications2);
+        }
+        return applications;
     }
 
 }

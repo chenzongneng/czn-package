@@ -15,9 +15,7 @@ import com.richstonedt.garnet.model.view.TenantView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.PermissionService;
 import com.richstonedt.garnet.service.TenantService;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +38,39 @@ public class PermissionTest {
     @Autowired
     private TenantService tenantService;
 
+    private Long applicationId;
+
+    private Long tenantId;
+
     @Test
     public void contextLoads() {}
+
+    @Before
+    public void inittestData() {
+        com.richstonedt.garnet.model.Application application = new Application();
+        ApplicationView applicationView = new ApplicationView();
+        application.setName("test_permission_appliction");
+        application.setAppCode("test_permission_appliction");
+        applicationView.setApplication(application);
+        Long applicationId = applicationService.insertApplication(applicationView);
+
+        Tenant tenant = new Tenant();
+        TenantView tenantView = new TenantView();
+        tenant.setName("test_permission_tenant");
+        tenant.setDescription("test permission with tenant");
+        tenantView.setTenant(tenant);
+        Long tenantId = tenantService.insertTenant(tenantView);
+
+        this.applicationId = applicationId;
+        this.tenantId = tenantId;
+
+    }
+
+    @After
+    public void dealInitTestData() {
+        applicationService.deleteByPrimaryKey(applicationId);
+        tenantService.deleteByPrimaryKey(tenantId);
+    }
 
     @Test
     public void test1QueryPermissionsByParms() {
@@ -57,26 +86,15 @@ public class PermissionTest {
 
     @Test
     public void test2InsertPermission() {
-        com.richstonedt.garnet.model.Application application = new Application();
-        ApplicationView applicationView = new ApplicationView();
-        application.setName("test_permission_appliction");
-        application.setAppCode("test_permission_appliction");
-        applicationView.setApplication(application);
-        Long applictionId = applicationService.insertApplication(applicationView);
 
-        Tenant tenant = new Tenant();
-        TenantView tenantView = new TenantView();
-        tenant.setName("test_permission_tenant");
-        tenant.setDescription("test permission with tenant");
-        tenantView.setTenant(tenant);
-        Long tenantId = tenantService.insertTenant(tenantView);
 
         Permission permission = new Permission();
         PermissionView permissionView = new PermissionView();
         permission.setName("test_permission");
         permission.setResourcePathWildcard("test%");
-        permission.setApplicationId(applictionId);
+        permission.setApplicationId(applicationId);
         permission.setTenantId(tenantId);
+        permission.setAction("edit");
         permissionView.setPermission(permission);
 
         Long permissionId = permissionService.insertPermission(permissionView);

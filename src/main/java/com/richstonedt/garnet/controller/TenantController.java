@@ -229,4 +229,26 @@ public class TenantController {
         }
     }
 
+    @ApiOperation(value = "[Torino Source]获取租户关联的用户的账号", notes = "通过id获取租户关联的用户的账号")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/tenants/usernames/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getUserNamesById(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
+            @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id) {
+        try {
+            String result = tenantService.getRelatedUserNamesByTenantId(id);
+
+            // 封装返回信息
+            GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

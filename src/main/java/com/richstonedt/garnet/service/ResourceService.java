@@ -42,7 +42,19 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
 
     String getAllResourceByAppAndType(ResourceParm resourceParm);
 
+    /**
+     * 导入excel表中的数据到数据库
+     * @param resourceExcelViews
+     */
     void saveResourcesExcel(List<ResourceExcelView> resourceExcelViews);
+
+    /**
+     * 查看资源配置类型是否有被关联资源
+     * @param ids
+     * @return
+     */
+    boolean hasRelated(String ids);
+
 
 
 }

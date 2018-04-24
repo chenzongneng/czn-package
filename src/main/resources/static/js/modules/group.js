@@ -265,13 +265,25 @@ var vm = new Vue({
             var LoginUserId = localStorage.getItem("userId");
 
             if(vm.group.name == null || $.trim(vm.group.name) == ""){
-                swal("", "组名称不能为空", "error");
+                swal("", "组名称不能为空", "warning");
                 return;
             }
 
             if (vm.group.name.length > 30) {
-                swal("", "组名称不能为空", "error");
+                swal("", "组名称不能为空", "warning");
             }
+
+            if(vm.group.applicationId == null || $.trim(vm.group.applicationId) == ""){
+                swal("", "应用不能为空", "warning");
+                return;
+            }
+
+            if(vm.group.tenantId == null || $.trim(vm.group.tenantId) == ""){
+                swal("", "租户不能为空", "warning");
+                return;
+            }
+
+
 
             // 获取用户树选择的用户
             var userNodes = userTree.getCheckedNodes(true);
@@ -291,7 +303,15 @@ var vm = new Vue({
             vm.group.roleIds = roleIdList.join(",");
 
 
+            if(roleIdList == null || roleIdList.length == 0){
+                swal("", "角色不能为空", "error");
+                return;
+            }
 
+            if(userIdList == null || userIdList.length == 0){
+                swal("", "用户不能为空", "error");
+                return;
+            }
 
 
             obj.userIds = userIdList;
@@ -306,6 +326,9 @@ var vm = new Vue({
                 success: function () {
                     vm.reload(false);
                     swal("操作成功!", "", "success");
+                },
+                error: function (result) {
+                    swal("操作失败!", getExceptionMessage(result), "error");
                 }
             });
         },

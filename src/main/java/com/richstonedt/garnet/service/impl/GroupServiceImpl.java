@@ -71,6 +71,9 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
         group.setModifiedTime(currentTime);
 
+        //验证组名称是否已经存在
+        checkDuplicateGroupName(group);
+
         this.insertSelective(group);
 
 
@@ -109,6 +112,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         Group group = groupView.getGroup();
         Long currentTime = System.currentTimeMillis();
         group.setModifiedTime(currentTime);
+
+        //验证组名称是否已经存在
+        checkDuplicateGroupName(group);
+
         this.updateByPrimaryKeySelective(group);
 
         if (ObjectUtils.isEmpty(group.getId())) {
@@ -228,6 +235,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     public PageUtil queryGroupsByParms(GroupParm groupParm) {
 
         GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
         //只查询状态为1，即可见的
         criteria.andStatusEqualTo(1);
@@ -287,6 +295,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     @Override
     public void updateStatusById(Group group) {
 
+        if (GarnetContants.GARNET_GROUP_ID.longValue() == group.getId().longValue()) {
+            throw new RuntimeException("不能删除超级组");
+        }
+
         //先删除关联外键
         GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
         groupRoleCriteria.createCriteria().andGroupIdEqualTo(group.getId());
@@ -296,7 +308,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         groupUserCriteria.createCriteria().andGroupIdEqualTo(group.getId());
         groupUserService.deleteByCriteria(groupUserCriteria);
 
-        Long currentTime = new Date().getTime();
+        Long currentTime = System.currentTimeMillis();
         group.setModifiedTime(currentTime);
         group.setStatus(0);
         this.updateByPrimaryKeySelective(group);
@@ -311,6 +323,24 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
 
         return groups;
+
+    }
+
+    /**
+     * 验证组名称是否已经存在
+     */
+    private void checkDuplicateGroupName(Group group) {
+
+        Long id = group.getId();
+        String name = group.getName();
+
+        GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.createCriteria().andNameEqualTo(name).andStatusEqualTo(1);
+        Group group1 = this.selectSingleByCriteria(groupCriteria);
+
+        if (!ObjectUtils.isEmpty(group1) && group1.getId().longValue() != id.longValue()) {
+            throw new RuntimeException("组名称已被使用");
+        }
 
     }
 }

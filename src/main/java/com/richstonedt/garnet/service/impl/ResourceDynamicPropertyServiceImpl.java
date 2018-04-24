@@ -5,12 +5,17 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceDynamicPropertyMapper;
+import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
+import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.parm.ResourceDynamicPropertyParm;
 import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
+import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
+import com.richstonedt.garnet.service.ResourceService;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +34,9 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
     @Autowired
     private CommonService commonService;
+
+    @Autowired
+    private ResourceService resourceService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -75,6 +83,27 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
                 this.insertSelective(resourceDynamicProperty);
                 l += 1;
             }
+            updateResourcesWhenTypeChange(resourceDynamicPropertyView, type);
+
+        }
+    }
+
+    /**
+     * 当资源配置类型名称改变时，级联更新资源
+     * @param resourceDynamicPropertyView
+     * @param type
+     */
+    private void updateResourcesWhenTypeChange(ResourceDynamicPropertyView resourceDynamicPropertyView, String type) {
+        ResourceCriteria resourceCriteria = new ResourceCriteria();
+        resourceCriteria.createCriteria().andTypeEqualTo(type);
+        List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
+        if (!CollectionUtils.isEmpty(resources) && resources.size() > 0) {
+            ResourceView resourceView = new ResourceView();
+            for (Resource resource : resources) {
+                resource.setType(resourceDynamicPropertyView.getResourceDynamicProperty().getType());
+                resourceView.setResource(resource);
+                resourceService.updateResource(resourceView);
+            }
         }
     }
 
@@ -83,6 +112,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
         String type = resourceDynamicPropertyParm.getType();
         ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.setOrderByClause(GarnetContants.ORDER_BY_TYPE);
         ResourceDynamicPropertyCriteria.Criteria criteria = resourceDynamicPropertyCriteria.createCriteria();
 
         if (!StringUtils.isEmpty(type)) {
@@ -116,12 +146,24 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
     @Override
     public void deleteResourceDynamicPropertyWithType(ResourceDynamicPropertyView resourceDynamicPropertyView) {
+
         if (!ObjectUtils.isEmpty(resourceDynamicPropertyView.getResourceDynamicProperty())) {
             String type = resourceDynamicPropertyView.getResourceDynamicProperty().getType();
-            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
-            this.deleteByCriteria(resourceDynamicPropertyCriteria);
+            Long id = resourceDynamicPropertyView.getResourceDynamicProperty().getId();
+            if (!StringUtils.isEmpty(type)) {
+                //如果有关联资源，一起删除
+                if (resourceService.hasRelated(String.valueOf(id))) {
+                    ResourceCriteria resourceCriteria = new ResourceCriteria();
+                    resourceCriteria.createCriteria().andTypeEqualTo(type);
+                    resourceService.deleteByCriteria(resourceCriteria);
+                }
+
+                ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+                resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
+                this.deleteByCriteria(resourceDynamicPropertyCriteria);
+            }
         }
+
     }
 
     @Override

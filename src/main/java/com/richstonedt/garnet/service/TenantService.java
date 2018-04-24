@@ -46,4 +46,11 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
 
     List<Long> getApplicationIs();
 
+    /**
+     * 根据tenantId查询 该租户关联的用户
+     * @param tenantId
+     * @return
+     */
+    String getRelatedUserNamesByTenantId(Long tenantId);
+
 }

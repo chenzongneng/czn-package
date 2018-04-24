@@ -100,9 +100,9 @@ public class ResourceDynamicPropertyController {
     public ResponseEntity<?> deleteResourceDynamicPropertys(
             @ApiParam(value = "资源动态属性ids，样例 - 1,2,3", required = true) @RequestParam(value = "ids") String ids) {
         try {
+            ResourceDynamicPropertyView resourceDynamicPropertyView = new ResourceDynamicPropertyView();
             for (String id : ids.split(",")) {
                 ResourceDynamicProperty resourceDynamicProperty = resourceDynamicPropertyService.selectByPrimaryKey(Long.parseLong(id));
-                ResourceDynamicPropertyView resourceDynamicPropertyView = new ResourceDynamicPropertyView();
                 resourceDynamicPropertyView.setResourceDynamicProperty(resourceDynamicProperty);
                 resourceDynamicPropertyService.deleteResourceDynamicPropertyWithType(resourceDynamicPropertyView);
             }

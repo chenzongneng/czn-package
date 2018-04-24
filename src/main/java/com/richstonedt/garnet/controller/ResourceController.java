@@ -105,10 +105,11 @@ public class ResourceController {
             @ApiParam(value = "资源ids，样例 - 1,2,3", required = true) @RequestParam String ids) {
         try {
 
+            ResourceView resourceView = new ResourceView();
+            Resource resource = new Resource();
             for (String id : ids.split(",")) {
-                if ("60".equals(id)) {
-                    throw new RuntimeException("不能删除超级权限");
-                }
+                resource.setId(Long.parseLong(id));
+                resourceView.setResource(resource);
                 resourceService.deleteByPrimaryKey(Long.parseLong(id));
             }
             // 封装返回信息
@@ -273,6 +274,24 @@ public class ResourceController {
         }
     }
 
-
+    @ApiOperation(value = "[Garnet]验证资源配置类型是否有关联资源", notes = "验证资源配置类型是否有关联资源")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/relate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> hasRelated(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
+            @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
+        try {
+            boolean b = resourceService.hasRelated(ids);
+            // 封装返回信息
+            return new ResponseEntity<>(b, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
 
 }
