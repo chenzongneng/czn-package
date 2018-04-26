@@ -583,20 +583,30 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 //        List<Resource> resourceList = loginMessage1.getResourceList();
         List<RefreshTokenResourceView> refreshTokenResourceViewList = loginMessage1.getRefreshTokenResourceList();
 
-        //通过resource列表获取 ResourceDynamicProperty列表
-        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
-        for (RefreshTokenResourceView refreshTokenResourceView : refreshTokenResourceViewList) {
-            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(refreshTokenResourceView.getType());
-            List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
-            resourceDynamicPropertyList.add(resourceDynamicProperties);
+
+
+        List<Resource> resourceListWithReadlyOnly = loginMessage1.getResourceListWithReadlyOnly();
+        List<Resource> resourceListWithEdit = loginMessage1.getResourceListWithReadlyOnly();
+        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = loginMessage1.getResourceDynamicPropertyList();
+
+        if (CollectionUtils.isEmpty(resourceListWithReadlyOnly)) {
+            resourceListWithReadlyOnly = new ArrayList<>();
         }
 
-        loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
+        if (CollectionUtils.isEmpty(resourceListWithEdit)) {
+            resourceListWithEdit = new ArrayList<>();
+        }
+
+        if (CollectionUtils.isEmpty(resourceDynamicPropertyList)) {
+            resourceDynamicPropertyList = new ArrayList<>();
+        }
+
+
 //        loginMessage.setResourceList(resourceList);
+        loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
         loginMessage.setRefreshTokenResourceList(refreshTokenResourceViewList);
-        loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
-        loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
+        loginMessage.setResourceListWithReadlyOnly(resourceListWithReadlyOnly);
+        loginMessage.setGetResourceListWithEdit(resourceListWithEdit);
 
         return loginMessage;
     }
@@ -672,7 +682,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId()).andActionsLike(permission.getAction());
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId());
                 List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
                 resourceList.addAll(resources);
             }
@@ -681,13 +691,29 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return loginMessage;
         }
 
-        //对resource列表进行处理
-        LoginMessage loginMessage1 = this.getResourcesDstinct(resourceList);
+        //通过resource列表获取 ResourceDynamicProperty列表
+        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
+        List<Resource> resourcesWithAction = new ArrayList<>();
+        if (resourceList.size() > 0) {
+            for (Resource resource : resourceList) {
+                ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+                resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resource.getType());
+                List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
+                resourceDynamicPropertyList.add(resourceDynamicProperties);
+                resource.setActions(resourceDynamicProperties.get(0).getActions());
+                resourcesWithAction.add(resource);
+            }
+        }
+
+        //对resource列表进行去重处理
+        LoginMessage loginMessage1 = this.getResourcesDstinct(permissionList, resourcesWithAction);
+
 
 //        loginMessage.setResourceList(loginMessage1.getResourceList());
+        loginMessage.setResourceDynamicPropertyList(loginMessage1.getResourceDynamicPropertyList());
         loginMessage.setRefreshTokenResourceList(loginMessage1.getRefreshTokenResourceList());
-        loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
-        loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
+//        loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
+//        loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
         return loginMessage;
     }
 
@@ -697,48 +723,65 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
      * @param resourceList
      * @return
      */
-    private LoginMessage getResourcesDstinct(List<Resource> resourceList) {
+    private LoginMessage getResourcesDstinct(List<Permission> permissionList, List<Resource> resourceList) {
         LoginMessage loginMessage = new LoginMessage();
 
         //对resource去重
-        Set<Resource> resourceSet = new HashSet<>();
+        Set<Long> resourceSet = new HashSet<>();
         List<Resource> resourceList1 = new ArrayList<>();
         for (Resource resource : resourceList) {
             Long resourceId = resource.getId();
             if (!resourceSet.contains(resourceId)) {
+                resourceSet.add(resourceId);
                 resourceList1.add(resource);
             }
         }
 
-        //根据actions筛选resource
-        List<Resource> resourceListWithReadOnly = new ArrayList<>();
-        List<Resource> resourceListWithEdit = new ArrayList<>();
+
         List<Resource> resourceList2 = new ArrayList<>();
         List<RefreshTokenResourceView> refreshTokenResourceViews = new ArrayList<>();
         RefreshTokenResourceView refreshTokenResourceView;
+        for (Permission permission : permissionList) {
+            String action = permission.getAction();
+            String pattern = ".*" + action + ".*";
+            for (Resource resource : resourceList1) {
+                String actions = resource.getActions();
+                if (actions.matches(pattern)) {
+                    String[] actionList = actions.split(">");
+                    //如果不是同级，返回action内容
+                    if (actionList.length > 1) {
+                        if ("readonly".equals(action)) {
+                            resource.setActions(action);
+                        } else {
+                            resource.setActions("edit");
+                        }
+                    }
 
-        String actions = "edit;readonly";
-        for (Resource resource : resourceList1) {
-            if ("readonly".equals(resource.getActions()) && !actions.equals(resource.getActions())) {
-                resourceListWithReadOnly.add(resource);
+                    resourceList2.add(resource);
+                    refreshTokenResourceView = new RefreshTokenResourceView();
+                    daoToViewCopier.copy(resource, refreshTokenResourceView, null);
+                    refreshTokenResourceView.setAction(resource.getActions());
+                    refreshTokenResourceViews.add(refreshTokenResourceView);
+                }
             }
-            if ("edit".equals(resource.getActions()) && !actions.equals(resource.getActions())) {
-                resourceListWithEdit.add(resource);
-            }
-            if (actions.equals(resource.getActions())) {
-                resource.setActions("edit");
-            }
-            refreshTokenResourceView = new RefreshTokenResourceView();
-            daoToViewCopier.copy(resource, refreshTokenResourceView, null);
-            refreshTokenResourceView.setAction(resource.getActions());
-            refreshTokenResourceViews.add(refreshTokenResourceView);
-            resourceList2.add(resource);
         }
-        loginMessage.setRefreshTokenResourceList(refreshTokenResourceViews);
-//        loginMessage.setResourceList(resourceList2);
-        loginMessage.setGetResourceListWithEdit(resourceListWithEdit);
-        loginMessage.setResourceListWithReadlyOnly(resourceListWithReadOnly);
 
+        //通过resource列表获取 ResourceDynamicProperty列表
+        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(resourceList2) && resourceList2.size() > 0) {
+            for (Resource resource : resourceList2) {
+                ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+                resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resource.getType());
+                List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
+                resourceDynamicPropertyList.add(resourceDynamicProperties);
+            }
+        }
+
+
+
+        loginMessage.setRefreshTokenResourceList(refreshTokenResourceViews);
+        loginMessage.setResourceList(resourceList2);
+        loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
         return loginMessage;
     }
 

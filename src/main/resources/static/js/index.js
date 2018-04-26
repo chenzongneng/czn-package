@@ -328,55 +328,46 @@ var vm = new Vue({
     }
 });
 
+
+
 /** 菜单路由 */
 function routerList(router, menuList,vm) {
+
+    // console.log("router menuList: "+JSON.stringify(menuList));
+
     for (var key in menuList) {
         var menu = menuList[key];
+        // console.log("router menu: "+JSON.stringify(menu));
         if (menu.type == 0) {
             routerList(router, menu.list,vm);
         } else if (menu.type == 1) {
             router.add('#' + menu.url, function () {
                 var url = window.location.hash;
+
+                // console.log("window.location.hash: "+window.location.hash);
+
+                var navItem = "";
+                if($("a[href='" + url + "']").text()=="" || $("a[href='" + url + "']").text() == null || typeof $("a[href='" + url + "']").text() == "undefined"){
+                    navItem = localStorage.getItem(window.location.hash);
+                }else {
+                    localStorage.setItem(window.location.hash,$("a[href='" + url + "']").text());
+                    navItem = localStorage.getItem(window.location.hash);
+                }
+
                 //替换iframe的url
                 vm.main = url.replace('#', '');
                 //导航菜单展开
                 $(".treeview-menu li").removeClass("active");
                 $(".sidebar-menu li").removeClass("active");
                 $("a[href='" + url + "']").parents("li").addClass("active");
-                vm.navTitle = $("a[href='" + url + "']").text();
+
+
+                vm.navTitle = navItem;
+                // vm.navTitle = $("a[href='" + url + "']").text();
             });
         }
     }
 }
-
-//刷新token
-function refreshToken () {
-
-    console.log("刷新token: " + $.now());
-    clearInterval(timer);
-
-    var data = {
-        userName: localStorage.getItem("userName"),
-        token: localStorage.getItem("refreshToken"),
-        appCode: "garnet"
-    }
-    $.ajax({
-        type: "POST",
-        async: true,
-        url: baseURL + "users/garnetrefreshtoken?token=" + accessToken,
-        data: JSON.stringify(data),
-        contentType: "application/json",
-        dataType: "",
-        success: function (result) {
-            console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
-            localStorage.setItem("accessToken", result.accessToken);
-            localStorage.setItem("refreshToken", result.refreshToken);
-        }
-    });
-}
-//每半小时自动刷新token
-// window.setInterval("refreshToken();", 60000 * 28);
-var timer = window.setInterval("refreshToken();", 60000 * 3);
 
 /** iframe自适应 */
 $(window).on('resize', function () {

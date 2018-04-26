@@ -24,7 +24,7 @@ $(function () {
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40 ,sortable: false},
             {label: '资源名称', name: 'name', align: 'center', width: 40, sortable: false},
             {label: '路径标识', name: 'path', align: 'center', width: 70, sortable: false},
-            {label: 'actions', name: 'actions', align: 'center', width: 70, sortable: false},
+            // {label: 'actions', name: 'actions', align: 'center', width: 70, sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 70}
         ],
         viewrecords: true,
@@ -408,10 +408,10 @@ var vm = new Vue({
 
             console.log(JSON.stringify(vm.actionsEdit) + " - " + JSON.stringify(vm.actionsReadonly));
 
-            if ((vm.actionsEdit == false && vm.actionsReadonly == false) || (vm.actionsEdit == null && vm.actionsReadonly == null)) {
-                swal("", "行为组不能为空", "warning");
-                return;
-            }
+            // if ((vm.actionsEdit == false && vm.actionsReadonly == false) || (vm.actionsEdit == null && vm.actionsReadonly == null)) {
+            //     swal("", "行为组不能为空", "warning");
+            //     return;
+            // }
 
             if (vm.actionsEdit == true && vm.actionsReadonly == true) {
                 vm.resource.actions = "edit;readonly";

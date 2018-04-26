@@ -472,12 +472,33 @@ var vm = new Vue({
             });
         },
         reviewUser: function () {
-            var userNames;
+            var userNameList;
+            var content;
+            var table;
+            var arr = new Array();
             $.get(baseURL + "tenants/usernames/" + vm.tenant.id, function (response) {
+
+                console.log(JSON.stringify(response));
+
                 if (!response) {
-                    userNames = "";
+                    userNameList = [];
                 }
-                userNames = response.data;
+                userNameList = response.data;
+
+                if (userNameList != null && userNameList.length > 0) {
+                    for (var i=0; i<userNameList.length; i ++) {
+                        var num = i + 1;
+                        var content1 = '<tr align="center"><td width="300" height="30">'+ num +'</td><td width="300" height="30">'+ userNameList[i] +'</td></tr>';
+                        arr.push(content1);
+                    }
+                    content = arr.join("");
+                } else {
+                    content = "";
+                }
+
+                table = '<table border="1" style="margin: 10px">' +
+                    '<tr align="center"><td width="300" height="30">序号</td><td width="300" height="30">用户名</td></tr>' +
+                    content + '</table>';
             });
 
             layer.open({
@@ -489,10 +510,10 @@ var vm = new Vue({
                 shadeClose: false,
                 // anim: 1,
                 skin: 'layui-layer-molv',
-                content:
-                '<div style="padding:18px;">' +
-                '   <textarea id="relatedUser" style="width: 250px; height: 500px;background-color: whitesmoke;" disabled>' + userNames + '</textarea>' +
-                '</div>',
+                content: table,
+                // '<div style="padding:18px;">' +
+                // '   <textarea id="relatedUser" style="width: 250px; height: 500px;background-color: whitesmoke;" disabled>' + userNames + '</textarea>' +
+                // '</div>',
                 btn: ['返回'],
                 btn1: function (index) {
                     layer.close(index);

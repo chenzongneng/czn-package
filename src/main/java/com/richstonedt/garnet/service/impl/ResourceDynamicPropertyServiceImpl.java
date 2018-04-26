@@ -53,13 +53,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
                 throw new RuntimeException("ResourceDynamicProperty Can Not Be Null");
             }
 
-            Long l = IdGeneratorUtil.generateId();
-            for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
-                resourceDynamicProperty.setId(l);
-                resourceDynamicProperty.setType(resourceDynamicPropertyView.getResourceDynamicProperty().getType());
-                this.insertSelective(resourceDynamicProperty);
-                l += 1;
-            }
+            insertResourceDynamicProp(resourceDynamicPropertyView);
         }
     }
 
@@ -76,16 +70,29 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
             this.deleteByCriteria(resourceDynamicPropertyCriteria);
             //插入修改的数据
-            Long l = IdGeneratorUtil.generateId();
-            for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
-                resourceDynamicProperty.setId(l);
-                resourceDynamicProperty.setType(resourceDynamicPropertyView.getResourceDynamicProperty().getType());
-                this.insertSelective(resourceDynamicProperty);
-                l += 1;
-            }
+            insertResourceDynamicProp(resourceDynamicPropertyView);
+            //级联更新资源
             updateResourcesWhenTypeChange(resourceDynamicPropertyView, type);
 
         }
+    }
+
+    /**
+     * 插入资源配置
+     * @param resourceDynamicPropertyView
+     */
+    private void insertResourceDynamicProp(ResourceDynamicPropertyView resourceDynamicPropertyView) {
+        List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
+
+        Long l = IdGeneratorUtil.generateId();
+        for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
+            resourceDynamicProperty.setId(l);
+            resourceDynamicProperty.setActions(resourceDynamicPropertyView.getResourceDynamicProperty().getActions());
+            resourceDynamicProperty.setType(resourceDynamicPropertyView.getResourceDynamicProperty().getType());
+            this.insertSelective(resourceDynamicProperty);
+            l += 1;
+        }
+
     }
 
     /**

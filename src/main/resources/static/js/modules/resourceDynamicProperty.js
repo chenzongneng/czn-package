@@ -81,6 +81,7 @@ var vm = new Vue({
         resourceDynamicProperty: {
             id: null,
             type: null,
+            actions: null,
             fieldName: null,
             description:null,
             applicationId:null,
@@ -234,6 +235,11 @@ var vm = new Vue({
                 return;
             }
 
+            if (vm.resourceDynamicProperty.actions == null || $.trim(vm.resourceDynamicProperty.actions) == "") {
+                swal("", "资源类型配置行为组不能为空", "warning");
+                return;
+            }
+
             $.ajax({
                 type: vm.resourceDynamicProperty.id === null ? "POST" : "PUT",
                 url: baseURL + "resourcedynamicpropertys",
@@ -269,18 +275,13 @@ var vm = new Vue({
                 vm.resourceDynamicProperty.id = response.id;
                 vm.resourceDynamicProperty.applicationId = response.applicationId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
+                vm.resourceDynamicProperty.actions = response.resourceDynamicProperty.actions;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
                 applicationList.appList.selectedApp = response.applicationId;
 
 
             });
         },
-        // /** 查询当前用户信息 */
-        // getCurrentUser: function () {
-        //     $.getJSON(baseURL + "token/userInfo?token=" + accessToken, function (response) {
-        //         vm.currentUser = response;
-        //     });
-        // },
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;

@@ -8,7 +8,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected boolean distinct;
 
@@ -24,36 +24,36 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected List<Criteria> oredCriteria;
 
     /**
-     * TABLE： gar_resource_dynamic_properties
+     * TABLE： gar_resource_dynamic_props
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected Integer start;
 
     /**
-     * TABLE： gar_resource_dynamic_properties
+     * TABLE： gar_resource_dynamic_props
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected Integer end;
 
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public ResourceDynamicPropertyCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -62,11 +62,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -75,11 +75,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -88,11 +88,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -101,11 +101,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public boolean isDistinct() {
         return distinct;
@@ -114,11 +114,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -127,11 +127,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -140,11 +140,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -155,11 +155,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -172,11 +172,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -186,11 +186,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public void clear() {
         oredCriteria.clear();
@@ -201,11 +201,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -214,11 +214,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public Integer getStart() {
         return start;
@@ -227,11 +227,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -240,11 +240,11 @@ public class ResourceDynamicPropertyCriteria {
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public Integer getEnd() {
         return end;
@@ -252,11 +252,11 @@ public class ResourceDynamicPropertyCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_resource_dynamic_properties
+     * 对应的数据库表为： gar_resource_dynamic_props
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -628,15 +628,85 @@ public class ResourceDynamicPropertyCriteria {
             addCriterion("description not between", value1, value2, "description");
             return (Criteria) this;
         }
+
+        public Criteria andActionsIsNull() {
+            addCriterion("actions is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsIsNotNull() {
+            addCriterion("actions is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsEqualTo(String value) {
+            addCriterion("actions =", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsNotEqualTo(String value) {
+            addCriterion("actions <>", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsGreaterThan(String value) {
+            addCriterion("actions >", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsGreaterThanOrEqualTo(String value) {
+            addCriterion("actions >=", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsLessThan(String value) {
+            addCriterion("actions <", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsLessThanOrEqualTo(String value) {
+            addCriterion("actions <=", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsLike(String value) {
+            addCriterion("actions like", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsNotLike(String value) {
+            addCriterion("actions not like", value, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsIn(List<String> values) {
+            addCriterion("actions in", values, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsNotIn(List<String> values) {
+            addCriterion("actions not in", values, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsBetween(String value1, String value2) {
+            addCriterion("actions between", value1, value2, "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andActionsNotBetween(String value1, String value2) {
+            addCriterion("actions not between", value1, value2, "actions");
+            return (Criteria) this;
+        }
     }
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_resource_dynamic_properties
+     * 对应的数据库表为： gar_resource_dynamic_props
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -647,11 +717,11 @@ public class ResourceDynamicPropertyCriteria {
 
     /**
      * 此类为自动生成.
-     * 对应的数据库表为： gar_resource_dynamic_properties
+     * 对应的数据库表为： gar_resource_dynamic_props
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     public static class Criterion {
         private String condition;

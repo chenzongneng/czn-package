@@ -69,6 +69,12 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
 
     List<User> queryUserByTenantId(UserParm userParm);
 
+    /**
+     * 刷新token
+     * @param tokenRefreshView
+     * @return
+     * @throws Exception
+     */
     LoginMessage refreshToken(TokenRefreshView tokenRefreshView) throws Exception;
 
     LoginMessage garnetRefreshToken(LoginView loginView) throws Exception;

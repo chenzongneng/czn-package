@@ -15,6 +15,7 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.*;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,7 +58,7 @@ public class UserController {
 
     private static final Map<String, String> kaptchaMap = new HashMap<>();
 
-    private static final Map<String, Object> loginMap = new HashMap<>();
+    private static final Map<String, Object> loginSessionMap = new HashMap<>();
 
 
     /** The service. */
@@ -391,26 +393,26 @@ public class UserController {
                 loginMessage = userService.garLogin(garLoginView);
             }
 
-            //判断是否是同一个人登录
+            HttpSession sessionNew = request.getSession(true);
+            String sessionId = sessionNew.getId();
+            //判断是否第一次登录
             String userName = garLoginView.getUserName();
-            Long loginTime = System.currentTimeMillis();
-
-            Cookie[] cookies = request.getCookies();
-            if (null != cookies) {
-                //之前已经有人登录, 删除cookie
-                for(Cookie cookie : cookies) {
-                    if (cookie.getName().equals(userName)) {
-                        cookie.setValue(null);
-                        // 立即销毁cookie
-                        cookie.setMaxAge(0);
-                        break;
-                    }
-                }
+            String sessionIdOld = (String)loginSessionMap.get(userName);
+            if (!StringUtils.isEmpty(sessionIdOld)) {
+                loginSessionMap.remove(userName);
             }
+            //是第一次，将新的sessionId存入
+            loginSessionMap.put(userName, sessionId);
 
-            //设置新的cookie
-            Cookie cookie = new Cookie(userName, String.valueOf(loginTime));
-            response.addCookie(cookie);
+            //如果是第一次登录，将sessionId也存入session
+//            HttpSession session = request.getSession();
+//            Object sessionIdFromSession = session.getAttribute(userName);
+//            if (StringUtils.isEmpty(sessionIdFromSession)) {
+//                session.setAttribute(userName, sessionId);
+//            } else {
+//                session.invalidate();
+//                session.setAttribute(userName, sessionId);
+//            }
 
             response.setHeader("accessToken", loginMessage.getAccessToken());
             response.setHeader("refreshToken", loginMessage.getRefreshToken());
@@ -451,6 +453,42 @@ public class UserController {
             header.setContentType(MediaType.IMAGE_JPEG);
             header.setCacheControl("no-store, no-cache");
             return new ResponseEntity<>(result, header, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get Kaptcha ", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]验证是否已经有人登录过", notes = "验证是否已经有人登录过")
+    @RequestMapping(value = "/checklogined", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> getLoginSession(HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(value = "用户名", required = true) @RequestParam(value = "userName",required = true) String userName) throws IOException {
+        try {
+
+            String sessionIdOld = (String)loginSessionMap.get(userName);
+            HttpSession session = request.getSession(true);
+            String sessionId = session.getId();
+//            String sessionFromSession = (String) session.getAttribute(userName);
+//            boolean b;
+//            if (!ObjectUtils.isEmpty(sessionIdOld) && !ObjectUtils.isEmpty(sessionFromSession) && sessionFromSession.equals(sessionIdOld)) {
+////                System.out.println(sessionIdOld + " - " + sessionFromSession);
+//                b = true;
+//            } else {
+//                b = false;
+//            }
+
+            boolean b;
+            if (!StringUtils.isEmpty(sessionIdOld) && sessionIdOld.equals(sessionId)) {
+                b = true;
+            } else {
+                b = false;
+            }
+
+            GarnetMessage<Boolean> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_INSERT_SUCCESS, b);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.CREATED);
         } catch (Throwable t) {
             LOG.error("Failed to get Kaptcha ", t);
             return GarnetRsUtil.newResponseEntity(t);
