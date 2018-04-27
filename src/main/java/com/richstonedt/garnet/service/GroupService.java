@@ -38,7 +38,12 @@ public interface GroupService extends BaseService<Group, GroupCriteria, Long> {
 
     public void deleteGroup(Long id);
 
-    public GroupView selectGroupWithUserAndRole(Long groupId);
+    /**
+     * 获取单个用户组以及其关联的userIds、roleIds
+     * @param groupId
+     * @return
+     */
+    GroupView selectGroupWithUserAndRole(Long groupId);
 
     /**
      * 获取租户列表

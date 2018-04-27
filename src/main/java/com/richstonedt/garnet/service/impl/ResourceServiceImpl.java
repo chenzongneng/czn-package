@@ -147,7 +147,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     @Override
     public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm) {
 
-        PageHelper.startPage(1, 10);
         List<Resource> resourceList = null;
         ResourceCriteria resourceCriteria = new ResourceCriteria();
         resourceCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
@@ -181,7 +180,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             }
         }
 
-        PageUtil result = new PageUtil(resourceList, (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
+        PageUtil result = new PageUtil(this.selectByCriteria(resourceCriteria), (int)this.countByCriteria(resourceCriteria),resourceParm.getPageSize(), resourceParm.getPageNumber());
 
         return result;
     }

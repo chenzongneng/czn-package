@@ -57,7 +57,7 @@ public class ApplicationTest {
     @After
     public void dealInitTestData() {
         tenantService.deleteByPrimaryKey(tenantId);
-        applicationService.deleteByPrimaryKey(applicationId);
+        applicationService.deleteApplication(applicationId);
     }
 
 
@@ -147,5 +147,15 @@ public class ApplicationTest {
         ApplicationView applicationView = applicationService.getApplicationWithTenant(applicationId);
         int size = applicationView.getTenantNameList().size();
         Assert.assertEquals(size, 1);
+    }
+
+    @Test
+    public void getApplicatinsWithoutRouterGroup() {
+        ApplicationParm applicationParm = new ApplicationParm();
+        applicationParm.setRouterGroupId(1L);
+        applicationParm.setUserId(1L);
+        List<Application> applicationList = applicationService.getApplicatinsWithoutRouterGroup(applicationParm);
+        int size = applicationList.size();
+        Assert.assertEquals(size, 2);
     }
 }

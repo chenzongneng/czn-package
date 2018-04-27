@@ -97,7 +97,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     }
 
     @Override
-    public Long insertUser(UserView userView) throws ParseException {
+    public Long insertUser(UserView userView) {
 
         String credential = userView.getPassword();
 
@@ -281,7 +281,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         groupUserService.deleteByCriteria(groupUserCriteria);
 
-
+        this.deleteByPrimaryKey(user.getId());
     }
 
     @Override
@@ -623,7 +623,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         //获取返回资源
         //根据appCode拿 application
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode);
+        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
         Application application = applicationService.selectSingleByCriteria(applicationCriteria);
         if (ObjectUtils.isEmpty(application)) {
             return loginMessage;
@@ -727,24 +727,23 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         LoginMessage loginMessage = new LoginMessage();
 
         //对resource去重
-        Set<Long> resourceSet = new HashSet<>();
+//        Set<Long> resourceSet = new HashSet<>();
+//        List<Resource> resourceList1 = new ArrayList<>();
+//        for (Resource resource : resourceList) {
+//            Long resourceId = resource.getId();
+//            if (!resourceSet.contains(resourceId)) {
+//                resourceSet.add(resourceId);
+//                resourceList1.add(resource);
+//            }
+//        }
+
+
         List<Resource> resourceList1 = new ArrayList<>();
-        for (Resource resource : resourceList) {
-            Long resourceId = resource.getId();
-            if (!resourceSet.contains(resourceId)) {
-                resourceSet.add(resourceId);
-                resourceList1.add(resource);
-            }
-        }
-
-
-        List<Resource> resourceList2 = new ArrayList<>();
         List<RefreshTokenResourceView> refreshTokenResourceViews = new ArrayList<>();
-        RefreshTokenResourceView refreshTokenResourceView;
         for (Permission permission : permissionList) {
             String action = permission.getAction();
             String pattern = ".*" + action + ".*";
-            for (Resource resource : resourceList1) {
+            for (Resource resource : resourceList) {
                 String actions = resource.getActions();
                 if (actions.matches(pattern)) {
                     String[] actionList = actions.split(">");
@@ -757,14 +756,31 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                         }
                     }
 
-                    resourceList2.add(resource);
-                    refreshTokenResourceView = new RefreshTokenResourceView();
-                    daoToViewCopier.copy(resource, refreshTokenResourceView, null);
-                    refreshTokenResourceView.setAction(resource.getActions());
-                    refreshTokenResourceViews.add(refreshTokenResourceView);
+                    resourceList1.add(resource);
                 }
             }
         }
+
+        //再次去重
+        //对resource去重
+        Set<Long> resourceSet = new HashSet<>();
+        List<Resource> resourceList2 = new ArrayList<>();
+        RefreshTokenResourceView refreshTokenResourceView;
+        for (Resource resource : resourceList1) {
+            Long resourceId = resource.getId();
+            if (!resourceSet.contains(resourceId)) {
+                resourceSet.add(resourceId);
+                resourceList2.add(resource);
+            }
+        }
+
+        for (Resource resource : resourceList2) {
+            refreshTokenResourceView = new RefreshTokenResourceView();
+            daoToViewCopier.copy(resource, refreshTokenResourceView, null);
+            refreshTokenResourceView.setAction(resource.getActions());
+            refreshTokenResourceViews.add(refreshTokenResourceView);
+        }
+
 
         //通过resource列表获取 ResourceDynamicProperty列表
         List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();

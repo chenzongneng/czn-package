@@ -182,39 +182,39 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         return resources;
     }
 
-    @Override
-    public PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm) {
-
-        PermissionCriteria permissionCriteria = new PermissionCriteria();
-        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
-        //查询没被删除的 permission
-        criteria.andStatusEqualTo(1);
-
-        if (!StringUtils.isEmpty(permissionParm.getUserId())) {
-            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
-            List<Long> tenantIds = returnTenantIdView.getTenantIds();
-            //如果不是超级管理员
-            if (!returnTenantIdView.isSuperAdmin()) {
-
-                if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
-                    criteria.andTenantIdIn(tenantIds);
-                } else {
-                    //没有关联租户，返回空
-                    PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
-                    return  new PageInfo<Permission>(null);
-                }
-            }
-        }
-        if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
-            criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
-        }
-
-        PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
-        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
-        PageInfo<Permission> permissionPageInfo = new PageInfo<Permission>(permissions);
-
-        return permissionPageInfo;
-    }
+//    @Override
+//    public PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm) {
+//
+//        PermissionCriteria permissionCriteria = new PermissionCriteria();
+//        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
+//        //查询没被删除的 permission
+//        criteria.andStatusEqualTo(1);
+//
+//        if (!StringUtils.isEmpty(permissionParm.getUserId())) {
+//            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
+//            List<Long> tenantIds = returnTenantIdView.getTenantIds();
+//            //如果不是超级管理员
+//            if (!returnTenantIdView.isSuperAdmin()) {
+//
+//                if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
+//                    criteria.andTenantIdIn(tenantIds);
+//                } else {
+//                    //没有关联租户，返回空
+//                    PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
+//                    return  new PageInfo<Permission>(null);
+//                }
+//            }
+//        }
+//        if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
+//            criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
+//        }
+//
+//        PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
+//        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
+//        PageInfo<Permission> permissionPageInfo = new PageInfo<Permission>(permissions);
+//
+//        return permissionPageInfo;
+//    }
 
     @Override
     public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm) {
@@ -230,7 +230,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
             //如果不是garnet的超级管理员
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(permissionParm.getUserId()))) {
-
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
                     criteria.andTenantIdIn(tenantIds);
                 } else {

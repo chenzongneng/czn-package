@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ObjectUtils;
 
@@ -139,4 +140,10 @@ public class ResourceDynamicTest {
         Assert.assertEquals(resourceDynamicPropertyList1.size(), 0);
     }
 
+    @Test
+    public void testSelectResourceDynamicPropertyViewById() {
+        ResourceDynamicPropertyView resourceDynamicPropertyView = resourceDynamicPropertyService.selectResourceDynamicPropertyViewById(1L);
+        ResourceDynamicProperty resourceDynamicProperty = resourceDynamicPropertyView.getResourceDynamicProperty();
+        Assert.assertEquals(resourceDynamicProperty.getType(), "garnet_appCode");
+    }
 }

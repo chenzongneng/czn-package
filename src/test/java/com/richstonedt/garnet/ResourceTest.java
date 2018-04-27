@@ -25,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ObjectUtils;
+import sun.security.util.Resources_pt_BR;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,6 +178,30 @@ public class ResourceTest {
         ResourceView resourceView = new ResourceView();
         resourceView.setResource(resource);
         resourceService.deleteResource(resourceView);
+    }
+
+    @Test
+    public void testGetGarnetAppCodeResources() throws IOException {
+        ResourceParm resourceParm = new ResourceParm();
+        resourceParm.setUserId(1L);
+        String result = resourceService.getGarnetAppCodeResources(resourceParm);
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetAllResourceByAppAndType() {
+        ResourceParm resourceParm = new ResourceParm();
+        resourceParm.setApplicationId(1L);
+        resourceParm.setType("garnet_appCode");
+        String result = resourceService.getAllResourceByAppAndType(resourceParm);
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testGetGarnetSysMenuResources() throws IOException {
+        ResourceParm resourceParm =  new ResourceParm();
+        String result = resourceService.getGarnetSysMenuResources(resourceParm);
+        Assert.assertNotNull(result);
     }
 
 }

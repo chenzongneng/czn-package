@@ -21,13 +21,13 @@ $(function () {
                 sortable: false
             },
             {label: '权限id', name: 'permission.id', align: 'center', hidden: true, index: "id", width: 20, key: true, sortable: false},
-            {label: '权限名称', name: 'permission.name', align: 'center', width: 60, sortable: false},
+            {label: '权限名称', name: 'permission.name', align: 'center', width: 100, sortable: false},
             {label: '应用名称', name: 'applicationName', align: 'center', width: 80},
             {label: '租户名称', name: 'tenantName', align: 'center', width: 80},
             {label: '通配符', name: 'permission.resourcePathWildcard', align: 'center', width: 80, sortable: false},
             {label: '详细说明', name: 'permission.description', align: 'center', width: 70,sortable: false},
-            {label: '创建时间', name: 'permission.createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
-            {label: '更新时间', name: 'permission.modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
+            {label: '创建时间', name: 'permission.createdTime', align: 'center', formatter:timeFormat, width: 120,sortable: false},
+            {label: '更新时间', name: 'permission.modifiedTime', align: 'center', formatter:timeFormat, width: 120 ,sortable: false},
             {label: '更改人', name: 'permission.updatedByUserName', align: 'center', width: 70 ,sortable: false},
             // {
             //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {

@@ -1,9 +1,7 @@
 /*监测页面动作*/
-var maxTime = 30; // seconds
+var maxTime = 10; // seconds
 var time = maxTime;
-var i = 0;
-var pathName = window.document.location.pathname;
-var patrn = /.*index.html$/;
+var patrn = /^#.*html$/;
 
 
 $(document).on('keydown mousedown', function(e) {
@@ -12,26 +10,38 @@ $(document).on('keydown mousedown', function(e) {
 
 var intervalId = setInterval(function() {
 
-    time--;
+    if (localStorage.getItem("accessToken") == null || accessToken == null) {
+        clearInterval(intervalId);
+        return;
+    }
 
-    if (patrn.exec(pathName)) {
-        i = i + 1;
+    var hashName = window.location.hash;
+
+    if (patrn.exec(hashName)) {
+        time = maxTime;
     } else {
-        i = 0;
+        time--;
     }
 
+    // console.log(hashName);
+    // console.log(time);
+    localStorage.setItem("indexTimerId", intervalId)
     if (time <= 0) {
-        ShowInvalidLoginMessage();
+        //检查登录定时器
+        localStorage.removeItem("checkLoginedTimerId");
+        clearInterval(localStorage.getItem("checkLoginedTimerId"));
+        //刷新token定时器
+        localStorage.removeItem("refreshTokenTimerId");
+        clearInterval(localStorage.getItem("refreshTokenTimerId"));
+        //首页记录操作定时器
+        localStorage.removeItem("indexTimerId");
         clearInterval(intervalId);
+        //子页记录操作定时器
+        localStorage.removeItem("actionTimerId");
+        clearInterval(localStorage.getItem("actionTimerId"));
+        ShowInvalidLoginMessage();
     }
 
-    if (i >= 30) {
-        i = 0;
-        ShowInvalidLoginMessage();
-        clearInterval(localStorage.getItem("checkLoginedTimerId"));
-        localStorage.removeItem("checkLoginedTimerId");
-        clearInterval(intervalId);
-    }
 }, 60000);
 
 function ShowInvalidLoginMessage() {

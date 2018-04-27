@@ -1,7 +1,13 @@
 /*验证是否是同一个人登录*/
 function checkLogined() {
-    $.get(baseURL + "checklogined/?userName=" + localStorage.getItem("userName") + "&token=" + accessToken, function (response) {
 
+    if (localStorage.getItem("userName") == null) {
+        clearInterval(checkLoginedTimerId);
+        console.log("清理checkLoginedTimerId");
+        return;
+    }
+
+    $.get(baseURL + "checklogined/?userName=" + localStorage.getItem("userName") + "&token=" + accessToken, function (response) {
         // console.log("检查是否在其他地方登录...");
         localStorage.setItem("checkLoginedTimerId", checkLoginedTimerId)
 
@@ -33,6 +39,15 @@ function refreshToken () {
 
     console.log("刷新token: " + $.now());
 
+    if (localStorage.getItem("accessToken") == null || accessToken == null) {
+        clearInterval(refreshTokenTimerId);
+        console.log("清理refreshTokenTimerId");
+        return;
+    } else {
+        console.log(localStorage.getItem("accessToken"));
+    }
+
+    localStorage.setItem("refreshTokenTimerId", refreshTokenTimerId);
     var data = {
         userName: localStorage.getItem("userName"),
         token: localStorage.getItem("refreshToken"),
@@ -46,7 +61,7 @@ function refreshToken () {
         contentType: "application/json",
         dataType: "",
         success: function (result) {
-            // console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
+            console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
             localStorage.setItem("accessToken", result.accessToken);
             localStorage.setItem("refreshToken", result.refreshToken);
         }
@@ -54,5 +69,5 @@ function refreshToken () {
 }
 //每半小时自动刷新token
 // window.setInterval("refreshToken();", 60000 * 28);
-window.setInterval("refreshToken();", 60000 * 29);
+var refreshTokenTimerId = window.setInterval("refreshToken();", 60000 * 10);
 var checkLoginedTimerId = window.setInterval("checkLogined();", 20000);

@@ -230,6 +230,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
                 for (ApplicationTenant applicationTenant : applicationTenantList) {
                     applicationIds.add(applicationTenant.getApplicationId());
                 }
+
+                if (applicationIds.size() == 0) {
+                    applicationIds.add(GarnetContants.NON_VALUE);
+                }
                 criteria.andIdIn(applicationIds);
             }
 

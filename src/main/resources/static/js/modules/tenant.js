@@ -478,8 +478,6 @@ var vm = new Vue({
             var arr = new Array();
             $.get(baseURL + "tenants/usernames/" + vm.tenant.id, function (response) {
 
-                console.log(JSON.stringify(response));
-
                 if (!response) {
                     userNameList = [];
                 }

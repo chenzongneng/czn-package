@@ -23,7 +23,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * @param userView the user view
      * @throws ParseException the parse exception
      */
-    public  Long insertUser(UserView userView) throws ParseException;
+    public  Long insertUser(UserView userView);
 
     /**
      * Update user.
