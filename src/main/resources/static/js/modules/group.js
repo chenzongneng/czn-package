@@ -251,7 +251,10 @@ var vm = new Vue({
                             } else {
                                 swal("删除失败!", result.message, "error");
                             }
-                        }
+                        },
+                        error: function (result) {
+                        swal("删除失败!", getExceptionMessage(result), "error");
+                    }
                     });
                 });
         },

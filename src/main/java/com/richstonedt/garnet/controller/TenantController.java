@@ -238,10 +238,10 @@ public class TenantController {
             @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id) {
         try {
-            String result = tenantService.getRelatedUserNamesByTenantId(id);
+            List<String> result = tenantService.getRelatedUserNamesByTenantId(id);
 
             // 封装返回信息
-            GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
+            GarnetMessage<List<String>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;

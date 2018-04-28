@@ -5,10 +5,13 @@ import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.GroupUser;
 import com.richstonedt.garnet.model.User;
+import com.richstonedt.garnet.model.UserCredential;
 import com.richstonedt.garnet.model.UserTenant;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
 import com.richstonedt.garnet.model.parm.UserParm;
+import com.richstonedt.garnet.model.view.UserCredentialView;
 import com.richstonedt.garnet.model.view.UserView;
+import com.richstonedt.garnet.service.UserCredentialService;
 import com.richstonedt.garnet.service.UserService;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -31,6 +34,9 @@ public class UserTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserCredentialService userCredentialService;
 
     @Test
     public void contextLoads() {}
@@ -97,88 +103,34 @@ public class UserTest {
         int status = user1.getStatus();
         Assert.assertEquals(status, 0);
 
-        userService.deleteByPrimaryKey(user.getId());
+        UserView userView = new UserView();
+        userView.setUser(user);
+        userService.deleteUser(userView);
     }
 
-//    @Test
-//    public void testUserInsert() throws ParseException {
-//
-//        UserView userView = new UserView();
-//
-//        User user = new User();
-//
-//        user.setUserName("minglee");
-//
-//        userView.setPassword("123456");
-//
-//        userView.setExpiredDateTime(new Date().getTime());
-//
-//        userView.setUser(user);
-//
-//        List<UserTenant> userTenants = new ArrayList<UserTenant>();
-//
-//        UserTenant userTenant = new UserTenant();
-//
-//        userTenant.setTenantId(100L);
-//
-//        userTenants.add(userTenant);
-//
-//        List<GroupUser> groupUsers = new ArrayList<GroupUser>();
-//
-//        GroupUser groupUser = new GroupUser();
-//
-//        groupUser.setGroupId(200L);
-//
-//        groupUsers.add(groupUser);
-//
-//        userView.setUserTenants(userTenants);
-//
-//        userView.setGroupUsers(groupUsers);
-//
-//        userService.insertUser(userView);
-//
-//    }
-//
-//    @Test
-//    public void testUserUpdate(){
-//
-//        UserView userView = new UserView();
-//
-//        User user = new User();
-//
-//        user.setId(1519703398L);
-//
-//        user.setUserName("minglee");
-//
-//        userView.setPassword("123456");
-//
-//        userView.setExpiredDateTime(new Date().getTime());
-//
-//        userView.setUser(user);
-//
-//        List<UserTenant> userTenants = new ArrayList<UserTenant>();
-//
-//        UserTenant userTenant = new UserTenant();
-//
-//        userTenant.setTenantId(500L);
-//
-//        userTenants.add(userTenant);
-//
-//        List<GroupUser> groupUsers = new ArrayList<GroupUser>();
-//
-//        GroupUser groupUser = new GroupUser();
-//
-//        groupUser.setGroupId(600L);
-//
-//        groupUsers.add(groupUser);
-//
-//        userView.setUserTenants(userTenants);
-//
-//        userView.setGroupUsers(groupUsers);
-//
-//        userService.updateUser(userView);
-//
-//
-//    }
+    @Test
+    public void testUpdateUserPassword() {
+        UserView userView = new UserView();
+        User user = new User();
+        user.setUserName("test_updatePassword");
+        user.setBelongToGarnet("N");
+        userView.setPassword("123456");
+        userView.setUser(user);
+        long userId = userService.insertUser(userView);
+
+        UserCredentialView userCredentialView = new UserCredentialView();
+        userCredentialView.setPassword("123456");
+        userCredentialView.setNewPassword("456789");
+        userCredentialView.setUserId(userId);
+        userService.updateUserPassword(userCredentialView);
+
+        UserCredential userCredential = userCredentialService.getCredentialByUserName("test_updatePassword");
+        String password = userCredential.getCredential();
+        Assert.assertEquals(password, "456789");
+
+        user.setId(userId);
+        userView.setUser(user);
+        userService.deleteUser(userView);
+    }
 
 }

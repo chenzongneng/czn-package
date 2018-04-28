@@ -5,19 +5,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="application_id" jdbcType="BIGINT" property="applicationId" />
     <result column="filed_name" jdbcType="VARCHAR" property="filedName" />
     <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="actions" jdbcType="VARCHAR" property="actions" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -51,7 +52,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -85,15 +86,15 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
-    id, type, application_id, filed_name, description
+    id, type, application_id, filed_name, description, actions
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     select
     <if test="distinct">
@@ -115,7 +116,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     select
     <include refid="Base_Column_List" />
@@ -126,7 +127,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     delete from gar_resource_dynamic_props
     where id = #{id,jdbcType=BIGINT}
@@ -135,7 +136,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     delete from gar_resource_dynamic_props
     <if test="_parameter != null">
@@ -146,18 +147,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     insert into gar_resource_dynamic_props (id, type, application_id,
-    filed_name, description)
+    filed_name, description, actions
+    )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{applicationId,jdbcType=BIGINT},
-    #{filedName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+    #{filedName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{actions,jdbcType=VARCHAR}
+    )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.ResourceDynamicProperty">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     insert into gar_resource_dynamic_props
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -175,6 +178,9 @@
       </if>
       <if test="description != null">
         description,
+      </if>
+      <if test="actions != null">
+        actions,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -193,13 +199,16 @@
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
       </if>
+      <if test="actions != null">
+        #{actions,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     select count(*) from gar_resource_dynamic_props
     <if test="_parameter != null">
@@ -210,7 +219,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     update gar_resource_dynamic_props
     <set>
@@ -229,6 +238,9 @@
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
       </if>
+      <if test="record.actions != null">
+        actions = #{record.actions,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -238,14 +250,15 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     update gar_resource_dynamic_props
     set id = #{record.id,jdbcType=BIGINT},
     type = #{record.type,jdbcType=VARCHAR},
     application_id = #{record.applicationId,jdbcType=BIGINT},
     filed_name = #{record.filedName,jdbcType=VARCHAR},
-    description = #{record.description,jdbcType=VARCHAR}
+    description = #{record.description,jdbcType=VARCHAR},
+    actions = #{record.actions,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -254,7 +267,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     update gar_resource_dynamic_props
     <set>
@@ -270,6 +283,9 @@
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
+      <if test="actions != null">
+        actions = #{actions,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -277,20 +293,21 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     update gar_resource_dynamic_props
     set type = #{type,jdbcType=VARCHAR},
     application_id = #{applicationId,jdbcType=BIGINT},
     filed_name = #{filedName,jdbcType=VARCHAR},
-    description = #{description,jdbcType=VARCHAR}
+    description = #{description,jdbcType=VARCHAR},
+    actions = #{actions,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     select
     <if test="distinct">
@@ -309,7 +326,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     insert into gar_resource_dynamic_props
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -327,6 +344,9 @@
       </if>
       <if test="list[0].description!=null">
         description,
+      </if>
+      <if test="list[0].actions!=null">
+        actions,
       </if>
     </trim>
     values
@@ -347,6 +367,9 @@
         <if test="item.description!=null">
           #{item.description,jdbcType=VARCHAR},
         </if>
+        <if test="item.actions!=null">
+          #{item.actions,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -354,7 +377,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-12 13:25
+      DATE: 2018-04-25 17:13
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_resource_dynamic_props
@@ -370,6 +393,9 @@
         </if>
         <if test="item.description!=null">
           description=#{item.description,jdbcType=VARCHAR},
+        </if>
+        <if test="item.actions!=null">
+          actions=#{item.actions,jdbcType=VARCHAR},
         </if>
       </set>
       where

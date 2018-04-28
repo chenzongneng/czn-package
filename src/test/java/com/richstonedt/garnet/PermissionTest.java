@@ -4,17 +4,20 @@ import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Application;
 import com.richstonedt.garnet.model.Permission;
+import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.criteria.PermissionCriteria;
 import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.parm.PermissionParm;
+import com.richstonedt.garnet.model.parm.PermissionResourceParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.model.view.PermissionView;
 import com.richstonedt.garnet.model.view.TenantView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.PermissionService;
 import com.richstonedt.garnet.service.TenantService;
+import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -22,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -152,5 +156,27 @@ public class PermissionTest {
         applicationCriteria.createCriteria().andAppCodeEqualTo("test_permission_appliction");
         List<Application> applications = applicationService.selectByCriteria(applicationCriteria);
         applicationService.deleteByPrimaryKey(applications.get(0).getId());
+    }
+
+    @Test
+    public void testQueryPermissionByTenantId() {
+        PermissionParm permissionParm = new PermissionParm();
+        permissionParm.setTenantId(1L);
+        List<Permission> permissionList = permissionService.queryPermissionByTenantId(permissionParm);
+        int size = permissionList.size();
+        Assert.assertEquals(size, 1);
+    }
+
+    @Test
+    public void testQueryResourcesByPermissionResourceParm() {
+        PermissionResourceParm permissionResourceParm = new PermissionResourceParm();
+        List<Long> permissionIds = new ArrayList<>();
+        permissionIds.add(1L);
+        permissionResourceParm.setPermissionIds(permissionIds);
+
+        List<Resource> resourceList = permissionService.queryResourcesByPermissionResourceParm(permissionResourceParm);
+        int size = resourceList.size();
+
+        Assert.assertEquals(size, 60);
     }
 }

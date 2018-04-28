@@ -51,6 +51,6 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
      * @param tenantId
      * @return
      */
-    String getRelatedUserNamesByTenantId(Long tenantId);
+    List<String> getRelatedUserNamesByTenantId(Long tenantId);
 
 }

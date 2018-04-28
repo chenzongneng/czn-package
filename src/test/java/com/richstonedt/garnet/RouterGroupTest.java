@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ObjectUtils;
 
@@ -179,6 +180,13 @@ public class RouterGroupTest {
 
         List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
         Assert.assertEquals(routerGroupList.size(), 0);
+    }
+
+    @Test
+    public void testSelectRouterByIdWithApp() {
+        RouterGroupView routerGroupView = routerGroupService.selectRouterByIdWithApp(1L);
+        String appCode = routerGroupView.getRouterGroup().getAppCode();
+        Assert.assertEquals(appCode, "garnet");
     }
 
 }

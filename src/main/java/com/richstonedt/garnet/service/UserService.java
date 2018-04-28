@@ -23,7 +23,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * @param userView the user view
      * @throws ParseException the parse exception
      */
-    public  Long insertUser(UserView userView) throws ParseException;
+    public  Long insertUser(UserView userView);
 
     /**
      * Update user.
@@ -69,6 +69,12 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
 
     List<User> queryUserByTenantId(UserParm userParm);
 
+    /**
+     * 刷新token
+     * @param tokenRefreshView
+     * @return
+     * @throws Exception
+     */
     LoginMessage refreshToken(TokenRefreshView tokenRefreshView) throws Exception;
 
     LoginMessage garnetRefreshToken(LoginView loginView) throws Exception;

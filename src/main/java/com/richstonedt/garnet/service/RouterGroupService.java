@@ -17,6 +17,11 @@ public interface RouterGroupService extends BaseService<RouterGroup, RouterGroup
 
     PageUtil queryRouterGroupByParms(RouterGroupParm routerGroupParm);
 
+    /**
+     * 获取单个router白名单及其绑定的applications
+     * @param id
+     * @return
+     */
     RouterGroupView selectRouterByIdWithApp(Long id);
 
     String getGroupNameByAppCode(String appCode);

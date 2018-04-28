@@ -53,14 +53,16 @@
                     </option>
                 </select>
             </div>
-            <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentResourceAdd">
-                <i class="fa fa-plus"></i>&nbsp;新增</a>
-            <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentResourceUpdate">
-                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-            <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentResourceDelete">
-                <i class="fa fa-trash-o"></i>&nbsp;删除</a>
-            <a class="btn btn-primary" @click="inputExcel">导入Excel</a>
-                <input type="file" id="file" v-show="false"  @change="importFile(this)"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+            <div style="margin: 15px; display: block">
+                <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentResourceAdd">
+                    <i class="fa fa-plus"></i>&nbsp;新增</a>
+                <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentResourceUpdate">
+                    <i class="fa fa-pencil-square-o"></i>&nbsp;管理</a>
+                <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentResourceDelete">
+                    <i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                <a class="btn btn-primary" @click="inputExcel">导入Excel</a>
+                    <input type="file" id="file" v-show="false"  @change="importFile(this)"  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+            </div>
             <!--<a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentResourceUpdate">-->
                 <!--<i class="fa fa-pencil-square-o"></i>&nbsp;查看</a>-->
         </div>
@@ -70,11 +72,11 @@
 
     <div v-show="!showList1" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
-        <form class="form-horizontal">
+        <form class="form-horizontal div-left">
             <div class="form-group">
                 <div class="col-sm-2 control-label">资源名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="resource.name" placeholder="资源名称"/>
+                    <input class="form-control" v-model="resource.name" placeholder="资源名称" maxlength="30"/>
                 </div>
             </div>
             <div class="form-group">
@@ -135,15 +137,15 @@
                     <!--<input class="form-control" v-model="resource.actions" placeholder="action"/>-->
                 <!--</div>-->
             <!--</div>-->
-            <div class="form-group">
-                <div class="col-sm-2 control-label">行为组<span style="color: #d7220a">*</span></div>
-                <label>
-                    <input type="checkbox" v-model="actionsEdit" value="edit"/> edit
-                </label>
-                <label>
-                    <input type="checkbox" v-model="actionsReadonly" value="readonly"/> readonly
-                </label>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-2 control-label">行为组<span style="color: #d7220a">*</span></div>-->
+                <!--<label>-->
+                    <!--<input type="checkbox" v-model="actionsEdit" value="edit"/> edit-->
+                <!--</label>-->
+                <!--<label>-->
+                    <!--<input type="checkbox" v-model="actionsReadonly" value="readonly"/> readonly-->
+                <!--</label>-->
+            <!--</div>-->
 
             <div class="form-group">
                 <div class="col-sm-2 control-label">varchar00</div>
@@ -266,6 +268,8 @@
                     <input class="form-control" v-model="resource.varchar19" placeholder="varchar19"/><input  v-model="resource.varchar19description" readonly="readonly" style="color: #d73925;border:none; margin-left: 10px; width: 160px;"/>
                 </div>
             </div>
+        </form>
+        <form class="form-horizontal div-right">
             <div class="form-group">
                 <div class="col-sm-2 control-label">int01</div>
                 <div class="col-sm-10 form-inline">
@@ -356,6 +360,11 @@
     </div>
 </div>
 
+<style>
+    .div-left{float: left; width: 49%}
+    .div-right{float: right; width: 49%}
+</style>
+
 <script type="text/javascript">
     $(function(){
         $('input:radio').click(function(){
@@ -392,6 +401,7 @@
 
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
+<script src="../js/actiontimer.js"></script>
 <script src="../js/modules/resource.js"></script>
 </body>
 </html>

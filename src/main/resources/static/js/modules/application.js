@@ -266,8 +266,8 @@ var vm = new Vue({
                             swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
-                        error: function () {
-                            swal("删除失败!", "系统错误，请联系系统管理员！", "error");
+                        error: function (response) {
+                            swal("删除失败!", getExceptionMessage(response), "error");
                         }
                     });
                 });

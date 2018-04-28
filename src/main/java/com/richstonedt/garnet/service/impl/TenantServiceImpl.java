@@ -329,7 +329,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     }
 
     @Override
-    public String getRelatedUserNamesByTenantId(Long tenantId) {
+    public List<String> getRelatedUserNamesByTenantId(Long tenantId) {
         List<Long> userIds = getUserIdsByTenantId(tenantId);
 
         if (userIds.size() == 0) {
@@ -341,12 +341,11 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         List<User> users = userService.selectByCriteria(userCredentia);
 
         StringBuilder stringBuilder = new StringBuilder();
+        List<String> userNameList = new ArrayList<>();
         for (User user : users) {
-            stringBuilder.append(user.getUserName());
-            stringBuilder.append("\n");
+            userNameList.add(user.getUserName());
         }
-        String result = stringBuilder.toString();
-        return result;
+        return userNameList;
     }
 
     /**

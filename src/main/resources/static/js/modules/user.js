@@ -445,9 +445,9 @@ var vm = new Vue({
                     });
                     return false;
                 }
-                if (value.length < 4 || value.length > 20) {
+                if (value.length < 4 || value.length > 30) {
                     swal({
-                        title: name + '的长度只能在4-20！',
+                        title: name + '的长度只能在4-30！',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false

@@ -41,7 +41,7 @@
             <a class="btn btn-primary" @click="add" v-if="resources.garnetSysManagementUsernAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
             <a class="btn btn-primary" @click="update" v-if="resources.garnetSysManagementUserUpdate">
-                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                <i class="fa fa-pencil-square-o"></i>&nbsp;管理</a>
             <a class="btn btn-primary" @click="del" v-if="resources.garnetSysManagementUserDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
@@ -61,13 +61,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">账号<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-bind:readonly="readusername" v-model="user.userName" placeholder="登录账号"/>
+                    <input class="form-control" v-bind:readonly="readusername" v-model="user.userName" placeholder="登录账号" maxlength="30"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">密码<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" v-model="user.password" placeholder="密码"/>
+                    <input type="password" class="form-control" v-model="user.password" placeholder="密码" maxlength="30"/>
                 </div>
             </div>
 
@@ -165,5 +165,6 @@
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
 <script src="../js/modules/user.js"></script>
+<script src="../js/actiontimer.js"></script>
 </body>
 </html>

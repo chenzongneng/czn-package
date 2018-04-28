@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 /**
  *
- * TABLE:gar_resource_dynamic_properties
+ * TABLE:gar_resource_dynamic_props
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-30 13:23
+ * DATE: 2018-04-25 17:13
  */
 public class ResourceDynamicProperty implements Serializable {
     private Long id;
@@ -21,12 +21,14 @@ public class ResourceDynamicProperty implements Serializable {
 
     private String description;
 
+    private String actions;
+
     /**
-     * TABLE： gar_resource_dynamic_properties
+     * TABLE： gar_resource_dynamic_props
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     private static final long serialVersionUID = 1L;
 
@@ -70,14 +72,22 @@ public class ResourceDynamicProperty implements Serializable {
         this.description = description == null ? null : description.trim();
     }
 
+    public String getActions() {
+        return actions;
+    }
+
+    public void setActions(String actions) {
+        this.actions = actions == null ? null : actions.trim();
+    }
+
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     @Override
     public boolean equals(Object that) {
@@ -92,20 +102,21 @@ public class ResourceDynamicProperty implements Serializable {
         }
         ResourceDynamicProperty other = (ResourceDynamicProperty) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
-            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
-            && (this.getFiledName() == null ? other.getFiledName() == null : this.getFiledName().equals(other.getFiledName()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()));
+                && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+                && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
+                && (this.getFiledName() == null ? other.getFiledName() == null : this.getFiledName().equals(other.getFiledName()))
+                && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+                && (this.getActions() == null ? other.getActions() == null : this.getActions().equals(other.getActions()));
     }
 
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     @Override
     public int hashCode() {
@@ -116,17 +127,18 @@ public class ResourceDynamicProperty implements Serializable {
         result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getFiledName() == null) ? 0 : getFiledName().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
+        result = prime * result + ((getActions() == null) ? 0 : getActions().hashCode());
         return result;
     }
 
     /**
      * <br>
      *
-     * TABLE： gar_resource_dynamic_properties<br>
+     * TABLE： gar_resource_dynamic_props<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-04-25 17:13
      */
     @Override
     public String toString() {
@@ -139,6 +151,7 @@ public class ResourceDynamicProperty implements Serializable {
         sb.append(", applicationId=").append(applicationId);
         sb.append(", filedName=").append(filedName);
         sb.append(", description=").append(description);
+        sb.append(", actions=").append(actions);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

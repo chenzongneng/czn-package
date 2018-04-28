@@ -21,21 +21,21 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      *
      * @param permissionView the permission view
      */
-    public Long insertPermission(PermissionView permissionView);
+    Long insertPermission(PermissionView permissionView);
 
     /**
      * Update perssion.
      *
      * @param permissionView the permission view
      */
-    public void updatePerssion(PermissionView permissionView);
+    void updatePerssion(PermissionView permissionView);
 
     /**
      * Delete perssion.
      *
      * @param permissionView the permission view
      */
-    public void deletePerssion(PermissionView permissionView);
+    void deletePerssion(PermissionView permissionView);
 
     /**
      * 根据permission_id获取所有的对应租户下对应applicaiton和对应user的所有资源
@@ -43,23 +43,27 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      * @param permissionResourceParm the permission resource parm
      * @return list
      */
-    public List<Resource> queryResourcesByPermissionResourceParm(PermissionResourceParm permissionResourceParm);
+    List<Resource> queryResourcesByPermissionResourceParm(PermissionResourceParm permissionResourceParm);
 
     /**
      * Query perssions by parms page info.
-     *
      * @param permissionParm the permission parm
      * @return the page info
      */
-    public PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm);
+//    PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm);
 
-    public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm);
+    PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm);
 
     /**
      * 当删除时，更新status为0，即禁用
      */
-    public void updateStatusById(Permission permission);
+    void updateStatusById(Permission permission);
 
-    public List<Permission> queryPermissionByTenantId(PermissionParm permissionParm);
+    /**
+     * 根据租户id获取权限列表
+     * @param permissionParm
+     * @return
+     */
+    List<Permission> queryPermissionByTenantId(PermissionParm permissionParm);
 
 }

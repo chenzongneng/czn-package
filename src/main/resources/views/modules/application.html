@@ -49,7 +49,7 @@
             <a class="btn btn-primary" @click="add" v-if="resources.garnetSysManagementApplicationAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
             <a class="btn btn-primary" @click="update" v-if="resources.garnetSysManagementApplicationUpdate">
-                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                <i class="fa fa-pencil-square-o"></i>&nbsp;管理</a>
             <a class="btn btn-primary" @click="del" v-if="resources.garnetSysManagementApplicationDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
@@ -79,13 +79,13 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">应用名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="application.name" placeholder="应用名称"/>
+                    <input class="form-control" v-model="application.name" placeholder="应用名称" maxlength="30"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">应用标识<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" id="appCode" v-model="application.appCode" placeholder="应用标识"/>
+                    <input class="form-control" id="appCode" v-model="application.appCode" placeholder="只能填写英文、下划线、连字符" maxlength="30"/>
                     <!--<span id="appCodeErr" style="color: #d73925">应用标识</span>-->
                 </div>
             </div>
@@ -99,7 +99,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">所属公司<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="application.company" placeholder="所属公司"/>
+                    <input class="form-control" v-model="application.company" placeholder="所属公司" maxlength="30"/>
                 </div>
             </div>
             <div class="form-group">
@@ -190,6 +190,7 @@
 
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
+<script src="../js/actiontimer.js"></script>
 <script src="../js/modules/application.js"></script>
 </body>
 </html>

@@ -22,11 +22,16 @@ public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
      * 当用户点击删除时，将其状态设为禁用
      * @param role
      */
-    public void updateStatusById(Role role);
+    void updateStatusById(Role role);
 
-    public RoleView selectRoleWithGroupAndPermission(Long id);
+    /**
+     * 获取单个角色及其绑定的groupIds、permissionIds
+     * @param id
+     * @return
+     */
+    RoleView selectRoleWithGroupAndPermission(Long id);
 
-    public List<Role> queryRolesByTenantId(RoleParm roleParm);
+    List<Role> queryRolesByTenantId(RoleParm roleParm);
 
     List<Role> queryRoles();
 

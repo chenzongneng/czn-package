@@ -230,6 +230,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
                 for (ApplicationTenant applicationTenant : applicationTenantList) {
                     applicationIds.add(applicationTenant.getApplicationId());
                 }
+
+                if (applicationIds.size() == 0) {
+                    applicationIds.add(GarnetContants.NON_VALUE);
+                }
                 criteria.andIdIn(applicationIds);
             }
 
@@ -304,6 +308,11 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     public void updateStatusById(Application application) {
 
         if (!ObjectUtils.isEmpty(application) && !ObjectUtils.isEmpty(application.getId())) {
+
+            if (application.getId().longValue() == GarnetContants.GARNET_APPLICATION_ID.longValue()) {
+                throw new RuntimeException("不能删除Garnet应用");
+            }
+
             //删除关联外键
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
             applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());

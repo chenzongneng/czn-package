@@ -47,7 +47,7 @@
             <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentresourceDynamicPropertyAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
             <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentresourceDynamicPropertyUpdate">
-                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+                <i class="fa fa-pencil-square-o"></i>&nbsp;管理</a>
             <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentresourceDynamicPropertyDelete">
                 <i class="fa fa-trash-o"></i>&nbsp;删除</a>
         </div>
@@ -57,11 +57,17 @@
 
     <div v-show="!showList" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
-        <form class="form-horizontal">
+        <form class="form-horizontal div-left">
             <div class="form-group">
                 <div class="col-sm-2 control-label">类型名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="resourceDynamicProperty.type" placeholder="类型名称"/>
+                    <input class="form-control" v-model="resourceDynamicProperty.type" placeholder="类型名称" maxlength="30"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">行为组<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicProperty.actions" placeholder="行为组"/>
                 </div>
             </div>
             <div class="form-group">
@@ -78,7 +84,6 @@
                     <input class="form-control" v-model="resourceDynamicPropertyList[0].description" placeholder="描述"/>
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="col-sm-2 control-label">fieldName</div>
                 <div class="col-sm-10">
@@ -307,6 +312,10 @@
                     <input class="form-control" v-model="resourceDynamicPropertyList[19].description" placeholder="描述"/>
                 </div>
             </div>
+        </form>
+
+
+        <form class="form-horizontal div-right" >
             <div class="form-group">
                 <div class="col-sm-2 control-label">fieldName</div>
                 <div class="col-sm-10">
@@ -428,6 +437,11 @@
     </div>
 </div>
 
+<style>
+    .div-left{float: left; width: 49%}
+    .div-right{float: right; width: 49%}
+</style>
+
 <!-- 选择资源 -->
 <div id="resourceLayer" style="display: none;padding:10px;">
     <ul id="resourceTree" class="ztree"></ul>
@@ -436,5 +450,6 @@
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
 <script src="../js/modules/resourceDynamicProperty.js"></script>
+<script src="../js/actiontimer.js"></script>
 </body>
 </html>
