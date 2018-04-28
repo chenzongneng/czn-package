@@ -13,10 +13,23 @@ import java.util.List;
 
 public interface ResourceService extends BaseService<Resource, ResourceCriteria, Long> {
 
+    /**
+     * 新增资源
+     * @param resourceView
+     * @return
+     */
     Long insertResource(ResourceView resourceView);
 
+    /**
+     * 更新资源
+     * @param resourceView
+     */
     void updateResource(ResourceView resourceView);
 
+    /**
+     * 删除资源
+     * @param resourceView
+     */
     void deleteResource(ResourceView resourceView);
 
     /**
@@ -40,6 +53,11 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      */
     String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException;
 
+    /**
+     * 通过应用id和资源类型获取资源列表,并拼接成字符串返回
+     * @param resourceParm
+     * @return
+     */
     String getAllResourceByAppAndType(ResourceParm resourceParm);
 
     /**

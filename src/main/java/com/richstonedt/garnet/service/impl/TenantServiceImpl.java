@@ -318,7 +318,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     }
 
     @Override
-    public List<Long> getApplicationIs() {
+    public List<Long> getApplicationIds() {
         ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
         List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
         List<Long> applicationIds = new ArrayList<>();

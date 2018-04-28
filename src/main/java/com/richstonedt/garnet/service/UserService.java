@@ -67,6 +67,11 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      */
     void updateStatusById(User user, Long loginUserId);
 
+    /**
+     * 通过租户id获取用户列表
+     * @param userParm
+     * @return
+     */
     List<User> queryUserByTenantId(UserParm userParm);
 
     /**
@@ -77,8 +82,20 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      */
     LoginMessage refreshToken(TokenRefreshView tokenRefreshView) throws Exception;
 
+    /**
+     * garnet应用的token刷新
+     * @param loginView
+     * @return
+     * @throws Exception
+     */
     LoginMessage garnetRefreshToken(LoginView loginView) throws Exception;
 
+    /**
+     * garnet应用登录
+     * @param garLoginView
+     * @return
+     * @throws Exception
+     */
     LoginMessage garLogin(GarLoginView garLoginView) throws Exception;
 
     /**

@@ -245,14 +245,21 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         if (StringUtils.isEmpty(applicationParm.getMode())) {
             criteria.andStatusEqualTo(1);
-        } else if (SERVICE_MODE_SAAS.equals(applicationParm.getMode())) {
-            criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
-        } else if (SERVICE_MODE_PAAS.equals(applicationParm.getMode())) {
-            criteria.andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
-        } else if (SERVICE_MODE_ALL.equals(applicationParm.getMode())) {
-            criteria.andStatusEqualTo(1);
-        } else {
-            return new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
+            return new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
+        }
+
+        switch (applicationParm.getMode()) {
+            case SERVICE_MODE_SAAS:
+                criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
+                break;
+            case SERVICE_MODE_PAAS:
+                criteria.andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
+                break;
+            case SERVICE_MODE_ALL:
+                criteria.andStatusEqualTo(1);
+                break;
+            default:
+                return new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
         }
 
         PageUtil result = new PageUtil(this.selectByCriteria(applicationCriteria), (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());

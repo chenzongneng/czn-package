@@ -35,7 +35,7 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      *
      * @param permissionView the permission view
      */
-    void deletePerssion(PermissionView permissionView);
+//    void deletePerssion(PermissionView permissionView);
 
     /**
      * 根据permission_id获取所有的对应租户下对应applicaiton和对应user的所有资源

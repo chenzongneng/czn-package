@@ -10,13 +10,26 @@ import java.util.List;
 
 public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
 
-    public Long insertRole(RoleView roleView);
+    /**
+     * 新增角色
+     * @param roleView
+     * @return
+     */
+    Long insertRole(RoleView roleView);
 
-    public void updateRole(RoleView roleView);
+    /**
+     * 更新角色
+     * @param roleView
+     */
+    void updateRole(RoleView roleView);
 
-    public void deleteRole(RoleView roleView);
+    /**
+     * 删除角色及其关联外键
+     * @param roleView
+     */
+    void deleteRole(RoleView roleView);
 
-    public PageUtil queryRolesByParms(RoleParm roleParm);
+    PageUtil queryRolesByParms(RoleParm roleParm);
 
     /**
      * 当用户点击删除时，将其状态设为禁用
@@ -31,8 +44,17 @@ public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
      */
     RoleView selectRoleWithGroupAndPermission(Long id);
 
+    /**
+     * 通过租户id查询角色列表
+     * @param roleParm
+     * @return
+     */
     List<Role> queryRolesByTenantId(RoleParm roleParm);
 
+    /**
+     * 查询角色列表
+     * @return
+     */
     List<Role> queryRoles();
 
 }

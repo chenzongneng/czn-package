@@ -17,6 +17,7 @@ $(function () {
         colModel: [
             {label: '租户ID', name: 'id', align: 'center', hidden: true, width: 20, key: true ,sortable: false},
             {label: '租户名称', name: 'name', align: 'center', width: 80 ,sortable: false},
+            {label: '平台模式', name: 'serviceMode', align: 'center', width: 70 ,sortable: false},
             {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
             {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false},

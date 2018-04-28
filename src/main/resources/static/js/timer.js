@@ -69,5 +69,5 @@ function refreshToken () {
 }
 //每半小时自动刷新token
 // window.setInterval("refreshToken();", 60000 * 28);
-var refreshTokenTimerId = window.setInterval("refreshToken();", 60000 * 10);
+var refreshTokenTimerId = window.setInterval("refreshToken();", 60000 * 29);
 var checkLoginedTimerId = window.setInterval("checkLogined();", 20000);

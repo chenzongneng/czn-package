@@ -30,7 +30,7 @@ public class UserCredentialServiceImpl extends BaseServiceImpl<UserCredential, U
     public UserCredential getCredentialByUserName(String userName) {
         User user = userService.getUserByUserName(userName);
         if (ObjectUtils.isEmpty(user)) {
-            return null;
+            return new UserCredential();
         }
 
         Long userId = user.getId();
