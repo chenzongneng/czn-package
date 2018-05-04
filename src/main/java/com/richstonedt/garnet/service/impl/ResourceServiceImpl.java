@@ -236,24 +236,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
      */
     private SySMenuJsonObject getSySMenuJsonObject(List<Resource> resourceList, String parentId) {
         //菜单管理一级
-        SySMenuJsonObject sySMenuJsonObject = new SySMenuJsonObject();
         Resource resource1 = null;
         List<SySMenuJsonObject> sySMenuJsonObjectList = new ArrayList<>();
         for (Resource resource : resourceList) {
             if ("1".equals(resource.getVarchar05()) && parentId.equals(resource.getVarchar01())) {
                 //菜单管理二级菜单
-                SySMenuJsonObject sySMenuJsonObject1 = new SySMenuJsonObject();
-                sySMenuJsonObject1.setMenuId(Integer.valueOf(resource.getVarchar00()));
-                sySMenuJsonObject1.setParentId(Integer.valueOf(resource.getVarchar01()));
-                sySMenuJsonObject1.setParentName(resource.getVarchar02() == "" ? null : resource.getVarchar00());
-                sySMenuJsonObject1.setName(resource.getVarchar03());
-                sySMenuJsonObject1.setUrl(resource.getVarchar04() == "" ? null : resource.getVarchar04());
-                sySMenuJsonObject1.setType(Integer.valueOf(resource.getVarchar05()));
-                sySMenuJsonObject1.setIcon(resource.getVarchar06());
-                sySMenuJsonObject1.setCode(resource.getVarchar07());
-                sySMenuJsonObject1.setOrderNum(Integer.valueOf(resource.getVarchar08()));
-                sySMenuJsonObject1.setOpen(resource.getVarchar09() == "" ? null : resource.getVarchar09());
-                sySMenuJsonObject1.setList(null);
+                SySMenuJsonObject sySMenuJsonObject1 = getSySMenuJsonObject(resource, null);
                 //二级菜单的list
                 sySMenuJsonObjectList.add(sySMenuJsonObject1);
             } else if ("0".equals(resource.getVarchar05()) && "0".equals(resource.getVarchar01())) {
@@ -266,6 +254,20 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             return new SySMenuJsonObject();
         }
 
+        //封装garnet菜单的jsonObject
+        SySMenuJsonObject sySMenuJsonObject = getSySMenuJsonObject(resource1, sySMenuJsonObjectList);
+
+        return sySMenuJsonObject;
+    }
+
+    /**
+     * 封装garnet菜单的jsonObject
+     * @param resource1
+     * @param sySMenuJsonObjectList
+     * @return
+     */
+    private SySMenuJsonObject getSySMenuJsonObject(Resource resource1, List<SySMenuJsonObject> sySMenuJsonObjectList) {
+        SySMenuJsonObject sySMenuJsonObject = new SySMenuJsonObject();
         sySMenuJsonObject.setMenuId(Integer.valueOf(resource1.getVarchar00()));
         sySMenuJsonObject.setParentId(Integer.valueOf(resource1.getVarchar01()));
         sySMenuJsonObject.setParentName(resource1.getVarchar02() == "" ? null : resource1.getVarchar00());
@@ -277,7 +279,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         sySMenuJsonObject.setOrderNum(Integer.valueOf(resource1.getVarchar08()));
         sySMenuJsonObject.setOpen(resource1.getVarchar09() == "" ? null : resource1.getVarchar09());
         sySMenuJsonObject.setList(sySMenuJsonObjectList);
-
         return sySMenuJsonObject;
     }
 
@@ -369,7 +370,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
      */
     @Override
     public String getAllResourceByAppAndType(ResourceParm resourceParm) {
-
         if (!ObjectUtils.isEmpty(resourceParm.getApplicationId()) && !StringUtils.isEmpty(resourceParm.getType())) {
             ResourceDynamicPropertyView resourceDynamicPropertyView = resourceDynamicPropertyService.selectResourceDynamicPropertyViewByType(resourceParm.getType());
             List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyView.getResourceDynamicPropertyList();
@@ -381,23 +381,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             StringBuilder result = new StringBuilder();
             JSONArray jsonArray = new JSONArray();
             for (Resource resource : resourceList) {
-                JSONObject jsonObject = new JSONObject();
-                String name = resource.getName();
-                jsonObject.put("资源名称", name);
-                if (!ObjectUtils.isEmpty(resource.getApplicationId())) {
-                    Application application = applicationService.selectByPrimaryKey(resource.getApplicationId());
-                    jsonObject.put("所属应用", application.getName());
-                } else {
-                    jsonObject.put("所属应用", null);
-                }
-                if (!ObjectUtils.isEmpty(resource.getTenantId())) {
-                    Tenant tenant = tenantService.selectByPrimaryKey(resource.getTenantId());
-                    jsonObject.put("所属租户", tenant.getName());
-                } else {
-                    jsonObject.put("所属租户", null);
-                }
-                jsonObject.put("路径标识", resource.getPath());
-                jsonObject.put("action", resource.getActions());
+
+                //设置资源名称等基础信息
+                JSONObject jsonObject = setBaseInfo(resource);
 
                 for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList) {
 
@@ -492,94 +478,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
                         default:
                             break;
                     }
-
-//                    if ("varchar00".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar00());
-//                    }
-//                    if ("varchar01".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar01());
-//                    }
-//                    if ("varchar02".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar02());
-//                    }
-//                    if ("varchar03".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar03());
-//                    }
-//                    if ("varchar04".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar04());
-//                    }
-//                    if ("varchar05".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar05());
-//                    }
-//                    if ("varchar06".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar06());
-//                    }
-//                    if ("varchar07".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar07());
-//                    }
-//                    if ("varchar08".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar08());
-//                    }
-//                    if ("varchar09".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar09());
-//                    }
-//                    if ("varchar10".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar10());
-//                    }
-//                    if ("varchar11".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar11());
-//                    }
-//                    if ("varchar12".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar12());
-//                    }
-//                    if ("varchar13".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar13());
-//                    }
-//                    if ("varchar14".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar14());
-//                    }
-//                    if ("varchar15".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar15());
-//                    }
-//                    if ("varchar16".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar16());
-//                    }
-//                    if ("varchar17".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar17());
-//                    }
-//                    if ("varchar18".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar18());
-//                    }
-//                    if ("varchar19".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getVarchar19());
-//                    }
-//                    if ("int01".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt01());
-//                    }
-//                    if ("int02".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt02());
-//                    }
-//                    if ("int03".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt03());
-//                    }
-//                    if ("int04".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt04());
-//                    }
-//                    if ("int05".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getInt05());
-//                    }
-//                    if ("boolean01".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean01());
-//                    }
-//                    if ("boolean02".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean02());
-//                    }
-//                    if ("boolean03".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean03());
-//                    }
-//                    if ("boolean04".equals(resourceDynamicProperty.getFiledName())) {
-//                        jsonObject.put(resourceDynamicProperty.getDescription(), resource.getBoolean04());
-//                    }
                 }
 
                 result.append(jsonObject.toString());
@@ -589,6 +487,35 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             return jsonArray.toString();
         }
         return null;
+    }
+
+    /**
+     * 设置资源名称等基础信息
+     * @param resource
+     * @return
+     */
+    private JSONObject setBaseInfo(Resource resource) {
+        JSONObject jsonObject = new JSONObject();
+        String name = resource.getName();
+        jsonObject.put("资源名称", name);
+
+        if (!ObjectUtils.isEmpty(resource.getApplicationId())) {
+            Application application = applicationService.selectByPrimaryKey(resource.getApplicationId());
+            jsonObject.put("所属应用", application.getName());
+        } else {
+            jsonObject.put("所属应用", null);
+        }
+
+        if (!ObjectUtils.isEmpty(resource.getTenantId())) {
+            Tenant tenant = tenantService.selectByPrimaryKey(resource.getTenantId());
+            jsonObject.put("所属租户", tenant.getName());
+        } else {
+            jsonObject.put("所属租户", null);
+        }
+
+        jsonObject.put("路径标识", resource.getPath());
+        jsonObject.put("action", resource.getActions());
+        return jsonObject;
     }
 
     /**
@@ -602,58 +529,44 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         Resource resource;
         for (ResourceExcelView resourceExcel : resourceExcelViews) {
             resourceView = new ResourceView();
+
             resource = new Resource();
 
-            if (!StringUtils.isEmpty(resourceExcel.getApplicationName())) {
-                //设置appId'
-                ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-                applicationCriteria.createCriteria().andNameEqualTo(resourceExcel.getApplicationName());
-                Application application = applicationService.selectSingleByCriteria(applicationCriteria);
-                if (!ObjectUtils.isEmpty(application)) {
-                    resource.setApplicationId(application.getId());
-                } else {
-                    throw new RuntimeException("应用："+ resourceExcel.getApplicationName() +" 不存在");
-                }
+
+            checkData(resourceExcel);
+
+            //设置appId'
+            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+            applicationCriteria.createCriteria().andNameEqualTo(resourceExcel.getApplicationName());
+            Application application = applicationService.selectSingleByCriteria(applicationCriteria);
+            if (!ObjectUtils.isEmpty(application)) {
+                resource.setApplicationId(application.getId());
             } else {
-                throw new RuntimeException("应用不能为空");
+                throw new RuntimeException("应用："+ resourceExcel.getApplicationName() +" 不存在");
             }
 
-            if (!StringUtils.isEmpty(resourceExcel.getTenantName())) {
-                //设置appId'
-                TenantCriteria tenantCriteria = new TenantCriteria();
-                tenantCriteria.createCriteria().andNameEqualTo(resourceExcel.getTenantName());
-                Tenant tenant = tenantService.selectSingleByCriteria(tenantCriteria);
-                if (!ObjectUtils.isEmpty(tenant)) {
-                    resource.setTenantId(tenant.getId());
-                } else {
-                    throw new RuntimeException("租户：" + resourceExcel.getTenantName() + " 不存在");
-                }
+            //设置tenantId
+            TenantCriteria tenantCriteria = new TenantCriteria();
+            tenantCriteria.createCriteria().andNameEqualTo(resourceExcel.getTenantName());
+            Tenant tenant = tenantService.selectSingleByCriteria(tenantCriteria);
+            if (!ObjectUtils.isEmpty(tenant)) {
+                resource.setTenantId(tenant.getId());
             } else {
-                throw new RuntimeException("租户不能为空");
+                throw new RuntimeException("租户：" + resourceExcel.getTenantName() + " 不存在");
             }
 
-            if (!StringUtils.isEmpty(resourceExcel.getType())) {
-                ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-                resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resourceExcel.getType());
-                List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
-                if (!CollectionUtils.isEmpty(resourceDynamicPropertyList)) {
-                    resource.setType(resourceExcel.getType());
-                }  else {
-                    throw new RuntimeException("资源类型：" + resourceExcel.getType() + " 不存在");
-                }
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resourceExcel.getType());
+            List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
+            if (!CollectionUtils.isEmpty(resourceDynamicPropertyList)) {
+                resource.setType(resourceExcel.getType());
+            }  else {
+                throw new RuntimeException("资源类型：" + resourceExcel.getType() + " 不存在");
             }
 
-            if (!StringUtils.isEmpty(resourceExcel.getName())) {
-                resource.setName(resourceExcel.getName());
-            } else {
-                throw new RuntimeException("资源名称不能为空");
-            }
-
-            if (StringUtils.isEmpty(resourceExcel.getApplicationName()) || StringUtils.isEmpty(resourceExcel.getPath())) {
-                throw new RuntimeException("路径标识和行为组不能为空");
-            }
-
+            resource.setName(resourceExcel.getName());
             resource.setActions(resourceExcel.getActions());
+            resource.setPath(resourceExcel.getPath());
 
             resource.setVarchar00(resourceExcel.getVarchar00());
             resource.setVarchar01(resourceExcel.getVarchar01());
@@ -690,6 +603,28 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             this.insertResource(resourceView);
         }
 
+    }
+
+    private void checkData(ResourceExcelView resourceExcel) {
+        if (StringUtils.isEmpty(resourceExcel.getApplicationName())) {
+            throw new RuntimeException("应用不能为空");
+        }
+
+        if (StringUtils.isEmpty(resourceExcel.getTenantName())) {
+            throw new RuntimeException("租户不能为空");
+        }
+
+        if (StringUtils.isEmpty(resourceExcel.getType())) {
+            throw new RuntimeException("资源类型不能为空");
+        }
+
+        if (StringUtils.isEmpty(resourceExcel.getName())) {
+            throw new RuntimeException("资源名称不能为空");
+        }
+
+        if (StringUtils.isEmpty(resourceExcel.getPath())) {
+            throw new RuntimeException("路径标识不能为空");
+        }
     }
 
     @Override

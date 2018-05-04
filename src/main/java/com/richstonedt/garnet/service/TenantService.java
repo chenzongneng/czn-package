@@ -42,9 +42,13 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
      * 当用户点击删除时，将其状态设为禁用
      * @param tenant
      */
-    public void updateStatusById(Tenant tenant);
+    void updateStatusById(Tenant tenant);
 
-    List<Long> getApplicationIs();
+    /**
+     * 获取所有已经绑定租户的applicationId
+     * @return
+     */
+    List<Long> getApplicationIds();
 
     /**
      * 根据tenantId查询 该租户关联的用户

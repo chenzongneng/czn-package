@@ -216,7 +216,7 @@ public class TenantController {
     public ResponseEntity<?> getApplicationIs(
             @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
         try {
-            List<Long> applicationIs = tenantService.getApplicationIs();
+            List<Long> applicationIs = tenantService.getApplicationIds();
 
             // 封装返回信息
             GarnetMessage<List<Long>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, applicationIs);

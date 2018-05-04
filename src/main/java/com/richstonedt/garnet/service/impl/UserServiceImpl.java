@@ -286,7 +286,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Override
     public PageUtil queryUsersByParms(UserParm userParm) {
-
         UserCriteria userCriteria = new UserCriteria();
         userCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         UserCriteria.Criteria criteria = userCriteria.createCriteria();
@@ -305,19 +304,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             //如果不是属于garnet的超级管理员，根据tenantId返回
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(userParm.getUserId()))) {
 
-                if (tenantIds.size() == 0) {
-                    tenantIds.add(GarnetContants.NON_VALUE);
-                }
-
-                //根据tenantId获取user列表
-                List<Long> userIdList = this.getUserIdsByTenantIds(tenantIds);
-
-                if (userIdList.size() == 0) {
-                    userIdList.add(GarnetContants.NON_VALUE);
-                }
+                //根据tenantIds获取关联的userIds
+                List<Long> userIdList = getUserIdList(tenantIds);
 
                 criteria.andIdIn(userIdList);
-
             } else {
                 //如果是garnet的超级管理员，直接返回所有user列表
                 PageUtil result = new PageUtil(this.selectByCriteria(userCriteria), (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
@@ -344,6 +334,24 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         PageUtil result = new PageUtil(usersWithTenant, (int) this.countByCriteria(userCriteria), userParm.getPageSize(), userParm.getPageNumber());
         return result;
+    }
+
+    /**
+     * 根据租户id获得用户ids
+     * @param tenantIds
+     * @return
+     */
+    private List<Long> getUserIdList(List<Long> tenantIds) {
+        if (tenantIds.size() == 0) {
+            tenantIds.add(GarnetContants.NON_VALUE);
+        }
+
+        //根据tenantId获取user列表
+        List<Long> userIdList = this.getUserIdsByTenantIds(tenantIds);
+        if (userIdList.size() == 0) {
+            userIdList.add(GarnetContants.NON_VALUE);
+        }
+        return userIdList;
     }
 
     private List<Long> getUserIdsByTenantIds(List<Long> tenantIds) {
@@ -482,7 +490,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     @Override
     public User getUserByUserName(String userName) {
         UserCriteria userCriteria = new UserCriteria();
-        userCriteria.createCriteria().andUserNameEqualTo(userName);
+        userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
         User user = this.selectSingleByCriteria(userCriteria);
         return user;
     }
@@ -551,7 +559,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String createTime = tokenParams[3];
 
         //验证基础信息是否正确
-        this.checkRefreshTokenData(tokenRefreshView);
+        LoginMessage loginMessage2 = this.checkRefreshTokenData(tokenRefreshView);
+        if (loginMessage2.getCode() == 401 && loginMessage2.getCode() == 403) {
+            return loginMessage2;
+        }
 
         //根据username 查询密码
         UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
@@ -726,42 +737,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     private LoginMessage getResourcesDstinct(List<Permission> permissionList, List<Resource> resourceList) {
         LoginMessage loginMessage = new LoginMessage();
 
-        //对resource去重
-//        Set<Long> resourceSet = new HashSet<>();
-//        List<Resource> resourceList1 = new ArrayList<>();
-//        for (Resource resource : resourceList) {
-//            Long resourceId = resource.getId();
-//            if (!resourceSet.contains(resourceId)) {
-//                resourceSet.add(resourceId);
-//                resourceList1.add(resource);
-//            }
-//        }
-
-
-        List<Resource> resourceList1 = new ArrayList<>();
         List<RefreshTokenResourceView> refreshTokenResourceViews = new ArrayList<>();
-        for (Permission permission : permissionList) {
-            String action = permission.getAction();
-            String pattern = ".*" + action + ".*";
-            for (Resource resource : resourceList) {
-                String actions = resource.getActions();
-                if (actions.matches(pattern)) {
-                    String[] actionList = actions.split(">");
-                    //如果不是同级，返回action内容
-                    if (actionList.length > 1) {
-                        if ("readonly".equals(action)) {
-                            resource.setActions(action);
-                        } else {
-                            resource.setActions("edit");
-                        }
-                    }
 
-                    resourceList1.add(resource);
-                }
-            }
-        }
+        //根据permission的action匹配资源
+        List<Resource> resourceList1 = getResources(permissionList, resourceList);
 
-        //再次去重
         //对resource去重
         Set<Long> resourceSet = new HashSet<>();
         List<Resource> resourceList2 = new ArrayList<>();
@@ -799,6 +779,36 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         loginMessage.setResourceList(resourceList2);
         loginMessage.setResourceDynamicPropertyList(resourceDynamicPropertyList);
         return loginMessage;
+    }
+
+    /**
+     * 根据权限中的action匹配resources
+     * @param permissionList
+     * @param resourceList
+     * @return
+     */
+    private List<Resource> getResources(List<Permission> permissionList, List<Resource> resourceList) {
+        List<Resource> resourceList1 = new ArrayList<>();
+        for (Permission permission : permissionList) {
+            String action = permission.getAction();
+            String pattern = ".*" + action + ".*";
+            for (Resource resource : resourceList) {
+                String actions = resource.getActions();
+                if (actions.matches(pattern)) {
+                    String[] actionList = actions.split(">");
+                    //如果不是同级，返回action内容
+                    if (actionList.length > 1) {
+                        if ("readonly".equals(action)) {
+                            resource.setActions(action);
+                        } else {
+                            resource.setActions("edit");
+                        }
+                    }
+                    resourceList1.add(resource);
+                }
+            }
+        }
+        return resourceList1;
     }
 
     private LoginMessage checkRefreshTokenData(TokenRefreshView tokenRefreshView) {
@@ -862,6 +872,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //取出token中携带的信息
         String tokenWithAppCode = loginView.getToken();
+
+        if (StringUtils.isEmpty(tokenWithAppCode)) {
+            throw new RuntimeException("token不能为空");
+        }
+
         String[] tokenParams = tokenWithAppCode.split("#");
         String token = tokenParams[0];
         String appCode = tokenParams[1];
@@ -1004,7 +1019,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Override
     public ReturnTenantIdView getTenantIdsByUserId(Long userId) {
-
+        //TODO 复杂度待修改
         //根据userId 查 tenantId列表
         UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
         userTenantCriteria.createCriteria().andUserIdEqualTo(userId);
@@ -1025,7 +1040,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         List<Long> groupIds = new ArrayList<>();
         for (GroupUser groupUser : groupUsers) {
-
             groupIds.add(groupUser.getGroupId());
         }
 
@@ -1034,14 +1048,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
-
         List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
-
-
         List<Long> roleIds = new ArrayList<>();
-
         for (GroupRole groupRole : groupRoles) {
-
             roleIds.add(groupRole.getRoleId());
         }
 
@@ -1055,11 +1064,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         List<RolePermission> rolePermissions = rolePermissionService.selectByCriteria(rolePermissionCriteria);
 
         List<Long> permissionIds = new ArrayList<>();
-
         for (RolePermission rolePermission : rolePermissions) {
-
             permissionIds.add(rolePermission.getPermissionId());
-
         }
 
         if (permissionIds.size() == 0) {
@@ -1068,14 +1074,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
         permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
-
         List<Permission> permissions = permissionService.selectByCriteria(permissionCriteria);
-
 
         //====================
 
         List<Resource> resourceList = new ArrayList<>();
-
         for (Permission permission : permissions) {
             ResourceCriteria resourceCriteria = new ResourceCriteria();
             resourceCriteria.createCriteria().andTenantIdIn(tenantIds).andPathLike(permission.getResourcePathWildcard());
@@ -1107,7 +1110,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return returnTenantIdView;
         } else {
             tenantIds = commonService.dealTenantIdsIfGarnet(userId, tenantIds);
-
             returnTenantIdView.setTenantIds(tenantIds);
             return returnTenantIdView;
         }

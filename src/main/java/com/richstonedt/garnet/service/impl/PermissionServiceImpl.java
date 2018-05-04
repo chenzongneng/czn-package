@@ -75,20 +75,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         this.insertSelective(permission);
 
-        if (!ObjectUtils.isEmpty(permissionView.getRolePermissions())) {
-
-            for (RolePermission rolePermission :
-                    permissionView.getRolePermissions()) {
-
-                rolePermission.setId(IdGeneratorUtil.generateId());
-
-                rolePermission.setPermissionId(permission.getId());
-
-                rolePermissionService.insertSelective(rolePermission);
-
-            }
-        }
-
         return permission.getId();
     }
 
@@ -104,45 +90,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         checkDuplicateName(permission);
 
         this.updateByPrimaryKeySelective(permission);
-
-        if (!ObjectUtils.isEmpty(permissionView.getRolePermissions())) {
-
-            RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
-
-            rolePermissionCriteria.createCriteria().andPermissionIdEqualTo(permission.getId());
-
-            rolePermissionService.deleteByCriteria(rolePermissionCriteria);
-
-            for (RolePermission rolePermission :
-                    permissionView.getRolePermissions()) {
-
-                rolePermission.setId(IdGeneratorUtil.generateId());
-
-                rolePermission.setPermissionId(permission.getId());
-
-                rolePermissionService.insertSelective(rolePermission);
-
-            }
-
-        }
-    }
-
-    @Override
-    public void deletePerssion(PermissionView permissionView) {
-
-        Permission permission = permissionView.getPermission();
-
-        if (!ObjectUtils.isEmpty(permissionView.getRolePermissions())) {
-
-            RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
-
-            rolePermissionCriteria.createCriteria().andPermissionIdEqualTo(permission.getId());
-
-            rolePermissionService.deleteByCriteria(rolePermissionCriteria);
-
-        }
-
-        this.deleteByPrimaryKey(permission.getId());
 
     }
 
@@ -181,40 +128,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         return resources;
     }
-
-//    @Override
-//    public PageInfo<Permission> queryPerssionsByParms(PermissionParm permissionParm) {
-//
-//        PermissionCriteria permissionCriteria = new PermissionCriteria();
-//        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
-//        //查询没被删除的 permission
-//        criteria.andStatusEqualTo(1);
-//
-//        if (!StringUtils.isEmpty(permissionParm.getUserId())) {
-//            ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(permissionParm.getUserId());
-//            List<Long> tenantIds = returnTenantIdView.getTenantIds();
-//            //如果不是超级管理员
-//            if (!returnTenantIdView.isSuperAdmin()) {
-//
-//                if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0 ) {
-//                    criteria.andTenantIdIn(tenantIds);
-//                } else {
-//                    //没有关联租户，返回空
-//                    PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
-//                    return  new PageInfo<Permission>(null);
-//                }
-//            }
-//        }
-//        if (!StringUtils.isEmpty(permissionParm.getSearchName())) {
-//            criteria.andNameLike("%" + permissionParm.getSearchName() + "%");
-//        }
-//
-//        PageHelper.startPage(permissionParm.getPageNumber(), permissionParm.getPageSize());
-//        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
-//        PageInfo<Permission> permissionPageInfo = new PageInfo<Permission>(permissions);
-//
-//        return permissionPageInfo;
-//    }
 
     @Override
     public PageUtil<Permission> queryPermissionsByParms(PermissionParm permissionParm) {
@@ -269,6 +182,16 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         //判断是否是超级权限，如果是，不能删除
         if (permission.getId().longValue() == GarnetContants.GARNET_PERMISSION_ID) {
             throw new RuntimeException("不能删除超级权限");
+        }
+
+        //删除关联外键
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andPermissionIdEqualTo(permission.getId());
+        List<RolePermission> rolePermissions = rolePermissionService.selectByCriteria(rolePermissionCriteria);
+        if (CollectionUtils.isEmpty(rolePermissions) && rolePermissions.size() > 0) {
+            for (RolePermission rolePermission : rolePermissions) {
+                rolePermissionService.deleteByPrimaryKey(rolePermission.getId());
+            }
         }
 
         Long currentTime = System.currentTimeMillis();

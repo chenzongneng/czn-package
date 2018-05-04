@@ -404,11 +404,25 @@ var vm = new Vue({
                 return false;
             }
             if (vm.user.email && !emailReg.test(vm.user.email)) {
-                alert("邮箱格式不正确!");
+                // alert("邮箱格式不正确!");
+                swal({
+                    title: "",
+                    text: '邮箱格式不正确！',
+                    type: 'warning',
+                    confirmButtonText: '确定',
+                    allowOutsideClick: false
+                });
                 return false;
             }
             if (vm.user.mobile && !telReg.test(vm.user.mobileNumber)) {
-                alert("电话号码格式不正确!");
+                // alert("电话号码格式不正确!");
+                swal({
+                    title: "",
+                    text: '电话号码格式不正确！',
+                    type: 'warning',
+                    confirmButtonText: '确定',
+                    allowOutsideClick: false
+                });
                 return false;
             }
             return true;
@@ -420,7 +434,8 @@ var vm = new Vue({
             if (!(isPassword && vm.user.userId)) {
                 if (!value) {
                     swal({
-                        title: name + '不能为空！',
+                        title: "",
+                        text: name + '不能为空！',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false
@@ -429,7 +444,8 @@ var vm = new Vue({
                 }
                 if (chineseReg.test(value)) {
                     swal({
-                        title: name + '不能为中文！',
+                        title: "",
+                        text: name + '不能为中文！',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false
@@ -438,7 +454,8 @@ var vm = new Vue({
                 }
                 if (!specialReg.test(value)) {
                     swal({
-                        title: name + '只能使用英文、数字、下划线或者连字符！',
+                        title: "",
+                        text: name + '只能使用英文、数字、下划线或者连字符！',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false
@@ -447,7 +464,8 @@ var vm = new Vue({
                 }
                 if (value.length < 4 || value.length > 30) {
                     swal({
-                        title: name + '的长度只能在4-30！',
+                        title: "",
+                        text: name + '的长度只能在4-30！',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false
@@ -456,7 +474,8 @@ var vm = new Vue({
                 }
                 if (value.indexOf(",") != -1 && name == "账号") {
                     swal({
-                        title: name + '不能包含特殊符号","',
+                        title: "",
+                        text: name + '不能包含特殊符号","',
                         type: 'warning',
                         confirmButtonText: '确定',
                         allowOutsideClick: false

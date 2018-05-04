@@ -11,16 +11,16 @@ import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.ApplicationTenant;
-import com.richstonedt.garnet.model.Tenant;
-import com.richstonedt.garnet.model.UserTenant;
 import com.richstonedt.garnet.model.criteria.TenantCriteria;
 import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.model.view.TenantView;
+import com.richstonedt.garnet.model.view.UserView;
 import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.TenantService;
+import com.richstonedt.garnet.service.UserService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -43,9 +43,12 @@ public class TenantTest {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private UserService userService;
+
     private Long applicationId;
 
-    private Long tenantId;
+    private Long userId;
 
     @Before
     public void inittestData() {
@@ -58,11 +61,24 @@ public class TenantTest {
         Long applicationId = applicationService.insertApplication(applicationView);
         this.applicationId = applicationId;
 
+        UserView userView = new UserView();
+        User user = new User();
+        user.setBelongToGarnet("N");
+        user.setUserName("test_tenant_user");
+        userView.setUser(user);
+        userView.setPassword("test_tenant_user");
+        long userId = userService.insertUser(userView);
+        this.userId = userId;
     }
 
     @After
     public void dealInitTestData() {
         applicationService.deleteByPrimaryKey(applicationId);
+        UserView userView = new UserView();
+        User user = new User();
+        user.setId(userId);
+        userView.setUser(user);
+        userService.deleteUser(userView);
     }
 
     @Test
@@ -76,6 +92,7 @@ public class TenantTest {
         tenantParm.setApplicationId(1L);
         tenantParm.setPageNumber(1);
         tenantParm.setPageSize(10);
+        tenantParm.setMode("all");
         PageUtil pageUtil = tenantService.queryTenantssByParms(tenantParm);
 
         Assert.assertEquals(pageUtil.getList().size(), 1);
@@ -97,6 +114,9 @@ public class TenantTest {
 
     @Test
     public void test3UpdateTenant() {
+        User user = userService.selectByPrimaryKey(userId);
+        String userName = user.getUserName();
+
         //测试修改
         TenantCriteria tenantCriteria = new TenantCriteria();
         tenantCriteria.createCriteria().andNameEqualTo("test");
@@ -106,9 +126,11 @@ public class TenantTest {
         Tenant tenant = new Tenant();
         tenant.setName("test_update");
         tenant.setId(tenantList.get(0).getId());
+        tenant.setServiceMode("paas");
         tenant.setDescription("test tenant update");
         TenantView tenantView = new TenantView();
         tenantView.setTenant(tenant);
+        tenantView.setUserNames(userName);
         tenantService.updateTenant(tenantView);
         TenantCriteria tenantCriteria1 = new TenantCriteria();
         tenantCriteria1.createCriteria().andNameEqualTo("test_update");
@@ -150,6 +172,20 @@ public class TenantTest {
         int size = tenantView1.getAppIdList().size();
         Assert.assertEquals(size, 1);
         tenantService.deleteTenant(id);
+    }
+
+    @Test
+    public void testGetRelatedUserNamesByTenantId() {
+        List<String> userNames = tenantService.getRelatedUserNamesByTenantId(1L);
+        int size = userNames.size();
+        Assert.assertEquals(size, 1);
+    }
+
+    @Test
+    public void testGetApplicationIds() {
+        List<Long> applicationIds =  tenantService.getApplicationIds();
+        int size = applicationIds.size();
+        Assert.assertEquals(size, 1);
     }
 
 }

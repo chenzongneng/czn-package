@@ -41,7 +41,7 @@ public class ClassUtil {
             String pkgName = clazz.getPackage().getName();
             String strFile = pkgName.replaceAll("\\.", "/");
             Enumeration<URL> urls = loader.getResources(strFile);
-            // TODO CalssUtil 复杂度待修改
+            // TODO 复杂度待修改
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 if (!ObjectUtils.isEmpty(url)) {

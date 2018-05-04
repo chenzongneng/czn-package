@@ -28,6 +28,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfig, Syste
     public Long insertSystemConfig(SystemConfigView systemConfigView) {
         SystemConfig systemConfig = systemConfigView.getSystemConfig();
         systemConfig.setId(IdGeneratorUtil.generateId());
+        this.insertSelective(systemConfig);
         return systemConfig.getId();
     }
 

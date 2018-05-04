@@ -17,6 +17,7 @@ $(function () {
             {label: '应用名称', name: 'name', align: 'center', width: 80 ,sortable: false},
             {label: '应用标识', name: 'appCode', align: 'center', width: 80 ,sortable: false},
             {label: '所属公司', name: 'company', align: 'center', width: 80 ,sortable: false},
+            {label: '平台模式', name: 'serviceMode', align: 'center', width: 70 ,sortable: false},
             {label: '刷新资源Api', name: 'refreshResourcesApi', align: 'center', width: 80 ,sortable: false},
             {label: '主机', name: 'hosts', align: 'center', width: 80 ,sortable: false},
             {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},

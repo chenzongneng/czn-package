@@ -8,10 +8,23 @@ import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
 
 public interface ResourceDynamicPropertyService extends BaseService<ResourceDynamicProperty, ResourceDynamicPropertyCriteria, Long> {
 
+    /**
+     * 新增资源配置类型
+     * @param resourceDynamicPropertyView
+     */
     void insertResourceDynamicProperty(ResourceDynamicPropertyView resourceDynamicPropertyView);
 
+    /**
+     * 更新资源配置类型
+     * @param resourceDynamicPropertyView
+     */
     void updateResourceDynamicProperty(ResourceDynamicPropertyView resourceDynamicPropertyView);
 
+    /**
+     * 查询资源配置类型
+     * @param resourceDynamicPropertyParm
+     * @return
+     */
     PageUtil queryResourceDynamicPropertySByParms(ResourceDynamicPropertyParm resourceDynamicPropertyParm);
 
     /**

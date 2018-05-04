@@ -3,14 +3,14 @@ package com.richstonedt.garnet;
 
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LoginMessage;
 import com.richstonedt.garnet.model.GroupUser;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.UserCredential;
 import com.richstonedt.garnet.model.UserTenant;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
 import com.richstonedt.garnet.model.parm.UserParm;
-import com.richstonedt.garnet.model.view.UserCredentialView;
-import com.richstonedt.garnet.model.view.UserView;
+import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.UserCredentialService;
 import com.richstonedt.garnet.service.UserService;
 import org.junit.Assert;
@@ -66,6 +66,14 @@ public class UserTest {
         User user1 = userService.selectByPrimaryKey(userId);
 
         Assert.assertNotNull(user1);
+
+        UserParm userParm = new UserParm();
+        userParm.setPageNumber(1);
+        userParm.setPageSize(10);
+        userParm.setUserId(userId);
+        PageUtil pageUtil = userService.queryUsersByParms(userParm);
+
+        Assert.assertEquals(pageUtil.getList().size(), 0);
     }
 
     @Test
@@ -86,6 +94,7 @@ public class UserTest {
         User users1 = userService.selectSingleByCriteria(userCriteria1);
 
         Assert.assertNotNull(users1);
+
     }
 
     @Test
@@ -131,6 +140,40 @@ public class UserTest {
         user.setId(userId);
         userView.setUser(user);
         userService.deleteUser(userView);
+    }
+
+    @Test
+    public void testRefreshToken() throws Exception {
+        LoginView loginView = new LoginView();
+        loginView.setAppCode("garnet");
+        loginView.setUserName("admin");
+        loginView.setPassword("admin");
+        LoginMessage loginMessage = userService.userLogin(loginView);
+        String refreshToken = loginMessage.getRefreshToken();
+
+        TokenRefreshView tokenRefreshView = new TokenRefreshView();
+        tokenRefreshView.setAppCode("garnet");
+        tokenRefreshView.setRefreshToken(refreshToken);
+        tokenRefreshView.setUserName("admin");
+        LoginMessage loginMessage1 = userService.refreshToken(tokenRefreshView);
+        Assert.assertNotNull(loginMessage1);
+    }
+
+    @Test
+    public void testGarnetRefreshToken() throws Exception {
+        GarLoginView garLoginView = new GarLoginView();
+        garLoginView.setUserName("admin");
+        garLoginView.setAppCode("garnet");
+        garLoginView.setPassword("admin");
+        LoginMessage loginMessage = userService.garLogin(garLoginView);
+        String refreshToken = loginMessage.getRefreshToken();
+        LoginView loginView = new LoginView();
+        loginView.setUserName("admin");
+        loginView.setPassword("admin");
+        loginView.setAppCode("garnet");
+        loginView.setToken(refreshToken);
+        LoginMessage loginMessage1 = userService.garnetRefreshToken(loginView);
+        Assert.assertNotNull(loginMessage1);
     }
 
 }

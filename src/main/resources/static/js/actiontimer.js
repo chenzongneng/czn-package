@@ -1,5 +1,5 @@
 /*监测页面动作*/
-var maxTime = 10; // seconds
+var maxTime = 30; // seconds
 var time = maxTime;
 
 $(document).on('keydown mousedown', function(e) {

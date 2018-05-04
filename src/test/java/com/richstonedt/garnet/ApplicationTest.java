@@ -38,7 +38,7 @@ public class ApplicationTest {
         TenantView tenantView = new TenantView();
         Tenant tenant = new Tenant();
         tenant.setName("test_application_tenant");
-        tenant.setServiceMode("pass");
+        tenant.setServiceMode("saas");
         tenantView.setTenant(tenant);
         Long tenantId = tenantService.insertTenant(tenantView);
         this.tenantId = tenantId;
@@ -47,7 +47,7 @@ public class ApplicationTest {
         Application application = new Application();
         application.setName("test_application_init");
         application.setAppCode("test_application_init");
-        application.setServiceMode("pass");
+        application.setServiceMode("saas");
         applicationView.setApplication(application);
         applicationView.setTenantIds(String.valueOf(tenantId));
         Long applicationId = applicationService.insertApplication(applicationView);
@@ -85,7 +85,7 @@ public class ApplicationTest {
         application.setName("test");
         application.setAppCode("test");
         application.setCompany("garnet");
-        application.setServiceMode("pass");
+        application.setServiceMode("paas");
         ApplicationView applicationView = new ApplicationView();
         applicationView.setTenantIds(String.valueOf(tenantId));
         applicationView.setApplication(application);
@@ -111,6 +111,7 @@ public class ApplicationTest {
         application.setAppCode("test_update");
         application.setCompany("garnet");
         application.setId(application1.getId());
+        application.setServiceMode("saas");
         ApplicationView applicationView = new ApplicationView();
         applicationView.setApplication(application);
 
