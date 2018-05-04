@@ -39,19 +39,14 @@ public class CommonServiceImpl implements CommonService {
         UserView userView = userService.getUserById(userId);
 
         if (("N").equals(userView.getUser().getBelongToGarnet())) {
-
             List<Long> tempIds = new ArrayList<>();
-
             for (Long tenantId : tenantIds) {
                 if(tenantId.longValue() != GarnetContants.GARNET_TENANT_ID.longValue()){
                     tempIds.add(tenantId);
                 }
             }
-
             return tempIds;
-
         }
-
         return tenantIds;
     }
 
@@ -59,7 +54,6 @@ public class CommonServiceImpl implements CommonService {
     public List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds) {
 
         boolean b = this.superAdminBelongGarnet(userId);
-
         List<Long> returnGroupIds = new ArrayList<>();
 
         //如果不是超级管理员
@@ -73,7 +67,6 @@ public class CommonServiceImpl implements CommonService {
                     returnGroupIds.add(group.getId());
                 }
             }
-
             return returnGroupIds;
         } else {
             //如果是超级管理员，原封返回

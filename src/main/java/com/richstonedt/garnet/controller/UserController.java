@@ -256,6 +256,24 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "[Garnet]获取用户列表", notes = "通过获取用户列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/usertree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getRoles() {
+        String message = "Failed to get entities!";
+        try {
+            List<User> users = userService.queryUsers();
+            // 封装返回信息
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error =  message + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
 
     @ApiOperation(value = "[Garnet]用户登录", notes = "用户登录")
     @ApiResponses(value = {
@@ -360,6 +378,30 @@ public class UserController {
             List<User> users = userService.queryUserByTenantId(userParm);
             // 封装返回信息
 //            GarnetMessage<PageInfo<Group>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, pageInfo);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @LoginRequired
+    @ApiOperation(value = "[Garnet]根据应用id获取用户列表", notes = "通过查询条件获取用户列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/users/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getGroupsByApplicationId(
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
+            @ApiParam(value = "applicationId", required = true) @PathVariable(value = "applicationId") Long applicationId) {
+        try {
+            UserParm userParm = new UserParm();
+            userParm.setUserId(userId);
+            userParm.setApplicationId(applicationId);
+            List<User> users = userService.queryUserByApplicationId(userParm);
+            // 封装返回信息
             return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

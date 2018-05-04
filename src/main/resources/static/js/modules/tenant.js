@@ -17,11 +17,11 @@ $(function () {
         colModel: [
             {label: '租户ID', name: 'id', align: 'center', hidden: true, width: 20, key: true ,sortable: false},
             {label: '租户名称', name: 'name', align: 'center', width: 80 ,sortable: false},
-            {label: '平台模式', name: 'serviceMode', align: 'center', width: 70 ,sortable: false},
+            {label: '平台模式', name: 'serviceMode', formatter:formatMode, align: 'center', width: 70 ,sortable: false},
             {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
             {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 150 ,sortable: false},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false},
-            {label: '备注', name: 'description', align: 'center', width: 80 ,sortable: false}
+            {label: '备注', name: 'description', align: 'center', width: 80 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: false,
         height: 385,
@@ -63,6 +63,16 @@ function timeFormat(cellvalue, options, row) {
     var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
     var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
     return Y + M + D + "  " + h + m + s;
+}
+
+function formatMode(cellvalue, options, row) {
+    if (cellvalue == "paas") {
+        return "PaaS";
+    } else if (cellvalue == "saas") {
+        return "SaaS";
+    } else {
+        return cellvalue;
+    }
 }
 
 /** 用户树 */
@@ -118,14 +128,14 @@ var vm = new Vue({
             options: [
                 {
                     id : "all",
-                    name : "平台模式-all"
+                    name : "全部"
                 },
                 {
                 id : "saas",
-                name : "平台模式-saas"
+                name : "平台模式-SaaS"
             },{
                 id : "paas",
-                name : "平台模式-paas"
+                name : "平台模式-PaaS"
             }]
         },
         // 新增和更新 选择模式列表
@@ -134,10 +144,10 @@ var vm = new Vue({
             options: [
                 {
                     id : "saas",
-                    name : "saas"
+                    name : "SaaS"
                 },{
                     id : "paas",
-                    name : "paas"
+                    name : "PaaS"
                 }]
         }
     },

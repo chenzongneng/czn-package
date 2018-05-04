@@ -22,10 +22,11 @@ $(function () {
                 sortable: false
             },
             // {label: '应用名称', name: 'applicationName', align: 'center', width: 40 ,sortable: false},
-            {label: '资源名称', name: 'name', align: 'center', width: 40, sortable: false},
-            {label: '路径标识', name: 'path', align: 'center', width: 70, sortable: false},
-            // {label: 'actions', name: 'actions', align: 'center', width: 70, sortable: false},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 70}
+            {label: '资源名称', name: 'name', align: 'center', width: 170, sortable: false},
+            {label: '路径标识', name: 'path', align: 'center', width: 150, sortable: false},
+            {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 100 ,sortable: false},
+            {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 100 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 60}
         ],
         viewrecords: true,
         height: 385,
@@ -60,6 +61,18 @@ $(function () {
         }
     });
 });
+
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    var h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D + "  " + h + m + s;
+}
 
 /** 资源结构树 */
 var resourceTree;

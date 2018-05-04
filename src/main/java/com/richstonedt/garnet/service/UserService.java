@@ -3,6 +3,7 @@ package com.richstonedt.garnet.service;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceException;
 import com.richstonedt.garnet.interceptory.LoginMessage;
+import com.richstonedt.garnet.model.Application;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
@@ -111,5 +112,17 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      */
     void updateUserPassword(UserCredentialView userCredentialView);
 
+    /**
+     * 查询用户列表
+     * @return
+     */
+    List<User> queryUsers();
+
+    /**
+     * 根据应用id查询用户列表
+     * @param userParm
+     * @return
+     */
+    List<User> queryUserByApplicationId(UserParm userParm);
 
 }

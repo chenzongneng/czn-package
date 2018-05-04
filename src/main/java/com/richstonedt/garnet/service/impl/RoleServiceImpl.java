@@ -121,6 +121,8 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
         groupRoleCriteria.createCriteria().andRoleIdEqualTo(role.getId());
         groupRoleService.deleteByCriteria(groupRoleCriteria);
+
+        //重新添加关联组
         if(!ObjectUtils.isEmpty(roleView.getGroupIds())){
 
             for (Long groupId : roleView.getGroupIds()) {
@@ -136,6 +138,8 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
         rolePermissionCriteria.createCriteria().andRoleIdEqualTo(role.getId());
         rolePermissionService.deleteByCriteria(rolePermissionCriteria);
+
+        //重新添加关联权限
         if(!ObjectUtils.isEmpty(roleView.getPermissionIds())){
 
             for (Long permissionId : roleView.getPermissionIds()) {
@@ -202,7 +206,6 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
             //如果不是超级管理员,根据tenantId返回列表
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(roleParm.getUserId()))) {
-
                 if (!CollectionUtils.isEmpty(tenantIds) && tenantIds.size() > 0) {
                     //根据tenantId列表查询role
                     criteria.andTenantIdIn(tenantIds);
@@ -297,6 +300,17 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         return roles;
     }
 
+    @Override
+    public List<Role> queryRolesByApplicationId(RoleParm roleParm) {
+        Long applicationId = roleParm.getApplicationId();
+
+        RoleCriteria roleCriteria = new RoleCriteria();
+        roleCriteria.createCriteria().andStatusEqualTo(1).andApplicationIdEqualTo(applicationId);
+        List<Role> roles = this.selectByCriteria(roleCriteria);
+
+        return roles;
+    }
+
     private RoleView convertToRoleView(Role role) {
         RoleView roleView = new RoleView();
         roleView.setRole(role);
@@ -319,7 +333,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         //设置部门名称列表
         List<String> groupName = this.getGroupNamesByRoleId(role.getId());
-        roleView.setPermissionNames(groupName);
+        roleView.setGroupNames(groupName);
 
         //设置权限名称列表
         List<String> perminssionNames = this.getPermissionNamesByRoleId(role.getId());

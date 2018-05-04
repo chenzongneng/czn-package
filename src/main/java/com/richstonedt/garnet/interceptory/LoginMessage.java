@@ -4,25 +4,34 @@ import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.view.RefreshTokenResourceView;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
+@ApiModel(value = "登录或刷新token返回mode", description = "登录或刷新token返回mode")
 public class LoginMessage {
 
+    @ApiModelProperty(value = "登录返回信息")
     private String message;
 
+    @ApiModelProperty(value = "登录用户")
     private User user;
 
+    @ApiModelProperty(value = "登录状态")
     private String loginStatus;
+
+    @ApiModelProperty(value = "")
+    private int code;
+
+    @ApiModelProperty(value = "登录用户关联的租户id")
+    private List<Long> tenantIdList;
 
     @ApiModelProperty(value = "访问token")
     private String accessToken;
 
     @ApiModelProperty(value = "刷新token")
     private String refreshToken;
-
-    private int code;
 
     @ApiModelProperty(value = "资源列表")
     private List<Resource> resourceList;
@@ -39,6 +48,13 @@ public class LoginMessage {
     @ApiModelProperty(value = "资源类型配置列表")
     private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
 
+    public List<Long> getTenantIdList() {
+        return tenantIdList;
+    }
+
+    public void setTenantIdList(List<Long> tenantIdList) {
+        this.tenantIdList = tenantIdList;
+    }
 
     public List<RefreshTokenResourceView> getRefreshTokenResourceList() {
         return refreshTokenResourceList;

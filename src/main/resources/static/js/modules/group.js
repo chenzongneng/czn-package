@@ -32,9 +32,10 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false ,sortable: false},
-            {label: '组名称', name: 'name', align: 'center', width: 40 ,sortable: false ,sortable: false},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false ,sortable: false},
-            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 150 ,sortable: false ,sortable: false},
+            {label: '组名称', name: 'name', align: 'center', width: 100 ,sortable: false ,sortable: false},
+            {label: '类型', name: 'tenantId', align: 'center', width: 80 ,sortable: false ,sortable: false, formatter:getType},
+            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 130 ,sortable: false ,sortable: false},
+            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 130 ,sortable: false ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: true,
@@ -80,6 +81,14 @@ function timeFormat(cellvalue, options, row) {
     var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
     var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
     return Y + M + D + "  " + h + m + s;
+}
+
+function getType(cellvalue, options, row) {
+    if (cellvalue == null || cellvalue == 0) {
+        return "应用";
+    } else {
+        return "租户";
+    }
 }
 
 /** 部门树 */
@@ -147,6 +156,9 @@ var currentUser;
 var vm = new Vue({
     el: '#rrapp',
     data: {
+        showType: true, // 显示类型
+        showByType: true, //根据选择类型选择显示租户级、应用级
+        hiddenByType: true,
         showList: true,
         title: null,
         searchName: null,
@@ -173,6 +185,19 @@ var vm = new Vue({
         appList: {
             selectedApp: "",
             options: []
+        },
+        // 类型列表数据
+        typeList: {
+            selectedType: "",
+            options: [
+                {
+                    id : "1",
+                    name : "租户"
+                },
+                {
+                    id : "2",
+                    name : "应用"
+                }]
         }
     },
     methods: {
@@ -183,11 +208,14 @@ var vm = new Vue({
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
+            vm.hiddenByType = true;
+            vm.showType = true;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
             vm.appList.selectedApp = "";
             vm.appList.options = [];
+            vm.typeList.selectedType = "";
             vm.group = {
                 groupId: null,
                 parentGroupId: null,
@@ -211,6 +239,8 @@ var vm = new Vue({
             }
 
             vm.showList = false;
+            vm.showType = false;
+            vm.hiddenByType = false;
             vm.title = "修改";
             vm.tenantList.options = [];
             vm.appList.options = [];
@@ -276,17 +306,20 @@ var vm = new Vue({
                 swal("", "组名称不能为空", "warning");
             }
 
-            if(vm.group.applicationId == null || $.trim(vm.group.applicationId) == ""){
-                swal("", "应用不能为空", "warning");
+            // if(vm.group.applicationId == null || $.trim(vm.group.applicationId) == ""){
+            //     swal("", "应用不能为空", "warning");
+            //     return;
+            // }
+            //
+            // if(vm.group.tenantId == null || $.trim(vm.group.tenantId) == ""){
+            //     swal("", "租户不能为空", "warning");
+            //     return;
+            // }
+
+            if((vm.group.tenantId == null || $.trim(vm.group.tenantId) == "") && (vm.group.applicationId == null || $.trim(vm.group.applicationId) == "")){
+                swal("", "请在选择类型后，选择租户或应用", "warning");
                 return;
             }
-
-            if(vm.group.tenantId == null || $.trim(vm.group.tenantId) == ""){
-                swal("", "租户不能为空", "warning");
-                return;
-            }
-
-
 
             // 获取用户树选择的用户
             var userNodes = userTree.getCheckedNodes(true);
@@ -307,12 +340,12 @@ var vm = new Vue({
 
 
             if(roleIdList == null || roleIdList.length == 0){
-                swal("", "角色不能为空", "error");
+                swal("", "角色不能为空", "warning");
                 return;
             }
 
             if(userIdList == null || userIdList.length == 0){
-                swal("", "用户不能为空", "error");
+                swal("", "用户不能为空", "warning");
                 return;
             }
 
@@ -372,11 +405,10 @@ var vm = new Vue({
         /** 添加按钮初始化数据 */
         initTreesToAdd: function () {
             //加载用户树
-            $.get(baseURL + "users?token=" + accessToken + "&page=1&limit=1000", function (response) {
+            $.get(baseURL + "usertree?token=" + accessToken + "&page=1&limit=1000", function (response) {
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, []);
                 userTree.expandAll(true);
             });
-
 
             // 加载角色树
             $.get(baseURL + "/roletree?token=" + accessToken, function (response) {
@@ -393,25 +425,43 @@ var vm = new Vue({
         getGroupInfo: function (groupId) {
             $.get(baseURL + "groups/" + groupId, function (response) {
 
-                // console.log("group response == " + JSON.stringify(response))
-
                 vm.group.groupId = response.data.group.groupId;
                 vm.group.applicationId = response.data.group.applicationId;
                 vm.group.tenantId = response.data.group.tenantId;
                 vm.group.name = response.data.group.name;
-                vm.tenantList.selectedTenant = response.data.group.tenantId;
-                vm.appList.selectedApp = response.data.group.applicationId;
+                // vm.tenantList.selectedTenant = response.data.group.tenantId;
+                // vm.appList.selectedApp = response.data.group.applicationId;
                 vm.group.parentName = response.data.group.parentName;
                 vm.group.parentGroupId = response.data.group.parentGroupId;
                 vm.group.orderNum = response.data.group.orderNum;
 
+                var userUrl;
+                var roleUrl;
+                var selectedTenant = response.data.group.tenantId;
+                var selectedApp = response.data.group.applicationId;
+                if (selectedTenant == null || selectedTenant == 0) {
+                    //应用级
+                    vm.appList.selectedApp = selectedApp;
+                    vm.showByType = false;
+                    userUrl = baseURL + "users/applicationId/" + vm.appList.selectedApp;
+                    roleUrl = baseURL + "roles/applicationId/" + vm.appList.selectedApp;
+                } else {
+                    //租户级
+                    vm.tenantList.selectedTenant = selectedTenant;
+                    vm.showByType = true;
+                    userUrl = baseURL + "users/tenantId/" + vm.tenantList.selectedTenant;
+                    roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
+                }
+
                 // 加载用户树
-                $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
+                // $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
+                $.get(userUrl + "?token=" + accessToken, function (response) {
                     userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                     userTree.expandAll(true);
 
                     // 加载角色树
-                    $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
+                    // $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
+                    $.get(roleUrl + "?token=" + accessToken, function (response) {
                         roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
                         roleTree.expandAll(true);
                     });
@@ -445,26 +495,66 @@ var vm = new Vue({
         /** 应用列表onchange 事件*/
         selectApp: function () {
             vm.group.applicationId = vm.appList.selectedApp;
+            vm.reloadRoleTreeByApp();
+            vm.reloadUserTreeByApp();
+        },
+        /** 类型列表onchange 事件*/
+        selectType: function () {
+            vm.hiddenByType = false;
+            var selectedType = vm.typeList.selectedType;
+            if (selectedType == 1) {
+                //租户级
+                vm.group.applicationId = null;
+                vm.showByType = true;
+            } else {
+                //应用级
+                vm.group.tenantId = null;
+                vm.showByType = false;
+            }
         },
         //根据租户加载用户树
         reloadUserTree : function() {
             $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+
                 userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                 userTree.expandAll(true);
 
-                for (var i = 0; i<response.length; i++) {
-                    var userId1 = JSON.stringify(response[i].id);
-                    if (userId1 == userId) {
-                    //勾选登录用户
-                    var node = userTree.getNodeByParam("id", userId);
-                    userTree.checkNode(node, true, false);
-                    }
-                }
+                // for (var i = 0; i<response.length; i++) {
+                //     var userId1 = JSON.stringify(response[i].id);
+                //     if (userId1 == userId) {
+                //     //勾选登录用户
+                //     var node = userTree.getNodeByParam("id", userId);
+                //     userTree.checkNode(node, true, false);
+                //     }
+                // }
+            })
+        },
+        //根据应用加载用户树
+        reloadUserTreeByApp : function() {
+            $.get(baseURL + "users/applicationId/" + vm.appList.selectedApp, function (response) {
+                userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
+                userTree.expandAll(true);
+
+                // for (var i = 0; i<response.length; i++) {
+                //     var userId1 = JSON.stringify(response[i].id);
+                //     if (userId1 == userId) {
+                //         //勾选登录用户
+                //         var node = userTree.getNodeByParam("id", userId);
+                //         userTree.checkNode(node, true, false);
+                //     }
+                // }
             })
         },
         //根据租户加载角色树
         reloadRoleTree : function() {
             $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+                roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
+                roleTree.expandAll(true);
+            })
+        },
+        //根据应用加载角色树
+        reloadRoleTreeByApp : function() {
+            $.get(baseURL + "roles/applicationId/" + vm.appList.selectedApp, function (response) {
                 roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
                 roleTree.expandAll(true);
             })

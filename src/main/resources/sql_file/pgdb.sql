@@ -60,7 +60,7 @@ CREATE TABLE gar_application_tenants
 CREATE TABLE gar_groups
 (
 	id bigint NOT NULL UNIQUE,
-	name varchar(256) NOT NULL UNIQUE,
+	name varchar(256) NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
@@ -259,7 +259,7 @@ CREATE TABLE gar_tokens
 CREATE TABLE gar_users
 (
 	id bigint NOT NULL UNIQUE,
-	user_name varchar(256) DEFAULT '' NOT NULL UNIQUE,
+	user_name varchar(256) DEFAULT '' NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
 	mobile_number varchar(256) DEFAULT '' NOT NULL,

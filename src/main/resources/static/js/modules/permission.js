@@ -22,6 +22,7 @@ $(function () {
             },
             {label: '权限id', name: 'permission.id', align: 'center', hidden: true, index: "id", width: 20, key: true, sortable: false},
             {label: '权限名称', name: 'permission.name', align: 'center', width: 100, sortable: false},
+            {label: '类型', name: 'permission.tenantId', align: 'center', width: 70 ,sortable: false ,sortable: false, formatter:getType},
             {label: '应用名称', name: 'applicationName', align: 'center', width: 80},
             {label: '租户名称', name: 'tenantName', align: 'center', width: 80},
             {label: '通配符', name: 'permission.resourcePathWildcard', align: 'center', width: 80, sortable: false},
@@ -84,6 +85,14 @@ function timeFormat(cellvalue, options, row) {
     return Y + M + D + "  " + h + m + s;
 }
 
+function getType(cellvalue, options, row) {
+    if (cellvalue == null || cellvalue == 0) {
+        return "应用";
+    } else {
+        return "租户";
+    }
+}
+
 /** 菜单结构树 */
 var resourceTree;
 var resourceTreeSetting = {
@@ -115,6 +124,9 @@ var resourceTreeSetting = {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+        showType: true, // 显示类型
+        showByType: true, //根据选择类型选择显示租户级、应用级
+        hiddenByType: true,
         searchName: null,
         showList: true,
         title: null,
@@ -146,6 +158,19 @@ var vm = new Vue({
             selectedTenant: "",
             options: []
         },
+        // 类型列表数据
+        typeList: {
+            selectedType: "",
+            options: [
+                {
+                    id : "1",
+                    name : "租户"
+                },
+                {
+                    id : "2",
+                    name : "应用"
+                }]
+        },
         // 当前用户信息
         currentUser: {}
     },
@@ -157,6 +182,8 @@ var vm = new Vue({
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
+            vm.hiddenByType = true;
+            vm.showType = true;
             vm.title = "新增";
             vm.permission = {
                 id: null,
@@ -166,6 +193,7 @@ var vm = new Vue({
                 action: null,
                 status: 1
             };
+            vm.typeList.selectedType = "";
             vm.tenantList.options = [];
             vm.appList.options = [];
             vm.getAppList();
@@ -180,6 +208,8 @@ var vm = new Vue({
                 return;
             }
             vm.showList = false;
+            vm.showType = false;
+            vm.hiddenByType = false;
             vm.title = "修改";
             vm.tenantList.options = [];
             vm.appList.options = [];
@@ -227,14 +257,19 @@ var vm = new Vue({
             vm.permission.updatedByUserName = localStorage.getItem("userName");
             obj.permission = vm.permission;
 
-            if (vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") {
-                swal("", "应用不能为空", "warning");
-                return;
-            }
+            // if (vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") {
+            //     swal("", "应用不能为空", "warning");
+            //     return;
+            // }
+            //
+            // if (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "") {
+            //     swal("", "租户不能为空", "warning");
+            //     return;
+            // }
 
-            if (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "") {
-                swal("", "租户不能为空", "warning");
-                return;
+            if ((vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") && (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "")) {
+                    swal("", "请在选择类型后，选择租户或应用", "warning");
+                    return;
             }
 
             if(vm.permission.name == null || $.trim(vm.permission.name) == ""){
@@ -302,8 +337,8 @@ var vm = new Vue({
 
                 response = response.data.permission;
                 vm.permission.id = response.id;
-                vm.permission.applicationId = response.applicationId;
-                vm.permission.tenantId = response.tenantId;
+                // vm.permission.applicationId = response.applicationId;
+                // vm.permission.tenantId = response.tenantId;
                 vm.permission.name = response.name;
                 vm.permission.wildcard = response.wildcard;
                 vm.permission.resourcePathWildcard = response.resourcePathWildcard;
@@ -311,9 +346,17 @@ var vm = new Vue({
                 vm.permission.status = response.status;
                 vm.permission.action = response.action;
 
-                // vm.getAppList();
-                // vm.getTenantList();
-                //vm.initTreesToUpdate();
+                var applicationId = response.applicationId;
+                var tenantId = response.tenantId;
+
+                if (tenantId == null || tenantId == 0) {
+                    //应用级
+                    vm.permission.applicationId = applicationId;
+                } else {
+                    //租户级
+                    vm.permission.tenantId = tenantId;
+                }
+
             });
         },
         /** 更新按钮初始化数据 */
@@ -348,6 +391,20 @@ var vm = new Vue({
         /** 应用列表onchange 事件*/
         selectApp: function () {
             vm.initTreesToAdd()
+        },
+        /** 类型列表onchange 事件*/
+        selectType: function () {
+            vm.hiddenByType = false;
+            var selectedType = vm.typeList.selectedType;
+            if (selectedType == 1) {
+                //租户级
+                vm.permission.applicationId = null;
+                vm.showByType = true;
+            } else {
+                //应用级
+                vm.permission.tenantId = null;
+                vm.showByType = false;
+            }
         },
         /**  获取应用列表 */
         getAppList: function () {

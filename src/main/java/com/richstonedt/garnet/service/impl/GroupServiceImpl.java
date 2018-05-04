@@ -321,9 +321,19 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         groupCriteria.createCriteria().andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
         List<Group> groups = this.selectByCriteria(groupCriteria);
 
+        return groups;
+    }
+
+    @Override
+    public List<Group> queryGroupsByApplicationId(GroupParm groupParm) {
+
+        Long applicationId = groupParm.getApplicationId();
+
+        GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andStatusEqualTo(1);
+        List<Group> groups = this.selectByCriteria(groupCriteria);
 
         return groups;
-
     }
 
     /**

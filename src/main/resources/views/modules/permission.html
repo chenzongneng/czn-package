@@ -50,23 +50,35 @@
     <div v-show="!showList" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-2 control-label">所属应用<span style="color: #d7220a">*</span></div>
+            <div class="form-group" v-show="showType">
+                <div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <select class="form-control" id="applicaitonIdSelected" v-model="permission.applicationId" @change="selectApp">
+                    <select class="form-control" v-model="typeList.selectedType" @change="selectType">
                         <option disabled value="">--请选择--</option>
-                        <option v-for="option in appList.options" v-bind:value="option.id">
+                        <option v-for="option in typeList.options" v-bind:value="option.id">
                             {{ option.name }}
                         </option>
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">所属租户<span style="color: #d7220a">*</span></div>
+
+            <div class="form-group" v-show="showByType" v-bind:hidden="hiddenByType">
+                <div class="col-sm-2 control-label">选择租户<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="permission.tenantId" @change="selectTenant">
                         <option disabled value="">--请选择--</option>
                         <option v-for="option in tenantList.options" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"  v-show="!showByType" v-bind:hidden="hiddenByType">
+                <div class="col-sm-2 control-label">选择应用<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <select class="form-control" id="applicaitonIdSelected" v-model="permission.applicationId" @change="selectApp">
+                        <option disabled value="">--请选择--</option>
+                        <option v-for="option in appList.options" v-bind:value="option.id">
                             {{ option.name }}
                         </option>
                     </select>

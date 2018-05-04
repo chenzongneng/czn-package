@@ -107,8 +107,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         List<Resource> resources = new ArrayList<Resource>();
 
-        for (Permission permission : permissions
-                ) {
+        for (Permission permission : permissions) {
 
             String wildCard = permission.getResourcePathWildcard();
 
@@ -165,9 +164,21 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
             permissionView = new PermissionView();
             permissionView.setPermission(permission);
             application = applicationService.selectByPrimaryKey(permission.getApplicationId());
-            permissionView.setApplicationName(application.getName());
+            String applicationName;
+            if (ObjectUtils.isEmpty(application)) {
+                applicationName = "";
+            } else {
+                applicationName = application.getName();
+            }
+            permissionView.setApplicationName(applicationName);
             tenant = tenantService.selectByPrimaryKey(permission.getTenantId());
-            permissionView.setTenantName(tenant.getName());
+            String tenantName;
+            if (ObjectUtils.isEmpty(tenant)) {
+                tenantName = "";
+            } else {
+                tenantName = tenant.getName();
+            }
+            permissionView.setTenantName(tenantName);
             permissionViewList.add(permissionView);
         }
 
@@ -207,6 +218,17 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
         permissionCriteria.createCriteria().andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
+
+        return permissions;
+    }
+
+    @Override
+    public List<Permission> queryPermissionByApplicationId(PermissionParm permissionParm) {
+        Long applicationId = permissionParm.getApplicationId();
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andStatusEqualTo(1);
         List<Permission> permissions = this.selectByCriteria(permissionCriteria);
 
         return permissions;

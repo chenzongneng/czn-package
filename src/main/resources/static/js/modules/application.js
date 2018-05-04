@@ -17,7 +17,7 @@ $(function () {
             {label: '应用名称', name: 'name', align: 'center', width: 80 ,sortable: false},
             {label: '应用标识', name: 'appCode', align: 'center', width: 80 ,sortable: false},
             {label: '所属公司', name: 'company', align: 'center', width: 80 ,sortable: false},
-            {label: '平台模式', name: 'serviceMode', align: 'center', width: 70 ,sortable: false},
+            {label: '平台模式', name: 'serviceMode', formatter:formatMode, align: 'center', width: 70 ,sortable: false},
             {label: '刷新资源Api', name: 'refreshResourcesApi', align: 'center', width: 80 ,sortable: false},
             {label: '主机', name: 'hosts', align: 'center', width: 80 ,sortable: false},
             {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 160 ,sortable: false},
@@ -64,6 +64,16 @@ function timeFormat(cellvalue, options, row) {
     var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
     var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
     return Y + M + D + "  " + h + m + s;
+}
+
+function formatMode(cellvalue, options, row) {
+    if (cellvalue == "paas") {
+        return "PaaS";
+    } else if (cellvalue == "saas") {
+        return "SaaS";
+    } else {
+        return cellvalue;
+    }
 }
 
 /** 用户树 */
@@ -118,14 +128,14 @@ var vm = new Vue({
             options: [
                 {
                 id : "all",
-                name : "平台模式-all"
+                name : "全部"
             },
             {
                 id : "saas",
-                name : "平台模式-saas"
+                name : "平台模式-SaaS"
             },{
                 id : "paas",
-                name : "平台模式-paas"
+                name : "平台模式-PaaS"
             }]
         },
         // 新增和更新 选择模式列表
@@ -134,10 +144,10 @@ var vm = new Vue({
             options: [
                 {
                     id : "saas",
-                    name : "saas"
+                    name : "SaaS"
                 },{
                     id : "paas",
-                    name : "paas"
+                    name : "PaaS"
                 }]
         }
     },

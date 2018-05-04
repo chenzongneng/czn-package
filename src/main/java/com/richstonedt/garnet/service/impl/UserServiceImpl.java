@@ -68,6 +68,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     private TenantService tenantService;
 
     @Autowired
+    private ApplicationTenantService applicationTenantService;
+
+    @Autowired
     private PermissionService permissionService;
 
     @Autowired
@@ -100,36 +103,22 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     public Long insertUser(UserView userView) {
 
         String credential = userView.getPassword();
-
         User user = userView.getUser();
 
-        UserCriteria userCriteria = new UserCriteria();
-        userCriteria.createCriteria().andUserNameEqualTo(user.getUserName());
-        List<User> users = this.selectByCriteria(userCriteria);
-        if (!CollectionUtils.isEmpty(users)) {
-            throw new RuntimeException("账号已存在");
-        }
+        //检查用户名称是否已被使用
+        checkDuplicateName(user);
 
         user.setId(IdGeneratorUtil.generateId());
-
         UserCredential userCredential = new UserCredential();
-
         userCredential.setExpiredDateTime(userView.getExpiredDateTime());
-
         userCredential.setCredential(credential);
-
         userCredential.setId(IdGeneratorUtil.generateId());
-
         userCredential.setUserId(user.getId());
-
         Long currentTime = System.currentTimeMillis();
-
         userCredential.setCreatedTime(currentTime);
-
         userCredential.setModifiedTime(currentTime);
 
         user.setCreatedTime(currentTime);
-
         user.setModifiedTime(currentTime);
 
         this.insertSelective(user);
@@ -138,60 +127,56 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //User - tenant中间表
         if (!ObjectUtils.isEmpty(userView.getUserTenants())) {
-
             for (UserTenant userTenant : userView.getUserTenants()) {
-
                 userTenant.setId(IdGeneratorUtil.generateId());
-
                 userTenant.setUserId(user.getId());
-
                 userTenantService.insertSelective(userTenant);
-
             }
-
         }
 
         //User - Group 中间表
         if (!ObjectUtils.isEmpty(userView.getGroupUsers())) {
-
-            for (GroupUser groupUser : userView.getGroupUsers()
-                    ) {
-
+            for (GroupUser groupUser : userView.getGroupUsers()) {
                 groupUser.setId(IdGeneratorUtil.generateId());
-
                 groupUser.setUserId(user.getId());
-
                 groupUserService.insertSelective(groupUser);
-
             }
-
         }
-
         return user.getId();
+    }
 
+    /**
+     * 检查用户名称是否已被使用
+     * @param user
+     */
+    private void checkDuplicateName(User user) {
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.createCriteria().andUserNameEqualTo(user.getUserName()).andStatusEqualTo(1);
+        List<User> users = this.selectByCriteria(userCriteria);
+        if (!CollectionUtils.isEmpty(users) && users.size() > 0) {
+            throw new RuntimeException("账号已存在");
+        }
     }
 
     @Override
     public void updateUser(UserView userView) {
 
+        //检查用户名称是否已被使用
+        User user = userView.getUser();
+        checkDuplicateName(user);
 
         //更新密码表
 
         UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
-
         userCredentialCriteria.createCriteria().andUserIdEqualTo(userView.getUser().getId());
-
         UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
 
         if (!userCredential.getExpiredDateTime().equals(userView.getExpiredDateTime())) {
-
             userCredential.setExpiredDateTime(userView.getExpiredDateTime());
             userCredential.setModifiedTime(System.currentTimeMillis());
-
         }
 
         if (!userCredential.getCredential().equals(userView.getPassword())) {
-
             userCredential.setCredential(userView.getPassword());
             userCredential.setModifiedTime(System.currentTimeMillis());
         }
@@ -199,55 +184,32 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         userCredentialService.updateByPrimaryKeySelective(userCredential);
 
         //更新User表
-        User user = userView.getUser();
         user.setModifiedTime(System.currentTimeMillis());
         this.updateByPrimaryKeySelective(user);
 
         //User - tenant中间表
         if (!ObjectUtils.isEmpty(userView.getUserTenants())) {
-
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-
             userTenantCriteria.createCriteria().andUserIdEqualTo(userView.getUser().getId());
-
             userTenantService.deleteByCriteria(userTenantCriteria);
-
             for (UserTenant userTenant : userView.getUserTenants()) {
-
                 userTenant.setId(IdGeneratorUtil.generateId());
-
                 userTenant.setUserId(userView.getUser().getId());
-
                 userTenantService.insertSelective(userTenant);
-
-
             }
-
         }
 
         //User - Group 中间表
         if (!ObjectUtils.isEmpty(userView.getGroupUsers())) {
-
             GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-
             groupUserCriteria.createCriteria().andUserIdEqualTo(userView.getUser().getId());
-
             groupUserService.deleteByCriteria(groupUserCriteria);
-
-            for (GroupUser groupUser : userView.getGroupUsers()
-                    ) {
-
+            for (GroupUser groupUser : userView.getGroupUsers()) {
                 groupUser.setId(IdGeneratorUtil.generateId());
-
                 groupUser.setUserId(userView.getUser().getId());
-
                 groupUserService.insertSelective(groupUser);
-
-
             }
-
         }
-
 
     }
 
@@ -258,29 +220,18 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //删除密码表
         UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
-
         userCredentialCriteria.createCriteria().andUserIdEqualTo(user.getId());
-
         userCredentialService.deleteByCriteria(userCredentialCriteria);
 
         //删除User - tenant中间表
-
-
         UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-
         userTenantCriteria.createCriteria().andUserIdEqualTo(userView.getUser().getId());
-
         userTenantService.deleteByCriteria(userTenantCriteria);
 
-
         //删除User - Group 中间表
-
         GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-
         groupUserCriteria.createCriteria().andUserIdEqualTo(userView.getUser().getId());
-
         groupUserService.deleteByCriteria(groupUserCriteria);
-
         this.deleteByPrimaryKey(user.getId());
     }
 
@@ -303,10 +254,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
             //如果不是属于garnet的超级管理员，根据tenantId返回
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(userParm.getUserId()))) {
-
                 //根据tenantIds获取关联的userIds
                 List<Long> userIdList = getUserIdList(tenantIds);
-
                 criteria.andIdIn(userIdList);
             } else {
                 //如果是garnet的超级管理员，直接返回所有user列表
@@ -364,7 +313,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                 userIds.add(userTenant.getUserId());
             }
         }
-        // 如果userIds 为空
+        // 如果userIds 不为空
         if (!CollectionUtils.isEmpty(userIds)) {
             List<Long> userIdList = new ArrayList<>();
             //隐藏 admin
@@ -466,6 +415,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             tokenOld.setToken(token);
             tokenService.updateByPrimaryKeySelective(tokenOld);
         }
+
+        //查询登录用户关联的tenantIds
+        ReturnTenantIdView returnTenantIdView = this.getTenantIdsByUserId(user.getId());
+        List<Long> tenantIdList = returnTenantIdView.getTenantIds();
+        loginMessage.setTenantIdList(tenantIdList);
+
         return loginMessage;
     }
 
@@ -540,6 +495,20 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         return users;
     }
 
+    /**
+     * 刷新token
+     * 1. 能通过拦截器，说明传入的token是正确且有效的,故不再验证token是否正确
+     * 2. 取出token中携带的信息
+     * 3. 验证基础信息是否正确
+     * 4. 根据username 查询密码
+     * 5. 生成新的token
+     * 6. 根据userName拿出token并更新到数据库
+     * 7. 取出资源列表
+     * 8. 处理返回
+     * @param tokenRefreshView
+     * @return
+     * @throws Exception
+     */
     @Override
     public LoginMessage refreshToken(TokenRefreshView tokenRefreshView) throws Exception {
         //能通过拦截器，说明token是正确且有效的,故不再验证token是否正确
@@ -589,12 +558,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         loginMessage.setAccessToken(accessTokenReturn);
         loginMessage.setRefreshToken(refreshTokenReturn);
 
+        List<Long> tenantIdList = tokenRefreshView.getTenantIdList();
+        if (CollectionUtils.isEmpty(tenantIdList) || tenantIdList.size() == 0) {
+            throw new RuntimeException("租户id列表不能为空");
+        }
+
         //取出资源列表
-        LoginMessage loginMessage1 = this.getResourcesWhenRefreshToken(userCredential, appCode, loginMessage);
+        LoginMessage loginMessage1 = this.getResourcesWhenRefreshToken(userCredential, appCode, loginMessage, tenantIdList);
 //        List<Resource> resourceList = loginMessage1.getResourceList();
         List<RefreshTokenResourceView> refreshTokenResourceViewList = loginMessage1.getRefreshTokenResourceList();
-
-
 
         List<Resource> resourceListWithReadlyOnly = loginMessage1.getResourceListWithReadlyOnly();
         List<Resource> resourceListWithEdit = loginMessage1.getResourceListWithReadlyOnly();
@@ -630,7 +602,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
      * @param loginMessage
      * @return
      */
-    private LoginMessage getResourcesWhenRefreshToken(UserCredential userCredential, String appCode, LoginMessage loginMessage) {
+    private LoginMessage getResourcesWhenRefreshToken(UserCredential userCredential, String appCode, LoginMessage loginMessage, List tenantIdList) {
         //获取返回资源
         //根据appCode拿 application
         ApplicationCriteria applicationCriteria = new ApplicationCriteria();
@@ -639,7 +611,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         if (ObjectUtils.isEmpty(application)) {
             return loginMessage;
         }
-
 
         //根据username 拿 group
         GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
@@ -693,7 +664,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId());
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId()).andTenantIdIn(tenantIdList);
                 List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
                 resourceList.addAll(resources);
             }
@@ -730,7 +701,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     /**
      * 对resource列表进行去重
-     *
+     * 1. 根据permission的action匹配资源
+     * 2. 对resource去重
+     * 3. 通过resource列表获取 ResourceDynamicProperty列表
      * @param resourceList
      * @return
      */
@@ -798,17 +771,29 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                     String[] actionList = actions.split(">");
                     //如果不是同级，返回action内容
                     if (actionList.length > 1) {
-                        if ("readonly".equals(action)) {
-                            resource.setActions(action);
-                        } else {
-                            resource.setActions("edit");
-                        }
+                        String action1 = this.getAction(action);
+                        resource.setActions(action1);
                     }
                     resourceList1.add(resource);
                 }
             }
         }
         return resourceList1;
+    }
+
+    /**
+     * 处理要返回的action值
+     * @param action
+     * @return
+     */
+    private String getAction(String action) {
+
+        if ("readonly".equals(action)) {
+            return action;
+        } else {
+            String action1 = "edit";
+            return action1;
+        }
     }
 
     private LoginMessage checkRefreshTokenData(TokenRefreshView tokenRefreshView) {
@@ -1019,7 +1004,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
     @Override
     public ReturnTenantIdView getTenantIdsByUserId(Long userId) {
-        //TODO 复杂度待修改
         //根据userId 查 tenantId列表
         UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
         userTenantCriteria.createCriteria().andUserIdEqualTo(userId);
@@ -1031,6 +1015,49 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             }
         }
 
+        //获取权限列表
+        List<Permission> permissions = getPermissions(userId);
+
+
+        List<Resource> resourceList = new ArrayList<>();
+        for (Permission permission : permissions) {
+            ResourceCriteria resourceCriteria = new ResourceCriteria();
+            resourceCriteria.createCriteria().andTenantIdIn(tenantIds).andPathLike(permission.getResourcePathWildcard());
+            resourceList.addAll(resourceService.selectByCriteria(resourceCriteria));
+        }
+
+        //判断是否拥有超级权限
+        boolean flag = false;
+        for (Resource resource : resourceList) {
+            if (GarnetContants.RESOURCE_PERMISSION.equals(resource.getVarchar00())) {
+                flag = true;
+            }
+        }
+
+        ReturnTenantIdView returnTenantIdView = new ReturnTenantIdView();
+        returnTenantIdView.setSuperAdmin(flag);
+
+        if (flag) {
+            TenantCriteria tenantCriteria = new TenantCriteria();
+            tenantCriteria.createCriteria();
+            List<Tenant> tenants = tenantService.selectByCriteria(tenantCriteria);
+            List<Long> teantIdList = new ArrayList<>();
+            for (Tenant tenant : tenants) {
+                teantIdList.add(tenant.getId());
+            }
+
+            teantIdList = commonService.dealTenantIdsIfGarnet(userId, teantIdList);
+            returnTenantIdView.setTenantIds(teantIdList);
+            return returnTenantIdView;
+        } else {
+            tenantIds = commonService.dealTenantIdsIfGarnet(userId, tenantIds);
+            returnTenantIdView.setTenantIds(tenantIds);
+            return returnTenantIdView;
+        }
+
+    }
+
+    private List<Permission> getPermissions(Long userId) {
         //change by ming
         GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
         groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
@@ -1074,46 +1101,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
         permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
-        List<Permission> permissions = permissionService.selectByCriteria(permissionCriteria);
 
         //====================
-
-        List<Resource> resourceList = new ArrayList<>();
-        for (Permission permission : permissions) {
-            ResourceCriteria resourceCriteria = new ResourceCriteria();
-            resourceCriteria.createCriteria().andTenantIdIn(tenantIds).andPathLike(permission.getResourcePathWildcard());
-            resourceList.addAll(resourceService.selectByCriteria(resourceCriteria));
-        }
-
-        //判断是否拥有超级权限
-        boolean flag = false;
-        for (Resource resource : resourceList) {
-            if (GarnetContants.RESOURCE_PERMISSION.equals(resource.getVarchar00())) {
-                flag = true;
-            }
-        }
-
-        ReturnTenantIdView returnTenantIdView = new ReturnTenantIdView();
-        returnTenantIdView.setSuperAdmin(flag);
-
-        if (flag) {
-            TenantCriteria tenantCriteria = new TenantCriteria();
-            tenantCriteria.createCriteria();
-            List<Tenant> tenants = tenantService.selectByCriteria(tenantCriteria);
-            List<Long> teantIdList = new ArrayList<>();
-            for (Tenant tenant : tenants) {
-                teantIdList.add(tenant.getId());
-            }
-
-            teantIdList = commonService.dealTenantIdsIfGarnet(userId, teantIdList);
-            returnTenantIdView.setTenantIds(teantIdList);
-            return returnTenantIdView;
-        } else {
-            tenantIds = commonService.dealTenantIdsIfGarnet(userId, tenantIds);
-            returnTenantIdView.setTenantIds(tenantIds);
-            return returnTenantIdView;
-        }
-
+        return permissionService.selectByCriteria(permissionCriteria);
     }
 
     @Override
@@ -1140,5 +1130,49 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                 throw new RuntimeException("初始密码不正确");
             }
         }
+    }
+
+    @Override
+    public List<User> queryUsers() {
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.createCriteria();
+        List<User> userList = this.selectByCriteria(userCriteria);
+        return userList;
+    }
+
+    @Override
+    public List<User> queryUserByApplicationId(UserParm userParm) {
+        Long applicationId = userParm.getApplicationId();
+
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicationId);
+        List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+
+        if (CollectionUtils.isEmpty(applicationTenantList) || applicationTenantList.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        List<Long> tenantIdList = new ArrayList<>();
+        for (ApplicationTenant applicationTenant : applicationTenantList) {
+            tenantIdList.add(applicationTenant.getTenantId());
+        }
+
+        List<Long> userIdList = getUserIdsByTenantIds(tenantIdList);
+
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andTenantIdIn(tenantIdList).andUserIdEqualTo(GarnetContants.GARNET_USER_ID);
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
+            userIdList.add(GarnetContants.GARNET_USER_ID);
+        }
+
+        List<User> userList = new ArrayList<>();
+        User user;
+        for (Long userId : userIdList) {
+            user = this.selectByPrimaryKey(userId);
+            userList.add(user);
+        }
+
+        return userList;
     }
 }

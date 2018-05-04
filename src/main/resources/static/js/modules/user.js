@@ -174,7 +174,6 @@ var vm = new Vue({
                 // console.log("originOptionsTenant" + JSON.stringify(vm.multiple.originOptionsTenant))
             });
             if (method == "update") {
-                //Todo 租户更新部分
                 // alert(vm.user.id);
                 $.get(baseURL + "tenants?page=1&limit=1000&userId="+vm.user.id, function (response) {
                     mySelf.multiple.selectedListTenant= response.list;

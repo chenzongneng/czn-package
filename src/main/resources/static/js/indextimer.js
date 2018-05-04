@@ -56,10 +56,6 @@ function ShowInvalidLoginMessage() {
             type: "warning"
         },
         function () {
-            if (patrn.exec(pathName)) {
-                parent.location.href = 'login.html';
-            } else {
-                parent.location.href = '../login.html';
-            }
+            parent.location.href = 'login.html';
         });
 }
