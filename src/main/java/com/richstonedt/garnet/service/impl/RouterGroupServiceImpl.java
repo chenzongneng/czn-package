@@ -57,6 +57,8 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         }
 
         RouterGroupCriteria routerGroupCriteria;
+        RouterGroup routerGroup1;
+        Long currentTime = System.currentTimeMillis();
         for (String appCode : appCodeList) {
 
             routerGroupCriteria = new RouterGroupCriteria();
@@ -66,10 +68,14 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
                 throw new RuntimeException("一个应用不能被添加到多个应用组");
             }
 
-            RouterGroup routerGroup1 = new RouterGroup();
+            routerGroup1 = new RouterGroup();
             routerGroup1.setId(IdGeneratorUtil.generateId());
             routerGroup1.setGroupName(routerGroup.getGroupName());
             routerGroup1.setAppCode(appCode);
+            routerGroup1.setCreatedTime(currentTime);
+            routerGroup1.setModifiedTime(currentTime);
+            routerGroup1.setRemark(routerGroup.getRemark());
+            routerGroup1.setUpdatedByUserName(routerGroup.getUpdatedByUserName());
             this.insertSelective(routerGroup1);
         }
 

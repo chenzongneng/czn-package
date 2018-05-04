@@ -85,10 +85,16 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
 
         Long l = IdGeneratorUtil.generateId();
+        Long currentTime = System.currentTimeMillis();
+        ResourceDynamicProperty resourceDynamicProperty1 = resourceDynamicPropertyView.getResourceDynamicProperty();
         for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
             resourceDynamicProperty.setId(l);
-            resourceDynamicProperty.setActions(resourceDynamicPropertyView.getResourceDynamicProperty().getActions());
-            resourceDynamicProperty.setType(resourceDynamicPropertyView.getResourceDynamicProperty().getType());
+            resourceDynamicProperty.setActions(resourceDynamicProperty1.getActions());
+            resourceDynamicProperty.setType(resourceDynamicProperty1.getType());
+            resourceDynamicProperty.setRemark(resourceDynamicProperty1.getRemark());
+            resourceDynamicProperty.setUpdatedByUserName(resourceDynamicProperty1.getUpdatedByUserName());
+            resourceDynamicProperty.setCreatedTime(currentTime);
+            resourceDynamicProperty.setModifiedTime(currentTime);
             this.insertSelective(resourceDynamicProperty);
             l += 1;
         }

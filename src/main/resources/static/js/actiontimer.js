@@ -9,7 +9,7 @@ $(document).on('keydown mousedown', function(e) {
 var intervalId = setInterval(function() {
     time--;
 
-    console.log("action timer: " + time);
+    // console.log("action timer: " + time);
 
     localStorage.setItem("actionTimerId", intervalId);
     if (time <= 0) {

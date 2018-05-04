@@ -8,8 +8,8 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-// var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
 
 /** token */
 var accessToken = localStorage.getItem("accessToken");

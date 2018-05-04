@@ -5,17 +5,21 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+    <result column="created_time" jdbcType="BIGINT" property="createdTime" />
+    <result column="modified_time" jdbcType="BIGINT" property="modifiedTime" />
+    <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -49,7 +53,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -83,15 +87,15 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
-    id, group_name, app_code
+    id, group_name, remark, app_code, created_time, modified_time, updated_by_user_name
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.RouterGroupCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     select
     <if test="distinct">
@@ -113,9 +117,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
-    select 
+    select
     <include refid="Base_Column_List" />
     from gar_router_group
     where id = #{id,jdbcType=BIGINT}
@@ -124,7 +128,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     delete from gar_router_group
     where id = #{id,jdbcType=BIGINT}
@@ -133,7 +137,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     delete from gar_router_group
     <if test="_parameter != null">
@@ -144,18 +148,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
-    insert into gar_router_group (id, group_name, app_code
-      )
-    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{appCode,jdbcType=VARCHAR}
-      )
+    insert into gar_router_group (id, group_name, remark,
+    app_code, created_time, modified_time,
+    updated_by_user_name)
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+    #{appCode,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT},
+    #{updatedByUserName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.RouterGroup">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     insert into gar_router_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -165,8 +171,20 @@
       <if test="groupName != null">
         group_name,
       </if>
+      <if test="remark != null">
+        remark,
+      </if>
       <if test="appCode != null">
         app_code,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="modifiedTime != null">
+        modified_time,
+      </if>
+      <if test="updatedByUserName != null">
+        updated_by_user_name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -176,8 +194,20 @@
       <if test="groupName != null">
         #{groupName,jdbcType=VARCHAR},
       </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="appCode != null">
         #{appCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=BIGINT},
+      </if>
+      <if test="updatedByUserName != null">
+        #{updatedByUserName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -185,7 +215,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     select count(*) from gar_router_group
     <if test="_parameter != null">
@@ -196,7 +226,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     update gar_router_group
     <set>
@@ -206,8 +236,20 @@
       <if test="record.groupName != null">
         group_name = #{record.groupName,jdbcType=VARCHAR},
       </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
       <if test="record.appCode != null">
         app_code = #{record.appCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdTime != null">
+        created_time = #{record.createdTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.modifiedTime != null">
+        modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.updatedByUserName != null">
+        updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -218,12 +260,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     update gar_router_group
     set id = #{record.id,jdbcType=BIGINT},
-      group_name = #{record.groupName,jdbcType=VARCHAR},
-      app_code = #{record.appCode,jdbcType=VARCHAR}
+    group_name = #{record.groupName,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    app_code = #{record.appCode,jdbcType=VARCHAR},
+    created_time = #{record.createdTime,jdbcType=BIGINT},
+    modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+    updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -232,15 +278,27 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     update gar_router_group
     <set>
       <if test="groupName != null">
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="appCode != null">
         app_code = #{appCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=BIGINT},
+      </if>
+      <if test="updatedByUserName != null">
+        updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -249,18 +307,22 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     update gar_router_group
     set group_name = #{groupName,jdbcType=VARCHAR},
-      app_code = #{appCode,jdbcType=VARCHAR}
+    remark = #{remark,jdbcType=VARCHAR},
+    app_code = #{appCode,jdbcType=VARCHAR},
+    created_time = #{createdTime,jdbcType=BIGINT},
+    modified_time = #{modifiedTime,jdbcType=BIGINT},
+    updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.RouterGroupCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     select
     <if test="distinct">
@@ -279,7 +341,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     insert into gar_router_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -289,11 +351,23 @@
       <if test="list[0].groupName!=null">
         group_name,
       </if>
+      <if test="list[0].remark!=null">
+        remark,
+      </if>
       <if test="list[0].appCode!=null">
         app_code,
       </if>
+      <if test="list[0].createdTime!=null">
+        created_time,
+      </if>
+      <if test="list[0].modifiedTime!=null">
+        modified_time,
+      </if>
+      <if test="list[0].updatedByUserName!=null">
+        updated_by_user_name,
+      </if>
     </trim>
-     values 
+    values
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -302,8 +376,20 @@
         <if test="item.groupName!=null">
           #{item.groupName,jdbcType=VARCHAR},
         </if>
+        <if test="item.remark!=null">
+          #{item.remark,jdbcType=VARCHAR},
+        </if>
         <if test="item.appCode!=null">
           #{item.appCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createdTime!=null">
+          #{item.createdTime,jdbcType=BIGINT},
+        </if>
+        <if test="item.modifiedTime!=null">
+          #{item.modifiedTime,jdbcType=BIGINT},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          #{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </trim>
     </foreach>
@@ -312,7 +398,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:28
+      DATE: 2018-05-04 10:59
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_router_group
@@ -320,11 +406,23 @@
         <if test="item.groupName!=null">
           group_name=#{item.groupName,jdbcType=VARCHAR},
         </if>
+        <if test="item.remark!=null">
+          remark=#{item.remark,jdbcType=VARCHAR},
+        </if>
         <if test="item.appCode!=null">
           app_code=#{item.appCode,jdbcType=VARCHAR},
         </if>
+        <if test="item.createdTime!=null">
+          created_time=#{item.createdTime,jdbcType=BIGINT},
+        </if>
+        <if test="item.modifiedTime!=null">
+          modified_time=#{item.modifiedTime,jdbcType=BIGINT},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          updated_by_user_name=#{item.updatedByUserName,jdbcType=VARCHAR},
+        </if>
       </set>
-      where 
+      where
       id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>

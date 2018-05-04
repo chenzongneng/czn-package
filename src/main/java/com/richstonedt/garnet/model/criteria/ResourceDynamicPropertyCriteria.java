@@ -8,7 +8,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public ResourceDynamicPropertyCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -426,6 +426,76 @@ public class ResourceDynamicPropertyCriteria {
 
         public Criteria andTypeNotBetween(String value1, String value2) {
             addCriterion("type not between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNull() {
+            addCriterion("remark is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNotNull() {
+            addCriterion("remark is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkEqualTo(String value) {
+            addCriterion("remark =", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotEqualTo(String value) {
+            addCriterion("remark <>", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThan(String value) {
+            addCriterion("remark >", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThanOrEqualTo(String value) {
+            addCriterion("remark >=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThan(String value) {
+            addCriterion("remark <", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThanOrEqualTo(String value) {
+            addCriterion("remark <=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLike(String value) {
+            addCriterion("remark like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotLike(String value) {
+            addCriterion("remark not like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIn(List<String> values) {
+            addCriterion("remark in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotIn(List<String> values) {
+            addCriterion("remark not in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkBetween(String value1, String value2) {
+            addCriterion("remark between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotBetween(String value1, String value2) {
+            addCriterion("remark not between", value1, value2, "remark");
             return (Criteria) this;
         }
 
@@ -629,6 +699,196 @@ public class ResourceDynamicPropertyCriteria {
             return (Criteria) this;
         }
 
+        public Criteria andCreatedTimeIsNull() {
+            addCriterion("created_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeIsNotNull() {
+            addCriterion("created_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeEqualTo(Long value) {
+            addCriterion("created_time =", value, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeNotEqualTo(Long value) {
+            addCriterion("created_time <>", value, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeGreaterThan(Long value) {
+            addCriterion("created_time >", value, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeGreaterThanOrEqualTo(Long value) {
+            addCriterion("created_time >=", value, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeLessThan(Long value) {
+            addCriterion("created_time <", value, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeLessThanOrEqualTo(Long value) {
+            addCriterion("created_time <=", value, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeIn(List<Long> values) {
+            addCriterion("created_time in", values, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeNotIn(List<Long> values) {
+            addCriterion("created_time not in", values, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeBetween(Long value1, Long value2) {
+            addCriterion("created_time between", value1, value2, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatedTimeNotBetween(Long value1, Long value2) {
+            addCriterion("created_time not between", value1, value2, "createdTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeIsNull() {
+            addCriterion("modified_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeIsNotNull() {
+            addCriterion("modified_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeEqualTo(Long value) {
+            addCriterion("modified_time =", value, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeNotEqualTo(Long value) {
+            addCriterion("modified_time <>", value, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeGreaterThan(Long value) {
+            addCriterion("modified_time >", value, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeGreaterThanOrEqualTo(Long value) {
+            addCriterion("modified_time >=", value, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeLessThan(Long value) {
+            addCriterion("modified_time <", value, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeLessThanOrEqualTo(Long value) {
+            addCriterion("modified_time <=", value, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeIn(List<Long> values) {
+            addCriterion("modified_time in", values, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeNotIn(List<Long> values) {
+            addCriterion("modified_time not in", values, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeBetween(Long value1, Long value2) {
+            addCriterion("modified_time between", value1, value2, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedTimeNotBetween(Long value1, Long value2) {
+            addCriterion("modified_time not between", value1, value2, "modifiedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameIsNull() {
+            addCriterion("updated_by_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameIsNotNull() {
+            addCriterion("updated_by_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameEqualTo(String value) {
+            addCriterion("updated_by_user_name =", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameNotEqualTo(String value) {
+            addCriterion("updated_by_user_name <>", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameGreaterThan(String value) {
+            addCriterion("updated_by_user_name >", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("updated_by_user_name >=", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameLessThan(String value) {
+            addCriterion("updated_by_user_name <", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameLessThanOrEqualTo(String value) {
+            addCriterion("updated_by_user_name <=", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameLike(String value) {
+            addCriterion("updated_by_user_name like", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameNotLike(String value) {
+            addCriterion("updated_by_user_name not like", value, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameIn(List<String> values) {
+            addCriterion("updated_by_user_name in", values, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameNotIn(List<String> values) {
+            addCriterion("updated_by_user_name not in", values, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameBetween(String value1, String value2) {
+            addCriterion("updated_by_user_name between", value1, value2, "updatedByUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedByUserNameNotBetween(String value1, String value2) {
+            addCriterion("updated_by_user_name not between", value1, value2, "updatedByUserName");
+            return (Criteria) this;
+        }
+
         public Criteria andActionsIsNull() {
             addCriterion("actions is null");
             return (Criteria) this;
@@ -706,7 +966,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -721,7 +981,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     public static class Criterion {
         private String condition;

@@ -3,36 +3,31 @@ package com.richstonedt.garnet.controller;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.ExcelUtils;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.view.FileView;
 import com.richstonedt.garnet.model.view.ResourceExcelView;
 import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.service.ResourceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,7 +117,31 @@ public class ExcelController {
             LOG.error(error, t);
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseMessage(error, t);
         }
+    }
 
+    @ApiOperation(value = "[Garnet]下载资源导入Excel模板", notes = "下载资源导入Excel模板")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/download/resourceexcel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> downloadExcelTemplate() {
+//        String path = System.getProperty("user.dir") + "/src/main/resources/exceltemplate/upload_template.xlsx";;
+        File file = new File(GarnetContants.SAVE_PATH + "/upload_template.xlsx");
+        byte[] body = null;
+        try(InputStream is = new FileInputStream(file)) {
+            body = new byte[is.available()];
+            is.read(body);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attchement;filename=" + file.getName());
+            HttpStatus statusCode = HttpStatus.OK;
+            ResponseEntity<byte[]> entity = new ResponseEntity<byte[]>(body, headers, statusCode);
+            return entity;
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
     }
 
 }

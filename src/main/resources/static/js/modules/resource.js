@@ -294,7 +294,6 @@ var vm = new Vue({
             $('#file').click();
         },
         importFile: function (ele) {
-
             var file = document.getElementById("file").files[0];
             var formData = new FormData();
             formData.append('file', file);    // 将文件转成二进制形式
@@ -326,6 +325,11 @@ var vm = new Vue({
 
             //重新选择同一个文件的时候，可以重复上传
             $('#file').val('');
+        },
+        //下载Excel模板
+        downloadExcel:function () {
+            document.getElementById("downloadExcel").href = baseURL + "download/resourceexcel";
+            document.getElementById("downloadExcel").click();
         },
         /**  新增按钮点击事件 */
         add: function () {

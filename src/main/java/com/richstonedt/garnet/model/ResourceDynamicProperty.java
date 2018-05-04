@@ -8,18 +8,26 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-04-25 17:13
+ * DATE: 2018-05-04 10:59
  */
 public class ResourceDynamicProperty implements Serializable {
     private Long id;
 
     private String type;
 
+    private String remark;
+
     private Long applicationId;
 
     private String filedName;
 
     private String description;
+
+    private Long createdTime;
+
+    private Long modifiedTime;
+
+    private String updatedByUserName;
 
     private String actions;
 
@@ -28,7 +36,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +54,14 @@ public class ResourceDynamicProperty implements Serializable {
 
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     public Long getApplicationId() {
@@ -72,6 +88,30 @@ public class ResourceDynamicProperty implements Serializable {
         this.description = description == null ? null : description.trim();
     }
 
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(Long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
     public String getActions() {
         return actions;
     }
@@ -87,7 +127,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     @Override
     public boolean equals(Object that) {
@@ -103,9 +143,13 @@ public class ResourceDynamicProperty implements Serializable {
         ResourceDynamicProperty other = (ResourceDynamicProperty) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
                 && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()))
                 && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
                 && (this.getFiledName() == null ? other.getFiledName() == null : this.getFiledName().equals(other.getFiledName()))
                 && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+                && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
+                && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
+                && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()))
                 && (this.getActions() == null ? other.getActions() == null : this.getActions().equals(other.getActions()));
     }
 
@@ -116,7 +160,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     @Override
     public int hashCode() {
@@ -124,9 +168,13 @@ public class ResourceDynamicProperty implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
         result = prime * result + ((getApplicationId() == null) ? 0 : getApplicationId().hashCode());
         result = prime * result + ((getFiledName() == null) ? 0 : getFiledName().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
+        result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
+        result = prime * result + ((getModifiedTime() == null) ? 0 : getModifiedTime().hashCode());
+        result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         result = prime * result + ((getActions() == null) ? 0 : getActions().hashCode());
         return result;
     }
@@ -138,7 +186,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-04-25 17:13
+     * DATE: 2018-05-04 10:59
      */
     @Override
     public String toString() {
@@ -148,9 +196,13 @@ public class ResourceDynamicProperty implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", type=").append(type);
+        sb.append(", remark=").append(remark);
         sb.append(", applicationId=").append(applicationId);
         sb.append(", filedName=").append(filedName);
         sb.append(", description=").append(description);
+        sb.append(", createdTime=").append(createdTime);
+        sb.append(", modifiedTime=").append(modifiedTime);
+        sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", actions=").append(actions);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

@@ -25,7 +25,7 @@ $(function () {
             {label: '类型', name: 'permission.tenantId', align: 'center', width: 70 ,sortable: false ,sortable: false, formatter:getType},
             {label: '应用名称', name: 'applicationName', align: 'center', width: 80},
             {label: '租户名称', name: 'tenantName', align: 'center', width: 80},
-            {label: '通配符', name: 'permission.resourcePathWildcard', align: 'center', width: 80, sortable: false},
+            {label: '资源通配符', name: 'permission.resourcePathWildcard', align: 'center', width: 80, sortable: false},
             {label: '详细说明', name: 'permission.description', align: 'center', width: 70,sortable: false},
             {label: '创建时间', name: 'permission.createdTime', align: 'center', formatter:timeFormat, width: 120,sortable: false},
             {label: '更新时间', name: 'permission.modifiedTime', align: 'center', formatter:timeFormat, width: 120 ,sortable: false},

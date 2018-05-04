@@ -10,8 +10,6 @@ public class ResourceDynamicPropertyParm extends BaseParm{
 
     private ResourceDynamicProperty resourceDynamicProperty;
 
-    private String searchName;
-
     private String type;
 
     public String getType() {
@@ -20,14 +18,6 @@ public class ResourceDynamicPropertyParm extends BaseParm{
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getSearchName() {
-        return searchName;
-    }
-
-    public void setSearchName(String searchName) {
-        this.searchName = searchName;
     }
 
     public ResourceDynamicProperty getResourceDynamicProperty() {

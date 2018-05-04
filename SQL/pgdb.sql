@@ -177,8 +177,8 @@ CREATE TABLE gar_resources
 CREATE TABLE gar_resource_dynamic_props
 (
 	id bigint NOT NULL UNIQUE,
-	name varchar(256) DEFAULT '' NOT NULL,
 	type varchar(50) DEFAULT '0' NOT NULL,
+	remark varchar(256) DEFAULT '' NOT NULL,
 	application_id bigint DEFAULT 0 NOT NULL,
 	filed_name varchar(256) DEFAULT '' NOT NULL,
 	description varchar(256) DEFAULT '' NOT NULL,
@@ -219,7 +219,7 @@ CREATE TABLE gar_router_group
 (
 	id bigint NOT NULL,
 	group_name varchar(256) NOT NULL,
-	description varchar(256) DEFAULT '' NOT NULL,
+	remark varchar(256) DEFAULT '' NOT NULL,
 	app_code varchar(256) NOT NULL,
 	created_time bigint DEFAULT 0 NOT NULL,
 	modified_time bigint DEFAULT 0 NOT NULL,
@@ -394,95 +394,95 @@ INSERT INTO gar_group_users(group_id, user_id, id) VALUES ('1', '1', '1');
 
 -- gar_resource_dynamic_props
 -- appCode
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('1', 'garnet_appCode', '0', 'varchar00', '填 code name', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('2', 'garnet_appCode', '0', 'varchar01', '填 true/false', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('3', 'garnet_appCode', '0', 'varchar02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('4', 'garnet_appCode', '0', 'varchar03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('5', 'garnet_appCode', '0', 'varchar04', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('6', 'garnet_appCode', '0', 'varchar05', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('7', 'garnet_appCode', '0', 'varchar06', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('8', 'garnet_appCode', '0', 'varchar07', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('9', 'garnet_appCode', '0', 'varchar08', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('10', 'garnet_appCode', '0', 'varchar09', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('11', 'garnet_appCode', '0', 'varchar10', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('12', 'garnet_appCode', '0', 'varchar11', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('13', 'garnet_appCode', '0', 'varchar12', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('14', 'garnet_appCode', '0', 'varchar13', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('15', 'garnet_appCode', '0', 'varchar14', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('16', 'garnet_appCode', '0', 'varchar15', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('17', 'garnet_appCode', '0', 'varchar16', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('18', 'garnet_appCode', '0', 'varchar17', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('19', 'garnet_appCode', '0', 'varchar18', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('20', 'garnet_appCode', '0', 'varchar19', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('21', 'garnet_appCode', '0', 'int01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('22', 'garnet_appCode', '0', 'int02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('23', 'garnet_appCode', '0', 'int03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('24', 'garnet_appCode', '0', 'int04', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('25', 'garnet_appCode', '0', 'int05', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('26', 'garnet_appCode', '0', 'boolean01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('27', 'garnet_appCode', '0', 'boolean02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('28', 'garnet_appCode', '0', 'boolean03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('29', 'garnet_appCode', '0', 'boolean04', '', 'readonly');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('1', 'garnet_appCode', '0', 'varchar00', '填 code name', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('2', 'garnet_appCode', '0', 'varchar01', '填 true/false', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('3', 'garnet_appCode', '0', 'varchar02', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('4', 'garnet_appCode', '0', 'varchar03', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('5', 'garnet_appCode', '0', 'varchar04', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('6', 'garnet_appCode', '0', 'varchar05', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('7', 'garnet_appCode', '0', 'varchar06', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('8', 'garnet_appCode', '0', 'varchar07', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('9', 'garnet_appCode', '0', 'varchar08', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('10', 'garnet_appCode', '0', 'varchar09', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('11', 'garnet_appCode', '0', 'varchar10', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('12', 'garnet_appCode', '0', 'varchar11', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('13', 'garnet_appCode', '0', 'varchar12', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('14', 'garnet_appCode', '0', 'varchar13', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('15', 'garnet_appCode', '0', 'varchar14', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('16', 'garnet_appCode', '0', 'varchar15', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('17', 'garnet_appCode', '0', 'varchar16', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('18', 'garnet_appCode', '0', 'varchar17', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('19', 'garnet_appCode', '0', 'varchar18', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('20', 'garnet_appCode', '0', 'varchar19', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('21', 'garnet_appCode', '0', 'int01', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('22', 'garnet_appCode', '0', 'int02', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('23', 'garnet_appCode', '0', 'int03', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('24', 'garnet_appCode', '0', 'int04', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('25', 'garnet_appCode', '0', 'int05', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('26', 'garnet_appCode', '0', 'boolean01', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('27', 'garnet_appCode', '0', 'boolean02', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('28', 'garnet_appCode', '0', 'boolean03', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('29', 'garnet_appCode', '0', 'boolean04', '', 'readonly', '控制功能按钮是否显示', '1522252800000', '1522252800000', 'admin');
 -- superAdmin
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('30', 'superAdmin', '0', 'varchar00', '拥有的权限', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('31', 'superAdmin', '0', 'varchar01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('32', 'superAdmin', '0', 'varchar02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('33', 'superAdmin', '0', 'varchar03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('34', 'superAdmin', '0', 'varchar04', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('35', 'superAdmin', '0', 'varchar05', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('36', 'superAdmin', '0', 'varchar06', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('37', 'superAdmin', '0', 'varchar07', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('38', 'superAdmin', '0', 'varchar08', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('39', 'superAdmin', '0', 'varchar09', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('40', 'superAdmin', '0', 'varchar10', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('41', 'superAdmin', '0', 'varchar11', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('42', 'superAdmin', '0', 'varchar12', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('43', 'superAdmin', '0', 'varchar13', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('44', 'superAdmin', '0', 'varchar14', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('45', 'superAdmin', '0', 'varchar15', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('46', 'superAdmin', '0', 'varchar16', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('47', 'superAdmin', '0', 'varchar17', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('48', 'superAdmin', '0', 'varchar18', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('49', 'superAdmin', '0', 'varchar19', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('50', 'superAdmin', '0', 'int01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('51', 'superAdmin', '0', 'int02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('52', 'superAdmin', '0', 'int03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('53', 'superAdmin', '0', 'int04', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('54', 'superAdmin', '0', 'int05', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('55', 'superAdmin', '0', 'boolean01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('56', 'superAdmin', '0', 'boolean02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('57', 'superAdmin', '0', 'boolean03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('58', 'superAdmin', '0', 'boolean04', '', 'readonly');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('30', 'superAdmin', '0', 'varchar00', '拥有的权限', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('31', 'superAdmin', '0', 'varchar01', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('32', 'superAdmin', '0', 'varchar02', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('33', 'superAdmin', '0', 'varchar03', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('34', 'superAdmin', '0', 'varchar04', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('35', 'superAdmin', '0', 'varchar05', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('36', 'superAdmin', '0', 'varchar06', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('37', 'superAdmin', '0', 'varchar07', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('38', 'superAdmin', '0', 'varchar08', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('39', 'superAdmin', '0', 'varchar09', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('40', 'superAdmin', '0', 'varchar10', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('41', 'superAdmin', '0', 'varchar11', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('42', 'superAdmin', '0', 'varchar12', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('43', 'superAdmin', '0', 'varchar13', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('44', 'superAdmin', '0', 'varchar14', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('45', 'superAdmin', '0', 'varchar15', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('46', 'superAdmin', '0', 'varchar16', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('47', 'superAdmin', '0', 'varchar17', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('48', 'superAdmin', '0', 'varchar18', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('49', 'superAdmin', '0', 'varchar19', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('50', 'superAdmin', '0', 'int01', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('51', 'superAdmin', '0', 'int02', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('52', 'superAdmin', '0', 'int03', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('53', 'superAdmin', '0', 'int04', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('54', 'superAdmin', '0', 'int05', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('55', 'superAdmin', '0', 'boolean01', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('56', 'superAdmin', '0', 'boolean02', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('57', 'superAdmin', '0', 'boolean03', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('58', 'superAdmin', '0', 'boolean04', '', 'readonly', 'Garnet超级管理员标志，不可更改', '1522252800000', '1522252800000', 'admin');
 -- sysMenu
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('59', 'garnet_sysMenu', '0', 'varchar00', 'menuId', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('60', 'garnet_sysMenu', '0', 'varchar01', 'parentId', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('61', 'garnet_sysMenu', '0', 'varchar02', 'parentName', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('62', 'garnet_sysMenu', '0', 'varchar03', 'name', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('63', 'garnet_sysMenu', '0', 'varchar04', 'url', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('64', 'garnet_sysMenu', '0', 'varchar05', 'type', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('65', 'garnet_sysMenu', '0', 'varchar06', 'icon', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('66', 'garnet_sysMenu', '0', 'varchar07', 'code', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('67', 'garnet_sysMenu', '0', 'varchar08', 'orderNum', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('68', 'garnet_sysMenu', '0', 'varchar09', 'open', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('69', 'garnet_sysMenu', '0', 'varchar10', 'list', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('70', 'garnet_sysMenu', '0', 'varchar11', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('71', 'garnet_sysMenu', '0', 'varchar12', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('72', 'garnet_sysMenu', '0', 'varchar13', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('73', 'garnet_sysMenu', '0', 'varchar14', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('74', 'garnet_sysMenu', '0', 'varchar15', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('75', 'garnet_sysMenu', '0', 'varchar16', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('76', 'garnet_sysMenu', '0', 'varchar17', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('77', 'garnet_sysMenu', '0', 'varchar18', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('78', 'garnet_sysMenu', '0', 'varchar19', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('79', 'garnet_sysMenu', '0', 'int01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('80', 'garnet_sysMenu', '0', 'int02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('81', 'garnet_sysMenu', '0', 'int03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('82', 'garnet_sysMenu', '0', 'int04', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('83', 'garnet_sysMenu', '0', 'int05', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('84', 'garnet_sysMenu', '0', 'boolean01', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('85', 'garnet_sysMenu', '0', 'boolean02', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('86', 'garnet_sysMenu', '0', 'boolean03', '', 'readonly');
-INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions) VALUES ('87', 'garnet_sysMenu', '0', 'boolean04', '', 'readonly');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('59', 'garnet_sysMenu', '0', 'varchar00', 'menuId', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('60', 'garnet_sysMenu', '0', 'varchar01', 'parentId', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('61', 'garnet_sysMenu', '0', 'varchar02', 'parentName', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('62', 'garnet_sysMenu', '0', 'varchar03', 'name', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('63', 'garnet_sysMenu', '0', 'varchar04', 'url', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('64', 'garnet_sysMenu', '0', 'varchar05', 'type', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('65', 'garnet_sysMenu', '0', 'varchar06', 'icon', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('66', 'garnet_sysMenu', '0', 'varchar07', 'code', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('67', 'garnet_sysMenu', '0', 'varchar08', 'orderNum', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('68', 'garnet_sysMenu', '0', 'varchar09', 'open', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('69', 'garnet_sysMenu', '0', 'varchar10', 'list', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('70', 'garnet_sysMenu', '0', 'varchar11', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('71', 'garnet_sysMenu', '0', 'varchar12', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('72', 'garnet_sysMenu', '0', 'varchar13', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('73', 'garnet_sysMenu', '0', 'varchar14', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('74', 'garnet_sysMenu', '0', 'varchar15', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('75', 'garnet_sysMenu', '0', 'varchar16', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('76', 'garnet_sysMenu', '0', 'varchar17', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('77', 'garnet_sysMenu', '0', 'varchar18', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('78', 'garnet_sysMenu', '0', 'varchar19', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('79', 'garnet_sysMenu', '0', 'int01', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('80', 'garnet_sysMenu', '0', 'int02', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('81', 'garnet_sysMenu', '0', 'int03', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('82', 'garnet_sysMenu', '0', 'int04', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('83', 'garnet_sysMenu', '0', 'int05', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('84', 'garnet_sysMenu', '0', 'boolean01', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('85', 'garnet_sysMenu', '0', 'boolean02', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('86', 'garnet_sysMenu', '0', 'boolean03', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('87', 'garnet_sysMenu', '0', 'boolean04', '', 'readonly', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
 
 -- gar_resources
 -- appCode
@@ -550,5 +550,5 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10, updated_by_user_name) VALUES ('59', '1', '/garnet/DevelopmentRouterGroup',  '', '菜单配置-DevelopmentRouterGroup', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '13', '9', '', '单点登录应用组', 'modules/routerGroup.html', '1', 'fa fa-th-list', 'garnetDevelopmentRouterGroup', '4', '', '', 'admin');
 
 -- gar_router_group
-INSERT INTO gar_router_group (id, group_name, app_code) VALUES ('1', '超级应用组', 'garnet');
+INSERT INTO gar_router_group (id, group_name, app_code, remark, created_time, modified_time, updated_by_user_name) VALUES ('1', '超级应用组', 'garnet', 'garnet系统应用组', '1522252800000', '1522252800000', 'admin');
 

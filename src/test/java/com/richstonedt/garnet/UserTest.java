@@ -155,6 +155,9 @@ public class UserTest {
         tokenRefreshView.setAppCode("garnet");
         tokenRefreshView.setRefreshToken(refreshToken);
         tokenRefreshView.setUserName("admin");
+        List<Long> tenantIdList = new ArrayList<>();
+        tenantIdList.add(1L);
+        tokenRefreshView.setTenantIdList(tenantIdList);
         LoginMessage loginMessage1 = userService.refreshToken(tokenRefreshView);
         Assert.assertNotNull(loginMessage1);
     }

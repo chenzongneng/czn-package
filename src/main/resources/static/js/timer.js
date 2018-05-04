@@ -3,7 +3,7 @@ function checkLogined() {
 
     if (localStorage.getItem("userName") == null) {
         clearInterval(checkLoginedTimerId);
-        console.log("清理checkLoginedTimerId");
+        // console.log("清理checkLoginedTimerId");
         return;
     }
 
@@ -37,14 +37,14 @@ function checkLogined() {
 //刷新token
 function refreshToken () {
 
-    console.log("刷新token: " + $.now());
+    // console.log("刷新token: " + $.now());
 
     if (localStorage.getItem("accessToken") == null || accessToken == null) {
         clearInterval(refreshTokenTimerId);
-        console.log("清理refreshTokenTimerId");
+        // console.log("清理refreshTokenTimerId");
         return;
     } else {
-        console.log(localStorage.getItem("accessToken"));
+        // console.log(localStorage.getItem("accessToken"));
     }
 
     localStorage.setItem("refreshTokenTimerId", refreshTokenTimerId);
@@ -61,7 +61,7 @@ function refreshToken () {
         contentType: "application/json",
         dataType: "",
         success: function (result) {
-            console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
+            // console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
             localStorage.setItem("accessToken", result.accessToken);
             localStorage.setItem("refreshToken", result.refreshToken);
         }
@@ -71,3 +71,6 @@ function refreshToken () {
 // window.setInterval("refreshToken();", 60000 * 28);
 var refreshTokenTimerId = window.setInterval("refreshToken();", 60000 * 25);
 var checkLoginedTimerId = window.setInterval("checkLogined();", 20000);
+
+//当页面刷新时，刷新token
+window.setTimeout("refreshToken();", 3000);

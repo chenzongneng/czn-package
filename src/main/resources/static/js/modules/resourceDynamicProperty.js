@@ -12,15 +12,10 @@ $(function () {
         colModel: [
             {label: '动态资源配置ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
             {label: '类型名称', name: 'type', align: 'center', width: 80, sortable: false},
-            {label: '行为组', name: 'actions', align: 'center', width: 80, sortable: false}
-            // {label: '应用名称', name: 'applicationName', align: 'center', width: 40},
-            // {
-            //     label: '状态', align: 'center', name: 'status', width: 20, formatter: function (value, options, row) {
-            //     return value === 0 ?
-            //         '<span class="label label-danger">禁用</span>' :
-            //         '<span class="label label-success">正常</span>';
-            // }
-            // }
+            {label: '备注', name: 'remark', align: 'center', width: 160 ,sortable: false},
+            {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 120 ,sortable: false},
+            {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 120 ,sortable: false},
+            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: true,
         height: 385,
@@ -56,6 +51,18 @@ $(function () {
     });
 });
 
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    var h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D + "  " + h + m + s;
+}
+
 //应用列表
 var applicationList = {
     // 应用列表数据
@@ -82,6 +89,7 @@ var vm = new Vue({
         resourceDynamicProperty: {
             id: null,
             type: null,
+            remark: null,
             actions: null,
             fieldName: null,
             description:null,
@@ -94,40 +102,38 @@ var vm = new Vue({
         }
     },
     mounted:function () {
-
-        for(var i=0; i<10;i++){
-            var p = new Object();
-            p.description = '';
-            p.filedName= 'varchar0'+i;
-            this.resourceDynamicPropertyList.push(p);
-
-        }
-
-        for(var i=10; i<20;i++){
-            var p = new Object();
-            p.description = '';
-            p.filedName= 'varchar'+i;
-            this.resourceDynamicPropertyList.push(p);
-
-        }
-
-        for(var i=1; i<6; i ++) {
-            var property = new Object();
-            property.description = '';
-            property.filedName= 'int0'+i;
-            this.resourceDynamicPropertyList.push(property);
-        }
-
-        for(var i=1; i<5; i ++) {
-            var property = new Object();
-            property.description = '';
-            property.filedName= 'boolean0'+i;
-            this.resourceDynamicPropertyList.push(property);
-        }
-
-
+        this.initData();
     },
     methods: {
+        initData:function () {
+            for(var i=0; i<10;i++){
+                var p = new Object();
+                p.description = '';
+                p.filedName= 'varchar0'+i;
+                this.resourceDynamicPropertyList.push(p);
+            }
+
+            for(var i=10; i<20;i++){
+                var p = new Object();
+                p.description = '';
+                p.filedName= 'varchar'+i;
+                this.resourceDynamicPropertyList.push(p);
+            }
+
+            for(var i=1; i<6; i ++) {
+                var property = new Object();
+                property.description = '';
+                property.filedName= 'int0'+i;
+                this.resourceDynamicPropertyList.push(property);
+            }
+
+            for(var i=1; i<5; i ++) {
+                var property = new Object();
+                property.description = '';
+                property.filedName= 'boolean0'+i;
+                this.resourceDynamicPropertyList.push(property);
+            }
+        },
 
         /**  查询按钮点击事件 */
         query: function () {
@@ -138,16 +144,17 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             applicationList.appList.selectedApp = null;
-            //resourceDynamicPropertyList: [];
-            // vm.resourceDynamicProperty = {
-            //     id: null,
-            //     applicationId: 1,
-            //     name: null,
-            //     code: null,
-            //     parentCode: null,
-            //     parentName: null,
-            //     orderNum: 0
-            // };
+
+            vm.resourceDynamicPropertyList = [];
+            vm.resourceDynamicProperty = {
+                id: null,
+                type: null,
+                remark: null,
+                actions: null,
+                applicationId:null
+            };
+
+            this.initData();
             // if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
             //     vm.resource.applicationId = vm.option.appSearchId;
             // }
@@ -223,6 +230,7 @@ var vm = new Vue({
 
             // 获取访问权限树选择的访问权限
             var obj = new Object();
+            vm.resourceDynamicProperty.updatedByUserName = localStorage.getItem("userName");
             obj.resourceDynamicProperty = vm.resourceDynamicProperty;
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
@@ -233,6 +241,11 @@ var vm = new Vue({
 
             if (vm.resourceDynamicProperty.type.length > 30) {
                 swal("", "资源类型配置名称长度不能大于30", "warning");
+                return;
+            }
+
+            if(vm.resourceDynamicProperty.remark == null || $.trim(vm.resourceDynamicProperty.remark) == "") {
+                swal("", "备注不能为空", "warning");
                 return;
             }
 
@@ -276,11 +289,10 @@ var vm = new Vue({
                 vm.resourceDynamicProperty.id = response.id;
                 vm.resourceDynamicProperty.applicationId = response.applicationId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
+                vm.resourceDynamicProperty.remark = response.resourceDynamicProperty.remark;
                 vm.resourceDynamicProperty.actions = response.resourceDynamicProperty.actions;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
                 applicationList.appList.selectedApp = response.applicationId;
-
-
             });
         },
         /** 重新加载 */
