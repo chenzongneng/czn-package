@@ -73,4 +73,11 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      */
     List<Permission> queryPermissionByApplicationId(PermissionParm permissionParm);
 
+    /**
+     * 根据应用id获取权限列表
+     * @param permissionParm
+     * @return
+     */
+    List<Permission> queryPermissionByParams(PermissionParm permissionParm);
+
 }

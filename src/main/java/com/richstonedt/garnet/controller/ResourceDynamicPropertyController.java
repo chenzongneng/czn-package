@@ -167,6 +167,7 @@ public class ResourceDynamicPropertyController {
     public ResponseEntity<?> getResourceDynamicPropertys(
             @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
             @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "0", required = false) @RequestParam(value = "applicationId", defaultValue = "0", required = false) Long applicationId,
             @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "类型", defaultValue = "", required = false) @RequestParam(value = "type", defaultValue = "", required = false) String type,
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
@@ -176,6 +177,7 @@ public class ResourceDynamicPropertyController {
             ResourceDynamicPropertyParm resourceDynamicPropertyParm = new ResourceDynamicPropertyParm();
             resourceDynamicPropertyParm.setUserId(userId);
             resourceDynamicPropertyParm.setTenantId(tenantId);
+            resourceDynamicPropertyParm.setApplicationId(applicationId);
             resourceDynamicPropertyParm.setPageSize(pageSize);
             resourceDynamicPropertyParm.setPageNumber(pageNumber);
             resourceDynamicPropertyParm.setSearchName(searchName);

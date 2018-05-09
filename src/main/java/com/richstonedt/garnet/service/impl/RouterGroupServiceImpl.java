@@ -135,7 +135,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         RouterGroup routerGroup = routerGroupParm.getRouterGroup();
         RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
-        routerGroupCriteria.setOrderByClause(GarnetContants.ORDER_BY_GROUP_NAME);
+        routerGroupCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         RouterGroupCriteria.Criteria criteria = routerGroupCriteria.createCriteria();
 
         if (!StringUtils.isEmpty(routerGroupParm.getSearchName())) {

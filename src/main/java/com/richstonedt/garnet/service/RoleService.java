@@ -64,4 +64,11 @@ public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
      */
     List<Role> queryRolesByApplicationId(RoleParm roleParm);
 
+    /**
+     * 根据应用id或租户id查询角色列表
+     * @param roleParm
+     * @return
+     */
+    List<Role> queryRolesByParams(RoleParm roleParm);
+
 }

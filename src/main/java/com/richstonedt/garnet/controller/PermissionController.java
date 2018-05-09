@@ -244,4 +244,29 @@ public class PermissionController {
         }
     }
 
+    @ApiOperation(value = "[Garnet]根据应用id获取权限列表", notes = "通过查询条件获取权限列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/permissions/byparams", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getGroupsByParams(
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
+            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "0", required = false) @RequestParam(value = "applicationId", defaultValue = "0", required = false) Long applicationId) {
+        try {
+            PermissionParm permissionParm = new PermissionParm();
+            permissionParm.setUserId(userId);
+            permissionParm.setTenantId(tenantId);
+            permissionParm.setApplicationId(applicationId);
+            List<Permission> permissions = permissionService.queryPermissionByParams(permissionParm);
+            // 封装返回信息
+            return new ResponseEntity<>(permissions, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

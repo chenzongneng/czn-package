@@ -77,13 +77,26 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">资源名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="resource.name" placeholder="资源名称" maxlength="30"/>
+                    <input class="form-control" v-model="resource.name" placeholder="资源名称" maxlength="60"/>
                 </div>
             </div>
+
+            <!--<div class="form-group" v-show="showType">-->
+                <!--<div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<select class="form-control" v-model="typeList1.selectedType" @change="selectType1">-->
+                        <!--<option disabled value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                        <!--<option v-for="option in typeList1.options" v-bind:value="option.id">-->
+                            <!--{{ option.name }}-->
+                        <!--</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+
             <div class="form-group">
                 <div class="col-sm-2 control-label">所属应用<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <select class="form-control" v-model="applicationList.appList.selectedApp">
+                    <select class="form-control" v-model="applicationList.appList.selectedApp" @change="selectApp">
                         <option disabled value="">--请选择--</option>
                         <option v-for="option in applicationList.appList.options" v-bind:value="option.id">
                         {{ option.name }}
@@ -92,7 +105,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">所属租户<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-2 control-label">所属租户</div>
                 <div class="col-sm-10">
                     <select class="form-control" v-model="tenantList.selectedTenant" @change="selectTenant">
                         <option disabled value="">--请选择--</option>
@@ -102,6 +115,7 @@
                     </select>
                 </div>
             </div>
+
             <!--<div class="form-group">-->
                 <!--<div class="col-sm-2 control-label">所属租户</div>-->
                 <!--<div class="col-sm-10">-->
@@ -116,11 +130,11 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">路径标识<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="resource.path" placeholder="可填如/garnet.html"/>
+                    <input class="form-control" v-model="resource.path" placeholder="可填如/garnet.html" maxlength="60"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-2 control-label">资源配置类型<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <!--@change="selectType"-->
                     <select class="form-control" v-model="typeList.selectedType" @change="selectType">

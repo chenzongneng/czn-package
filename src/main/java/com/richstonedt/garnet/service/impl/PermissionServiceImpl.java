@@ -234,6 +234,27 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
         return permissions;
     }
 
+    @Override
+    public List<Permission> queryPermissionByParams(PermissionParm permissionParm) {
+        Long applicationId = permissionParm.getApplicationId();
+        Long tenantId = permissionParm.getTenantId();
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            criteria.andApplicationIdEqualTo(applicationId);
+        }
+
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            criteria.andTenantIdEqualTo(tenantId);
+        }
+
+        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
+        return permissions;
+    }
+
     private void checkDuplicateName(Permission permission) {
 
         Long id = permission.getId();

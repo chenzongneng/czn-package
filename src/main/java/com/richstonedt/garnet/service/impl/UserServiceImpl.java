@@ -105,9 +105,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String credential = userView.getPassword();
         User user = userView.getUser();
 
-        //检查用户名称是否已被使用
-        checkDuplicateName(user);
-
         user.setId(IdGeneratorUtil.generateId());
         UserCredential userCredential = new UserCredential();
         userCredential.setExpiredDateTime(userView.getExpiredDateTime());
@@ -120,6 +117,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         user.setCreatedTime(currentTime);
         user.setModifiedTime(currentTime);
+
+        //检查用户名称是否已被使用
+        checkDuplicateName(user);
 
         this.insertSelective(user);
 
@@ -152,8 +152,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     private void checkDuplicateName(User user) {
         UserCriteria userCriteria = new UserCriteria();
         userCriteria.createCriteria().andUserNameEqualTo(user.getUserName()).andStatusEqualTo(1);
-        List<User> users = this.selectByCriteria(userCriteria);
-        if (!CollectionUtils.isEmpty(users) && users.size() > 0) {
+        User user1 = this.selectSingleByCriteria(userCriteria);
+        if (!ObjectUtils.isEmpty(user1) && user1.getId().longValue() != user.getId().longValue()) {
             throw new RuntimeException("账号已存在");
         }
     }
@@ -523,13 +523,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         String[] tokenParams = tokenWithAppCode.split("#");
         String token = tokenParams[0];
-        String appCode = tokenParams[1];
+//        String appCode = tokenParams[1];
+        String appCode = tokenRefreshView.getAppCode();
         String userName = tokenParams[2];
         String createTime = tokenParams[3];
 
         //验证基础信息是否正确
         LoginMessage loginMessage2 = this.checkRefreshTokenData(tokenRefreshView);
-        if (loginMessage2.getCode() == 401 && loginMessage2.getCode() == 403) {
+        if (loginMessage2.getCode() == 401 || loginMessage2.getCode() == 403 || "false".equals(loginMessage2.getLoginStatus())) {
             return loginMessage2;
         }
 
@@ -814,7 +815,23 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return loginMessage;
         }
 
+
         //根据username 查询密码，如果查不到则账号有误
+        User user = userService.getUserByUserName(userName);
+//        UserCriteria userCriteria = new UserCriteria();
+//        userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
+//        User user = this.selectSingleByCriteria(userCriteria);
+        if (ObjectUtils.isEmpty(user)) {
+            loginMessage.setMessage("token错误");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
+//        Long userId = user.getId();
+//        UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
+//        userCredentialCriteria.createCriteria().andUserIdEqualTo(userId);
+//        UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
         UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
         if (ObjectUtils.isEmpty(userCredential)) {
             loginMessage.setMessage(MessageDescription.LOGIN_USERNAME_NOT_EXIST);
@@ -829,7 +846,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             //用密码解密token
             tokenPlayload = JwtToken.verifyToken(token, password);
         } catch (Exception e) {
-            loginMessage.setMessage("账号或密码错误");
+            loginMessage.setMessage("账号错误,请输入正确账号");
             loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(401);
             return loginMessage;
@@ -841,7 +858,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String routerGroupNameGo = routerGroupService.getGroupNameByAppCode(tokenRefreshView.getAppCode());
         //应用没有被添加进应用组或不在同一个应用组，无法访问
         if (StringUtils.isEmpty(routerGroupName) || StringUtils.isEmpty(routerGroupNameGo) || !routerGroupName.equals(routerGroupNameGo)) {
-            loginMessage.setMessage("没有权限");
+            loginMessage.setMessage("应用不存在或不在同一个应用组");
             loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
             loginMessage.setCode(403);
             return loginMessage;
@@ -1143,9 +1160,19 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     @Override
     public List<User> queryUserByApplicationId(UserParm userParm) {
         Long applicationId = userParm.getApplicationId();
+        Long tenantId = userParm.getTenantId();
 
         ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-        applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(applicationId);
+        ApplicationTenantCriteria.Criteria criteria = applicationTenantCriteria.createCriteria();
+
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            criteria.andTenantIdEqualTo(tenantId);
+        }
+
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            criteria.andApplicationIdEqualTo(applicationId);
+        }
+
         List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
 
         if (CollectionUtils.isEmpty(applicationTenantList) || applicationTenantList.size() == 0) {
@@ -1171,6 +1198,21 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         for (Long userId : userIdList) {
             user = this.selectByPrimaryKey(userId);
             userList.add(user);
+        }
+
+        return userList;
+    }
+
+    @Override
+    public List<User> queryUserByParams(UserParm userParm) {
+        Long applicationId = userParm.getApplicationId();
+        Long tenantId = userParm.getTenantId();
+
+        List<User> userList;
+        if ((!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) && (ObjectUtils.isEmpty(applicationId) || applicationId.longValue() == 0)) {
+            userList = this.queryUserByTenantId(userParm);
+        } else {
+            userList = this.queryUserByApplicationId(userParm);
         }
 
         return userList;

@@ -250,7 +250,33 @@ public class RoleController {
         }
     }
 
-    @ApiOperation(value = "[Garnet]获取角色列表", notes = "通过获取角色列表")
+    @ApiOperation(value = "[Garnet]根据应用id或租户id获取角色列表", notes = "通过查询条件获取角色列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/roles/byparams", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getGroupsByParams(
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
+            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "0", required = false) @RequestParam(value = "applicationId", defaultValue = "0", required = false) Long applicationId) {
+        try {
+            RoleParm roleParm = new RoleParm();
+            roleParm.setUserId(userId);
+            roleParm.setApplicationId(applicationId);
+            roleParm.setTenantId(tenantId);
+            roleParm.setApplicationId(applicationId);
+            List<Role> roles = roleService.queryRolesByParams(roleParm);
+            // 封装返回信息
+            return new ResponseEntity<>(roles, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]获取全部角色列表", notes = "获取角色列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })

@@ -92,6 +92,8 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             resourceDynamicProperty.setActions(resourceDynamicProperty1.getActions());
             resourceDynamicProperty.setType(resourceDynamicProperty1.getType());
             resourceDynamicProperty.setRemark(resourceDynamicProperty1.getRemark());
+            resourceDynamicProperty.setApplicationId(resourceDynamicProperty1.getApplicationId());
+            resourceDynamicProperty.setTenantId(resourceDynamicProperty1.getTenantId());
             resourceDynamicProperty.setUpdatedByUserName(resourceDynamicProperty1.getUpdatedByUserName());
             resourceDynamicProperty.setCreatedTime(currentTime);
             resourceDynamicProperty.setModifiedTime(currentTime);
@@ -125,11 +127,20 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
         String type = resourceDynamicPropertyParm.getType();
         ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-        resourceDynamicPropertyCriteria.setOrderByClause(GarnetContants.ORDER_BY_TYPE);
+        resourceDynamicPropertyCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
         ResourceDynamicPropertyCriteria.Criteria criteria = resourceDynamicPropertyCriteria.createCriteria();
 
         if (!StringUtils.isEmpty(type)) {
             criteria.andTypeEqualTo(type);
+        }
+
+        Long applicationId = resourceDynamicPropertyParm.getApplicationId();
+        Long tenantId = resourceDynamicPropertyParm.getTenantId();
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            criteria.andApplicationIdEqualTo(applicationId);
+        }
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            criteria.andTenantIdEqualTo(tenantId);
         }
 
         if (!StringUtils.isEmpty(resourceDynamicPropertyParm.getSearchName())) {

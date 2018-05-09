@@ -336,6 +336,27 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         return groups;
     }
 
+    @Override
+    public List<Group> queryGroupsByParams(GroupParm groupParm) {
+        Long applicationId = groupParm.getApplicationId();
+        Long tenantId = groupParm.getTenantId();
+
+        GroupCriteria groupCriteria = new GroupCriteria();
+        GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            criteria.andApplicationIdEqualTo(applicationId);
+        }
+
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            criteria.andTenantIdEqualTo(tenantId);
+        }
+
+        List<Group> groups = this.selectByCriteria(groupCriteria);
+        return groups;
+    }
+
     /**
      * 验证组名称是否已经存在
      */

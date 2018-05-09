@@ -51,7 +51,7 @@ public class ApplicationController {
 
     @ApiOperation(value = "[Garnet]创建应用", notes = "创建一个应用")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = GarnetMessage.class) ),
             @ApiResponse(code = 409, message = "conflict"),
             @ApiResponse(code = 500, message = "internal server error") })
     @RequestMapping(value = "/applications", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

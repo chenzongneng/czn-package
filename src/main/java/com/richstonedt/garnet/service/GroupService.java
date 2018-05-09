@@ -72,5 +72,12 @@ public interface GroupService extends BaseService<Group, GroupCriteria, Long> {
      */
     public List<Group> queryGroupsByApplicationId(GroupParm groupParm);
 
+    /**
+     * 通过applicationId或tenantId查询相对应的组
+     * @param groupParm
+     * @return
+     */
+    public List<Group> queryGroupsByParams(GroupParm groupParm);
+
 
 }

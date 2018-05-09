@@ -8,7 +8,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public ResourceDynamicPropertyCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -958,6 +958,66 @@ public class ResourceDynamicPropertyCriteria {
             addCriterion("actions not between", value1, value2, "actions");
             return (Criteria) this;
         }
+
+        public Criteria andTenantIdIsNull() {
+            addCriterion("tenant_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdIsNotNull() {
+            addCriterion("tenant_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdEqualTo(Long value) {
+            addCriterion("tenant_id =", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotEqualTo(Long value) {
+            addCriterion("tenant_id <>", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdGreaterThan(Long value) {
+            addCriterion("tenant_id >", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("tenant_id >=", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdLessThan(Long value) {
+            addCriterion("tenant_id <", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdLessThanOrEqualTo(Long value) {
+            addCriterion("tenant_id <=", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdIn(List<Long> values) {
+            addCriterion("tenant_id in", values, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotIn(List<Long> values) {
+            addCriterion("tenant_id not in", values, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdBetween(Long value1, Long value2) {
+            addCriterion("tenant_id between", value1, value2, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotBetween(Long value1, Long value2) {
+            addCriterion("tenant_id not between", value1, value2, "tenantId");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -966,7 +1026,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -981,7 +1041,7 @@ public class ResourceDynamicPropertyCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-04 10:59
+     * DATE: 2018-05-09 15:20
      */
     public static class Criterion {
         private String condition;

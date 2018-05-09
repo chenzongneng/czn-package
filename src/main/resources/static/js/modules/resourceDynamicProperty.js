@@ -82,6 +82,9 @@ var vm = new Vue({
     data: {
         name: null,
         showList: true,
+        showType: true, //类型选择下拉框
+        showTenant: false, //显示租户下拉框
+        showApplication: false, //显示应用下拉框
         showParentCode: false,
         title: null,
         searchName: null,
@@ -93,12 +96,40 @@ var vm = new Vue({
             actions: null,
             fieldName: null,
             description:null,
+            tenantId: null,
             applicationId:null,
             orderNum: 0
         },
         option: {
             applicationId: 1,
             appSearchId: ""
+        },
+        // 应用列表数据
+        appList: {
+            selectedApp: "",
+            options: []
+        },
+        // 租户表数据
+        tenantList: {
+            selectedTenant: "",
+            options: []
+        },
+        // 类型列表数据
+        typeList: {
+            selectedType: "",
+            options: [
+                {
+                    id : "1",
+                    name : "租户"
+                },
+                {
+                    id : "2",
+                    name : "应用"
+                },
+                {
+                    id : "3",
+                    name : "租户+应用"
+                }]
         }
     },
     mounted:function () {
@@ -142,8 +173,15 @@ var vm = new Vue({
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
+            vm.showType = true;
+            vm.showApplication = false;
+            vm.showTenant = false;
             vm.title = "新增";
-            applicationList.appList.selectedApp = null;
+            applicationList.appList.options = [];
+            applicationList.appList.selectedApp = "";
+            vm.tenantList.options = [];
+            vm.tenantList.selectedTenant = "";
+            vm.typeList.selectedType = "";
 
             vm.resourceDynamicPropertyList = [];
             vm.resourceDynamicProperty = {
@@ -151,10 +189,13 @@ var vm = new Vue({
                 type: null,
                 remark: null,
                 actions: null,
-                applicationId:null
+                tenantId: "",
+                applicationId: ""
             };
 
             this.initData();
+            vm.getTenantList();
+            vm.getAppList();
             // if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
             //     vm.resource.applicationId = vm.option.appSearchId;
             // }
@@ -170,7 +211,15 @@ var vm = new Vue({
                 return;
             }
             vm.showList = false;
+            vm.showType = false;
             vm.title = "修改";
+            applicationList.appList.options = [];
+            applicationList.appList.selectedApp = "";
+            vm.tenantList.options = [];
+            vm.tenantList.selectedTenant = "";
+
+            vm.getTenantList();
+            vm.getAppList();
             vm.initTreesToUpdate(resourceDynamicPropertyId);
             // vm.loadResourceTree();
         },
@@ -231,6 +280,8 @@ var vm = new Vue({
             // 获取访问权限树选择的访问权限
             var obj = new Object();
             vm.resourceDynamicProperty.updatedByUserName = localStorage.getItem("userName");
+            vm.resourceDynamicProperty.tenantId = vm.tenantList.selectedTenant;
+            vm.resourceDynamicProperty.applicationId = applicationList.appList.selectedApp;
             obj.resourceDynamicProperty = vm.resourceDynamicProperty;
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
@@ -238,6 +289,34 @@ var vm = new Vue({
                 swal("", "资源类型配置名称不能为空", "warning");
                 return;
             }
+
+            if ((vm.tenantList.selectedTenant == null || $.trim(vm.tenantList.selectedTenant) == "") && (applicationList.appList.selectedApp == null || applicationList.appList.selectedApp == "")) {
+                swal("", "请在选择类型后，选择租户或应用", "warning");
+                return;
+            }
+
+            if (vm.typeList.selectedType != null && $.trim(vm.typeList.selectedType) != "") {
+                var selectType = vm.typeList.selectedType;
+                if (selectType == 1) {
+                    //租户级
+                    if (vm.resourceDynamicProperty.tenantId == null || $.trim(vm.resourceDynamicProperty.tenantId) == "") {
+                        swal("", "请选择租户", "warning");
+                        return;
+                    }
+                } else if (selectType == 2) {
+                    //应用级
+                    if (vm.resourceDynamicProperty.applicationId == null || $.trim(vm.resourceDynamicProperty.applicationId) == "") {
+                        swal("", "请选择应用", "warning");
+                        return;
+                    }
+                } else if (selectType == 3) {
+                    if ((vm.tenantList.selectedTenant == null || $.trim(vm.tenantList.selectedTenant) == "") || (applicationList.appList.selectedApp == null || applicationList.appList.selectedApp == "")) {
+                        swal("", "租户和应用都不能为空", "warning");
+                        return;
+                    }
+                }
+            }
+
 
             if (vm.resourceDynamicProperty.type.length > 30) {
                 swal("", "资源类型配置名称长度不能大于30", "warning");
@@ -253,6 +332,11 @@ var vm = new Vue({
                 swal("", "资源类型配置行为组不能为空", "warning");
                 return;
             }
+
+            // if (vm.resourceDynamicProperty.actions != "edit" && vm.resourceDynamicProperty.actions != "read" && vm.resourceDynamicProperty.actions != "edit,read") {
+            //     swal("", "行为组只能填写以下三种：eidt、read或edit,read", "warning");
+            //     return;
+            // }
 
             $.ajax({
                 type: vm.resourceDynamicProperty.id === null ? "POST" : "PUT",
@@ -287,12 +371,36 @@ var vm = new Vue({
                 response = response.data;
 
                 vm.resourceDynamicProperty.id = response.id;
-                vm.resourceDynamicProperty.applicationId = response.applicationId;
+                vm.resourceDynamicProperty.applicationId = response.resourceDynamicProperty.applicationId;
+                vm.resourceDynamicProperty.tenantId = response.resourceDynamicProperty.tenantId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
                 vm.resourceDynamicProperty.remark = response.resourceDynamicProperty.remark;
                 vm.resourceDynamicProperty.actions = response.resourceDynamicProperty.actions;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
-                applicationList.appList.selectedApp = response.applicationId;
+                applicationList.appList.selectedApp = response.resourceDynamicProperty.applicationId;
+                vm.tenantList.selectedTenant = response.resourceDynamicProperty.tenantId;
+
+                var selectedTenant = response.resourceDynamicProperty.tenantId;
+                var selectedApp = response.resourceDynamicProperty.applicationId;
+
+                if (selectedTenant == null || selectedTenant == 0) {
+                    //应用级
+                    applicationList.appList.selectedApp = selectedApp;
+                    vm.showApplication = true;
+                    vm.showTenant = false;
+                } else if (selectedApp == null || selectedApp == 0){
+                    //租户级
+                    vm.tenantList.selectedTenant = selectedTenant;
+                    vm.showTenant = true;
+                    vm.showApplication = false;
+                } else {
+                    //租户+应用
+                    applicationList.appList.selectedApp = selectedApp;
+                    vm.tenantList.selectedTenant = selectedTenant;
+                    vm.showApplication = true;
+                    vm.showTenant = true;
+                }
+
             });
         },
         /** 重新加载 */
@@ -315,21 +423,70 @@ var vm = new Vue({
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
-            vm.initTreesToAdd()
+            // vm.initTreesToAdd()
+            // vm.getAppList();
         },
+        /*租户列表onchange事件*/
+        selectTenant: function () {
+          // vm.getTenantList();
+        },
+        /*类型列表onchangegkwr*/
         selectType: function () {
-            vm.initTreesToAdd()
+            var selectedType = vm.typeList.selectedType;
+            if (selectedType == 1) {
+                //租户级
+                vm.tenantList.selectedTenant = "";
+                applicationList.appList.selectedApp = "";
+                vm.resourceDynamicProperty.applicationId = null;
+                vm.resourceDynamicProperty.tenantId = null;
+                vm.showTenant = true;
+                vm.showApplication = false;
+            } else if (selectedType == 2) {
+                //应用级
+                vm.tenantList.selectedTenant = "";
+                applicationList.appList.selectedApp = "";
+                vm.resourceDynamicProperty.tenantId = null;
+                vm.resourceDynamicProperty.applicationId = null;
+                vm.showTenant = false;
+                vm.showApplication = true;
+            } else {
+                //租户+应用
+                vm.tenantList.selectedTenant = "";
+                applicationList.appList.selectedApp = "";
+                vm.resourceDynamicProperty.tenantId = null;
+                vm.resourceDynamicProperty.applicationId = null;
+                vm.showApplication = true;
+                vm.showTenant = true;
+            }
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
                 $.each(response.list, function (index, item) {
+                    // vm.appList.options.push(item);
                     applicationList.appList.options.push(item);
                     applicationList.appSearchList.options.push(item);
                 })
-
             });
-        }
+        },
+        /**  获取租户列表 */
+        getTenantList: function () {
+            $.get(baseURL + "tenants?userId=" + userId + "&page=1&limit=1000", function (response) {
+                $.each(response.list, function (index, item) {
+                    vm.tenantList.options.push(item);
+                })
+            });
+        },
+        /**  获取应用列表 */
+        // getAppList: function () {
+        //     $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+        //         $.each(response.list, function (index, item) {
+        //             applicationList.appList.options.push(item);
+        //             applicationList.appSearchList.options.push(item);
+        //         })
+        //
+        //     });
+        // }
     },
     /**  初始化页面时执行该方法 */
     created: function () {

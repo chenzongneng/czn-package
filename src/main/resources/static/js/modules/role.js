@@ -125,7 +125,8 @@ var vm = new Vue({
     data: {
         showType: true, // 显示类型
         showByType: true, //根据选择类型选择显示租户级、应用级
-        hiddenByType: true,
+        showTenant: false, //显示租户
+        showApplication: false, //显示应用
         searchName: null,
         showList: true,
         title: null,
@@ -160,6 +161,10 @@ var vm = new Vue({
                 {
                     id : "2",
                     name : "应用"
+                },
+                {
+                    id : "3",
+                    name : "租户+应用"
                 }]
         },
         // 当前用户信息
@@ -173,8 +178,9 @@ var vm = new Vue({
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
-            vm.hiddenByType = true;
             vm.showType = true;
+            vm.showTenant = false;
+            vm.showApplication = false;
             vm.title = "新增";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
@@ -279,18 +285,32 @@ var vm = new Vue({
                 swal("", "角色名称不能为空", "warning");
                 return;
             }
-            // if(vm.role.tenantId == null) {
-            //     swal("", "请选择租户", "warning");
-            //     return;
-            // }
-            // if(vm.role.applicationId == null) {
-            //     swal("", "请选择应用", "warning");
-            //     return;
-            // }
 
-            if (vm.role.tenantId == null && vm.role.applicationId == null) {
+            if ((vm.role.tenantId == null || $.trim(vm.role.tenantId) =="") && (vm.role.applicationId == null || $.trim(vm.role.applicationId) == "")) {
                     swal("", "请在选择类型后，选择租户或应用", "warning");
                     return;
+            }
+
+            if (vm.typeList.selectedType != null && vm.typeList.selectedType != "") {
+                var selectType = vm.typeList.selectedType;
+                if (selectType == 1) {
+                    //租户级
+                    if (vm.role.tenantId == null || $.trim(vm.role.tenantId) == "") {
+                        swal("", "租户不能为空", "warning");
+                        return;
+                    }
+                } else if (selectType == 2) {
+                    //应用级
+                    if (vm.role.applicationId == null || $.trim(vm.role.applicationId) == "") {
+                        swal("", "应用不能为空", "warning");
+                        return;
+                    }
+                } else if (selectType == 3) {
+                    if ((vm.role.tenantId == null || $.trim(vm.role.tenantId) =="") || (vm.role.applicationId == null || $.trim(vm.role.applicationId) == "")) {
+                        swal("", "租户和应用都不能为空", "");
+                        return;
+                    }
+                }
             }
 
             if(permissionIdList == null || permissionIdList.length == 0) {
@@ -366,13 +386,23 @@ var vm = new Vue({
                 if (selectedTenant == null || selectedTenant == 0) {
                     //应用级
                     vm.appList.selectedApp = selectedApp;
-                    vm.showByType = false;
+                    vm.showTenant = false;
+                    vm.showApplication = true;
                     permissionUrl = baseURL + "permissions/applicationId/" + selectedApp;
                     groupUrl = baseURL + "groups/applicationId/" + selectedApp;
-                } else {
+                } else if (selectedApp == null || selectedApp == 0) {
                     //租户级
                     vm.tenantList.selectedTenant = selectedTenant;
-                    vm.showByType = true;
+                    vm.showApplication = false;
+                    vm.showTenant = true;
+                    permissionUrl = baseURL + "permissions/tenantId/" + selectedTenant;
+                    groupUrl = baseURL + "groups/tenantId/" + selectedTenant;
+                } else {
+                    //租户+应用
+                    vm.appList.selectedApp = selectedApp;
+                    vm.tenantList.selectedTenant = selectedTenant;
+                    vm.showApplication = true;
+                    vm.showTenant = true;
                     permissionUrl = baseURL + "permissions/tenantId/" + selectedTenant;
                     groupUrl = baseURL + "groups/tenantId/" + selectedTenant;
                 }
@@ -421,26 +451,40 @@ var vm = new Vue({
         /** 租户列表onchange 事件*/
         selectTenant: function () {
             vm.role.tenantId = vm.tenantList.selectedTenant;
+            vm.role.applicationId = vm.appList.selectedApp;
             //重新加载权限
             vm.roadPermissionTree();
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
+            vm.role.tenantId = vm.tenantList.selectedTenant;
             vm.role.applicationId = vm.appList.selectedApp;
-            vm.roadPermissionTreeByApp();
+            vm.roadPermissionTree();
+            // if (vm.tenantList.selectedTenant == null && $.trim(vm.tenantList.selectedTenant) == "") {
+            //     vm.roadPermissionTreeByApp();
+            // }
         },
         /** 类型列表onchange 事件*/
         selectType: function () {
-            vm.hiddenByType = false;
             var selectedType = vm.typeList.selectedType;
             if (selectedType == 1) {
                 //租户级
                 vm.role.applicationId = null;
-                vm.showByType = true;
-            } else {
+                vm.role.tenantId = null;
+                vm.showTenant = true;
+                vm.showApplication = false;
+            } else if (selectedType == 2){
                 //应用级
                 vm.role.tenantId = null;
-                vm.showByType = false;
+                vm.role.applicationId = null;
+                vm.showTenant = false;
+                vm.showApplication = true;
+            } else {
+                //租户+应用
+                vm.role.tenantId = null;
+                vm.role.applicationId = null;
+                vm.showTenant = true;
+                vm.showApplication = true;
             }
         },
         /**  获取租户列表 */
@@ -461,7 +505,8 @@ var vm = new Vue({
         },
         /** 加载组 */
         roadGroupTree:function () {
-            $.get(baseURL + "groups/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+            // $.get(baseURL + "groups/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+            $.get(baseURL + "groups/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
                 groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
                 groupTree.expandAll(true);
             })
@@ -478,7 +523,8 @@ var vm = new Vue({
         /** 加载权限树 */
         roadPermissionTree:function () {
             //加载权限树
-            $.get(baseURL + "permissions/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+            // $.get(baseURL + "permissions/tenantId/" + vm.tenantList.selectedTenant, function (response) {
+            $.get(baseURL + "permissions/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
                 permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                 permissionTree.expandAll(true);
 

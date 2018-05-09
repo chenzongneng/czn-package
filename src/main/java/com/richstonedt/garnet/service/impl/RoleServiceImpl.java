@@ -311,6 +311,33 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         return roles;
     }
 
+    @Override
+    public long countByCriteria(RoleCriteria criteria) {
+        return super.countByCriteria(criteria);
+    }
+
+    @Override
+    public List<Role> queryRolesByParams(RoleParm roleParm) {
+        Long applicationId = roleParm.getApplicationId();
+        Long tenantId = roleParm.getTenantId();
+
+        RoleCriteria roleCriteria = new RoleCriteria();
+        RoleCriteria.Criteria criteria = roleCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            criteria.andApplicationIdEqualTo(applicationId);
+        }
+
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            criteria.andTenantIdEqualTo(tenantId);
+        }
+
+        List<Role> roles = this.selectByCriteria(roleCriteria);
+
+        return roles;
+    }
+
     private RoleView convertToRoleView(Role role) {
         RoleView roleView = new RoleView();
         roleView.setRole(role);
