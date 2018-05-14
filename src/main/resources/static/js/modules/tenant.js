@@ -202,7 +202,6 @@ var vm = new Vue({
             $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
-
             });
 
         },
@@ -364,7 +363,7 @@ var vm = new Vue({
         /**  根据ID获取租户信息 */
         getTenant: function (tenantId) {
             $.get(baseURL + "tenants/" + tenantId + "?token=" +　accessToken, function (response) {
-                // alert(JSON.stringify(response.data.tenant));
+
                 response=response.data;
                 var mode;
                 if (response) {
@@ -376,11 +375,6 @@ var vm = new Vue({
                     vm.tenant.appIdList = response.appIdList;
                     vm.modeList2.selectedMode = response.tenant.serviceMode;
 
-                    // vm.userName = response.userName;
-                    // $.each(response.appIdList, function (index, item) {
-                    //     var node = appTree.getNodeByParam("id", item);
-                    //     appTree.checkNode(node, true, false);
-                    // });
                     $.each(response.appNameList, function (index, item) {
                         vm.tenant.appNames.push(item);
                     })
@@ -404,6 +398,10 @@ var vm = new Vue({
         },
         /**  应用树点击事件 */
         appTree: function (tenant) {
+
+            $('#laySearchName').val('');
+            vm.getAppList('');
+
             $.each(tenant.appIdList, function (index, item) {
                 var node = appTree.getNodeByParam("id", item);
                 if (node == null) {
@@ -420,6 +418,7 @@ var vm = new Vue({
             } else if (vm.modeList2.selectedMode == "saas") {
                 title = "选择应用（只能选择一个）";
             }
+
 
             layer.open({
                 type: 1,
@@ -447,6 +446,18 @@ var vm = new Vue({
                     vm.tenant.appIdList = appIdList;
                     layer.close(index);
                 }
+            });
+
+            $('#laySearch').on("click", function () {
+                var searchName = $('#laySearchName').val();
+                vm.getAppList(searchName);
+            });
+        },
+        getAppList: function (searchName) {
+            // 加载应用树
+            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&searchName=" + searchName, function (response) {
+                appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
+                appTree.expandAll(true);
             });
         },
         //模式选择事件

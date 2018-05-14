@@ -309,8 +309,8 @@ var vm = new Vue({
             }
 
 
-            if (!(vm.permission.action == "edit" || vm.permission.action == "readonly")) {
-                swal("", "行为只能填写 edit 或 readonly ", "warning");
+            if (!(vm.permission.action == "edit" || vm.permission.action == "read")) {
+                swal("", "行为只能填写 edit 或 read ", "warning");
                 return;
             }
 

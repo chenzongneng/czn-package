@@ -75,11 +75,27 @@ $.ajaxSetup({
     },
 
     complete: function (xhr) {
-        // console.log("xhr == " + JSON.stringify(xhr));
+
+        // var userId = localStorage.getItem("userId");
+        // if (userId == null || userId == "") {
+        //     var pathName = window.document.location.pathname;
+        //     var patrn = /.*index.html$/;
+        //     if (patrn.exec(pathName)) {
+        //         parent.location.href = 'login.html';
+        //     } else {
+        //         parent.location.href = '../login.html';
+        //     }
+        // }
+
         var response = JSON.parse(xhr.responseText);
 
         // token过期，则跳转到登录页面
         if (response.code == 401) {
+            localStorage.removeItem("userId");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("belongToGarnet");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
 
             if ("请先登录" == response.message) {
                 var pathName = window.document.location.pathname;
@@ -92,7 +108,6 @@ $.ajaxSetup({
             } else {
                 swal({
                         title: response.message,
-                        // text:  response.message,
                         type: "error"
                     },
                     function () {
@@ -107,6 +122,12 @@ $.ajaxSetup({
             }
 
         } else if (response.code == 403) {
+            localStorage.removeItem("userId");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("belongToGarnet");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+
             swal({
                     title: "没有权限",
                     text: response.message,

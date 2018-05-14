@@ -237,10 +237,12 @@ public class ApplicationController {
     public ResponseEntity<?> getApplicationsWithoutRouterGroup(
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "应用组id", defaultValue = "", required = false) @RequestParam(value = "routerGroupId", defaultValue = "", required = false) Long routerGroupId,
+            @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
         try {
             ApplicationParm applicationParm = new ApplicationParm();
             applicationParm.setUserId(userId);
+            applicationParm.setSearchName(searchName);
             applicationParm.setRouterGroupId(routerGroupId);
             List<Application> applications = applicationService.getApplicatinsWithoutRouterGroup(applicationParm);
             // 封装返回信息

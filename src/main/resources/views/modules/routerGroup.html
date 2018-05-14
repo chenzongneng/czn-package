@@ -59,7 +59,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="routerGroup.groupName" placeholder="名称" maxlength="30"/>
+                    <input class="form-control" v-model="routerGroup.groupName" placeholder="长度不大于30" maxlength="30"/>
                 </div>
             </div>
             <div class="form-group">
@@ -72,7 +72,7 @@
                 <div class="col-sm-2 control-label">选择应用<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" style="cursor:pointer;" v-model="applicationNames"
-                           @click="applicationTree" readonly="readonly" placeholder="可选多个应用"/>
+                           @click="applicationTree(routerGroup)" readonly="readonly" placeholder="可选多个应用"/>
                 </div>
             </div>
             <div class="form-group">
@@ -86,7 +86,19 @@
 
 <!-- 选择租户 -->
 <div id="applicationLayer" style="display: none;padding:10px;">
-    <ul id="applicationTree" class="ztree"></ul>
+    <!--<form class="form-horizontal" style="width: 280px;">-->
+        <div class="form-group">
+            <div class="col-sm-10">
+                <input class="form-control" placeholder="应用名" id="laySearchName" autocomplete="off">
+            </div>
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-default"  id="laySearch" value="search"/>
+            </div>
+        </div>
+        <div class="form-group" style="padding-top: 20px;">
+            <ul id="applicationTree" class="ztree"></ul>
+        </div>
+    <!--</form>-->
 </div>
 
 

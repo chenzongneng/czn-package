@@ -97,6 +97,7 @@ var vm = new Vue({
             groupName: null,
             appCode: null,
             remark: null,
+            applicationIdList: [],
             updatedByUserName: null
         },
         applicationNames: [],
@@ -236,16 +237,20 @@ var vm = new Vue({
                     vm.routerGroup.groupName = response.routerGroup.groupName;
                     vm.routerGroup.appCode = response.routerGroup.appCode;
                     vm.routerGroup.remark = response.routerGroup.remark;
-                    vm.applicationList = response.applicationIdList;
+                    vm.routerGroup.applicationIdList = response.applicationIdList;
                     vm.appCodeList = response.appCodeList;
                     vm.applicationNames = response.applicationNames;
 
-                    // 勾选已有应用
-                    $.each(response.applicationIdList, function (index, item) {
 
-                        var node = applicationTree.getNodeByParam("id", item);
-                        applicationTree.checkNode(node, true, false);
-                    });
+                    // console.log(JSON.stringify(vm.routerGroup.applicationList));
+                    // console.log(JSON.stringify(response.applicationIdList))
+
+                    // // 勾选已有应用
+                    // $.each(response.applicationIdList, function (index, item) {
+                    //     var node = applicationTree.getNodeByParam("id", item);
+                    //     applicationTree.checkNode(node, true, false);
+                    // });
+
                     // $.each(response.applicationNames, function (index, item) {
                     //     vm.applicationNames.push(item);
                     // })
@@ -253,7 +258,17 @@ var vm = new Vue({
             });
         },
         /**  应用树点击事件 */
-        applicationTree: function () {
+        applicationTree: function (routerGroup) {
+
+            $('#laySearchName').val('');
+            vm.getAppList('');
+
+            // 勾选已有应用
+            $.each(routerGroup.applicationIdList, function (index, item) {
+                var node = applicationTree.getNodeByParam("id", item);
+                applicationTree.checkNode(node, true, false);
+            });
+
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -282,6 +297,20 @@ var vm = new Vue({
                     // console.log("routerGroup appCode == " + JSON.stringify(vm.appCodeList));
                     layer.close(index);
                 }
+            });
+
+            $('#laySearch').on("click", function () {
+
+                var searchName = $('#laySearchName').val();
+                vm.getAppList(searchName);
+
+            });
+        },
+
+        getAppList: function (searchName) {
+            $.get(baseURL + "applications/withoutroutergroup?userId=" + userId + "&searchName=" + searchName + "&routerGroupId=" + vm.routerGroup.id, function (response) {
+                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response);
+                applicationTree.expandAll(true);
             });
         },
         reload: function (backFirst) {

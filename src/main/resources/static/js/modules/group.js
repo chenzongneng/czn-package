@@ -320,8 +320,6 @@ var vm = new Vue({
                 return;
             }
 
-            console.log("type: " + vm.typeList.selectedType);
-
             if (vm.typeList.selectedType != null && vm.typeList.selectedType != "") {
                 var selectType = vm.typeList.selectedType;
                 if (selectType == 1) {
@@ -562,8 +560,6 @@ var vm = new Vue({
         //根据租户加载用户树
         reloadUserTree : function() {
 
-            console.log(JSON.stringify(vm.tenantList.selectedTenant) + " - " + JSON.stringify(vm.appList.selectedApp));
-
             // $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant, function (response) {
             $.get(baseURL + "users/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
 
@@ -623,8 +619,6 @@ var vm = new Vue({
         /**  获取应用列表 */
         getAppList: function () {
             $.get(baseURL + "applications?page=1&limit=1000"  + "&userId=" + userId, function (response) {
-
-                console.log(JSON.stringify(response));
 
                 $.each(response.list, function (index, item) {
                     vm.appList.options.push(item);

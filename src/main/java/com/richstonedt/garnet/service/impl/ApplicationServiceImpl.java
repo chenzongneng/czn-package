@@ -372,6 +372,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         criteria.andStatusEqualTo(1);
         List<UserTenant> userTenants = null;
 
+        if (!ObjectUtils.isEmpty(applicationParm.getSearchName())) {
+            criteria.andNameLike("%" + applicationParm.getSearchName() + "%");
+        }
+
         //根据用户id拿应用
         if (!ObjectUtils.isEmpty(applicationParm.getUserId())) {
 
@@ -400,6 +404,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         if (CollectionUtils.isEmpty(applications) || applications.size() == 0) {
             return new ArrayList<>();
         }
+        //处理去掉已经被选中的应用
         List<Application> applicationList = dealApplications(applicationParm, applications);
 
 
@@ -421,6 +426,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             routerGroupCriteria = new RouterGroupCriteria();
             routerGroupCriteria.createCriteria().andAppCodeEqualTo(appCode);
             List<RouterGroup> routerGroupList = routerGroupService.selectByCriteria(routerGroupCriteria);
+            //已经被选中的应用
             if (!CollectionUtils.isEmpty(routerGroupList) && routerGroupList.size() > 0) {
                 applications1.add(applications.get(i));
             }
@@ -441,6 +447,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
                 applicationCriteria1 = new ApplicationCriteria();
                 applicationCriteria1.createCriteria().andAppCodeEqualTo(routerGroup1.getAppCode()).andStatusEqualTo(1);
                 application = this.selectSingleByCriteria(applicationCriteria1);
+                //应用组已选中的应用
                 applications2.add(application);
             }
             applications.addAll(applications2);

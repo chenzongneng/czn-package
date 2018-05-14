@@ -365,6 +365,8 @@ var vm = new Vue({
             vm.typeList.options = [];
             applicationList.appList.selectedApp = "";
             applicationList.appList.options = [];
+            applicationList.appSearchList.selectedApp = "";
+            applicationList.appSearchList.options = [];
             vm.actionsEdit = false;
             vm.actionsReadonly = false;
             vm.resource = {
@@ -407,6 +409,8 @@ var vm = new Vue({
             vm.actionsEdit = false;
             vm.actionsReadonly = false;
             vm.resource.type = null;
+            applicationList.appSearchList.selectedApp = "";
+            applicationList.appSearchList.options = [];
             // vm.resource.apiIdList = [];
             // vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);

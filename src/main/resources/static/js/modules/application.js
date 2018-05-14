@@ -107,6 +107,7 @@ var vm = new Vue({
         tips:null, //根据选择模式的不同给出不同的提示信息
         hidden: true,
         modeName: null,
+        laySearchName: null,
         application: {
             id:null,
             name: null,
@@ -382,6 +383,7 @@ var vm = new Vue({
                     vm.application.createdTime = response.application.createdTime;
                     vm.application.modifiedTime = response.application.modifiedTime;
                     vm.modeList2.selectedMode = response.application.serviceMode;
+                    vm.application.tenantIdList = response.tenantIdList;
 
                     var mode = vm.modeList2.selectedMode;
                     // console.log("app response == " + JSON.stringify(response));
@@ -392,15 +394,16 @@ var vm = new Vue({
                         tenantTree.expandAll(true);
                     });
 
-                    // 勾选已有租户
-                    $.each(response.tenantIdList, function (index, item) {
-                        var node = tenantTree.getNodeByParam("id", item);
-                        if (node == null) {
-                            console.log("勾选已有租户 null");
-                            return;
-                        }
-                        tenantTree.checkNode(node, true, false);
-                    });
+                    // // 勾选已有租户
+                    // $.each(response.tenantIdList, function (index, item) {
+                    //     var node = tenantTree.getNodeByParam("id", item);
+                    //     if (node == null) {
+                    //         console.log("勾选已有租户 null");
+                    //         return;
+                    //     }
+                    //     tenantTree.checkNode(node, true, false);
+                    // });
+
                     $.each(response.tenantNameList, function (index, item) {
                         vm.application.tenantNames.push(item);
                     })
@@ -408,7 +411,7 @@ var vm = new Vue({
             });
         },
         /**  租户树点击事件 */
-        tenantTree: function () {
+        tenantTree: function (application) {
 
             var title;
 
@@ -417,6 +420,19 @@ var vm = new Vue({
             } else if ("saas" == vm.modeList2.selectedMode) {
                 title = "选择租户（可选择多个）";
             }
+
+            $('#laySearchName').val('');
+            vm.getTenantList('');
+
+            // 勾选已有租户
+            $.each(application.tenantIdList, function (index, item) {
+                var node = tenantTree.getNodeByParam("id", item);
+                if (node == null) {
+                    console.log("勾选已有租户 null");
+                    return;
+                }
+                tenantTree.checkNode(node, true, false);
+            });
 
             layer.open({
                 type: 1,
@@ -432,8 +448,11 @@ var vm = new Vue({
                 btn1: function (index) {
                     vm.application.tenantNames = [];
                     vm.application.tenantIds = "";
-                    // 获取应用树选择的应用
+                    // 获取租户树选择的应用
                     var tenantNodes = tenantTree.getCheckedNodes(true);
+
+                    console.log(JSON.stringify(tenantNodes));
+
                     var tenantIdList = [];
                     for (var i = 0; i < tenantNodes.length; i++) {
                         tenantIdList.push(tenantNodes[i].id);
@@ -443,6 +462,18 @@ var vm = new Vue({
                     vm.application.tenantIdList = tenantIdList;
                     layer.close(index);
                 }
+            });
+
+            $('#laySearch').on("click", function () {
+                    var searchName = $('#laySearchName').val();
+                    vm.getTenantList(searchName);
+            });
+        },
+        getTenantList: function (searchName) {
+            // 加载租户树
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&searchName=" + searchName, function (response) {
+                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
+                tenantTree.expandAll(true);
             });
         },
         //模式选择事件
@@ -471,6 +502,9 @@ var vm = new Vue({
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
+        },
+        layQuery: function () {
+
         },
         /**
          * 验证应用标识

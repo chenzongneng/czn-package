@@ -525,7 +525,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String token = tokenParams[0];
 //        String appCode = tokenParams[1];
         String appCode = tokenRefreshView.getAppCode();
-        String userName = tokenParams[2];
+        String userName = tokenRefreshView.getUserName();
+//        String userName = tokenParams[2];
         String createTime = tokenParams[3];
 
         //验证基础信息是否正确
@@ -614,19 +615,35 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         //根据username 拿 group
-        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-        groupUserCriteria.createCriteria().andUserIdEqualTo(userCredential.getUserId());
-        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+//        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+//        groupUserCriteria.createCriteria().andUserIdEqualTo(userCredential.getUserId());
+//        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+//
+//        if (CollectionUtils.isEmpty(groupUserList)) {
+//            return loginMessage;
+//        }
+//        //根据group 拿 role
+//        List<Long> groupIds = new ArrayList<>();
+//        for (GroupUser groupUser : groupUserList) {
+//            Long groupId = groupUser.getGroupId();
+//            groupIds.add(groupId);
+//        }
 
-        if (CollectionUtils.isEmpty(groupUserList)) {
+        //根据TenantIdList 拿Groups
+        GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.createCriteria().andTenantIdIn(tenantIdList);
+        List<Group> groups = groupService.selectByCriteria(groupCriteria);
+
+        if (CollectionUtils.isEmpty(groups)) {
             return loginMessage;
         }
+
         //根据group 拿 role
         List<Long> groupIds = new ArrayList<>();
-        for (GroupUser groupUser : groupUserList) {
-            Long groupId = groupUser.getGroupId();
-            groupIds.add(groupId);
+        for (Group group : groups) {
+            groupIds.add(group.getId());
         }
+
         //通过中间表拿关联的role
         GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
         groupRoleCriteria.createCriteria().andGroupIdIn(groupIds);
@@ -665,7 +682,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId()).andTenantIdIn(tenantIdList);
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId());
                 List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
                 resourceList.addAll(resources);
             }
@@ -804,9 +821,18 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String[] tokenParams = tokenWithAppCode.split("#");
         System.out.println(tokenParams.length);
         String token = tokenParams[0];
+//        String userName = tokenRefreshView.getUserName();
         String appCode = tokenParams[1];
         String userName = tokenParams[2];
         String createTime = tokenParams[3];
+
+
+        if (StringUtils.isEmpty(userName) || !userName.equals(tokenRefreshView.getUserName())) {
+            loginMessage.setMessage("token错误");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
 
         //如果要跳转的appCode不存在，返回错误
         if (StringUtils.isEmpty(tokenRefreshView.getAppCode())) {
@@ -819,9 +845,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //根据username 查询密码，如果查不到则账号有误
         User user = userService.getUserByUserName(userName);
-//        UserCriteria userCriteria = new UserCriteria();
-//        userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
-//        User user = this.selectSingleByCriteria(userCriteria);
         if (ObjectUtils.isEmpty(user)) {
             loginMessage.setMessage("token错误");
             loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
@@ -829,10 +852,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return loginMessage;
         }
 
-//        Long userId = user.getId();
-//        UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
-//        userCredentialCriteria.createCriteria().andUserIdEqualTo(userId);
-//        UserCredential userCredential = userCredentialService.selectSingleByCriteria(userCredentialCriteria);
         UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
         if (ObjectUtils.isEmpty(userCredential)) {
             loginMessage.setMessage(MessageDescription.LOGIN_USERNAME_NOT_EXIST);

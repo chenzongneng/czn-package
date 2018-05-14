@@ -66,9 +66,14 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             }
             //删除type关联的所有数据
 //            String type = resourceDynamicProperties.get(0).getType();
+            //数据库中的type
+            Long id = resourceDynamicProperty.getId();
+            ResourceDynamicProperty resourceDynamicPropertyOld = this.selectByPrimaryKey(id);
+            String typeOld = resourceDynamicPropertyOld.getType();
+
             String type = resourceDynamicProperty.getType();
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
+            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(typeOld);
 
             List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
             resourceDynamicProperty.setCreatedTime(resourceDynamicPropertyList.get(0).getCreatedTime());
@@ -78,7 +83,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             //插入修改的数据
             insertResourceDynamicProp(resourceDynamicPropertyView);
             //级联更新资源
-            updateResourcesWhenTypeChange(resourceDynamicPropertyView, type);
+            updateResourcesWhenTypeChange(resourceDynamicPropertyView, typeOld);
 
         }
     }
