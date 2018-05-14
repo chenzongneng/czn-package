@@ -15,23 +15,21 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.http.*;
-import org.springframework.util.ObjectUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,33 +50,48 @@ import java.util.Map;
 @RequestMapping(value = "/api/v1.0")
 public class UserController {
 
-    /** The Constant LOG. */
+    /**
+     * The Constant LOG.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
-
+    /**
+     * The constant kaptchaMap.
+     */
     private static final Map<String, String> kaptchaMap = new HashMap<>();
 
+    /**
+     * The constant loginSessionMap.
+     */
     private static final Map<String, Object> loginSessionMap = new HashMap<>();
 
 
-    /** The service. */
+    /**
+     * The service.
+     */
     @Autowired
     private UserService userService;
 
     @Autowired
     private Producer producer;
 
+    /**
+     * Create user response entity.
+     *
+     * @param userView  the user view
+     * @param ucBuilder the uc builder
+     * @return the response entity
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]创建用户", notes = "创建一个用户")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class)),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/users", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequestMapping(value = "/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createUser(
-        @ApiParam(value = "用户", required = true) @RequestBody UserView userView,
+            @ApiParam(value = "用户", required = true) @RequestBody UserView userView,
             UriComponentsBuilder ucBuilder) {
-
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
 
         try {
@@ -106,11 +119,17 @@ public class UserController {
         }
     }
 
+    /**
+     * Delete user response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]删除用户", notes = "通过id删除用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteUser(
             @ApiParam(value = "用户id", required = true) @PathVariable(value = "id") long id) {
@@ -131,17 +150,23 @@ public class UserController {
         }
     }
 
+    /**
+     * Delete users response entity.
+     *
+     * @param loginUserId the login user id
+     * @param ids         the ids
+     * @return the response entity
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]删除用户", notes = "批量删除用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteUsers(
             @ApiParam(value = "登录用户id", required = true) @RequestParam(value = "loginUserId") Long loginUserId,
             @ApiParam(value = "ids,用‘,’隔开", required = true) @RequestParam(value = "ids") String ids) {
         try {
-
             for (String id : ids.split(",")) {
                 User user = new User();
                 user.setId(Long.parseLong(id));
@@ -161,10 +186,10 @@ public class UserController {
 
     @LoginRequired
     @ApiOperation(value = "[Garnet]更新用户", notes = "更新用户信息")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal Server Error") })
+            @ApiResponse(code = 500, message = "internal Server Error")})
     @RequestMapping(value = "/users", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateUsers(
             @ApiParam(value = "用户信息", required = true) @RequestBody UserView userView) {
@@ -182,12 +207,18 @@ public class UserController {
         }
     }
 
+    /**
+     * Update password response entity.
+     *
+     * @param userCredentialView the user credential view
+     * @return the response entity
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]更新密码", notes = "更新用户密码")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal Server Error") })
+            @ApiResponse(code = 500, message = "internal Server Error")})
     @RequestMapping(value = "/users/password", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updatePassword(
             @ApiParam(value = "用户信息", required = true) @RequestBody UserCredentialView userCredentialView) {
@@ -208,12 +239,12 @@ public class UserController {
     @ApiOperation(value = "[Garnet]获取单个用户", notes = "通过id获取用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUser(
             @ApiParam(value = "用户id", required = true) @PathVariable(value = "id") long id) {
         try {
-            UserView userView  = userService.getUserById(id);
+            UserView userView = userService.getUserById(id);
             // 封装返回信息
             GarnetMessage<UserView> garnetMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, userView);
             return new ResponseEntity<>(garnetMessage, HttpStatus.OK);
@@ -225,11 +256,21 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets users.
+     *
+     * @param userId     the user id
+     * @param tenantId   the tenant id
+     * @param searchName the search name
+     * @param pageNumber the page number
+     * @param pageSize   the page size
+     * @return the users
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUsers(
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
@@ -238,7 +279,6 @@ public class UserController {
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         try {
-
             UserParm userParm = new UserParm();
             userParm.setUserId(userId);
             userParm.setTenantId(tenantId);
@@ -256,10 +296,15 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets roles.
+     *
+     * @return the roles
+     */
     @ApiOperation(value = "[Garnet]获取用户列表", notes = "通过获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/usertree", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getRoles() {
         String message = "Failed to get entities!";
@@ -268,23 +313,30 @@ public class UserController {
             // 封装返回信息
             return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Throwable t) {
-            String error =  message + MessageDescription.OPERATION_QUERY_FAILURE;
+            String error = message + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);
             GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }
     }
 
+    /**
+     * Login response entity.
+     *
+     * @param request   the request
+     * @param response  the response
+     * @param loginView the login view
+     * @return the response entity
+     */
     @ApiOperation(value = "[Garnet]用户登录", notes = "用户登录")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = LoginMessage.class) ),
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = LoginMessage.class)),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/users/login", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequestMapping(value = "/users/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response,
 //            @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
-            @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
-
+                                   @ApiParam(value = "用户", required = true) @RequestBody LoginView loginView) {
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
         try {
             LoginMessage loginMessage = userService.userLogin(loginView);
@@ -304,13 +356,22 @@ public class UserController {
         }
     }
 
+    /**
+     * Refresh token response entity.
+     *
+     * @param request          the request
+     * @param response         the response
+     * @param token            the token
+     * @param tokenRefreshView the token refresh view
+     * @return the response entity
+     */
     @ApiOperation(value = "[Garnet]刷新token", notes = "刷新token")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = LoginMessage.class) ),
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = LoginMessage.class)),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @LoginRequired
-    @RequestMapping(value = "/users/refreshtoken", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/users/refreshtoken", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request, HttpServletResponse response,
             @ApiParam(value = "token", required = false) @RequestParam(value = "token") String token,
@@ -333,11 +394,20 @@ public class UserController {
         }
     }
 
+    /**
+     * Garnet refresh token response entity.
+     *
+     * @param request   the request
+     * @param response  the response
+     * @param token     the token
+     * @param loginView the login view
+     * @return the response entity
+     */
     @ApiOperation(value = "[Garnet]garnet刷新token", notes = "garnet刷新token")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class)),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @LoginRequired
     @RequestMapping(value = "/users/garnetrefreshtoken", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> garnetRefreshToken(
@@ -362,11 +432,18 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets groups by tenant id.
+     *
+     * @param userId   the user id
+     * @param tenantId the tenant id
+     * @return the groups by tenant id
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]根据租户id获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users/tenantId/{tenantId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getGroupsByTenantId(
             @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
@@ -387,11 +464,18 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets groups by application id.
+     *
+     * @param userId        the user id
+     * @param applicationId the application id
+     * @return the groups by application id
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]根据应用id获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users/applicationId/{applicationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getGroupsByApplicationId(
             @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
@@ -411,11 +495,19 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets groups by params.
+     *
+     * @param userId        the user id
+     * @param tenantId      the tenant id
+     * @param applicationId the application id
+     * @return the groups by params
+     */
     @LoginRequired
     @ApiOperation(value = "[Garnet]根据应用id或租户id获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
-            @ApiResponse(code = 500, message = "internal server error") })
+            @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users/byparams", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getGroupsByParams(
             @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
@@ -437,22 +529,29 @@ public class UserController {
         }
     }
 
+    /**
+     * Garnet login response entity.
+     *
+     * @param request      the request
+     * @param response     the response
+     * @param garLoginView the gar login view
+     * @return the response entity
+     */
     @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
+            @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class)),
             @ApiResponse(code = 409, message = "conflict"),
-            @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/users/garnetlogin", method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            @ApiResponse(code = 500, message = "internal server error")})
+    @RequestMapping(value = "/users/garnetlogin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> garnetLogin(HttpServletRequest request, HttpServletResponse response,
-            @ApiParam(value = "用户", required = true) @RequestBody GarLoginView garLoginView) {
+                                         @ApiParam(value = "用户", required = true) @RequestBody GarLoginView garLoginView) {
 
         String error = "Failed to add entity! " + MessageDescription.OPERATION_INSERT_FAILURE;
         try {
-
             LoginMessage loginMessage = new LoginMessage();
             String nowTime = garLoginView.getNowTime();
             String kaptcha = kaptchaMap.get(nowTime);
-            if (StringUtils.isEmpty(garLoginView.getKaptcha()) || !garLoginView.getKaptcha().equals(kaptcha)) {
+            if (StringUtils.isEmpty(garLoginView.getKaptcha()) || !garLoginView.getKaptcha().equalsIgnoreCase(kaptcha)) {
                 loginMessage.setMessage("验证码不正确");
                 loginMessage.setLoginStatus("false");
                 loginMessage.setCode(401);
@@ -465,7 +564,7 @@ public class UserController {
             String sessionId = sessionNew.getId();
             //判断是否第一次登录
             String userName = garLoginView.getUserName();
-            String sessionIdOld = (String)loginSessionMap.get(userName);
+            String sessionIdOld = (String) loginSessionMap.get(userName);
             if (!StringUtils.isEmpty(sessionIdOld)) {
                 loginSessionMap.remove(userName);
             }
@@ -494,6 +593,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets kaptcha.
+     *
+     * @param nowTime the now time
+     * @param oldTime the old time
+     * @return the kaptcha
+     * @throws IOException the io exception
+     */
     @ApiOperation(value = "[Garnet]获取验证码", notes = "Get Kaptcha")
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     @ApiResponses(value = {
@@ -501,7 +608,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> getKaptcha(
             @ApiParam(value = "nowTime,当前时间毫秒值", required = true) @RequestParam(value = "nowTime") String nowTime,
-            @ApiParam(value = "oldTime,上一张验证码的毫秒值", required = false) @RequestParam(value = "oldTime",required = false) String oldTime) throws IOException {
+            @ApiParam(value = "oldTime,上一张验证码的毫秒值", required = false) @RequestParam(value = "oldTime", required = false) String oldTime) throws IOException {
         try {
             //生成文字验证码
             String text = producer.createText();
@@ -527,16 +634,24 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets login session.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param userName the user name
+     * @return the login session
+     * @throws IOException the io exception
+     */
     @ApiOperation(value = "[Garnet]验证是否已经有人登录过", notes = "验证是否已经有人登录过")
     @RequestMapping(value = "/checklogined", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful query"),
             @ApiResponse(code = 500, message = "internal server error")})
     public ResponseEntity<?> getLoginSession(HttpServletRequest request, HttpServletResponse response,
-            @ApiParam(value = "用户名", required = true) @RequestParam(value = "userName",required = true) String userName) throws IOException {
+                                             @ApiParam(value = "用户名", required = true) @RequestParam(value = "userName", required = true) String userName) throws IOException {
         try {
-
-            String sessionIdOld = (String)loginSessionMap.get(userName);
+            String sessionIdOld = (String) loginSessionMap.get(userName);
             HttpSession session = request.getSession(true);
             String sessionId = session.getId();
 //            String sessionFromSession = (String) session.getAttribute(userName);
