@@ -772,6 +772,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                     String[] actionList = actions.split(">");
                     //如果不是同级，返回action内容
                     if (actionList.length > 1) {
+                        //处理要返回的action值
                         String action1 = this.getAction(action);
                         resource.setActions(action1);
                     }
@@ -789,7 +790,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
      */
     private String getAction(String action) {
 
-        if ("readonly".equals(action)) {
+        if ("read".equals(action)) {
             return action;
         } else {
             String action1 = "edit";

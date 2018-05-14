@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <title>动态资源配置管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, menu-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../libs/sweetalert/sweetalert.css">
+    <script src="../libs/jquery.min.js"></script>
+    <script src="../plugins/layer/layer.js"></script>
+    <script src="../libs/bootstrap.min.js"></script>
+    <script src="../libs/vue.min.js"></script>
+    <script src="../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="../libs/sweetalert/sweetalert.min.js"></script>
+    <script src="../js/common.js"></script>
+</head>
+
+<body>
+<div id="garnetApp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <input class="form-control" v-model="searchName" @keyup.enter="query" placeholder="资源类型名称">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+            <!--<div class="form-group col-sm-2">-->
+                <!--<select class="form-control" v-model="option.appSearchId" @change="reload(true)">-->
+                    <!--<option disabled value=""> 根据应用查询 </option>-->
+                    <!--<option v-for="option in applicationList.appSearchList.options" v-bind:value="option.id">-->
+                        <!--{{ option.name }}-->
+                    <!--</option>-->
+                <!--</select>-->
+            <!--</div>-->
+            <a class="btn btn-primary" @click="add" v-if="resources.garnetDevelopmentresourceDynamicPropertyAdd">
+                <i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a class="btn btn-primary" @click="update" v-if="resources.garnetDevelopmentresourceDynamicPropertyUpdate">
+                <i class="fa fa-pencil-square-o"></i>&nbsp;配置</a>
+            <a class="btn btn-primary" @click="del" v-if="resources.garnetDevelopmentresourceDynamicPropertyDelete">
+                <i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <!--<form class="form-horizontal div-left">-->
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">资源类型名称<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicProperty.type" placeholder="类型名称" maxlength="30"/>
+                </div>
+            </div>
+
+            <div class="form-group" v-show="showType">
+                <div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <select class="form-control" v-model="typeList.selectedType" @change="selectType">
+                        <option disabled value="">--请选择--</option>
+                        <option v-for="option in typeList.options" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" v-bind:hidden="!showTenant">
+                <div class="col-sm-2 control-label">选择租户<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <select class="form-control" v-model="tenantList.selectedTenant" @change="selectTenant">
+                        <option disabled value="">--请选择--</option>
+                        <option v-for="option in tenantList.options" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" v-bind:hidden="!showApplication">
+                <div class="col-sm-2 control-label">选择应用<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <select class="form-control" id="applicaitonIdSelected" v-model="applicationList.appList.selectedApp" @change="selectApp">
+                        <option disabled value="">--请选择--</option>
+                        <option v-for="option in applicationList.appList.options" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">备注<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicProperty.remark" placeholder="备注"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">行为组<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <input class="form-control" id="actions" v-model="resourceDynamicProperty.actions" placeholder="可填如edit、read或edit,read" maxlength="60"/>
+                    <div id="result"></div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <!--<input class="form-control" readonly="readonly" v-model="resourceDynamicProperty.fieldName" placeholder="varchar00"/>-->
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[0].filedName"  placeholder="varchar00">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <!--<input class="form-control" v-model="resourceDynamicProperty.description" placeholder="描述"/>-->
+                    <input class="form-control" v-model="resourceDynamicPropertyList[0].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[1].fieldName" placeholder="varchar01"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[1].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[2].fieldName" placeholder="varchar02"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[2].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[3].fieldName" placeholder="varchar03"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[3].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[4].fieldName" placeholder="varchar04"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[4].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[5].fieldName" placeholder="varchar05"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[5].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[6].fieldName" placeholder="varchar06"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[6].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[7].fieldName" placeholder="varchar07"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[7].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[8].fieldName" placeholder="varchar08"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[8].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[9].fieldName" placeholder="varchar09"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[9].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[10].fieldName" placeholder="varchar10"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[10].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[11].fieldName" placeholder="varchar11"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[11].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[12].fieldName" placeholder="varchar12"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[12].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[13].fieldName" placeholder="varchar13"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[13].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[14].fieldName" placeholder="varchar14"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[14].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[15].fieldName" placeholder="varchar15"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[15].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[16].fieldName" placeholder="varchar16"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[16].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[17].fieldName" placeholder="varchar17"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[17].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[18].fieldName" placeholder="varchar18"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[18].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[19].fieldName" placeholder="varchar19"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[19].description" placeholder="描述"/>
+                </div>
+            </div>
+        <!--</form>-->
+
+
+        <!--<form class="form-horizontal div-right" >-->
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[20].fieldName" placeholder="int01"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[20].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[21].fieldName" placeholder="int02"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[21].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[22].fieldName" placeholder="int03"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[22].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[23].fieldName" placeholder="int04"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[23].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[24].fieldName" placeholder="int05"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[24].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[25].fieldName" placeholder="boolean01"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[25].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[26].fieldName" placeholder="boolean02"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[26].description" placeholder="描述"/>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[27].fieldName" placeholder="boolean03"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[27].description" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">fieldName</div>
+                <div class="col-sm-10">
+                    <input class="form-control" readonly="readonly" v-model="resourceDynamicPropertyList[28].fieldName" placeholder="boolean04"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicPropertyList[28].description" placeholder="描述"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload(false)" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .div-left{float: left; width: 49%}
+    .div-right{float: right; width: 49%}
+</style>
+
+<!-- 选择资源 -->
+<div id="resourceLayer" style="display: none;padding:10px;">
+    <ul id="resourceTree" class="ztree"></ul>
+</div>
+
+<script language="JavaScript">
+    $(function(){
+        $('#actions').bind('input propertychange', function() {
+            var pattern = /^[a-zA-Z\,]{1,60}$/;
+            var value = $(this).val();
+            if (!pattern.exec(value)) {
+                var html = "<span style='color: red'>只能输入英文和英文逗号</span>";
+            } else {
+                var html = "";
+            }
+            $('#result').html(
+                html
+            );
+        });
+
+    })
+</script>
+
+<script src="../libs/router.js"></script>
+<script src="../js/index.js"></script>
+<script src="../js/modules/resourceDynamicProperty.js"></script>
+<script src="../js/actiontimer.js"></script>
+</body>
+</html>

@@ -37,7 +37,7 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      * @param resourceParm
      * @return
      */
-    PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm);
+    PageUtil queryResourcesByParms(ResourceParm resourceParm);
 
     /**
      * 获取garnet_appCode下的所有resources

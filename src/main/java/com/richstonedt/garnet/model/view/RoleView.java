@@ -29,6 +29,16 @@ public class RoleView {
 
     private String applicationName;
 
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getTenantName() {
         return tenantName;
     }

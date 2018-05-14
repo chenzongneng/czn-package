@@ -261,7 +261,25 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             }
         }
 
-        PageUtil result = new PageUtil(this.selectByCriteria(groupCriteria), (int)this.countByCriteria(groupCriteria) ,groupParm.getPageSize(), groupParm.getPageNumber());
+        List<Group> groupList = this.selectByCriteria(groupCriteria);
+        GroupView groupView;
+        List<GroupView> groupViewList = new ArrayList<>();
+        for (Group group : groupList) {
+            groupView = new GroupView();
+            groupView.setGroup(group);
+            if (group.getTenantId().longValue() != 0 && group.getApplicationId().longValue() == 0) {
+                groupView.setType("租户");
+            } else if (group.getTenantId().longValue() == 0 && group.getApplicationId().longValue() != 0) {
+                groupView.setType("应用");
+            } else {
+                groupView.setType("租户+应用");
+            }
+
+            groupViewList.add(groupView);
+        }
+
+
+        PageUtil result = new PageUtil(groupViewList, (int)this.countByCriteria(groupCriteria) ,groupParm.getPageSize(), groupParm.getPageNumber());
         return result;
     }
 

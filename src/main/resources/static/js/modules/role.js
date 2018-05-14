@@ -14,7 +14,7 @@ $(function () {
             {label: '角色名称', name: 'role.name', align: 'center', width: 70 ,sortable: false},
             // {label: '所属租户', name: 'tenantName', align: 'center', width: 70 ,sortable: false},
             // {label: '所属应用', name: 'applicationName', align: 'center', width: 70 ,sortable: false},
-            {label: '类型', name: 'role.tenantId', align: 'center', width: 70 ,sortable: false ,sortable: false, formatter:getType},
+            {label: '类型', name: 'type', align: 'center', width: 70 ,sortable: false ,sortable: false},
             {label: '组列表', name: 'groupNames', align: 'center', width: 140 ,sortable: false},
             {label: '权限列表', name: 'permissionNames', align: 'center', width: 140 ,sortable: false},
             {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 120 ,sortable: false},

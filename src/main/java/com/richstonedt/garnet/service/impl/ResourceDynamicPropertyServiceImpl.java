@@ -15,7 +15,6 @@ import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
 import com.richstonedt.garnet.service.ResourceService;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,15 +58,22 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
     @Override
     public void updateResourceDynamicProperty(ResourceDynamicPropertyView resourceDynamicPropertyView) {
+        ResourceDynamicProperty resourceDynamicProperty = resourceDynamicPropertyView.getResourceDynamicProperty();
         List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
         if (!CollectionUtils.isEmpty(resourceDynamicProperties)) {
             if (ObjectUtils.isEmpty(resourceDynamicPropertyView.getResourceDynamicProperty())) {
                 throw new RuntimeException("ResourceDynamicProperty Can Not Be Null");
             }
             //删除type关联的所有数据
-            String type = resourceDynamicProperties.get(0).getType();
+//            String type = resourceDynamicProperties.get(0).getType();
+            String type = resourceDynamicProperty.getType();
             ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
             resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
+
+            List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+            resourceDynamicProperty.setCreatedTime(resourceDynamicPropertyList.get(0).getCreatedTime());
+            resourceDynamicPropertyView.setResourceDynamicProperty(resourceDynamicProperty);
+
             this.deleteByCriteria(resourceDynamicPropertyCriteria);
             //插入修改的数据
             insertResourceDynamicProp(resourceDynamicPropertyView);
@@ -83,10 +89,10 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
      */
     private void insertResourceDynamicProp(ResourceDynamicPropertyView resourceDynamicPropertyView) {
         List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
+        ResourceDynamicProperty resourceDynamicProperty1 = resourceDynamicPropertyView.getResourceDynamicProperty();
 
         Long l = IdGeneratorUtil.generateId();
         Long currentTime = System.currentTimeMillis();
-        ResourceDynamicProperty resourceDynamicProperty1 = resourceDynamicPropertyView.getResourceDynamicProperty();
         for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
             resourceDynamicProperty.setId(l);
             resourceDynamicProperty.setActions(resourceDynamicProperty1.getActions());
@@ -95,7 +101,15 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             resourceDynamicProperty.setApplicationId(resourceDynamicProperty1.getApplicationId());
             resourceDynamicProperty.setTenantId(resourceDynamicProperty1.getTenantId());
             resourceDynamicProperty.setUpdatedByUserName(resourceDynamicProperty1.getUpdatedByUserName());
-            resourceDynamicProperty.setCreatedTime(currentTime);
+
+            if (ObjectUtils.isEmpty(resourceDynamicProperty1.getId())) {
+                resourceDynamicProperty.setCreatedTime(currentTime);
+            } else {
+                resourceDynamicProperty.setCreatedTime(resourceDynamicProperty1.getCreatedTime());
+            }
+
+
+
             resourceDynamicProperty.setModifiedTime(currentTime);
             this.insertSelective(resourceDynamicProperty);
             l += 1;

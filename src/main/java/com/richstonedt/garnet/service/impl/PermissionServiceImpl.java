@@ -179,6 +179,15 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
                 tenantName = tenant.getName();
             }
             permissionView.setTenantName(tenantName);
+
+            if (permission.getTenantId().longValue() != 0 && permission.getApplicationId().longValue() == 0) {
+                permissionView.setType("租户");
+            } else if (permission.getTenantId().longValue() == 0 && permission.getApplicationId().longValue() != 0) {
+                permissionView.setType("应用");
+            } else {
+                permissionView.setType("租户+应用");
+            }
+
             permissionViewList.add(permissionView);
         }
 

@@ -22,7 +22,7 @@ $(function () {
             },
             {label: '权限id', name: 'permission.id', align: 'center', hidden: true, index: "id", width: 20, key: true, sortable: false},
             {label: '权限名称', name: 'permission.name', align: 'center', width: 100, sortable: false},
-            {label: '类型', name: 'permission.tenantId', align: 'center', width: 70 ,sortable: false ,sortable: false, formatter:getType},
+            {label: '类型', name: 'type', align: 'center', width: 70 ,sortable: false ,sortable: false},
             {label: '应用名称', name: 'applicationName', align: 'center', width: 80},
             {label: '租户名称', name: 'tenantName', align: 'center', width: 80},
             {label: '资源通配符', name: 'permission.resourcePathWildcard', align: 'center', width: 80, sortable: false},

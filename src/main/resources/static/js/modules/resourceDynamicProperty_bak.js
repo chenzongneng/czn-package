@@ -86,7 +86,6 @@ var vm = new Vue({
         showTenant: false, //显示租户下拉框
         showApplication: false, //显示应用下拉框
         showParentCode: false,
-        count: 0, // 添加新的一行时，计数已经添加了多少行
         title: null,
         searchName: null,
         resourceDynamicPropertyList : [],
@@ -131,16 +130,10 @@ var vm = new Vue({
                     id : "3",
                     name : "租户+应用"
                 }]
-        },
-        // 选择的输入框类型
-        typeArray: {
-            sArray: [],
-            iArray: [],
-            bArray: []
-        },
+        }
     },
     mounted:function () {
-        // this.initData();
+        this.initData();
     },
     methods: {
         initData:function () {
@@ -184,15 +177,11 @@ var vm = new Vue({
             vm.showApplication = false;
             vm.showTenant = false;
             vm.title = "新增";
-            vm.count = 0;
             applicationList.appList.options = [];
             applicationList.appList.selectedApp = "";
             vm.tenantList.options = [];
             vm.tenantList.selectedTenant = "";
             vm.typeList.selectedType = "";
-            vm.typeArray.sArray = [];
-            vm.typeArray.iArray = [];
-            vm.typeArray.bArray = [];
 
             vm.resourceDynamicPropertyList = [];
             vm.resourceDynamicProperty = {
@@ -204,10 +193,7 @@ var vm = new Vue({
                 applicationId: ""
             };
 
-            //删除动态添加的输入框
-            $("input[name='descriptions']").parent().parent().remove();
-
-            // this.initData();
+            this.initData();
             vm.getTenantList();
             vm.getAppList();
             // if(vm.option.appSearchId !== undefined && vm.option.appSearchId !== null && vm.option.appSearchId !== ""){
@@ -224,11 +210,6 @@ var vm = new Vue({
             if (!resourceDynamicPropertyId) {
                 return;
             }
-
-
-            //删除动态添加的输入框
-            $("input[name='descriptions']").parent().parent().remove();
-
             vm.showList = false;
             vm.showType = false;
             vm.title = "修改";
@@ -236,9 +217,6 @@ var vm = new Vue({
             applicationList.appList.selectedApp = "";
             vm.tenantList.options = [];
             vm.tenantList.selectedTenant = "";
-            vm.typeArray.sArray = [];
-            vm.typeArray.iArray = [];
-            vm.typeArray.bArray = [];
 
             vm.getTenantList();
             vm.getAppList();
@@ -254,6 +232,9 @@ var vm = new Vue({
             }
 
             $.get(baseURL + "resources/relate?ids=" + resourceIds + "&token=" + accessToken, function (response) {
+
+                console.log("response == " + response);
+
                 if (response == Boolean(true)) {
                     title = "部分资源配置已被资源关联，是否确认删除？";
                 } else {
@@ -286,6 +267,8 @@ var vm = new Vue({
                             vm.reload(false);
                         },
                         error: function (result) {
+
+                            console.log(JSON.stringify(result));
                             swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
@@ -293,15 +276,6 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-            vm.resourceDynamicPropertyList = [];
-            $("input[name='descriptions']").each(function (i,item) {
-                var description = item.value;
-                var ttype = item.attributes["ttype"].nodeValue;
-                var object = new Object();
-                object.filedName = ttype;
-                object.description = description;
-                vm.resourceDynamicPropertyList.push(object);
-            });
 
             // 获取访问权限树选择的访问权限
             var obj = new Object();
@@ -360,7 +334,7 @@ var vm = new Vue({
             }
 
             var pattern = /^[a-zA-Z\,]{1,60}$/;
-            if (!pattern.exec(vm.resourceDynamicProperty.actions)) {
+            if (!pattern.exec(pattern)) {
                 swal("", "资源类型配置行为组只能输入英文和英文逗号", "warning");
                 return;
             }
@@ -402,7 +376,7 @@ var vm = new Vue({
             $.get(baseURL + "resourcedynamicpropertys/" + resourceDynamicPropertyId, function (response) {
                 response = response.data;
 
-                vm.resourceDynamicProperty.id = response.resourceDynamicProperty.id;
+                vm.resourceDynamicProperty.id = response.id;
                 vm.resourceDynamicProperty.applicationId = response.resourceDynamicProperty.applicationId;
                 vm.resourceDynamicProperty.tenantId = response.resourceDynamicProperty.tenantId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
@@ -417,320 +391,24 @@ var vm = new Vue({
 
                 if (selectedTenant == null || selectedTenant == 0) {
                     //应用级
-                    vm.typeList.selectedType = 2;
                     applicationList.appList.selectedApp = selectedApp;
                     vm.showApplication = true;
                     vm.showTenant = false;
                 } else if (selectedApp == null || selectedApp == 0){
                     //租户级
-                    vm.typeList.selectedType = 1;
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showTenant = true;
                     vm.showApplication = false;
                 } else {
                     //租户+应用
-                    vm.typeList.selectedType = 3;
                     applicationList.appList.selectedApp = selectedApp;
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showApplication = true;
                     vm.showTenant = true;
                 }
 
-                // for (var i=0; i<vm.resourceDynamicPropertyList.length; i++) {
-                $.each(vm.resourceDynamicPropertyList,function (index, v) {
-
-                    // var v = vm.resourceDynamicPropertyList[i];
-
-                    var inputName;
-                    var filedName = v.filedName;
-                    var delId = "del_" + filedName;
-                    var spattern = /^varchar.*$/;
-                    var ipattern = /^int.*$/;
-                    var bpattern = /^boolean.*$/;
-
-                    if (spattern.exec(filedName)) {
-                        inputName = "字符型";
-                        vm.typeArray.sArray.push(filedName);
-                    } else if (ipattern.exec(filedName)) {
-                        inputName = "整型";
-                        vm.typeArray.iArray.push(filedName);
-                    } else if (bpattern.exec(filedName)) {
-                        inputName = "布尔型";
-                        vm.typeArray.bArray.push(filedName);
-                    }
-                    var row = '<div class="form-group">\n' +
-                        '                <div class="col-sm-2 control-label">' + inputName + '</div>\n' +
-                        '                <div class="col-sm-10">\n' +
-                        '                    <input class="form-control" name="descriptions" ttype="' + filedName + '" placeholder="描述" value="'+ v.description +'"/>\n' +
-                        '                </div>' +
-                        '                <div>' +
-                        '                    <input type="button" class="btn btn-default" id="' + delId + '" value="-"/> ' +
-                        '                </div>'
-                    '            </div>';
-                    $('#resourceDynamicPropForm').append(row);
-
-
-                    /*绑定点击事件开始*/
-                    $('#' + delId).on("click", function () {
-                        $('#' + delId).parent().parent().remove();
-
-                        if (inputName == "字符型") {
-                            var arr = [];
-                            for (var i=0; i<vm.typeArray.sArray.length; i++) {
-                                if (vm.typeArray.sArray[i] != filedName) {
-                                    arr.push(vm.typeArray.sArray[i]);
-                                }
-                            }
-                            vm.typeArray.sArray = arr;
-                        } else if (inputName == "整型") {
-                            var arr = [];
-                            for (var i=0; i<vm.typeArray.iArray.length; i++) {
-                                if (vm.typeArray.iArray[i] != filedName) {
-                                    arr.push(vm.typeArray.iArray[i]);
-                                }
-                            }
-                            vm.typeArray.iArray = arr;
-                        } else {
-                            var arr = [];
-                            for (var i=0; i<vm.typeArray.bArray.length; i++) {
-                                if (vm.typeArray.bArray[i] != filedName) {
-                                    arr.push(vm.typeArray.bArray[i]);
-                                }
-                            }
-                            vm.typeArray.bArray = arr;
-                        }
-                    });
-                    /*绑定点击事件结束*/
-                });
-
-                console.log("update array: " + JSON.stringify(vm.typeArray));
-
             });
         },
-        /*增加新的一行*/
-        addRow: function () {
-
-            var sFieldName;
-            var iFieldName;
-            var bFieldName;
-            var inputName;
-            var delId;
-            var inputId;
-            // var count = vm.count;
-            var fieldName;
-
-            var sArray = [
-                "varchar00", "varchar01", "varchar02", "varchar03", "varchar04", "varchar05", "varchar06",
-                "varchar07", "varchar08", "varchar09", "varchar10", "varchar11", "varchar12", "varchar13",
-                "varchar14", "varchar15", "varchar16", "varchar17", "varchar18", "varchar19"
-            ];
-
-            var iArray = [
-                "int01", "int02", "int03", "int04", "int05"
-            ];
-
-            var bArray = [
-                "boolean01", "boolean02", "boolean03", "boolean04"
-            ];
-
-            var type = $('input:radio[name="type"]:checked').val();
-            if(type == null){
-                swal("", "请选择输入框类型", "warning");
-                return;
-            } else{
-                if (type == 1) {
-                    //字符型
-                    inputName = "字符型";
-                    if (vm.typeArray.sArray.length == 0) {
-                        sFieldName = sArray[0];
-                        vm.typeArray.sArray.push(sFieldName);
-                    } else if (vm.typeArray.sArray.length == sArray.length) {
-                        swal("", "字符型输入框已达到最大值，不能再添加了", "warning");
-                        return;
-                    } else {
-
-                        outloop:
-                        for (var i=0; i<sArray.length; i++) {
-                            for (var j=0; j<vm.typeArray.sArray.length; i++) {
-                                var index = vm.typeArray.sArray.indexOf(sArray[i]);
-
-                                if (index == -1) {
-                                    //这个元素还没有被使用
-                                    sFieldName = sArray[i];
-                                    vm.typeArray.sArray.push(sArray[i]);
-                                    break outloop;
-                                }
-                            }
-                        }
-                    }
-
-                } else if ( type == 2){
-                    //整型
-                    inputName = "整型";
-                    if (vm.typeArray.iArray.length == 0) {
-                        iFieldName = iArray[0];
-                        vm.typeArray.iArray.push(iFieldName);
-                    } else if (vm.typeArray.iArray.length == iArray.length) {
-                        swal("", "整型输入框已达到最大值，不能再添加了", "warning");
-                        return;
-                    } else {
-
-                        outloop:
-                            for (var i=0; i<iArray.length; i++) {
-                                for (var j=0; j<vm.typeArray.iArray.length; i++) {
-                                    var index = vm.typeArray.iArray.indexOf(iArray[i]);
-
-                                    if (index == -1) {
-                                        //这个元素还没有被使用
-                                        iFieldName = iArray[i];
-                                        vm.typeArray.iArray.push(iArray[i]);
-                                        break outloop;
-                                    }
-                                }
-                            }
-                    }
-
-                } else {
-                    //布尔型
-                    inputName = "布尔型";
-                    if (vm.typeArray.bArray.length == 0) {
-                        bFieldName = bArray[0];
-                        vm.typeArray.bArray.push(bFieldName);
-                    } else if (vm.typeArray.bArray.length == bArray.length) {
-                        swal("", "布尔型输入框已达到最大值，不能再添加了", "warning");
-                        return;
-                    } else {
-
-                        outloop:
-                            for (var i=0; i<bArray.length; i++) {
-                                for (var j=0; j<vm.typeArray.bArray.length; i++) {
-                                    var index = vm.typeArray.bArray.indexOf(bArray[i]);
-
-                                    if (index == -1) {
-                                        //这个元素还没有被使用
-                                        bFieldName = bArray[i];
-                                        vm.typeArray.bArray.push(bArray[i]);
-                                        break outloop;
-                                    }
-                                }
-                            }
-                    }
-                }
-            }
-
-            if (inputName == "字符型") {
-                 delId = "del_" + sFieldName;
-                 inputId = "input_" + sFieldName;
-                 fieldName = sFieldName;
-            } else if (inputName == "整型") {
-                delId = "del_" + iFieldName;
-                inputId = "input_" + iFieldName;
-                fieldName = iFieldName;
-            } else {
-                delId = "del_" + bFieldName;
-                inputId = "input_" + iFieldName;
-                fieldName = bFieldName;
-            }
-
-            // var count = vm.resourceDynamicPropertyList.length;
-
-            //添加resourceDynamicPropertyList对象
-            // var object = new Object();
-            // object.description = '';
-            // object.filedName = fieldName;
-            // vm.resourceDynamicPropertyList.push(object);
-
-            var row = '<div class="form-group">\n' +
-                '                <div class="col-sm-2 control-label">' + inputName + '</div>\n' +
-                '                <div class="col-sm-10">\n' +
-                '                    <input class="form-control" name="descriptions" ttype="' + fieldName + '" placeholder="描述"/>\n' +
-                '                </div>' +
-                '                <div>' +
-                '                    <input type="button" class="btn btn-default" id="' + delId + '" value="-"/> ' +
-                '                </div>'
-                '            </div>';
-
-            $('#resourceDynamicPropForm').append(row);
-
-            $('#' + delId).on("click", function () {
-                $('#' + delId).parent().parent().remove();
-
-                if (inputName == "字符型") {
-                    var arr = [];
-                    for (var i=0; i<vm.typeArray.sArray.length; i++) {
-                        if (vm.typeArray.sArray[i] != sFieldName) {
-                            arr.push(vm.typeArray.sArray[i]);
-                        }
-                    }
-                    vm.typeArray.sArray = arr;
-
-                    //更新vm.resourceDynamicPropertyList
-                    // var rdpArr = [];
-                    // for (var i=0; i<vm.resourceDynamicPropertyList.length; i++) {
-                    //     var v = vm.resourceDynamicPropertyList[i].filedName;
-                    //     if (v == sFieldName) {
-                    //         vm.resourceDynamicPropertyList[i].filedName = "";
-                    //     }
-                    //     // if (v != sFieldName) {
-                    //     //     rdpArr.push(vm.resourceDynamicPropertyList[i]);
-                    //     // }
-                    // }
-                    // // vm.resourceDynamicPropertyList = rdpArr;
-                    // console.log(JSON.stringify(vm.resourceDynamicPropertyList));
-
-                } else if (inputName == "整型") {
-                    var arr = [];
-                    for (var i=0; i<vm.typeArray.iArray.length; i++) {
-                        if (vm.typeArray.iArray[i] != iFieldName) {
-                            arr.push(vm.typeArray.iArray[i]);
-                        }
-                    }
-                    vm.typeArray.iArray = arr;
-
-                    //更新vm.resourceDynamicPropertyList
-                    // var rdpArr = [];
-                    // for (var i=0; i<vm.resourceDynamicPropertyList.length; i++) {
-                    //     var v = vm.resourceDynamicPropertyList[i].filedName;
-                    //     if (v == iFieldName) {
-                    //         vm.resourceDynamicPropertyList[i].filedName = "";
-                    //     }
-                    //     // if (v != iFieldName) {
-                    //     //     rdpArr.push(vm.resourceDynamicPropertyList[i]);
-                    //     // }
-                    // }
-                    // // vm.resourceDynamicPropertyList = rdpArr;
-                    // console.log(JSON.stringify(vm.resourceDynamicPropertyList));
-
-                } else {
-                    var arr = [];
-                    for (var i=0; i<vm.typeArray.bArray.length; i++) {
-                        if (vm.typeArray.bArray[i] != bFieldName) {
-                            arr.push(vm.typeArray.bArray[i]);
-                        }
-                    }
-                    vm.typeArray.bArray = arr;
-                    //更新vm.resourceDynamicPropertyList
-                    // var rdpArr = [];
-                    // for (var i=0; i<vm.resourceDynamicPropertyList.length; i++) {
-                    //     var v = vm.resourceDynamicPropertyList[i].filedName;
-                    //     if (v == bFieldName) {
-                    //         vm.resourceDynamicPropertyList[i].filedName = "";
-                    //     }
-                    //     // if (v != bFieldName) {
-                    //     //     rdpArr.push(vm.resourceDynamicPropertyList[i]);
-                    //     // }
-                    // }
-                    // // vm.resourceDynamicPropertyList = rdpArr;
-                    // console.log(JSON.stringify(vm.resourceDynamicPropertyList));
-                }
-
-            });
-
-
-            // console.log(JSON.stringify(vm.resourceDynamicPropertyList));
-
-        },
-
         /** 重新加载 */
         reload: function (backFirst) {
             vm.showList = true;

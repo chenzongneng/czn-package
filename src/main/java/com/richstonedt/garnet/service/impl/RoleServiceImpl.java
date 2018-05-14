@@ -366,6 +366,14 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         List<String> perminssionNames = this.getPermissionNamesByRoleId(role.getId());
         roleView.setPermissionNames(perminssionNames);
 
+        if (role.getTenantId().longValue() != 0 && role.getApplicationId().longValue() == 0) {
+            roleView.setType("租户");
+        } else if (role.getTenantId().longValue() == 0 && role.getApplicationId().longValue() != 0) {
+            roleView.setType("应用");
+        } else {
+            roleView.setType("租户+应用");
+        }
+
         return roleView;
     }
 

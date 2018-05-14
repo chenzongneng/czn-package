@@ -31,12 +31,12 @@ $(function () {
         url: baseURL + 'groups?userId=' + userId,
         datatype: "json",
         colModel: [
-            {label: '组id', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false ,sortable: false},
-            {label: '组名称', name: 'name', align: 'center', width: 100 ,sortable: false ,sortable: false},
-            {label: '类型', name: 'tenantId', align: 'center', width: 80 ,sortable: false ,sortable: false, formatter:getType},
-            {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 130 ,sortable: false ,sortable: false},
-            {label: '更新时间', name: 'modifiedTime', align: 'center',formatter:timeFormat, width: 130 ,sortable: false ,sortable: false},
-            {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
+            {label: '组id', name: 'group.id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false ,sortable: false},
+            {label: '组名称', name: 'group.name', align: 'center', width: 100 ,sortable: false ,sortable: false},
+            {label: '类型', name: 'type', align: 'center', width: 80 ,sortable: false ,sortable: false},
+            {label: '创建时间', name: 'group.createdTime', align: 'center', formatter:timeFormat, width: 130 ,sortable: false ,sortable: false},
+            {label: '更新时间', name: 'group.modifiedTime', align: 'center',formatter:timeFormat, width: 130 ,sortable: false ,sortable: false},
+            {label: '更改人', name: 'group.updatedByUserName', align: 'center', width: 80 ,sortable: false}
         ],
         viewrecords: true,
         height: 385,

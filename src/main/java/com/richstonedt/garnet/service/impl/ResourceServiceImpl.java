@@ -145,7 +145,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     }
 
     @Override
-    public PageUtil<Resource> queryResourcesByParms(ResourceParm resourceParm) {
+    public PageUtil queryResourcesByParms(ResourceParm resourceParm) {
 
         List<Resource> resourceList = null;
         ResourceCriteria resourceCriteria = new ResourceCriteria();

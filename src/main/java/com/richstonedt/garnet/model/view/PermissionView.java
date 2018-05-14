@@ -18,6 +18,16 @@ public class PermissionView {
 
     private String tenantName;
 
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getApplicationName() {
         return applicationName;
     }
