@@ -476,6 +476,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
             userTenantCriteria.createCriteria().andUserIdEqualTo(user.getId());
             userTenantService.deleteByCriteria(userTenantCriteria);
+
+            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+            groupUserCriteria.createCriteria().andUserIdEqualTo(user.getId());
+            groupUserService.deleteByCriteria(groupUserCriteria);
+
+            UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
+            userCredentialCriteria.createCriteria().andUserIdEqualTo(user.getId());
+            userCredentialService.deleteByCriteria(userCredentialCriteria);
         }
 
         Long currentTime = System.currentTimeMillis();
