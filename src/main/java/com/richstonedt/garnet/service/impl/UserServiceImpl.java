@@ -368,6 +368,16 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return loginMessage;
         }
 
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andAppCodeEqualTo(loginView.getAppCode()).andStatusEqualTo(1);
+        Application application = applicationService.selectSingleByCriteria(applicationCriteria);
+        if (ObjectUtils.isEmpty(application)) {
+            loginMessage.setMessage("应用不存在");
+            loginMessage.setLoginStatus(LOGINMESSAGE_STATUS_FALSE);
+            loginMessage.setCode(401);
+            return loginMessage;
+        }
+
         //获取密码,验证密码是否正确
         UserCredentialCriteria userCredentialCriteria = new UserCredentialCriteria();
         userCredentialCriteria.createCriteria().andUserIdEqualTo(user.getId());
@@ -821,7 +831,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         String[] tokenParams = tokenWithAppCode.split("#");
         System.out.println(tokenParams.length);
         String token = tokenParams[0];
-//        String userName = tokenRefreshView.getUserName();
         String appCode = tokenParams[1];
         String userName = tokenParams[2];
         String createTime = tokenParams[3];
