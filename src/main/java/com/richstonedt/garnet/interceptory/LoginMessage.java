@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.interceptory;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.User;
@@ -8,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
+import java.util.Map;
 
 @ApiModel(value = "登录或刷新token返回mode", description = "登录或刷新token返回mode")
 public class LoginMessage {
@@ -24,6 +26,7 @@ public class LoginMessage {
     @ApiModelProperty(value = "")
     private int code;
 
+    @JsonIgnore
     @ApiModelProperty(value = "登录用户关联的租户id")
     private List<Long> tenantIdList;
 
@@ -47,6 +50,9 @@ public class LoginMessage {
 
     @ApiModelProperty(value = "资源类型配置列表")
     private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
+
+    @ApiModelProperty(value = "登录用户关联的租户")
+    private Map<String,Long> userTenantNameAndIdMap;
 
     public List<Long> getTenantIdList() {
         return tenantIdList;
@@ -142,5 +148,13 @@ public class LoginMessage {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Map<String, Long> getUserTenantNameAndIdMap() {
+        return userTenantNameAndIdMap;
+    }
+
+    public void setUserTenantNameAndIdMap(Map<String, Long> userTenantNameAndIdMap) {
+        this.userTenantNameAndIdMap = userTenantNameAndIdMap;
     }
 }

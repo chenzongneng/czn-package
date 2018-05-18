@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="TOKEN" jdbcType="VARCHAR" property="token" />
@@ -19,7 +19,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -53,7 +53,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -87,7 +87,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     ID, TOKEN, USER_NAME, ROUTER_GROUP_NAME, CREATED_TIME, MODIFIED_TIME, EXPIRE_TIME
   </sql>
@@ -95,7 +95,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select
     <if test="distinct">
@@ -117,7 +117,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select 
     <include refid="Base_Column_List" />
@@ -128,7 +128,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     delete from GAR_TOKENS
     where ID = #{id,jdbcType=DECIMAL}
@@ -137,7 +137,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     delete from GAR_TOKENS
     <if test="_parameter != null">
@@ -148,7 +148,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     insert into GAR_TOKENS (ID, TOKEN, USER_NAME, 
       ROUTER_GROUP_NAME, CREATED_TIME, MODIFIED_TIME, 
@@ -161,7 +161,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     insert into GAR_TOKENS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -215,7 +215,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select count(*) from GAR_TOKENS
     <if test="_parameter != null">
@@ -226,7 +226,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     update GAR_TOKENS
     <set>
@@ -260,7 +260,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     update GAR_TOKENS
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -278,7 +278,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     update GAR_TOKENS
     <set>
@@ -307,7 +307,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     update GAR_TOKENS
     set TOKEN = #{token,jdbcType=VARCHAR},
@@ -322,7 +322,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select
     <if test="distinct">
@@ -341,7 +341,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     insert into GAR_TOKENS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -398,7 +398,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_TOKENS

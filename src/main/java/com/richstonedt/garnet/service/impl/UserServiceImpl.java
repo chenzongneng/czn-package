@@ -14,6 +14,7 @@ import com.richstonedt.garnet.model.message.MessageDescription;
 import com.richstonedt.garnet.model.parm.UserParm;
 import com.richstonedt.garnet.model.view.*;
 import com.richstonedt.garnet.service.*;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
@@ -427,6 +428,33 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         //查询登录用户关联的tenantIds
+        //*******************************change by ming***********************************
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
+        List<ApplicationTenant> applicationTenants =applicationTenantService.selectByCriteria(applicationTenantCriteria);
+        List<Long> applicationTenantsIds = new ArrayList<>();
+        for (ApplicationTenant applicationTenant: applicationTenants) {
+            applicationTenantsIds.add(applicationTenant.getTenantId());
+        }
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andTenantIdIn(applicationTenantsIds).andUserIdEqualTo(user.getId());
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> tenantsIds = new ArrayList<>();
+
+        for (UserTenant userTenant: userTenants) {
+            tenantsIds.add(userTenant.getTenantId());
+        }
+
+        TenantCriteria tenantCriteria = new TenantCriteria();
+        tenantCriteria.createCriteria().andIdIn(tenantsIds);
+        List<Tenant> tenants = tenantService.selectByCriteria(tenantCriteria);
+        Map<String,Long> tenantNameAndIdMap= new HashMap<String,Long>();
+        for (Tenant tenant:
+                tenants ) {
+            tenantNameAndIdMap.put(tenant.getName(),tenant.getId());
+        }
+        loginMessage.setUserTenantNameAndIdMap(tenantNameAndIdMap);
+        //******************************************************************
         ReturnTenantIdView returnTenantIdView = this.getTenantIdsByUserId(user.getId());
         List<Long> tenantIdList = returnTenantIdView.getTenantIds();
         loginMessage.setTenantIdList(tenantIdList);
@@ -803,13 +831,19 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String pattern = ".*" + action + ".*";
             for (Resource resource : resourceList) {
                 String actions = resource.getActions();
+
+                //add by ming 这句是添加的
+                resource.setActions(action);
+
                 if (actions.matches(pattern)) {
                     String[] actionList = actions.split(">");
                     //如果不是同级，返回action内容
                     if (actionList.length > 1) {
                         //处理要返回的action值
                         String action1 = this.getAction(action);
+
                         resource.setActions(action1);
+
                     }
                     resourceList1.add(resource);
                 }

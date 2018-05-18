@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <result column="GROUP_ID" jdbcType="DECIMAL" property="groupId" />
     <result column="USER_ID" jdbcType="DECIMAL" property="userId" />
@@ -15,7 +15,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -49,7 +49,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -83,7 +83,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     GROUP_ID, USER_ID, ID
   </sql>
@@ -91,7 +91,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select
     <if test="distinct">
@@ -113,7 +113,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     delete from GAR_GROUP_USERS
     <if test="_parameter != null">
@@ -124,7 +124,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     insert into GAR_GROUP_USERS (GROUP_ID, USER_ID, ID
       )
@@ -135,7 +135,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     insert into GAR_GROUP_USERS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -165,7 +165,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select count(*) from GAR_GROUP_USERS
     <if test="_parameter != null">
@@ -176,7 +176,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     update GAR_GROUP_USERS
     <set>
@@ -198,7 +198,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     update GAR_GROUP_USERS
     set GROUP_ID = #{record.groupId,jdbcType=DECIMAL},
@@ -212,7 +212,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     select
     <if test="distinct">
@@ -231,7 +231,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     insert into GAR_GROUP_USERS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -264,7 +264,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-04-18 18:32
+      DATE: 2018-05-18 11:17
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_GROUP_USERS
