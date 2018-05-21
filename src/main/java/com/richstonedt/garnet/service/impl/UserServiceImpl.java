@@ -728,7 +728,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId());
+                tenantIdList.add(null);
+                resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId()).andTenantIdIn(tenantIdList);
+
                 List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
                 resourceList.addAll(resources);
             }
@@ -760,6 +762,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         loginMessage.setRefreshTokenResourceList(loginMessage1.getRefreshTokenResourceList());
 //        loginMessage.setGetResourceListWithEdit(loginMessage1.getGetResourceListWithEdit());
 //        loginMessage.setResourceListWithReadlyOnly(loginMessage1.getResourceListWithReadlyOnly());
+
+
+
         return loginMessage;
     }
 
