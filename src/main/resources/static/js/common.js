@@ -8,8 +8,8 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+// var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
 
 /** token */
 var accessToken = localStorage.getItem("accessToken");
@@ -106,7 +106,7 @@ $.ajaxSetup({
                     parent.location.href = '../login.html';
                 }
             } else {
-                swal({
+                window.parent.swal({
                         title: response.message,
                         type: "error"
                     },
@@ -128,7 +128,7 @@ $.ajaxSetup({
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
 
-            swal({
+            window.parent.swal({
                     title: "没有权限",
                     text: response.message,
                     type: "error"
@@ -167,13 +167,13 @@ function getSelectedRow() {
     var rowKey = grid.getGridParam("selrow");
     if (!rowKey) {
         //alert("请选择一条记录");
-        swal("请选择一条记录!", "", "warning");
+        window.parent.swal("请选择一条记录!", "", "warning");
         return;
     }
     var selectedIDs = grid.getGridParam("selarrrow");
     if (selectedIDs.length > 1) {
         //alert("只能选择一条记录");
-        swal("只能选择一条记录!", "", "warning");
+        window.parent.swal("只能选择一条记录!", "", "warning");
         return;
     }
     return rowKey;
@@ -185,7 +185,7 @@ function getSelectedRows() {
     var rowKey = grid.getGridParam("selrow");
     if (!rowKey) {
         //alert("请选择一条记录");
-        swal("请选择一条记录!", "", "warning");
+        window.parent.swal("请选择一条记录!", "", "warning");
         return;
     }
     return grid.getGridParam("selarrrow");

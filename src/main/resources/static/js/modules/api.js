@@ -159,7 +159,7 @@ var vm = new Vue({
             if (!apiIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,

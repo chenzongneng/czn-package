@@ -230,7 +230,7 @@ var vm = new Vue({
             if (!roleIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
@@ -246,11 +246,11 @@ var vm = new Vue({
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
-                            swal("删除成功!", "", "success");
+                            window.parent.swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
                         error: function (result) {
-                            swal("删除失败!", getExceptionMessage(result), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -282,12 +282,12 @@ var vm = new Vue({
             obj.permissionIds = permissionIdList;
 
             if(vm.role.name == null || $.trim(vm.role.name) == "") {
-                swal("", "角色名称不能为空", "warning");
+                window.parent.swal("", "角色名称不能为空", "warning");
                 return;
             }
 
             if ((vm.role.tenantId == null || $.trim(vm.role.tenantId) =="") && (vm.role.applicationId == null || $.trim(vm.role.applicationId) == "")) {
-                    swal("", "请在选择类型后，选择租户或应用", "warning");
+                window.parent.swal("", "请在选择类型后，选择租户或应用", "warning");
                     return;
             }
 
@@ -296,30 +296,30 @@ var vm = new Vue({
                 if (selectType == 1) {
                     //租户级
                     if (vm.role.tenantId == null || $.trim(vm.role.tenantId) == "") {
-                        swal("", "租户不能为空", "warning");
+                        window.parent.swal("", "租户不能为空", "warning");
                         return;
                     }
                 } else if (selectType == 2) {
                     //应用级
                     if (vm.role.applicationId == null || $.trim(vm.role.applicationId) == "") {
-                        swal("", "应用不能为空", "warning");
+                        window.parent.swal("", "应用不能为空", "warning");
                         return;
                     }
                 } else if (selectType == 3) {
                     if ((vm.role.tenantId == null || $.trim(vm.role.tenantId) =="") || (vm.role.applicationId == null || $.trim(vm.role.applicationId) == "")) {
-                        swal("", "租户和应用都不能为空", "");
+                        window.parent.swal("", "租户和应用都不能为空", "");
                         return;
                     }
                 }
             }
 
             if(permissionIdList == null || permissionIdList.length == 0) {
-                swal("", "请选择权限", "warning");
+                window.parent.swal("", "请选择权限", "warning");
                 return;
             }
 
             if (vm.role.name.length > 30) {
-                swal("", "角色名称长度不能大于30", "");
+                window.parent.swal("", "角色名称长度不能大于30", "");
                 return;
             }
 
@@ -331,10 +331,10 @@ var vm = new Vue({
                 dataType: '',
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },

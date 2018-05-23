@@ -257,7 +257,7 @@ var vm = new Vue({
                 }
             });
 
-            swal({
+            window.parent.swal({
                     title:title,
                     // title: "删除应用",
                     // text:title,
@@ -275,11 +275,11 @@ var vm = new Vue({
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
-                            swal("删除成功!", "", "success");
+                            window.parent.swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
                         error: function (response) {
-                            swal("删除失败!", getExceptionMessage(response), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(response), "error");
                         }
                     });
                 });
@@ -296,12 +296,12 @@ var vm = new Vue({
 
             if(vm.application.name == null || $.trim(vm.application.name) == ""){
                 // alert("应用名称不能为空");
-                swal("", "应用名称不能为空", "warning");
+                window.parent.swal("", "应用名称不能为空", "warning");
                 return;
             }
 
             if (vm.application.appCode == null || $.trim(vm.application.name) == "") {
-                swal("", "应用标识不能为空", "warning");
+                window.parent.swal("", "应用标识不能为空", "warning");
                 return;
             }
 
@@ -310,27 +310,27 @@ var vm = new Vue({
             var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
             if (!specialReg.test(vm.application.appCode)) {
                 console.log("nonono");
-                swal("", "应用标识只能使用英文、数字、下划线或者连字符！", "warning");
+                window.parent.swal("", "应用标识只能使用英文、数字、下划线或者连字符！", "warning");
                 return;
             }
 
             if (vm.application.company == null || $.trim(vm.application.name) == "") {
-                swal("", "公司名称不能为空", "warning");
+                window.parent.swal("", "公司名称不能为空", "warning");
                 return;
             }
 
             if (vm.application.name.length > 30) {
-                swal("", "应用名称长度不能大于30", "warning");
+                window.parent.swal("", "应用名称长度不能大于30", "warning");
                 return;
             }
 
             if (vm.application.appCode.length > 30) {
-                swal("", "应用标识长度不能大于30", "warning");
+                window.parent.swal("", "应用标识长度不能大于30", "warning");
                 return;
             }
 
             if (vm.application.company.length > 30) {
-                swal("", "公司长度不能大于30", "warning");
+                window.parent.swal("", "公司长度不能大于30", "warning");
                 return;
             }
 
@@ -347,11 +347,11 @@ var vm = new Vue({
             } else if(mode == "paas") {
                 vm.application.serviceMode = "paas";
                 if (tenantIdList!=null && tenantIdList.length > 1) {
-                    swal("", "当前模式不能添加多个租户", "warning");
+                    window.parent.swal("", "当前模式不能添加多个租户", "warning");
                     return;
                 }
             } else {
-                swal("", "请选择正确模式", "warning");
+                window.parent.swal("", "请选择正确模式", "warning");
                 return;
             }
 
@@ -363,10 +363,10 @@ var vm = new Vue({
                 dataType: "",
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },

@@ -242,7 +242,7 @@ var vm = new Vue({
                 }
             });
 
-            swal({
+            window.parent.swal({
                     title: title,
                     type: "warning",
                     showCancelButton: true,
@@ -259,17 +259,17 @@ var vm = new Vue({
                         dataType: "",
                         success: function (result) {
                             if (!result.message) {
-                                swal("删除成功!", "", "success");
+                                window.parent.swal("删除成功!", "", "success");
                                 vm.reload(false);
                             } else {
-                                swal("删除失败!", result.message, "error");
+                                window.parent.swal("删除失败!", result.message, "error");
                             }
                             vm.reload(false);
                         },
                         error: function (result) {
 
                             console.log(JSON.stringify(result));
-                            swal("删除失败!", getExceptionMessage(result), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -286,12 +286,12 @@ var vm = new Vue({
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
             if(vm.resourceDynamicProperty.type == null || $.trim(vm.resourceDynamicProperty.type) == "") {
-                swal("", "资源类型配置名称不能为空", "warning");
+                window.parent.swal("", "资源类型配置名称不能为空", "warning");
                 return;
             }
 
             if ((vm.tenantList.selectedTenant == null || $.trim(vm.tenantList.selectedTenant) == "") && (applicationList.appList.selectedApp == null || applicationList.appList.selectedApp == "")) {
-                swal("", "请在选择类型后，选择租户或应用", "warning");
+                window.parent.swal("", "请在选择类型后，选择租户或应用", "warning");
                 return;
             }
 
@@ -300,18 +300,18 @@ var vm = new Vue({
                 if (selectType == 1) {
                     //租户级
                     if (vm.resourceDynamicProperty.tenantId == null || $.trim(vm.resourceDynamicProperty.tenantId) == "") {
-                        swal("", "请选择租户", "warning");
+                        window.parent.swal("", "请选择租户", "warning");
                         return;
                     }
                 } else if (selectType == 2) {
                     //应用级
                     if (vm.resourceDynamicProperty.applicationId == null || $.trim(vm.resourceDynamicProperty.applicationId) == "") {
-                        swal("", "请选择应用", "warning");
+                        window.parent.swal("", "请选择应用", "warning");
                         return;
                     }
                 } else if (selectType == 3) {
                     if ((vm.tenantList.selectedTenant == null || $.trim(vm.tenantList.selectedTenant) == "") || (applicationList.appList.selectedApp == null || applicationList.appList.selectedApp == "")) {
-                        swal("", "租户和应用都不能为空", "warning");
+                        window.parent.swal("", "租户和应用都不能为空", "warning");
                         return;
                     }
                 }
@@ -319,23 +319,23 @@ var vm = new Vue({
 
 
             if (vm.resourceDynamicProperty.type.length > 30) {
-                swal("", "资源类型配置名称长度不能大于30", "warning");
+                window.parent.swal("", "资源类型配置名称长度不能大于30", "warning");
                 return;
             }
 
             if(vm.resourceDynamicProperty.remark == null || $.trim(vm.resourceDynamicProperty.remark) == "") {
-                swal("", "备注不能为空", "warning");
+                window.parent.swal("", "备注不能为空", "warning");
                 return;
             }
 
             if (vm.resourceDynamicProperty.actions == null || $.trim(vm.resourceDynamicProperty.actions) == "") {
-                swal("", "资源类型配置行为组不能为空", "warning");
+                window.parent.swal("", "资源类型配置行为组不能为空", "warning");
                 return;
             }
 
             var pattern = /^[a-zA-Z\,]{1,60}$/;
             if (!pattern.exec(pattern)) {
-                swal("", "资源类型配置行为组只能输入英文和英文逗号", "warning");
+                window.parent.swal("", "资源类型配置行为组只能输入英文和英文逗号", "warning");
                 return;
             }
 

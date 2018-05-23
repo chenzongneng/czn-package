@@ -613,7 +613,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //取出资源列表
         LoginMessage loginMessage1 = this.getResourcesWhenRefreshToken(userCredential, appCode, loginMessage, tenantIdList);
-//        List<Resource> resourceList = loginMessage1.getResourceList();
         List<RefreshTokenResourceView> refreshTokenResourceViewList = loginMessage1.getRefreshTokenResourceList();
 
         List<Resource> resourceListWithReadlyOnly = loginMessage1.getResourceListWithReadlyOnly();
@@ -661,23 +660,23 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         //根据username 拿 group
-//        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
-//        groupUserCriteria.createCriteria().andUserIdEqualTo(userCredential.getUserId());
-//        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
-//
-//        if (CollectionUtils.isEmpty(groupUserList)) {
-//            return loginMessage;
-//        }
-//        //根据group 拿 role
-//        List<Long> groupIds = new ArrayList<>();
-//        for (GroupUser groupUser : groupUserList) {
-//            Long groupId = groupUser.getGroupId();
-//            groupIds.add(groupId);
-//        }
+        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andUserIdEqualTo(userCredential.getUserId());
+        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+
+        if (CollectionUtils.isEmpty(groupUserList)) {
+            return loginMessage;
+        }
+
+        List<Long> groupIds1 = new ArrayList<>();
+        for (GroupUser groupUser : groupUserList) {
+            Long groupId = groupUser.getGroupId();
+            groupIds1.add(groupId);
+        }
 
         //根据TenantIdList 拿Groups
         GroupCriteria groupCriteria = new GroupCriteria();
-        groupCriteria.createCriteria().andTenantIdIn(tenantIdList);
+        groupCriteria.createCriteria().andTenantIdIn(tenantIdList).andIdIn(groupIds1).andStatusEqualTo(1);
         List<Group> groups = groupService.selectByCriteria(groupCriteria);
 
         if (CollectionUtils.isEmpty(groups)) {
@@ -728,7 +727,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             String resourcePathWildcard = permission.getResourcePathWildcard();
             if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
-                tenantIdList.add(null);
+                tenantIdList.add(0);
                 resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andApplicationIdEqualTo(application.getId()).andTenantIdIn(tenantIdList);
 
                 List<Resource> resources = resourceService.selectByCriteria(resourceCriteria);
@@ -739,15 +738,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             return loginMessage;
         }
 
-        //通过resource列表获取 ResourceDynamicProperty列表
-        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
+        //添加action到resource;
+//        List<List<ResourceDynamicProperty>> resourceDynamicPropertyList = new ArrayList<>();
         List<Resource> resourcesWithAction = new ArrayList<>();
         if (resourceList.size() > 0) {
             for (Resource resource : resourceList) {
                 ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
                 resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(resource.getType());
                 List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
-                resourceDynamicPropertyList.add(resourceDynamicProperties);
+//                resourceDynamicPropertyList.add(resourceDynamicProperties);
                 resource.setActions(resourceDynamicProperties.get(0).getActions());
                 resourcesWithAction.add(resource);
             }
@@ -846,9 +845,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
                     if (actionList.length > 1) {
                         //处理要返回的action值
                         String action1 = this.getAction(action);
-
                         resource.setActions(action1);
-
                     }
                     resourceList1.add(resource);
                 }

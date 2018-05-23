@@ -60,6 +60,12 @@
         <!--<form class="form-horizontal div-left">-->
         <form class="form-horizontal" id="resourceDynamicPropForm">
             <div class="form-group">
+                <div id="tips">
+                    <span style="color: #d73925;padding-left: 30px">请谨慎使用编辑功能，随意编辑可能会造成不可预料的结果</span>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="col-sm-2 control-label">资源类型名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="resourceDynamicProperty.type" placeholder="长度不大于30" maxlength="30"/>

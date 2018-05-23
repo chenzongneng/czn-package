@@ -50,7 +50,7 @@ function ShowInvalidLoginMessage() {
     localStorage.removeItem("belongToGarnet");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    swal({
+    window.parent.swal({
             title: "",
             text:  "您已长时间没操作了，请重新登录",
             type: "warning"

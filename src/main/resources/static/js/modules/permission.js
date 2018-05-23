@@ -230,7 +230,7 @@ var vm = new Vue({
             if (!permissionIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
@@ -246,11 +246,11 @@ var vm = new Vue({
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
-                            swal("删除成功!", "", "success");
+                            window.parent.swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
                         error: function (response) {
-                            swal("删除失败!", getExceptionMessage(response), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(response), "error");
                         }
                     });
                 });
@@ -263,7 +263,7 @@ var vm = new Vue({
             obj.permission = vm.permission;
 
             if ((vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") && (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "")) {
-                    swal("", "请在选择类型后，选择租户或应用", "warning");
+                window.parent.swal("", "请在选择类型后，选择租户或应用", "warning");
                     return;
             }
 
@@ -271,46 +271,46 @@ var vm = new Vue({
                 var selectType = vm.typeList.selectedType;
                 if (selectType == 1) {
                     if (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "") {
-                        swal("", "租户不能为空", "warning");
+                        window.parent.swal("", "租户不能为空", "warning");
                         return;
                     }
                 } else if (selectType == 2) {
                     if(vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") {
-                        swal("", "应用不能为空", "warning");
+                        window.parent.swal("", "应用不能为空", "warning");
                         return;
                     }
                 } else if (selectType == 3) {
                     if ((vm.permission.applicationId == null || $.trim(vm.permission.applicationId) == "") || (vm.permission.tenantId == null || $.trim(vm.permission.tenantId) == "")) {
-                        swal("", "租户和应用都不能为空", "warning");
+                        window.parent.swal("", "租户和应用都不能为空", "warning");
                         return;
                     }
                 }
             }
 
             if(vm.permission.name == null || $.trim(vm.permission.name) == ""){
-                swal("", "权限名称不能为空", "warning");
+                window.parent.swal("", "权限名称不能为空", "warning");
                 return;
             }
 
 
             if (vm.permission.action == null || $.trim(vm.permission.action) == "") {
-                swal("", "行为不能为空", "warning");
+                window.parent.swal("", "行为不能为空", "warning");
                 return;
             }
 
             if (vm.permission.name.length > 30) {
-                swal("", "权限名称不能大于30", "warning");
+                window.parent.swal("", "权限名称不能大于30", "warning");
                 return;
             }
 
             if (vm.permission.resourcePathWildcard == null || $.trim(vm.permission.resourcePathWildcard) == "") {
-                swal("", "通配符不能为空", "warning");
+                window.parent.swal("", "通配符不能为空", "warning");
                 return;
             }
 
 
             if (!(vm.permission.action == "edit" || vm.permission.action == "read")) {
-                swal("", "行为只能填写 edit 或 read ", "warning");
+                window.parent.swal("", "行为只能填写 edit 或 read ", "warning");
                 return;
             }
 
@@ -331,10 +331,10 @@ var vm = new Vue({
                 dataType: '',
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },

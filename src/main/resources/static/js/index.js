@@ -151,7 +151,7 @@ var vm = new Vue({
 
                     if (value == null || $.trim(value) == "") {
                         layer.close(index);
-                        swal({
+                        window.parent.swal({
                                 title: '密码修改失败',
                                 text: '密码不能为空',
                                 type: 'warning',
@@ -166,7 +166,7 @@ var vm = new Vue({
 
                     if (chineseReg.test(value)) {
                         layer.close(index);
-                        swal({
+                        window.parent.swal({
                                 title: '密码修改失败',
                                 text: '密码不能为中文',
                                 type: 'warning',
@@ -180,7 +180,7 @@ var vm = new Vue({
                     }
                     if (!specialReg.test(value)) {
                         layer.close(index);
-                        swal({
+                        window.parent.swal({
                                 title: '密码修改失败',
                                 text: '密码只能使用英文、数字、下划线或者连字符',
                                 type: 'warning',
@@ -194,7 +194,7 @@ var vm = new Vue({
                     }
                     if (value.length < 4 || value.length > 20) {
                         layer.close(index);
-                        swal({
+                        window.parent.swal({
                                 title: '密码修改失败',
                                 text: '密码的长度只能在4-20',
                                 type: 'warning',
@@ -223,7 +223,7 @@ var vm = new Vue({
                             // swal("密码修改成功，请重新登录!", "", "success");
                             // location.href = 'login.html';
 
-                            swal({
+                            window.parent.swal({
                                     title: "密码修改成功",
                                     text:  "请重新登录",
                                     type: "success"
@@ -235,7 +235,7 @@ var vm = new Vue({
                         error: function (response) {
                             layer.close(index);
                             // swal("修改密码失败", getExceptionMessage(response), "warning");
-                            swal({
+                            window.parent.swal({
                                     title: "修改密码失败",
                                     text:  getExceptionMessage(response),
                                     type: "warning"
@@ -276,7 +276,7 @@ var vm = new Vue({
             if (!(isPassword && vm.user.userId)) {
 
                 if (!value) {
-                    swal({
+                    window.parent.swal({
                         title: name + '不能为空！',
                         type: 'warning',
                         confirmButtonText: '确定',
@@ -286,7 +286,7 @@ var vm = new Vue({
                 }
                 if (chineseReg.test(value)) {
 
-                    swal({
+                    window.parent.swal({
                         title: name + '不能为中文！',
                         type: 'warning',
                         confirmButtonText: '确定',
@@ -296,7 +296,7 @@ var vm = new Vue({
                 }
                 if (!specialReg.test(value)) {
 
-                    swal({
+                    window.parent.swal({
                         title: name + '只能使用英文、数字、下划线或者连字符！',
                         type: 'warning',
                         confirmButtonText: '确定',
@@ -306,7 +306,7 @@ var vm = new Vue({
                 }
                 if (value.length < 4 || value.length > 20) {
 
-                    swal({
+                    window.parent.swal({
                         title: name + '的长度只能在4-20！',
                         type: 'warning',
                         confirmButtonText: '确定',
@@ -350,7 +350,7 @@ function routerList(router, menuList,vm) {
                 if($("a[href='" + url + "']").text()=="" || $("a[href='" + url + "']").text() == null || typeof $("a[href='" + url + "']").text() == "undefined"){
                     navItem = localStorage.getItem(window.location.hash);
                 }else {
-                    localStorage.setItem(window.location.hash,$("a[href='" + url + "']").text());
+                    localStorage.setItem(window.location.hash, $("a[href='" + url + "']").text());
                     navItem = localStorage.getItem(window.location.hash);
                 }
 
@@ -368,6 +368,13 @@ function routerList(router, menuList,vm) {
         }
     }
 }
+
+//防止页面后退
+history.pushState(null, null, document.URL);
+window.addEventListener('popstate', function () {
+    history.pushState(null, null, document.URL);
+});
+
 
 /** iframe自适应 */
 $(window).on('resize', function () {

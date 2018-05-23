@@ -111,6 +111,8 @@ var vm = new Vue({
         },
         /**  新增按钮点击事件 */
         add: function () {
+            $('#checkRouterName').hide();
+
             vm.showList = false;
             vm.title = "新增";
             vm.appCodeList = [];
@@ -133,6 +135,8 @@ var vm = new Vue({
         },
         /**  更新按钮点击事件 */
         update: function () {
+            $('#checkRouterName').hide();
+
             var routerGroupId = getSelectedRow();
 
             if (!routerGroupId) {
@@ -157,7 +161,7 @@ var vm = new Vue({
             if (!routerGroupIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录",
                     type: "warning",
                     showCancelButton: true,
@@ -173,11 +177,11 @@ var vm = new Vue({
                         contentType: "routerGroup/json",
                         dataType: "",
                         success: function () {
-                            swal("删除成功!", "", "success");
+                            window.parent.swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
                         error: function (response) {
-                            swal("删除失败!", getExceptionMessage(response), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(response), "error");
                         }
                     });
                 });
@@ -191,22 +195,42 @@ var vm = new Vue({
             obj.appCodeList = vm.appCodeList;
             // alert(JSON.stringify(obj));
             if(vm.routerGroup.groupName === null || $.trim(vm.routerGroup.groupName) == ""){
-                swal("", "名称不能为空", "warning");
+                window.parent.swal("", "名称不能为空", "warning");
                 return;
             }
 
             if (vm.routerGroup.groupName.length > 30) {
-                swal("", "名称长度不能大于30", "warning");
+                window.parent.swal("", "名称长度不能大于30", "warning");
                 return;
             }
 
             if(vm.routerGroup.remark === null || $.trim(vm.routerGroup.remark) == ""){
-                swal("", "备注不能为空", "warning");
+                window.parent.swal("", "备注不能为空", "warning");
                 return;
             }
 
             if (vm.appCodeList == null || vm.appCodeList.length == 0) {
-                swal("", "请添加应用", "warning")
+                window.parent.swal("", "请添加应用", "warning")
+                return;
+            }
+
+            var id = vm.routerGroup.id;
+            var b = false;
+            var groupName = $('#groupName').val();
+            if (id == null) {
+                id = 0;
+            }
+            $.get(baseURL + "routergroups/checkname?groupName=" + groupName + "&id=" + id , function (response) {
+                console.log("sure: " + JSON.stringify(response.data));
+                if (response.data == Boolean(false)) {
+                    b = false;
+                } else {
+                    b = true;
+                }
+            });
+
+            if (!b) {
+                window.parent.swal("", "此应用组已被使用", "warning");
                 return;
             }
 
@@ -219,10 +243,10 @@ var vm = new Vue({
                 async: true,
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -305,6 +329,26 @@ var vm = new Vue({
                 vm.getAppList(searchName);
 
             });
+        },
+
+        checkRouterName: function () {
+            console.log("router name ...");
+            var groupName = $('#groupName').val();
+            var id = vm.routerGroup.id;
+
+            if (id == null) {
+                id = 0;
+            }
+
+            $.get(baseURL + "routergroups/checkname?groupName=" + groupName + "&id=" + id , function (response) {
+                if (response.data == Boolean(false)) {
+                    $('#checkRouterName').show();
+                } else {
+                    $('#checkRouterName').hide();
+                }
+
+            });
+
         },
 
         getAppList: function (searchName) {

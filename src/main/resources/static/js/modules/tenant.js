@@ -106,6 +106,7 @@ var vm = new Vue({
         title: null,
         userName:null,
         userNames:null,
+        delRelatedUserNames:null,
         hidden:false,
         reviewHidden:true,
         tips:null,
@@ -187,6 +188,7 @@ var vm = new Vue({
             vm.hidden = false;
             vm.title = "新增";
             vm.userNames = null;
+            vm.delRelatedUserNames = null;
             vm.reviewHidden = true;
             vm.tenant = {
                 id: null,
@@ -233,6 +235,7 @@ var vm = new Vue({
             vm.tenant.appNames = [];
             vm.userName = null;
             vm.userNames = null;
+            vm.delRelatedUserNames = null;
             vm.tenant.id = tenantId;
 
             vm.getTenant(tenantId);
@@ -243,7 +246,7 @@ var vm = new Vue({
             if (!tenantIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
@@ -259,11 +262,11 @@ var vm = new Vue({
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
-                            swal("删除成功!", "", "success");
+                            window.parent.swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
                         error: function (response) {
-                            swal("删除失败!", getExceptionMessage(response), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(response), "error");
                         }
 
                     });
@@ -286,16 +289,17 @@ var vm = new Vue({
             obj.userTenants = [];
             obj.userName = userName;
             obj.userNames = vm.userNames;
+            obj.delRelatedUserNames = vm.delRelatedUserNames;
             var appIdList = vm.tenant.appIdList;
 
             // alert(JSON.stringify(obj));
             if(vm.tenant.name == null || $.trim(vm.tenant.name) == ""){
-                swal("", "租户名称不能为空", "warning");
+                window.parent.swal("", "租户名称不能为空", "warning");
                 return;
             }
 
             if (vm.tenant.name.length > 30) {
-                swal("", "租户名称长度不能大于30", "warning");
+                window.parent.swal("", "租户名称长度不能大于30", "warning");
                 return;
             }
 
@@ -309,7 +313,7 @@ var vm = new Vue({
             if(mode == "saas") {  //saas
                 vm.tenant.serviceMode = "saas";
                 if (appIdList != null && appIdList.length > 1) {
-                    swal("", "当前模式不能添加多个应用", "warning");
+                    window.parent.swal("", "当前模式不能添加多个应用", "warning");
                     return;
                 }
                 // console.log("my modeId is : " + vm.modeId);
@@ -340,7 +344,7 @@ var vm = new Vue({
                 //         }
                 //     });
                 // });
-                swal("", "请选择正确模式", "warning");
+                window.parent.swal("", "请选择正确模式", "warning");
                 return;
             }
 
@@ -352,10 +356,10 @@ var vm = new Vue({
                 dataType: "",
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response),  "error");
+                    window.parent.swal("", getExceptionMessage(response),  "error");
                 }
             });
 
@@ -494,10 +498,49 @@ var vm = new Vue({
             });
         },
         reviewUser: function () {
+
+            var delRelatedTenantUser;
+
+            delRelatedTenantUser = '<div class="form-group" style="padding:10px;">\n' +
+                '            <div class="col-sm-10">\n' +
+                '                <input class="form-control" placeholder="解绑用户，可用“,”分隔" id="layDelRelatedUserNames" autocomplete="off">\n' +
+                '            </div>\n' +
+                '            <div class="col-sm-2">\n' +
+                '                <input type="button" class="btn btn-default"  id="layDelRelated" value="确认"/>\n' +
+                '            </div>\n' +
+                '        </div>';
+
+            var table = delRelatedTenantUser + '<div style="position: relative;padding-top: 10px;">' + vm.createLayerTable() + '</div>';
+
+            layer.open({
+                type: 1,
+                title: "已绑定的账号",
+                area: ['300px', '500px'],
+                closeBtn: 0,
+                shade: 0.3,
+                zIndex: 1,
+                shadeClose: false,
+                // anim: 1,
+                skin: 'layui-layer-molv',
+                content: table,
+                btn: ['返回'],
+                btn1: function (index) {
+                    // top.location.reload();
+                    layer.close(index);
+                }
+            });
+
+            $('#layDelRelated').on("click", function () {
+                vm.delRelatedTenantUser();
+            });
+
+        },
+        createLayerTable: function () {
             var userNameList;
             var content;
             var table;
             var arr = new Array();
+
             $.get(baseURL + "tenants/usernames/" + vm.tenant.id, function (response) {
 
                 if (!response) {
@@ -516,30 +559,38 @@ var vm = new Vue({
                     content = "";
                 }
 
-                table = '<table border="1" style="margin: 10px">' +
+                table =
+                    '<table border="1" style="margin: 10px;" id="layTable">' +
                     '<tr align="center"><td width="300" height="30">序号</td><td width="300" height="30">用户名</td></tr>' +
                     content + '</table>';
             });
 
-            layer.open({
-                type: 1,
-                title: "已绑定的账号",
-                area: ['300px', '500px'],
-                closeBtn: 0,
-                shade: 0.3,
-                shadeClose: false,
-                // anim: 1,
-                skin: 'layui-layer-molv',
-                content: table,
-                // '<div style="padding:18px;">' +
-                // '   <textarea id="relatedUser" style="width: 250px; height: 500px;background-color: whitesmoke;" disabled>' + userNames + '</textarea>' +
-                // '</div>',
-                btn: ['返回'],
-                btn1: function (index) {
-                    layer.close(index);
-                }
-            });
+            return table;
+        },
+        delRelatedTenantUser: function () {
+            var userName = $('#layDelRelatedUserNames').val();
 
+            $.ajax({
+                type: "DELETE",
+                url: baseURL + "/tenants/delrealted?userNames=" + userName + "&token=" + accessToken,
+                contentType: "application/json",
+                dataType: "",
+                success: function () {
+
+                    $('#layTable').html(
+                        vm.createLayerTable()
+                    );
+
+                    $('#layDelRelated').on("click", function () {
+                        vm.delRelatedTenantUser();
+                    });
+
+                },
+                error: function (response) {
+                    window.parent.swal("删除失败!", getExceptionMessage(response), "error");
+                }
+
+            });
         },
         reload: function (backFirst) {
             vm.showList = true;

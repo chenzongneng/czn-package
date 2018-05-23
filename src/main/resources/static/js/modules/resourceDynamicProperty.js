@@ -179,6 +179,9 @@ var vm = new Vue({
         },
         /**  新增按钮点击事件 */
         add: function () {
+
+            $('#tips').hide();
+
             vm.showList = false;
             vm.showType = true;
             vm.showApplication = false;
@@ -225,6 +228,7 @@ var vm = new Vue({
                 return;
             }
 
+            $('#tips').show();
 
             //删除动态添加的输入框
             $("input[name='descriptions']").parent().parent().remove();
@@ -261,7 +265,7 @@ var vm = new Vue({
                 }
             });
 
-            swal({
+            window.parent.swal({
                     title: title,
                     type: "warning",
                     showCancelButton: true,
@@ -278,15 +282,15 @@ var vm = new Vue({
                         dataType: "",
                         success: function (result) {
                             if (!result.message) {
-                                swal("删除成功!", "", "success");
+                                window.parent.swal("删除成功!", "", "success");
                                 vm.reload(false);
                             } else {
-                                swal("删除失败!", result.message, "error");
+                                window.parent.swal("删除失败!", result.message, "error");
                             }
                             vm.reload(false);
                         },
                         error: function (result) {
-                            swal("删除失败!", getExceptionMessage(result), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -312,12 +316,12 @@ var vm = new Vue({
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
             if(vm.resourceDynamicProperty.type == null || $.trim(vm.resourceDynamicProperty.type) == "") {
-                swal("", "资源类型配置名称不能为空", "warning");
+                window.parent.swal("", "资源类型配置名称不能为空", "warning");
                 return;
             }
 
             if ((vm.tenantList.selectedTenant == null || $.trim(vm.tenantList.selectedTenant) == "") && (applicationList.appList.selectedApp == null || applicationList.appList.selectedApp == "")) {
-                swal("", "请在选择类型后，选择租户或应用", "warning");
+                window.parent.swal("", "请在选择类型后，选择租户或应用", "warning");
                 return;
             }
 
@@ -326,18 +330,18 @@ var vm = new Vue({
                 if (selectType == 1) {
                     //租户级
                     if (vm.resourceDynamicProperty.tenantId == null || $.trim(vm.resourceDynamicProperty.tenantId) == "") {
-                        swal("", "请选择租户", "warning");
+                        window.parent.swal("", "请选择租户", "warning");
                         return;
                     }
                 } else if (selectType == 2) {
                     //应用级
                     if (vm.resourceDynamicProperty.applicationId == null || $.trim(vm.resourceDynamicProperty.applicationId) == "") {
-                        swal("", "请选择应用", "warning");
+                        window.parent.swal("", "请选择应用", "warning");
                         return;
                     }
                 } else if (selectType == 3) {
                     if ((vm.tenantList.selectedTenant == null || $.trim(vm.tenantList.selectedTenant) == "") || (applicationList.appList.selectedApp == null || applicationList.appList.selectedApp == "")) {
-                        swal("", "租户和应用都不能为空", "warning");
+                        window.parent.swal("", "租户和应用都不能为空", "warning");
                         return;
                     }
                 }
@@ -345,29 +349,29 @@ var vm = new Vue({
 
 
             if (vm.resourceDynamicProperty.type.length > 30) {
-                swal("", "资源类型配置名称长度不能大于30", "warning");
+                window.parent.swal("", "资源类型配置名称长度不能大于30", "warning");
                 return;
             }
 
             if(vm.resourceDynamicProperty.remark == null || $.trim(vm.resourceDynamicProperty.remark) == "") {
-                swal("", "备注不能为空", "warning");
+                window.parent.swal("", "备注不能为空", "warning");
                 return;
             }
 
             if (vm.resourceDynamicProperty.actions == null || $.trim(vm.resourceDynamicProperty.actions) == "") {
-                swal("", "资源类型配置行为组不能为空", "warning");
+                window.parent.swal("", "资源类型配置行为组不能为空", "warning");
                 return;
             }
 
             var pattern = /^[a-zA-Z\,]{1,60}$/;
             if (!pattern.exec(vm.resourceDynamicProperty.actions)) {
-                swal("", "资源类型配置行为组只能输入英文和英文逗号", "warning");
+                window.parent.swal("", "资源类型配置行为组只能输入英文和英文逗号", "warning");
                 return;
             }
 
             if (vm.typeArray.sArray.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
                 // alert("请至少添加一行输入框");
-                swal("", "请至少添加一行输入框", "warning");
+                window.parent.swal("", "请至少添加一行输入框", "warning");
                 return;
             }
 
@@ -384,10 +388,10 @@ var vm = new Vue({
                 dataType: '',
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -442,10 +446,7 @@ var vm = new Vue({
                     vm.showTenant = true;
                 }
 
-                // for (var i=0; i<vm.resourceDynamicPropertyList.length; i++) {
                 $.each(vm.resourceDynamicPropertyList,function (index, v) {
-
-                    // var v = vm.resourceDynamicPropertyList[i];
 
                     var inputName;
                     var filedName = v.filedName;
@@ -481,9 +482,67 @@ var vm = new Vue({
 
                         $.get(baseURL + "resources/relate?ids=" + resourceDynamicPropertyId + "&token=" + accessToken, function (response) {
                             if (response == Boolean(true)) {
-                                swal("", "此资源配置已被使用，请删除关联资源后再更新", "warning");
-                                return;
-                            } else {
+
+                                layer.confirm('该资源类型已经存在已关联资源配置，更新后请修改关联的资源', { btn: ['确定','取消'],
+                                    btn1: function(index){
+
+                                        if (inputName == "字符型") {
+                                            var arr = [];
+                                            for (var i=0; i<vm.typeArray.sArray.length; i++) {
+                                                if (vm.typeArray.sArray[i] != filedName) {
+                                                    arr.push(vm.typeArray.sArray[i]);
+                                                }
+                                            }
+
+                                            if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                                                window.parent.swal("", "请至少添加一行输入框", "warning");
+                                                return;
+                                            } else {
+                                                vm.typeArray.sArray = arr;
+                                            }
+
+                                        } else if (inputName == "整型") {
+                                            var arr = [];
+                                            for (var i=0; i<vm.typeArray.iArray.length; i++) {
+                                                if (vm.typeArray.iArray[i] != filedName) {
+                                                    arr.push(vm.typeArray.iArray[i]);
+                                                }
+                                            }
+
+                                            if (arr.length == 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                                                window.parent.swal("", "请至少添加一行输入框", "warning");
+                                                return;
+                                            } else {
+                                                vm.typeArray.iArray = arr;
+                                            }
+                                        } else {
+                                            var arr = [];
+                                            for (var i=0; i<vm.typeArray.bArray.length; i++) {
+                                                if (vm.typeArray.bArray[i] != filedName) {
+                                                    arr.push(vm.typeArray.bArray[i]);
+                                                }
+                                            }
+
+                                            if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
+                                                window.parent.swal("", "请至少添加一行输入框", "warning");
+                                                return;
+                                            } else {
+                                                vm.typeArray.bArray = arr;
+                                            }
+                                        }
+
+                                        // console.log(JSON.stringify(vm.typeArray.sArray) + " - " + JSON.stringify(vm.typeArray.iArray) + " - " + JSON.stringify(vm.typeArray.bArray));
+
+                                        $('#' + delId).parent().parent().remove();
+
+                                        layer.close(index);
+                                    },
+                                    btn2: function(){
+                                        return;
+                                    }
+                                })
+                            }
+                            else {
 
                                 if (inputName == "字符型") {
                                     var arr = [];
@@ -494,7 +553,7 @@ var vm = new Vue({
                                     }
 
                                     if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                                        swal("", "请至少添加一行输入框", "warning");
+                                        window.parent.swal("", "请至少添加一行输入框", "warning");
                                         return;
                                     } else {
                                         vm.typeArray.sArray = arr;
@@ -509,7 +568,7 @@ var vm = new Vue({
                                     }
 
                                     if (arr.length == 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                                        swal("", "请至少添加一行输入框", "warning");
+                                        window.parent.swal("", "请至少添加一行输入框", "warning");
                                         return;
                                     } else {
                                         vm.typeArray.iArray = arr;
@@ -523,7 +582,7 @@ var vm = new Vue({
                                     }
 
                                     if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
-                                        swal("", "请至少添加一行输入框", "warning");
+                                        window.parent.swal("", "请至少添加一行输入框", "warning");
                                         return;
                                     } else {
                                         vm.typeArray.bArray = arr;
@@ -533,12 +592,12 @@ var vm = new Vue({
                                 // console.log(JSON.stringify(vm.typeArray.sArray) + " - " + JSON.stringify(vm.typeArray.iArray) + " - " + JSON.stringify(vm.typeArray.bArray));
 
                                 $('#' + delId).parent().parent().remove();
-
                             }
                         });
 
                     });
                     /*绑定点击事件结束*/
+
                 });
 
                 // console.log("update array: " + JSON.stringify(vm.typeArray));
@@ -573,7 +632,7 @@ var vm = new Vue({
 
             var type = $('input:radio[name="type"]:checked').val();
             if(type == null){
-                swal("", "请选择输入框类型", "warning");
+                window.parent.swal("", "请选择输入框类型", "warning");
                 return;
             } else{
                 if (type == 1) {
@@ -583,7 +642,7 @@ var vm = new Vue({
                         sFieldName = sArray[0];
                         vm.typeArray.sArray.push(sFieldName);
                     } else if (vm.typeArray.sArray.length == sArray.length) {
-                        swal("", "字符型输入框已达到最大值，不能再添加了", "warning");
+                        window.parent.swal("", "字符型输入框已达到最大值，不能再添加了", "warning");
                         return;
                     } else {
 
@@ -609,7 +668,7 @@ var vm = new Vue({
                         iFieldName = iArray[0];
                         vm.typeArray.iArray.push(iFieldName);
                     } else if (vm.typeArray.iArray.length == iArray.length) {
-                        swal("", "整型输入框已达到最大值，不能再添加了", "warning");
+                        window.parent.swal("", "整型输入框已达到最大值，不能再添加了", "warning");
                         return;
                     } else {
 
@@ -635,7 +694,7 @@ var vm = new Vue({
                         bFieldName = bArray[0];
                         vm.typeArray.bArray.push(bFieldName);
                     } else if (vm.typeArray.bArray.length == bArray.length) {
-                        swal("", "布尔型输入框已达到最大值，不能再添加了", "warning");
+                        window.parent.swal("", "布尔型输入框已达到最大值，不能再添加了", "warning");
                         return;
                     } else {
 
@@ -692,7 +751,7 @@ var vm = new Vue({
                         }
                     }
                     if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                        swal("", "请至少添加一行输入框", "warning");
+                        window.parent.swal("", "请至少添加一行输入框", "warning");
                         return;
                     } else {
                         vm.typeArray.sArray = arr;
@@ -707,7 +766,7 @@ var vm = new Vue({
                     }
 
                     if (arr.length == 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                        swal("", "请至少添加一行输入框", "warning");
+                        window.parent.swal("", "请至少添加一行输入框", "warning");
                         return;
                     } else {
                         vm.typeArray.iArray = arr;
@@ -721,7 +780,7 @@ var vm = new Vue({
                         }
                     }
                     if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
-                        swal("", "请至少添加一行输入框", "warning");
+                        window.parent.swal("", "请至少添加一行输入框", "warning");
                         return;
                     } else {
                         vm.typeArray.bArray = arr;

@@ -255,7 +255,7 @@ var vm = new Vue({
             //     swal("您不能删除自己!", "", "error");
             //     return;
             // }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
@@ -271,11 +271,11 @@ var vm = new Vue({
                         contentType: "application/json",
                         dataType: "",
                         success: function () {
-                            swal("删除成功!", "", "success");
+                            window.parent.swal("删除成功!", "", "success");
                             vm.reload(false);
                         },
                         error: function (response) {
-                            swal("删除失败!", getExceptionMessage(response), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(response), "error");
                         }
 
                     });
@@ -313,10 +313,10 @@ var vm = new Vue({
                 dataType: "",
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -404,7 +404,7 @@ var vm = new Vue({
             }
             if (vm.user.email && !emailReg.test(vm.user.email)) {
                 // alert("邮箱格式不正确!");
-                swal({
+                window.parent.swal({
                     title: "",
                     text: '邮箱格式不正确！',
                     type: 'warning',
@@ -415,7 +415,7 @@ var vm = new Vue({
             }
             if (vm.user.mobile && !telReg.test(vm.user.mobileNumber)) {
                 // alert("电话号码格式不正确!");
-                swal({
+                window.parent.swal({
                     title: "",
                     text: '电话号码格式不正确！',
                     type: 'warning',
@@ -432,7 +432,7 @@ var vm = new Vue({
 
             if (!(isPassword && vm.user.userId)) {
                 if (!value) {
-                    swal({
+                    window.parent.swal({
                         title: "",
                         text: name + '不能为空！',
                         type: 'warning',
@@ -442,7 +442,7 @@ var vm = new Vue({
                     return false;
                 }
                 if (chineseReg.test(value)) {
-                    swal({
+                    window.parent.swal({
                         title: "",
                         text: name + '不能为中文！',
                         type: 'warning',
@@ -452,7 +452,7 @@ var vm = new Vue({
                     return false;
                 }
                 if (!specialReg.test(value)) {
-                    swal({
+                    window.parent.swal({
                         title: "",
                         text: name + '只能使用英文、数字、下划线或者连字符！',
                         type: 'warning',
@@ -462,7 +462,7 @@ var vm = new Vue({
                     return false;
                 }
                 if (value.length < 4 || value.length > 30) {
-                    swal({
+                    window.parent.swal({
                         title: "",
                         text: name + '的长度只能在4-30！',
                         type: 'warning',
@@ -472,7 +472,7 @@ var vm = new Vue({
                     return false;
                 }
                 if (value.indexOf(",") != -1 && name == "账号") {
-                    swal({
+                    window.parent.swal({
                         title: "",
                         text: name + '不能包含特殊符号","',
                         type: 'warning',

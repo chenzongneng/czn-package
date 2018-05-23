@@ -17,6 +17,7 @@ import com.richstonedt.garnet.service.ApplicationService;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.ResourceService;
 import com.richstonedt.garnet.service.RouterGroupService;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +73,11 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
             routerGroup1.setId(IdGeneratorUtil.generateId());
             routerGroup1.setGroupName(routerGroup.getGroupName());
             routerGroup1.setAppCode(appCode);
-            routerGroup1.setCreatedTime(currentTime);
+            if (ObjectUtils.isEmpty(routerGroup.getCreatedTime())) {
+                routerGroup1.setCreatedTime(currentTime);
+            } else {
+                routerGroup1.setCreatedTime(routerGroup.getCreatedTime());
+            }
             routerGroup1.setModifiedTime(currentTime);
             routerGroup1.setRemark(routerGroup.getRemark());
             routerGroup1.setUpdatedByUserName(routerGroup.getUpdatedByUserName());
@@ -99,6 +104,15 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         String groupName = routerGroup1.getGroupName();
         RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
         routerGroupCriteria.createCriteria().andGroupNameEqualTo(groupName);
+
+//        //获取创建时间
+        List<RouterGroup> routerGroupList = this.selectByCriteria(routerGroupCriteria);
+        if (!CollectionUtils.isEmpty(routerGroupList) && routerGroupList.size() > 0) {
+            Long createTime = routerGroupList.get(0).getCreatedTime();
+            routerGroup.setCreatedTime(createTime);
+            routerGroupView.setRouterGroup(routerGroup);
+        }
+
         //删除整个应用组
         this.deleteByCriteria(routerGroupCriteria);
         //重新添加应用组
@@ -256,6 +270,28 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
         String groupName = routerGroup.getGroupName();
         return groupName;
+    }
+
+    @Override
+    public boolean isGroupNameUsed(Long id, String groupName) {
+
+        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.createCriteria().andGroupNameEqualTo(groupName);
+        List<RouterGroup> routerGroupList = this.selectByCriteria(routerGroupCriteria);
+        boolean b = false;
+        if (CollectionUtils.isEmpty(routerGroupList) || routerGroupList.size() <= 0) {
+            b = true;
+        } else {
+            if (!ObjectUtils.isEmpty(id) && id.longValue() != 0L) {
+                for (RouterGroup routerGroup : routerGroupList) {
+                    if (routerGroup.getId().longValue() == id.longValue()) {
+                        b = true;
+                    }
+                }
+            }
+        }
+
+        return b;
     }
 
     public List<RouterGroup> dealRouterGroupListIfGarnet(Long userId, List<RouterGroup> routerGroups) {

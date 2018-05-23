@@ -47,4 +47,11 @@ public interface RouterGroupService extends BaseService<RouterGroup, RouterGroup
      * @return
      */
     String getGroupNameByAppCode(String appCode);
+
+    /**
+     * 判断应用组名是否已经存在
+     * @param groupName
+     * @return
+     */
+    boolean isGroupNameUsed(Long id, String groupName);
 }

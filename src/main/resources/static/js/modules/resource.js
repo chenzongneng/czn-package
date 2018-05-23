@@ -158,6 +158,7 @@ var vm = new Vue({
         showParentCode: false,
         title: null,
         resourceDynamicPropertyList: [],
+        filedNames: [],
         resource: {
             id: null,
             name: null,
@@ -297,7 +298,7 @@ var vm = new Vue({
         view: function () {
 
             if (vm.searchType == null || vm.searchType == "" || vm.searchApp == null || vm.searchApp == "") {
-                swal("", "应用和类型都不能为空", "error");
+                window.parent.swal("", "应用和类型都不能为空", "error");
                 return;
             }
 
@@ -327,17 +328,17 @@ var vm = new Vue({
                 // dataType: "",
                 success: function (result) {
                     vm.reload(false);
-                    swal("", "导入Resource成功", "success");
+                    window.parent.swal("", "导入Resource成功", "success");
                 },
                 error: function (result) {
 
                     // console.log("import result == " + JSON.stringify(result));
 
                     if (result.status == 200 && result.readyState == 4) {
-                        swal("", "导入Resource成功", "success");
+                        window.parent.swal("", "导入Resource成功", "success");
                         vm.reload(false);
                     } else {
-                        swal("导入Resource失败", getExceptionMessage(result), "error");
+                        window.parent.swal("导入Resource失败", getExceptionMessage(result), "error");
                         // swal("导入Resource失败", "", "error");
                     }
                 }
@@ -422,7 +423,7 @@ var vm = new Vue({
             if (!resourceIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
@@ -439,15 +440,15 @@ var vm = new Vue({
                         dataType: "",
                         success: function (result) {
                             if (!result.message) {
-                                swal("删除成功!", "", "success");
+                                window.parent.swal("删除成功!", "", "success");
                                 vm.reload(false);
                             } else {
-                                swal("删除失败!", result.message, "error");
+                                window.parent.swal("删除失败!", result.message, "error");
                             }
                             vm.reload(false);
                         },
                         error: function (result) {
-                            swal("删除失败!", getExceptionMessage(result), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(result), "error");
                         }
                     });
                 });
@@ -455,7 +456,7 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
 
-            console.log(JSON.stringify(vm.actionsEdit) + " - " + JSON.stringify(vm.actionsReadonly));
+            // console.log(JSON.stringify(vm.actionsEdit) + " - " + JSON.stringify(vm.actionsReadonly));
 
             // if ((vm.actionsEdit == false && vm.actionsReadonly == false) || (vm.actionsEdit == null && vm.actionsReadonly == null)) {
             //     swal("", "行为组不能为空", "warning");
@@ -481,14 +482,15 @@ var vm = new Vue({
             obj.resource.tenantId = vm.tenantList.selectedTenant;
             obj.resource.applicationId = applicationList.appList.selectedApp;
 
+            console.log("obj: " + JSON.stringify(obj));
 
             if (vm.resource.name == null || $.trim(vm.resource.name) == "") {
-                swal("", "资源名称不能为空", "warning");
+                window.parent.swal("", "资源名称不能为空", "warning");
                 return;
             }
 
             if (obj.resource.applicationId == null || $.trim(obj.resource.applicationId) == "") {
-                swal("", "应用不能为空", "warning");
+                window.parent.swal("", "应用不能为空", "warning");
                 return;
             }
 
@@ -498,23 +500,23 @@ var vm = new Vue({
             // }
 
             if (vm.resource.type == null || $.trim(vm.resource.type) == "") {
-                swal("", "资源类型不能为空", "warning");
+                window.parent.swal("", "资源类型不能为空", "warning");
                 return;
             }
 
             if (vm.resource.path == null || $.trim(vm.resource.path) == "") {
-                swal("", "路径标识不能为空", "warning");
+                window.parent.swal("", "路径标识不能为空", "warning");
                 return;
             }
 
 
             if (vm.resource.name.length > 60) {
-                swal("", "资源名称长度不能大于60", "warning");
+                window.parent.swal("", "资源名称长度不能大于60", "warning");
                 return;
             }
 
             if (vm.resource.path.length > 60) {
-                swal("", "路径标识长度不能大于60", "warning");
+                window.parent.swal("", "路径标识长度不能大于60", "warning");
                 return;
             }
 
@@ -526,10 +528,10 @@ var vm = new Vue({
                 dataType: '',
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (response) {
-                    swal("", getExceptionMessage(response), "error");
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -549,6 +551,7 @@ var vm = new Vue({
         },
         /** 通过id 得到一个resource对象 */
         getResourceById: function (resourceId) {
+
             $.get(baseURL + "resources/" + resourceId, function (response) {
                 response = response.data;
 
@@ -563,35 +566,35 @@ var vm = new Vue({
                 vm.resource.tenantId = response.tenantId;
                 vm.resource.type = response.type;
                 vm.typeList.selectedType = response.type;
-                vm.resource.varchar00 = response.varchar00;
-                vm.resource.varchar01 = response.varchar01;
-                vm.resource.varchar02 = response.varchar02;
-                vm.resource.varchar03 = response.varchar03;
-                vm.resource.varchar04 = response.varchar04;
-                vm.resource.varchar05 = response.varchar05;
-                vm.resource.varchar06 = response.varchar06;
-                vm.resource.varchar07 = response.varchar07;
-                vm.resource.varchar08 = response.varchar08;
-                vm.resource.varchar09 = response.varchar09;
-                vm.resource.varchar10 = response.varchar10;
-                vm.resource.varchar11 = response.varchar11;
-                vm.resource.varchar12 = response.varchar12;
-                vm.resource.varchar13 = response.varchar13;
-                vm.resource.varchar14 = response.varchar14;
-                vm.resource.varchar15 = response.varchar15;
-                vm.resource.varchar16 = response.varchar16;
-                vm.resource.varchar17 = response.varchar17;
-                vm.resource.varchar18 = response.varchar18;
-                vm.resource.varchar19 = response.varchar19;
-                vm.resource.int01 = response.int01;
-                vm.resource.int02 = response.int02;
-                vm.resource.int03 = response.int03;
-                vm.resource.int04 = response.int04;
-                vm.resource.int05 = response.int05;
-                vm.resource.boolean01 = response.boolean01;
-                vm.resource.boolean02 = response.boolean02;
-                vm.resource.boolean03 = response.boolean03;
-                vm.resource.boolean04 = response.boolean04;
+                // vm.resource.varchar00 = response.varchar00;
+                // vm.resource.varchar01 = response.varchar01;
+                // vm.resource.varchar02 = response.varchar02;
+                // vm.resource.varchar03 = response.varchar03;
+                // vm.resource.varchar04 = response.varchar04;
+                // vm.resource.varchar05 = response.varchar05;
+                // vm.resource.varchar06 = response.varchar06;
+                // vm.resource.varchar07 = response.varchar07;
+                // vm.resource.varchar08 = response.varchar08;
+                // vm.resource.varchar09 = response.varchar09;
+                // vm.resource.varchar10 = response.varchar10;
+                // vm.resource.varchar11 = response.varchar11;
+                // vm.resource.varchar12 = response.varchar12;
+                // vm.resource.varchar13 = response.varchar13;
+                // vm.resource.varchar14 = response.varchar14;
+                // vm.resource.varchar15 = response.varchar15;
+                // vm.resource.varchar16 = response.varchar16;
+                // vm.resource.varchar17 = response.varchar17;
+                // vm.resource.varchar18 = response.varchar18;
+                // vm.resource.varchar19 = response.varchar19;
+                // vm.resource.int01 = response.int01;
+                // vm.resource.int02 = response.int02;
+                // vm.resource.int03 = response.int03;
+                // vm.resource.int04 = response.int04;
+                // vm.resource.int05 = response.int05;
+                // vm.resource.boolean01 = response.boolean01;
+                // vm.resource.boolean02 = response.boolean02;
+                // vm.resource.boolean03 = response.boolean03;
+                // vm.resource.boolean04 = response.boolean04;
 
                 var action = response.actions;
                 if ("edit" == action) {
@@ -606,14 +609,134 @@ var vm = new Vue({
                     vm.actionsReadonly = true;
                     vm.actionsEdit = true;
                 }
-                // vm.initTreesToAdd();
-                // $.each(response.apiIdList, function (index, item) {
-                //     var node = apiTree.getNodeByParam("apiId", item);
-                //     apiTree.checkNode(node, true, false);
-                // });
-                // vm.typeChange();
+
                 vm.getTypeList();
+                vm.hideInput();
                 vm.getResourceDynamicPropertyByType();
+
+                console.log(vm.filedNames);
+
+                for (var i=0; i<vm.filedNames.length; i++) {
+                    if (vm.filedNames[i] == "varchar00") {
+                        vm.resource.varchar00 = response.varchar00;
+                    }
+
+                    if (vm.filedNames[i] == "varchar01") {
+                        vm.resource.varchar01 = response.varchar01;
+                    }
+
+                    if (vm.filedNames[i] == "varchar02") {
+                        vm.resource.varchar02 = response.varchar02;
+                    }
+
+                    if (vm.filedNames[i] == "varchar03") {
+                        vm.resource.varchar03 = response.varchar03;
+
+                    }
+
+                    if (vm.filedNames[i] == "varchar04") {
+                        vm.resource.varchar04 = response.varchar04;
+
+                    }
+
+                    if (vm.filedNames[i] == "varchar05") {
+                        vm.resource.varchar05 = response.varchar05;
+                        vm.resource.varchar06 = response.varchar06;
+                    }
+
+                    if (vm.filedNames[i] == "varchar06") {
+                        vm.resource.varchar06 = response.varchar06;
+                    }
+
+                    if (vm.filedNames[i] == "varchar07") {
+                        vm.resource.varchar07 = response.varchar07;
+                    }
+
+                    if (vm.filedNames[i] == "varchar08") {
+                        vm.resource.varchar08 = response.varchar08;
+                    }
+
+                    if (vm.filedNames[i] == "varchar09") {
+                        vm.resource.varchar09 = response.varchar09;
+                    }
+
+                    if (vm.filedNames[i] == "varchar10") {
+                        vm.resource.varchar10 = response.varchar10;
+                    }
+
+                    if (vm.filedNames[i] == "varchar11") {
+                        vm.resource.varchar11 = response.varchar11;
+                    }
+
+                    if (vm.filedNames[i] == "varchar12") {
+                        vm.resource.varchar12 = response.varchar12;
+                    }
+
+                    if (vm.filedNames[i] == "varchar13") {
+                        vm.resource.varchar13 = response.varchar13;
+                    }
+
+                    if (vm.filedNames[i] == "varchar14") {
+                        vm.resource.varchar14 = response.varchar14;
+                    }
+
+                    if (vm.filedNames[i] == "varchar15") {
+                        vm.resource.varchar15 = response.varchar15;
+                    }
+
+                    if (vm.filedNames[i] == "varchar16") {
+                        vm.resource.varchar16 = response.varchar16;
+                    }
+
+                    if (vm.filedNames[i] == "varchar17") {
+                        vm.resource.varchar17 = response.varchar17;
+                    }
+
+                    if (vm.filedNames[i] == "varchar18") {
+                        vm.resource.varchar18 = response.varchar18;
+                        vm.resource.varchar19 = response.varchar19;
+                    }
+
+                    if (vm.filedNames[i] == "varchar19") {
+                        vm.resource.varchar19 = response.varchar19;
+                    }
+
+                    if (vm.filedNames[i] == "int01") {
+                        vm.resource.int01 = response.int01;
+                    }
+
+                    if (vm.filedNames[i] == "int02") {
+                        vm.resource.int02 = response.int02;
+                    }
+
+                    if (vm.filedNames[i] == "int03") {
+                        vm.resource.int03 = response.int03;
+                    }
+
+                    if (vm.filedNames[i] == "int04") {
+                        vm.resource.int04 = response.int04;
+                    }
+
+                    if (vm.filedNames[i] == "int05") {
+                        vm.resource.int05 = response.int05;
+                    }
+
+                    if (vm.filedNames[i] == "boolean01") {
+                        vm.resource.boolean01 = response.boolean01;
+                    }
+
+                    if (vm.filedNames[i] == "boolean02") {
+                        vm.resource.boolean02 = response.boolean02;
+                    }
+
+                    if (vm.filedNames[i] == "boolean03") {
+                        vm.resource.boolean03 = response.boolean03;
+                    }
+
+                    if (vm.filedNames[i] == "boolean04") {
+                        vm.resource.boolean04 = response.boolean04;
+                    }
+                }
 
             });
         },
@@ -690,15 +813,15 @@ var vm = new Vue({
             }
         },
         radioChecked: function (value) {
-            console.log(value);
-            console.log(JSON.stringify(vm.resource.boolean01));
+            // console.log(value);
+            // console.log(JSON.stringify(vm.resource.boolean01));
         },
         //通过type和appId返回resource
         getResourceByTypeAndApp: function () {
             vm.searchType = vm.searchTypeOption.searchType;
             vm.searchApp = vm.option.appSearchId;
 
-            console.log("type: " + vm.searchType + " == applicationId: " + vm.searchApp);
+            // console.log("type: " + vm.searchType + " == applicationId: " + vm.searchApp);
             vm.reload(true);
         },
         /**  获取应用列表 */
@@ -752,26 +875,26 @@ var vm = new Vue({
         },
         hideInput: function () {
 
-            vm.resource.varchar00 = null;
-            vm.resource.varchar01 = null;
-            vm.resource.varchar02 = null;
-            vm.resource.varchar03 = null;
-            vm.resource.varchar04 = null;
-            vm.resource.varchar05 = null;
-            vm.resource.varchar06 = null;
-            vm.resource.varchar07 = null;
-            vm.resource.varchar08 = null;
-            vm.resource.varchar09 = null;
-            vm.resource.varchar10 = null;
-            vm.resource.varchar11 = null;
-            vm.resource.varchar12 = null;
-            vm.resource.varchar13 = null;
-            vm.resource.varchar14 = null;
-            vm.resource.varchar15 = null;
-            vm.resource.varchar16 = null;
-            vm.resource.varchar17 = null;
-            vm.resource.varchar18 = null;
-            vm.resource.varchar19 = null;
+            vm.resource.varchar00 = '';
+            vm.resource.varchar01 = '';
+            vm.resource.varchar02 = '';
+            vm.resource.varchar03 = '';
+            vm.resource.varchar04 = '';
+            vm.resource.varchar05 = '';
+            vm.resource.varchar06 = '';
+            vm.resource.varchar07 = '';
+            vm.resource.varchar08 = '';
+            vm.resource.varchar09 = '';
+            vm.resource.varchar10 = '';
+            vm.resource.varchar11 = '';
+            vm.resource.varchar12 = '';
+            vm.resource.varchar13 = '';
+            vm.resource.varchar14 = '';
+            vm.resource.varchar15 = '';
+            vm.resource.varchar16 = '';
+            vm.resource.varchar17 = '';
+            vm.resource.varchar18 = '';
+            vm.resource.varchar19 = '';
             vm.resource.int01 = null;
             vm.resource.int02 = null;
             vm.resource.int03 = null;
@@ -815,25 +938,32 @@ var vm = new Vue({
         //通过type获取动态资源列表的description
         getResourceDynamicPropertyByType: function () {
 
+            vm.filedNames = [];
             var type = vm.typeList.selectedType;
             if (type == null || type == "") {
                 vm.hideInput();
                 return;
             }
 
+            //通过type获取资源配置
             $.get(baseURL + "resourcedynamicpropertys/type/" + type, function (response) {
                 response = response.data;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
 
+                // console.log("item: " + JSON.stringify(response.resourceDynamicPropertyList));
+
                 $.each(response.resourceDynamicPropertyList, function (index, item) {
+
                     if ("" + item.filedName == "varchar00") {
                         vm.resource.varchar00description = item.description;
                         $('#varchar001').html(item.description);
                         if (item.description == null || item.description == "") {
+                            $('#varchar00').val('');
                             $('#varchar00').hide();
                             vm.resource.varchar00 = null;
                         } else {
                             $('#varchar00').show();
+                            vm.filedNames.push("varchar00");
                         }
                     }
 
@@ -841,10 +971,12 @@ var vm = new Vue({
                         vm.resource.varchar01description = item.description;
                         $('#varchar011').html(item.description);
                         if (item.description == null || item.description == "") {
+                            $('#varchar01').val('');
                             $('#varchar01').hide();
                             vm.resource.varchar01 = null;
                         } else {
                             $('#varchar01').show();
+                            vm.filedNames.push("varchar01");
                         }
                     }
 
@@ -854,8 +986,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar02').hide();
                             vm.resource.varchar02 = null;
+                            $('#varchar02').val('');
                         } else {
                             $('#varchar02').show();
+                            vm.filedNames.push("varchar02");
                         }
                     }
 
@@ -865,8 +999,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar03').hide();
                             vm.resource.varchar03 = null;
+                            $('#varchar03').val('');
                         } else {
                             $('#varchar03').show();
+                            vm.filedNames.push("varchar03");
                         }
                     }
 
@@ -876,8 +1012,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar04').hide();
                             vm.resource.varchar04 = null;
+                            $('#varchar04').val('');
                         } else {
                             $('#varchar04').show();
+                            vm.filedNames.push("varchar04");
                         }
                     }
 
@@ -887,8 +1025,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar05').hide();
                             vm.resource.varchar05 = null;
+                            $('#varchar05').val('');
                         } else {
                             $('#varchar05').show();
+                            vm.filedNames.push("varchar05");
                         }
                     }
 
@@ -898,8 +1038,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar06').hide();
                             vm.resource.varchar06 = null;
+                            $('#varchar06').val('');
                         } else {
                             $('#varchar06').show();
+                            vm.filedNames.push("varchar06");
                         }
                     }
 
@@ -909,8 +1051,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar07').hide();
                             vm.resource.varchar07 = null;
+                            $('#varchar07').val('');
                         } else {
                             $('#varchar07').show();
+                            vm.filedNames.push("varchar07");
                         }
                     }
 
@@ -920,8 +1064,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar08').hide();
                             vm.resource.varchar08 = null;
+                            $('#varchar08').val('');
                         } else {
                             $('#varchar08').show();
+                            vm.filedNames.push("varchar08");
                         }
                     }
 
@@ -931,8 +1077,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar09').hide();
                             vm.resource.varchar09 = null;
+                            $('#varchar09').val('');
                         } else {
                             $('#varchar09').show();
+                            vm.filedNames.push("varchar09");
                         }
                     }
 
@@ -942,8 +1090,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar10').hide();
                             vm.resource.varchar10 = null;
+                            $('#varchar10').val('');
                         } else {
                             $('#varchar10').show();
+                            vm.filedNames.push("varchar10");
                         }
                     }
 
@@ -953,8 +1103,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar11').hide();
                             vm.resource.varchar11 = null;
+                            $('#varchar11').val('');
                         } else {
                             $('#varchar11').show();
+                            vm.filedNames.push("varchar11");
                         }
                     }
 
@@ -964,8 +1116,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar12').hide();
                             vm.resource.varchar12 = null;
+                            $('#varchar12').val('');
                         } else {
                             $('#varchar12').show();
+                            vm.filedNames.push("varchar12");
                         }
                     }
 
@@ -975,8 +1129,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar13').hide();
                             vm.resource.varchar13 = null;
+                            $('#varchar13').val('');
                         } else {
                             $('#varchar13').show();
+                            vm.filedNames.push("varchar13");
                         }
                     }
 
@@ -986,8 +1142,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar14').hide();
                             vm.resource.varchar14 = null;
+                            $('#varchar14').val('');
                         } else {
                             $('#varchar14').show();
+                            vm.filedNames.push("varchar14");
                         }
                     }
 
@@ -997,8 +1155,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar15').hide();
                             vm.resource.varchar15 = null;
+                            $('#varchar15').val('');
                         } else {
                             $('#varchar15').show();
+                            vm.filedNames.push("varchar15");
                         }
                     }
 
@@ -1008,8 +1168,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar16').hide();
                             vm.resource.varchar16 = null;
+                            $('#varchar16').val('');
                         } else {
                             $('#varchar16').show();
+                            vm.filedNames.push("varchar16");
                         }
                     }
 
@@ -1019,8 +1181,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar17').hide();
                             vm.resource.varchar17 = null;
+                            $('#varchar17').val('');
                         } else {
                             $('#varchar17').show();
+                            vm.filedNames.push("varchar17");
                         }
                     }
 
@@ -1030,8 +1194,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar18').hide();
                             vm.resource.varchar18 = null;
+                            $('#varchar18').val('');
                         } else {
                             $('#varchar18').show();
+                            vm.filedNames.push("varchar18");
                         }
                     }
 
@@ -1041,8 +1207,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#varchar19').hide();
                             vm.resource.varchar19 = null;
+                            $('#varchar19').val('');
                         } else {
                             $('#varchar19').show();
+                            vm.filedNames.push("varchar19");
                         }
                     }
 
@@ -1052,8 +1220,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#int01').hide();
                             vm.resource.int01 = null;
+                            $('#int01').val('');
                         } else {
                             $('#int01').show();
+                            vm.filedNames.push("int01");
                         }
                     }
 
@@ -1063,8 +1233,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#int02').hide();
                             vm.resource.int02 = null;
+                            $('#int02').val('');
                         } else {
                             $('#int02').show();
+                            vm.filedNames.push("int02");
                         }
                     }
 
@@ -1074,8 +1246,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#int03').hide();
                             vm.resource.int03 = null;
+                            $('#int03').val('');
                         } else {
                             $('#int03').show();
+                            vm.filedNames.push("int03");
                         }
                     }
 
@@ -1085,8 +1259,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#int04').hide();
                             vm.resource.int04 = null;
+                            $('#int04').val('');
                         } else {
                             $('#int04').show();
+                            vm.filedNames.push("int04");
                         }
                     }
 
@@ -1096,8 +1272,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#int05').hide();
                             vm.resource.int05 = null;
+                            $('#int05').val('');
                         } else {
                             $('#int05').show();
+                            vm.filedNames.push("int05");
                         }
                     }
 
@@ -1107,8 +1285,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#boolean01').hide();
                             vm.resource.boolean01 = null;
+                            $('#boolean01').val('');
                         } else {
                             $('#boolean01').show();
+                            vm.filedNames.push("boolean01");
                         }
                     }
 
@@ -1118,8 +1298,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#boolean02').hide();
                             vm.resource.boolean02 = null;
+                            $('#boolean02').val('');
                         } else {
                             $('#boolean02').show();
+                            vm.filedNames.push("boolean02");
                         }
                     }
 
@@ -1129,8 +1311,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#boolean03').hide();
                             vm.resource.boolean03 = null;
+                            $('#boolean03').val('');
                         } else {
                             $('#boolean03').show();
+                            vm.filedNames.push("boolean03");
                         }
                     }
 
@@ -1140,8 +1324,10 @@ var vm = new Vue({
                         if (item.description == null || item.description == "") {
                             $('#boolean04').hide();
                             vm.resource.boolean04 = null;
+                            $('#boolean04').val('');
                         } else {
                             $('#boolean04').show();
+                            vm.filedNames.push("boolean04");
                         }
                     }
                 });

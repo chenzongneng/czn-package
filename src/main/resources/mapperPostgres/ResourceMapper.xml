@@ -744,21 +744,21 @@
       <if test="varchar19 != null">
         varchar_19 = #{varchar19,jdbcType=VARCHAR},
       </if>
-      <if test="int01 != null">
+      <!--<if test="int01 != null">-->
         int_01 = #{int01,jdbcType=INTEGER},
-      </if>
-      <if test="int02 != null">
+      <!--</if>-->
+      <!--<if test="int02 != null">-->
         int_02 = #{int02,jdbcType=INTEGER},
-      </if>
-      <if test="int03 != null">
+      <!--</if>-->
+      <!--<if test="int03 != null">-->
         int_03 = #{int03,jdbcType=INTEGER},
-      </if>
-      <if test="int04 != null">
+      <!--</if>-->
+      <!--<if test="int04 != null">-->
         int_04 = #{int04,jdbcType=INTEGER},
-      </if>
-      <if test="int05 != null">
+      <!--</if>-->
+      <!--<if test="int05 != null">-->
         int_05 = #{int05,jdbcType=INTEGER},
-      </if>
+      <!--</if>-->
       <!--<if test="boolean01 != null">-->
         boolean_01 = #{boolean01,jdbcType=BIT},
       <!--</if>-->

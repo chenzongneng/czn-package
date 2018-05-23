@@ -21,7 +21,7 @@ function checkLogined() {
             localStorage.removeItem("belongToGarnet");
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
-            swal({
+            window.parent.swal({
                     title: "",
                     text:  "您的账号已在其他地方登录。",
                     type: "error"

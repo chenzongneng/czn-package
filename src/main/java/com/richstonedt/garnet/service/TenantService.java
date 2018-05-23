@@ -57,4 +57,10 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
      */
     List<String> getRelatedUserNamesByTenantId(Long tenantId);
 
+    /**
+     * 取消租户和用户的关联
+     * @param userNames
+     */
+    void deleteTenantUserRelated(String userNames);
+
 }

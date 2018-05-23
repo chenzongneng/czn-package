@@ -268,7 +268,7 @@ var vm = new Vue({
             if (!groupIds) {
                 return;
             }
-            swal({
+            window.parent.swal({
                     title: "确定要删除选中的记录？",
                     type: "warning",
                     showCancelButton: true,
@@ -285,14 +285,14 @@ var vm = new Vue({
                         dataType: "",
                         success: function (result) {
                             if (!result.message) {
-                                swal("删除成功!", "", "success");
+                                window.parent.swal("删除成功!", "", "success");
                                 vm.reload(false);
                             } else {
-                                swal("删除失败!", result.message, "error");
+                                window.parent.swal("删除失败!", result.message, "error");
                             }
                         },
                         error: function (result) {
-                        swal("删除失败!", getExceptionMessage(result), "error");
+                            window.parent.swal("删除失败!", getExceptionMessage(result), "error");
                     }
                     });
                 });
@@ -307,16 +307,16 @@ var vm = new Vue({
             var LoginUserId = localStorage.getItem("userId");
 
             if(vm.group.name == null || $.trim(vm.group.name) == ""){
-                swal("", "组名称不能为空", "warning");
+                window.parent.swal("", "组名称不能为空", "warning");
                 return;
             }
 
             if (vm.group.name.length > 30) {
-                swal("", "组名称不能为空", "warning");
+                window.parent.swal("", "组名称不能为空", "warning");
             }
 
             if((vm.group.tenantId == null || $.trim(vm.group.tenantId) == "") && (vm.group.applicationId == null || $.trim(vm.group.applicationId) == "")){
-                swal("", "请在选择类型后，选择租户或应用", "warning");
+                window.parent.swal("", "请在选择类型后，选择租户或应用", "warning");
                 return;
             }
 
@@ -324,17 +324,17 @@ var vm = new Vue({
                 var selectType = vm.typeList.selectedType;
                 if (selectType == 1) {
                     if (vm.group.tenantId == null || $.trim(vm.group.tenantId) == "") {
-                        swal("", "租户不能为空", "warning");
+                        window.parent.swal("", "租户不能为空", "warning");
                         return;
                     }
                 } else if (selectType == 2) {
                     if (vm.group.applicationId == null || $.trim(vm.group.applicationId) == "") {
-                        swal("", "应用不能为空", "warning");
+                        window.parent.swal("", "应用不能为空", "warning");
                         return;
                     }
                 } else if (selectType == 3) {
                     if ((vm.group.tenantId == null || $.trim(vm.group.tenantId) == "") || (vm.group.applicationId == null || $.trim(vm.group.applicationId) == "")) {
-                        swal("", "租户和应用都不能为空", "warning");
+                        window.parent.swal("", "租户和应用都不能为空", "warning");
                         return;
                     }
                 }
@@ -358,12 +358,12 @@ var vm = new Vue({
 
 
             if(roleIdList == null || roleIdList.length == 0){
-                swal("", "角色不能为空", "warning");
+                window.parent.swal("", "角色不能为空", "warning");
                 return;
             }
 
             if(userIdList == null || userIdList.length == 0){
-                swal("", "用户不能为空", "warning");
+                window.parent.swal("", "用户不能为空", "warning");
                 return;
             }
 
@@ -379,10 +379,10 @@ var vm = new Vue({
                 dataType: "",
                 success: function () {
                     vm.reload(false);
-                    swal("操作成功!", "", "success");
+                    window.parent.swal("操作成功!", "", "success");
                 },
                 error: function (result) {
-                    swal("操作失败!", getExceptionMessage(result), "error");
+                    window.parent.swal("操作失败!", getExceptionMessage(result), "error");
                 }
             });
         },
@@ -619,7 +619,6 @@ var vm = new Vue({
         /**  获取应用列表 */
         getAppList: function () {
             $.get(baseURL + "applications?page=1&limit=1000"  + "&userId=" + userId, function (response) {
-
                 $.each(response.list, function (index, item) {
                     vm.appList.options.push(item);
                 })

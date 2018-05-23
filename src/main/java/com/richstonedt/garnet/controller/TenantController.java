@@ -251,4 +251,27 @@ public class TenantController {
         }
     }
 
+    @ApiOperation(value = "[Torino Source]删除租户和用户的关联", notes = "通过用户名删除其和租户的关联")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/tenants/delrealted", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> delRelatedTenantUser(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
+            @ApiParam(value = "用户名", required = true) @RequestParam(value = "userNames", defaultValue = "", required = true) String userNames) {
+        try {
+
+            tenantService.deleteTenantUserRelated(userNames);
+
+            // 封装返回信息
+            GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, null);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

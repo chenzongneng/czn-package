@@ -188,4 +188,26 @@ public class RouterGroupController {
         }
     }
 
+    @ApiOperation(value = "[Torino Source]获取router白名单列表", notes = "通过查询条件获取router白名单列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/routergroups/checkname", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> checkGroupName(
+            @ApiParam(value = "ID", defaultValue = "", required = false) @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
+            @ApiParam(value = "应用组名", defaultValue = "", required = false) @RequestParam(value = "groupName", defaultValue = "", required = true) String groupName) {
+        try {
+
+            boolean result = routerGroupService.isGroupNameUsed(id, groupName);
+            // 封装返回信息
+            GarnetMessage<Boolean> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

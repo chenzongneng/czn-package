@@ -101,6 +101,10 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         this.dealForgenKeyApplications(tenantView);
         //更新用户
         this.dealForgenKeyUsers(tenantView);
+        //取消租户和用户的绑定
+//        if (!StringUtils.isEmpty(tenantView.getDelRelatedUserNames())) {
+//            this.deleteTenantUserRelated(tenantView.getDelRelatedUserNames());
+//        }
     }
 
     /**
@@ -346,6 +350,41 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             userNameList.add(user.getUserName());
         }
         return userNameList;
+    }
+
+    @Override
+    public void deleteTenantUserRelated(String userNames) {
+
+        if (StringUtils.isEmpty(userNames)) {
+            throw new RuntimeException("要取消绑定的用户名不能为空");
+        }
+
+        List<Long> userIds = new ArrayList<>();
+        for (String userName : userNames.split(",")) {
+            UserCriteria userCriteria = new UserCriteria();
+            userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
+            User user = userService.selectSingleByCriteria(userCriteria);
+            if (ObjectUtils.isEmpty(user)) {
+                throw new RuntimeException("用户名：" + userName + " 不存在");
+            }
+            userIds.add(user.getId());
+        }
+
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andUserIdIn(userIds);
+        userTenantService.deleteByCriteria(userTenantCriteria);
+
+        //将garnet和admin的关联被删除，重新添加上
+        UserTenantCriteria userTenantCriteria1 = new UserTenantCriteria();
+        userTenantCriteria1.createCriteria().andTenantIdEqualTo(GarnetContants.GARNET_TENANT_ID).andUserIdEqualTo(GarnetContants.GARNET_USER_ID);
+        UserTenant userTenant = userTenantService.selectSingleByCriteria(userTenantCriteria1);
+        if (ObjectUtils.isEmpty(userTenant)) {
+            userTenant = new UserTenant();
+            userTenant.setUserId(GarnetContants.GARNET_USER_ID);
+            userTenant.setTenantId(GarnetContants.GARNET_TENANT_ID);
+            userTenant.setId(IdGeneratorUtil.generateId());
+            userTenantService.insertSelective(userTenant);
+        }
     }
 
     /**

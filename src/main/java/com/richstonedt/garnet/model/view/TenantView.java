@@ -22,6 +22,16 @@ public class TenantView {
 
     private String userNames;
 
+    private String delRelatedUserNames;
+
+    public String getDelRelatedUserNames() {
+        return delRelatedUserNames;
+    }
+
+    public void setDelRelatedUserNames(String delRelatedUserNames) {
+        this.delRelatedUserNames = delRelatedUserNames;
+    }
+
     public String getUserNames() {
         return userNames;
     }
