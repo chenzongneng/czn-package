@@ -73,10 +73,6 @@ var vm = new Vue({
             $.ajaxSettings.async = false;
             // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
             $.getJSON(baseURL + "resources/getsysmenu?userId=" + userId, function (r) {
-
-                // console.log("getsysmenu == " + JSON.stringify(r));
-
-
                 that.menuList = r;
                 //路由
                 var router = new Router();
@@ -100,7 +96,6 @@ var vm = new Vue({
                 if (!response) {
                     parent.location.href = 'index.html';
                 } else {
-                    // console.log("getUser: " + JSON.stringify(response));
                     if (response.loginStatus == "false") {
                         return;
                     }

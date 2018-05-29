@@ -364,6 +364,8 @@ var vm = new Vue({
             vm.tenantList.options = [];
             vm.typeList.selectedType = "";
             vm.typeList.options = [];
+            vm.typeList1.selectedType = "";
+            // vm.typeList1.options = [];
             applicationList.appList.selectedApp = "";
             applicationList.appList.options = [];
             applicationList.appSearchList.selectedApp = "";
@@ -482,15 +484,15 @@ var vm = new Vue({
             obj.resource.tenantId = vm.tenantList.selectedTenant;
             obj.resource.applicationId = applicationList.appList.selectedApp;
 
-            console.log("obj: " + JSON.stringify(obj));
+            // console.log("obj: " + JSON.stringify(obj));
 
             if (vm.resource.name == null || $.trim(vm.resource.name) == "") {
                 window.parent.swal("", "资源名称不能为空", "warning");
                 return;
             }
 
-            if (obj.resource.applicationId == null || $.trim(obj.resource.applicationId) == "") {
-                window.parent.swal("", "应用不能为空", "warning");
+            if ((obj.resource.applicationId == null || $.trim(obj.resource.applicationId) == "") && (obj.resource.tenantId == null || $.trim(obj.resource.tenantId) == "")) {
+                window.parent.swal("", "请在选择类型后，选择租户或应用", "warning");
                 return;
             }
 
@@ -610,11 +612,32 @@ var vm = new Vue({
                     vm.actionsEdit = true;
                 }
 
+                var selectedTenant = response.tenantId;
+                var selectedApp = response.applicationId;
+                if (selectedTenant == null || selectedTenant == 0) {
+                    //应用级
+                    vm.tenantList.selectedTenant = "";
+                    applicationList.appList.selectedApp = selectedApp;
+                    vm.showApplication = true;
+                    vm.showTenant = false;
+                } else if (selectedApp == null || selectedApp == 0){
+                    //租户级
+                    applicationList.appList.selectedApp = "";
+                    vm.tenantList.selectedTenant = selectedTenant;
+                    vm.showTenant = true;
+                    vm.showApplication = false;
+                } else {
+                    applicationList.appList.selectedApp = selectedApp;
+                    vm.tenantList.selectedTenant = selectedTenant;
+                    vm.showApplication = true;
+                    vm.showTenant = true;
+                }
+
                 vm.getTypeList();
                 vm.hideInput();
                 vm.getResourceDynamicPropertyByType();
 
-                console.log(vm.filedNames);
+                // console.log(vm.filedNames);
 
                 for (var i=0; i<vm.filedNames.length; i++) {
                     if (vm.filedNames[i] == "varchar00") {
@@ -786,26 +809,26 @@ var vm = new Vue({
         },
         /** 类型列表onchange 事件*/
         selectType1: function () {
+            vm.tenantList.selectedTenant = "";
+            applicationList.appList.selectedApp = "";
+            vm.typeList.options = [];
+            vm.typeList.selectedType = "";
+            vm.hideInput();
+
             var selectedType = vm.typeList1.selectedType;
             if (selectedType == 1) {
                 //租户级
-                vm.tenantList.selectedTenant = "";
-                applicationList.appList.selectedApp = "";
                 vm.resource.applicationId = null;
                 vm.resource.tenantId = null;
                 vm.showTenant = true;
                 vm.showApplication = false;
             } else if (selectedType == 2) {
                 //应用级
-                vm.tenantList.selectedTenant = "";
-                applicationList.appList.selectedApp = "";
                 vm.resource.tenantId = null;
                 vm.resource.applicationId = null;
                 vm.showTenant = false;
                 vm.showApplication = true;
             } else {
-                vm.tenantList.selectedTenant = "";
-                applicationList.appList.selectedApp = "";
                 vm.resource.tenantId = null;
                 vm.resource.applicationId = null;
                 vm.showApplication = true;

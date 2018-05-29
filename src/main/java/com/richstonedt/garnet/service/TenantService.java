@@ -60,7 +60,8 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
     /**
      * 取消租户和用户的关联
      * @param userNames
+     * @param id
      */
-    void deleteTenantUserRelated(String userNames);
+    void deleteTenantUserRelated(Long id, String userNames);
 
 }

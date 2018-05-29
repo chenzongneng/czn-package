@@ -126,7 +126,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
     List<User> queryUserByApplicationId(UserParm userParm);
 
     /**
-     * 根据应用id查询用户列表
+     * 根据租户id和应用id查询用户列表
      * @param userParm
      * @return
      */

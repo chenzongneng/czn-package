@@ -41,7 +41,7 @@ var intervalId = setInterval(function() {
         clearInterval(localStorage.getItem("actionTimerId"));
         ShowInvalidLoginMessage();
     }
-
+// }, 1000);
 }, 60000);
 
 function ShowInvalidLoginMessage() {
@@ -56,6 +56,7 @@ function ShowInvalidLoginMessage() {
             type: "warning"
         },
         function () {
+            // console.log("我是indextimer...");
             parent.location.href = 'login.html';
         });
 }

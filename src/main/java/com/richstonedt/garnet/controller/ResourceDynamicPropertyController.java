@@ -214,4 +214,46 @@ public class ResourceDynamicPropertyController {
         }
     }
 
+    @ApiOperation(value = "[Torino Source]检查资源配置类型代号是否已被使用", notes = "检查资源配置类型代号是否已被使用")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resourcedynamicpropertys/checktype", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> checkType(
+            @ApiParam(value = "资源动态属性ID", required = true) @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
+            @ApiParam(value = "资源动态属性type", required = true) @RequestParam(value = "type", defaultValue = "", required = true) String type) {
+        try {
+            boolean result = resourceDynamicPropertyService.isTypeUsed(id, type);
+            // 封装返回信息
+            GarnetMessage<Boolean> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Torino Source]检查资源配置类型名称是否已被使用", notes = "检查资源配置类型名称是否已被使用")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resourcedynamicpropertys/checkremark", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> checkRemark(
+            @ApiParam(value = "资源动态属性ID", required = true) @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
+            @ApiParam(value = "资源动态属性名称", required = true) @RequestParam(value = "remark", defaultValue = "", required = true) String remark) {
+        try {
+            boolean result = resourceDynamicPropertyService.isRemarkUsed(id, remark);
+            // 封装返回信息
+            GarnetMessage<Boolean> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

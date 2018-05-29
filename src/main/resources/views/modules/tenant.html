@@ -31,7 +31,7 @@
 </head>
 
 <body>
-<div id="garnetApp" v-cloak>
+<div id="garnetApp" v-cloak style="margin: 15px;">
     <div v-show="showList">
         <div class="grid-btn">
             <div class="form-group col-sm-2">
@@ -143,7 +143,8 @@
 </div>
 
 <!-- 选择应用 -->
-<div id="appLayer" style="display: none;padding:10px;">
+<!--<div id="appLayerDiv">-->
+<div id="appLayer" style="display:none;padding:10px;">
     <!--<form class="form-horizontal" style="width: 280px;">-->
         <div class="form-group">
             <div class="col-sm-10">
@@ -158,6 +159,12 @@
         </div>
     <!--</form>-->
 </div>
+<!--</div>-->
+<!--<div id="appLayer">-->
+    <!--<div class="col-sm-10">-->
+        <!--<input class="form-control" placeholder="应用名" id="laySearchName" autocomplete="off">-->
+    <!--</div>-->
+<!--</div>-->
 
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>

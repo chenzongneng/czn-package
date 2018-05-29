@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -353,7 +354,11 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     }
 
     @Override
-    public void deleteTenantUserRelated(String userNames) {
+    public void deleteTenantUserRelated(Long id, String userNames) {
+
+        if (ObjectUtils.isEmpty(id)) {
+            throw new RuntimeException("租户id不能为空");
+        }
 
         if (StringUtils.isEmpty(userNames)) {
             throw new RuntimeException("要取消绑定的用户名不能为空");
@@ -367,11 +372,19 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             if (ObjectUtils.isEmpty(user)) {
                 throw new RuntimeException("用户名：" + userName + " 不存在");
             }
+
+            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+            userTenantCriteria.createCriteria().andUserIdEqualTo(user.getId()).andTenantIdEqualTo(id);
+            List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+            if (CollectionUtils.isEmpty(userTenants)) {
+                throw new RuntimeException("用户名：" + userName + " 没有被此租户绑定");
+            }
+
             userIds.add(user.getId());
         }
 
         UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-        userTenantCriteria.createCriteria().andUserIdIn(userIds);
+        userTenantCriteria.createCriteria().andUserIdIn(userIds).andTenantIdEqualTo(id);
         userTenantService.deleteByCriteria(userTenantCriteria);
 
         //将garnet和admin的关联被删除，重新添加上
@@ -464,7 +477,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         if (!CollectionUtils.isEmpty(userTenants)) {
             for (UserTenant userTenant : userTenants) {
                 if (userTenant.getTenantId().longValue() == tenantId.longValue() && userTenant.getUserId().longValue() == user.getId().longValue()) {
-                    throw new RuntimeException("您已经添加过此用户");
+                    throw new RuntimeException("您已经添加过用户：" + user.getUserName());
                 }
             }
 

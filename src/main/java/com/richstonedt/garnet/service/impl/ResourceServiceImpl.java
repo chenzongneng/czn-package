@@ -69,6 +69,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         Resource resource = resourceView.getResource();
 
+
+
         resource.setId(IdGeneratorUtil.generateId());
 
         Long currentTime = System.currentTimeMillis();
@@ -76,6 +78,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         resource.setCreatedTime(currentTime);
 
         resource.setModifiedTime(currentTime);
+
+        //检查资源名称是否已经存在
+        checkDuplicateResourceName(resource);
 
         this.insertSelective(resource);
 
@@ -95,12 +100,32 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
     }
 
+    /**
+     * 验证资源名称是否已经存在
+     */
+    private void checkDuplicateResourceName(Resource resource) {
+        String name = resource.getName();
+        Long id = resource.getId();
+
+        ResourceCriteria resourceCriteria = new ResourceCriteria();
+        resourceCriteria.createCriteria().andNameEqualTo(name);
+        Resource resource1 = this.selectSingleByCriteria(resourceCriteria);
+
+        if (!ObjectUtils.isEmpty(resource1) && id.longValue() != resource1.getId().longValue()) {
+            throw new RuntimeException("资源名称已存在");
+        }
+    }
+
     @Override
     public void updateResource(ResourceView resourceView) {
 
         Resource resource = resourceView.getResource();
         Long currentTime = System.currentTimeMillis();
         resource.setModifiedTime(currentTime);
+
+        //检查资源名称是否已存在
+        checkDuplicateResourceName(resource);
+
         this.updateByPrimaryKeySelective(resource);
 
         if(!ObjectUtils.isEmpty(resourceView.getResourceDynamicProperties())){

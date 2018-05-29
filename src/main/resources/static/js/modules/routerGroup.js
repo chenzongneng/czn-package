@@ -332,7 +332,6 @@ var vm = new Vue({
         },
 
         checkRouterName: function () {
-            console.log("router name ...");
             var groupName = $('#groupName').val();
             var id = vm.routerGroup.id;
 

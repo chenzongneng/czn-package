@@ -47,4 +47,20 @@ public interface ResourceDynamicPropertyService extends BaseService<ResourceDyna
      */
     ResourceDynamicPropertyView selectResourceDynamicPropertyViewByType(String type);
 
+    /**
+     * 检查type是否已被使用
+     * @param id
+     * @param type
+     * @return
+     */
+    boolean isTypeUsed(Long id, String type);
+
+    /**
+     * 检查remark是否已被使用
+     * @param id
+     * @param remark
+     * @return
+     */
+    boolean isRemarkUsed(Long id, String remark);
+
 }

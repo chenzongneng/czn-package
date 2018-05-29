@@ -24,9 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.w3c.dom.ls.LSInput;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -372,6 +370,17 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         }
 
         List<Group> groups = this.selectByCriteria(groupCriteria);
+
+        //去重
+//        List<Group> groupList = new ArrayList<>();
+//        Set<Long> groupIdSet = new HashSet<>();
+//        for (Group group : groups) {
+//            if (!groupIdSet.contains(group.getId())) {
+//                groupIdSet.add(group.getId());
+//                groupList.add(group);
+//            }
+//        }
+
         return groups;
     }
 

@@ -210,9 +210,7 @@ var vm = new Vue({
             };
 
             //删除动态添加的输入框
-            $("input[name='sdescriptions']").parent().parent().remove();
-            $("input[name='idescriptions']").parent().parent().remove();
-            $("input[name='bdescriptions']").parent().parent().remove();
+            $("input[name='descriptions']").parent().parent().remove();
 
             // this.initData();
             vm.getTenantList();
@@ -238,10 +236,7 @@ var vm = new Vue({
             $('#tips').show();
 
             //删除动态添加的输入框
-            $("input[name='sdescriptions']").parent().parent().remove();
-            $("input[name='idescriptions']").parent().parent().remove();
-            $("input[name='bdescriptions']").parent().parent().remove();
-
+            $("input[name='descriptions']").parent().parent().remove();
 
             vm.showList = false;
             vm.showType = false;
@@ -308,36 +303,14 @@ var vm = new Vue({
         /**  新增或更新确认 */
         saveOrUpdate: function () {
             vm.resourceDynamicPropertyList = [];
-            $("input[name='sdescriptions']").each(function (i,item) {
+            $("input[name='descriptions']").each(function (i,item) {
                 var description = item.value;
-                var ttype = vm.typeArray.sArray[i];
-                // var ttype = item.attributes["ttype"].nodeValue;
+                var ttype = item.attributes["ttype"].nodeValue;
                 var object = new Object();
                 object.filedName = ttype;
                 object.description = description;
                 vm.resourceDynamicPropertyList.push(object);
             });
-
-            $("input[name='idescriptions']").each(function (i,item) {
-                var description = item.value;
-                var ttype = vm.typeArray.iArray[i];
-                // var ttype = item.attributes["ttype"].nodeValue;
-                var object = new Object();
-                object.filedName = ttype;
-                object.description = description;
-                vm.resourceDynamicPropertyList.push(object);
-            });
-
-            $("input[name='bdescriptions']").each(function (i,item) {
-                var description = item.value;
-                var ttype = vm.typeArray.bArray[i];
-                // var ttype = item.attributes["ttype"].nodeValue;
-                var object = new Object();
-                object.filedName = ttype;
-                object.description = description;
-                vm.resourceDynamicPropertyList.push(object);
-            });
-
 
             // 获取访问权限树选择的访问权限
             var obj = new Object();
@@ -450,50 +423,18 @@ var vm = new Vue({
             //     return;
             // }
 
-
-            $.get(baseURL + "resources/relate?ids=" + id + "&token=" + accessToken, function (response) {
-                if (response == Boolean(true)) {
-                    window.parent.swal({
-                            title: "",
-                            text: "该资源类型存在已关联资源配置，更新后请修改关联的资源",
-                            type: "warning",
-                            showCancelButton: true,
-                            closeOnConfirm: false,
-                            confirmButtonText: "确认",
-                            cancelButtonText: "取消",
-                            confirmButtonColor: "#DD6B55"
-                        },
-                        function () {
-                            $.ajax({
-                                type: vm.resourceDynamicProperty.id === null ? "POST" : "PUT",
-                                url: baseURL + "resourcedynamicpropertys",
-                                contentType: "application/json",
-                                data: JSON.stringify(obj),
-                                dataType: '',
-                                success: function () {
-                                    vm.reload(false);
-                                    window.parent.swal("操作成功!", "", "success");
-                                },
-                                error: function (response) {
-                                    window.parent.swal("", getExceptionMessage(response), "error");
-                                }
-                            });
-                        });
-                } else {
-                    $.ajax({
-                        type: vm.resourceDynamicProperty.id === null ? "POST" : "PUT",
-                        url: baseURL + "resourcedynamicpropertys",
-                        contentType: "application/json",
-                        data: JSON.stringify(obj),
-                        dataType: '',
-                        success: function () {
-                            vm.reload(false);
-                            window.parent.swal("操作成功!", "", "success");
-                        },
-                        error: function (response) {
-                            window.parent.swal("", getExceptionMessage(response), "error");
-                        }
-                    });
+            $.ajax({
+                type: vm.resourceDynamicProperty.id === null ? "POST" : "PUT",
+                url: baseURL + "resourcedynamicpropertys",
+                contentType: "application/json",
+                data: JSON.stringify(obj),
+                dataType: '',
+                success: function () {
+                    vm.reload(false);
+                    window.parent.swal("操作成功!", "", "success");
+                },
+                error: function (response) {
+                    window.parent.swal("", getExceptionMessage(response), "error");
                 }
             });
         },
@@ -556,24 +497,21 @@ var vm = new Vue({
                     var spattern = /^varchar.*$/;
                     var ipattern = /^int.*$/;
                     var bpattern = /^boolean.*$/;
-                    var descriptions;
+
                     if (spattern.exec(filedName)) {
                         inputName = "字符型";
-                        descriptions = "sdescriptions";
                         vm.typeArray.sArray.push(filedName);
                     } else if (ipattern.exec(filedName)) {
                         inputName = "整型";
-                        descriptions = "idescriptions";
                         vm.typeArray.iArray.push(filedName);
                     } else if (bpattern.exec(filedName)) {
                         inputName = "布尔型";
-                        descriptions = "bdescriptions";
                         vm.typeArray.bArray.push(filedName);
                     }
                     var row = '<div class="form-group">\n' +
                         '                <div class="col-sm-2 control-label">' + inputName + '</div>\n' +
                         '                <div class="col-sm-10">\n' +
-                        '                    <input class="form-control" name="' + descriptions + '" ttype="' + filedName + '" placeholder="描述" value="'+ v.description +'"/>\n' +
+                        '                    <input class="form-control" name="descriptions" ttype="' + filedName + '" placeholder="描述" value="'+ v.description +'"/>\n' +
                         '                </div>' +
                         '                <div>' +
                         '                    <input type="button" class="btn btn-default" id="' + delId + '" value="-"/> ' +
@@ -585,48 +523,120 @@ var vm = new Vue({
                     /*绑定点击事件开始*/
                     $('#' + delId).on("click", function () {
 
-                        if (inputName == "字符型") {
-                            var arr = [];
+                        $.get(baseURL + "resources/relate?ids=" + resourceDynamicPropertyId + "&token=" + accessToken, function (response) {
+                            if (response == Boolean(true)) {
 
-                            if (vm.typeArray.sArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                                window.parent.swal("", "请至少添加一行输入框", "warning");
-                                return;
-                            } else {
-                                for (var i=0; i<vm.typeArray.sArray.length-1; i++) {
-                                    arr.push(vm.typeArray.sArray[i]);
-                                }
-                                vm.typeArray.sArray = arr;
+                                layer.confirm('该资源类型已经存在已关联资源配置，更新后请修改关联的资源', { btn: ['确定','取消'],
+                                    btn1: function(index){
+
+                                        if (inputName == "字符型") {
+                                            var arr = [];
+                                            for (var i=0; i<vm.typeArray.sArray.length; i++) {
+                                                if (vm.typeArray.sArray[i] != filedName) {
+                                                    arr.push(vm.typeArray.sArray[i]);
+                                                }
+                                            }
+
+                                            if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                                                window.parent.swal("", "请至少添加一行输入框", "warning");
+                                                return;
+                                            } else {
+                                                vm.typeArray.sArray = arr;
+                                            }
+
+                                        } else if (inputName == "整型") {
+                                            var arr = [];
+                                            for (var i=0; i<vm.typeArray.iArray.length; i++) {
+                                                if (vm.typeArray.iArray[i] != filedName) {
+                                                    arr.push(vm.typeArray.iArray[i]);
+                                                }
+                                            }
+
+                                            if (arr.length == 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                                                window.parent.swal("", "请至少添加一行输入框", "warning");
+                                                return;
+                                            } else {
+                                                vm.typeArray.iArray = arr;
+                                            }
+                                        } else {
+                                            var arr = [];
+                                            for (var i=0; i<vm.typeArray.bArray.length; i++) {
+                                                if (vm.typeArray.bArray[i] != filedName) {
+                                                    arr.push(vm.typeArray.bArray[i]);
+                                                }
+                                            }
+
+                                            if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
+                                                window.parent.swal("", "请至少添加一行输入框", "warning");
+                                                return;
+                                            } else {
+                                                vm.typeArray.bArray = arr;
+                                            }
+                                        }
+
+                                        // console.log(JSON.stringify(vm.typeArray.sArray) + " - " + JSON.stringify(vm.typeArray.iArray) + " - " + JSON.stringify(vm.typeArray.bArray));
+
+                                        $('#' + delId).parent().parent().remove();
+
+                                        layer.close(index);
+                                    },
+                                    btn2: function(){
+                                        return;
+                                    }
+                                })
                             }
+                            else {
 
-                        } else if (inputName == "整型") {
-                            var arr = [];
+                                if (inputName == "字符型") {
+                                    var arr = [];
+                                    for (var i=0; i<vm.typeArray.sArray.length; i++) {
+                                        if (vm.typeArray.sArray[i] != filedName) {
+                                            arr.push(vm.typeArray.sArray[i]);
+                                        }
+                                    }
 
-                            if (vm.typeArray.iArray.length-1 <= 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                                window.parent.swal("", "请至少添加一行输入框", "warning");
-                                return;
-                            } else {
-                                for (var i=0; i<vm.typeArray.iArray.length-1; i++) {
-                                    arr.push(vm.typeArray.iArray[i]);
+                                    if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                                        window.parent.swal("", "请至少添加一行输入框", "warning");
+                                        return;
+                                    } else {
+                                        vm.typeArray.sArray = arr;
+                                    }
+
+                                } else if (inputName == "整型") {
+                                    var arr = [];
+                                    for (var i=0; i<vm.typeArray.iArray.length; i++) {
+                                        if (vm.typeArray.iArray[i] != filedName) {
+                                            arr.push(vm.typeArray.iArray[i]);
+                                        }
+                                    }
+
+                                    if (arr.length == 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                                        window.parent.swal("", "请至少添加一行输入框", "warning");
+                                        return;
+                                    } else {
+                                        vm.typeArray.iArray = arr;
+                                    }
+                                } else {
+                                    var arr = [];
+                                    for (var i=0; i<vm.typeArray.bArray.length; i++) {
+                                        if (vm.typeArray.bArray[i] != filedName) {
+                                            arr.push(vm.typeArray.bArray[i]);
+                                        }
+                                    }
+
+                                    if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
+                                        window.parent.swal("", "请至少添加一行输入框", "warning");
+                                        return;
+                                    } else {
+                                        vm.typeArray.bArray = arr;
+                                    }
                                 }
-                                vm.typeArray.iArray = arr;
-                            }
 
-                        } else {
-                            var arr = [];
+                                // console.log(JSON.stringify(vm.typeArray.sArray) + " - " + JSON.stringify(vm.typeArray.iArray) + " - " + JSON.stringify(vm.typeArray.bArray));
 
-                            if (vm.typeArray.bArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
-                                window.parent.swal("", "请至少添加一行输入框", "warning");
-                                return;
-                            } else {
-                                for (var i=0; i<vm.typeArray.bArray.length-1; i++) {
-                                    arr.push(vm.typeArray.bArray[i]);
-                                }
-                                vm.typeArray.bArray = arr;
+                                $('#' + delId).parent().parent().remove();
                             }
-                        }
-                        // console.log(JSON.stringify(vm.typeArray.sArray) + " - " + JSON.stringify(vm.typeArray.iArray) + " - " + JSON.stringify(vm.typeArray.bArray));
-                        $('#' + delId).parent().parent().remove();
-                        // console.log("update-del array: " + JSON.stringify(vm.typeArray));
+                        });
 
                     });
                     /*绑定点击事件结束*/
@@ -678,6 +688,7 @@ var vm = new Vue({
                         window.parent.swal("", "字符型输入框已达到最大值，不能再添加了", "warning");
                         return;
                     } else {
+
                         outloop:
                         for (var i=0; i<sArray.length; i++) {
                             for (var j=0; j<vm.typeArray.sArray.length; i++) {
@@ -703,6 +714,7 @@ var vm = new Vue({
                         window.parent.swal("", "整型输入框已达到最大值，不能再添加了", "warning");
                         return;
                     } else {
+
                         outloop:
                             for (var i=0; i<iArray.length; i++) {
                                 for (var j=0; j<vm.typeArray.iArray.length; i++) {
@@ -728,6 +740,7 @@ var vm = new Vue({
                         window.parent.swal("", "布尔型输入框已达到最大值，不能再添加了", "warning");
                         return;
                     } else {
+
                         outloop:
                             for (var i=0; i<bArray.length; i++) {
                                 for (var j=0; j<vm.typeArray.bArray.length; i++) {
@@ -745,28 +758,24 @@ var vm = new Vue({
                 }
             }
 
-            var descriptions;
             if (inputName == "字符型") {
                  delId = "del_" + sFieldName;
                  inputId = "input_" + sFieldName;
                  fieldName = sFieldName;
-                 descriptions = "sdescriptions";
             } else if (inputName == "整型") {
                 delId = "del_" + iFieldName;
                 inputId = "input_" + iFieldName;
                 fieldName = iFieldName;
-                descriptions = "idescriptions";
             } else {
                 delId = "del_" + bFieldName;
                 inputId = "input_" + iFieldName;
                 fieldName = bFieldName;
-                descriptions = "bdescriptions";
             }
 
             var row = '<div class="form-group">\n' +
                 '                <div class="col-sm-2 control-label">' + inputName + '</div>\n' +
                 '                <div class="col-sm-10">\n' +
-                '                    <input class="form-control" name="'+ descriptions +'"  ttype="' + fieldName + '" placeholder="描述"/>\n' +
+                '                    <input class="form-control" name="descriptions" ttype="' + fieldName + '" placeholder="描述"/>\n' +
                 '                </div>' +
                 '                <div>' +
                 '                    <input type="button" class="btn btn-default" id="' + delId + '" value="-"/> ' +
@@ -775,55 +784,55 @@ var vm = new Vue({
 
             $('#resourceDynamicPropForm').append(row);
 
-            //删除输入框事件
             $('#' + delId).on("click", function () {
 
                 if (inputName == "字符型") {
                     var arr = [];
-                    if (vm.typeArray.sArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                    for (var i=0; i<vm.typeArray.sArray.length; i++) {
+                        if (vm.typeArray.sArray[i] != sFieldName) {
+                            arr.push(vm.typeArray.sArray[i]);
+                        }
+                    }
+                    if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
                         window.parent.swal("", "请至少添加一行输入框", "warning");
                         return;
                     } else {
-                        for (var i=0; i<vm.typeArray.sArray.length-1; i++) {
-                            arr.push(vm.typeArray.sArray[i]);
-                        }
-
-
                         vm.typeArray.sArray = arr;
                     }
 
                 } else if (inputName == "整型") {
                     var arr = [];
-                    if (vm.typeArray.iArray.length-1 <= 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
+                    for (var i=0; i<vm.typeArray.iArray.length; i++) {
+                        if (vm.typeArray.iArray[i] != iFieldName) {
+                            arr.push(vm.typeArray.iArray[i]);
+                        }
+                    }
+
+                    if (arr.length == 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
                         window.parent.swal("", "请至少添加一行输入框", "warning");
                         return;
                     } else {
-                        for (var i=0; i<vm.typeArray.iArray.length-1; i++) {
-                            arr.push(vm.typeArray.iArray[i]);
-                        }
                         vm.typeArray.iArray = arr;
                     }
 
                 } else {
                     var arr = [];
-
-                    if (vm.typeArray.bArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
+                    for (var i=0; i<vm.typeArray.bArray.length; i++) {
+                        if (vm.typeArray.bArray[i] != bFieldName) {
+                            arr.push(vm.typeArray.bArray[i]);
+                        }
+                    }
+                    if (arr.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
                         window.parent.swal("", "请至少添加一行输入框", "warning");
                         return;
                     } else {
-                        for (var i=0; i<vm.typeArray.bArray.length-1; i++) {
-                            arr.push(vm.typeArray.bArray[i]);
-                        }
                         vm.typeArray.bArray = arr;
                     }
                 }
 
                 $('#' + delId).parent().parent().remove();
 
-                // console.log("delete array: " + JSON.stringify(vm.typeArray));
-
             });
-            // console.log("insert array: " + JSON.stringify(vm.typeArray));
             // console.log(JSON.stringify(vm.resourceDynamicPropertyList));
         },
         /*检查type是否已被使用*/

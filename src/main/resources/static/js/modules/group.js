@@ -460,35 +460,39 @@ var vm = new Vue({
                 if (selectedTenant == null || selectedTenant == 0) {
                     //应用级
                     vm.appList.selectedApp = selectedApp;
+                    vm.tenantList.selectedTenant = "";
                     vm.showApplication = true;
                     vm.showTenant = false;
-                    userUrl = baseURL + "users/applicationId/" + vm.appList.selectedApp;
-                    roleUrl = baseURL + "roles/applicationId/" + vm.appList.selectedApp;
+                    // userUrl = baseURL + "users/applicationId/" + vm.appList.selectedApp;
+                    // roleUrl = baseURL + "roles/applicationId/" + vm.appList.selectedApp;
                 } else if (selectedApp == null || selectedApp == 0){
                     //租户级
                     vm.tenantList.selectedTenant = selectedTenant;
+                    vm.appList.selectedApp = "";
                     vm.showTenant = true;
                     vm.showApplication = false;
-                    userUrl = baseURL + "users/tenantId/" + vm.tenantList.selectedTenant;
-                    roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
+                    // userUrl = baseURL + "users/tenantId/" + vm.tenantList.selectedTenant;
+                    // roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
                 } else {
                     vm.appList.selectedApp = selectedApp;
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showApplication = true;
                     vm.showTenant = true;
-                    userUrl = baseURL + "users/tenantId/" + vm.tenantList.selectedTenant;
-                    roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
+                    // userUrl = baseURL + "users/tenantId/" + vm.tenantList.selectedTenant;
+                    // roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
                 }
 
                 // 加载用户树
-                // $.get(baseURL + "users/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
-                $.get(userUrl + "?token=" + accessToken, function (response) {
+
+                $.get(baseURL + "users/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
+                // $.get(userUrl + "?token=" + accessToken, function (response) {
                     userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, response);
                     userTree.expandAll(true);
 
                     // 加载角色树
-                    // $.get(baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant + "?token=" + accessToken, function (response) {
-                    $.get(roleUrl + "?token=" + accessToken, function (response) {
+
+                    $.get(baseURL + "roles/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" +vm.appList.selectedApp, function (response) {
+                    // $.get(roleUrl + "?token=" + accessToken, function (response) {
                         roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, response);
                         roleTree.expandAll(true);
                     });
@@ -531,26 +535,25 @@ var vm = new Vue({
         },
         /** 类型列表onchange 事件*/
         selectType: function () {
+            userTree = $.fn.zTree.init($("#userTree"), userTreeSetting, []);
+            roleTree = $.fn.zTree.init($("#roleTree"), roleTreeSetting, []);
+            vm.tenantList.selectedTenant = "";
+            vm.appList.selectedApp = "";
+
             var selectedType = vm.typeList.selectedType;
             if (selectedType == 1) {
                 //租户级
-                vm.tenantList.selectedTenant = "";
-                vm.appList.selectedApp = "";
                 vm.group.applicationId = null;
                 vm.group.tenantId = null;
                 vm.showTenant = true;
                 vm.showApplication = false;
             } else if (selectedType == 2) {
                 //应用级
-                vm.tenantList.selectedTenant = "";
-                vm.appList.selectedApp = "";
                 vm.group.tenantId = null;
                 vm.group.applicationId = null;
                 vm.showTenant = false;
                 vm.showApplication = true;
             } else {
-                vm.tenantList.selectedTenant = "";
-                vm.appList.selectedApp = "";
                 vm.group.tenantId = null;
                 vm.group.applicationId = null;
                 vm.showApplication = true;

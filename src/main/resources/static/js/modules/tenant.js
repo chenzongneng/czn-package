@@ -423,7 +423,6 @@ var vm = new Vue({
                 title = "选择应用（只能选择一个）";
             }
 
-
             layer.open({
                 type: 1,
                 offset: '50px',
@@ -432,7 +431,10 @@ var vm = new Vue({
                 area: ['300px', '450px'],
                 shade: 0.3,
                 shadeClose: false,
+                zIndex:1,
+                // content: '<div id="appLayerDiv"><div id="appLayer" style="">    <!--<form class="form-horizontal" style="width: 280px;">-->        <div class="form-group">            <div class="col-sm-10">                <input class="form-control" placeholder="应用名" id="laySearchName" autocomplete="off">            </div>            <div class="col-sm-2">                <input type="button" class="btn btn-default"  id="laySearch" value="search"/>            </div>        </div>        <div class="form-group" style="padding-top: 20px;">            <ul id="appTree" class="ztree"></ul>        </div>    <!--</form>--></div></div>',
                 content: jQuery("#appLayer"),
+                // content:"<div id='displayDiv'>324234324</div>",
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     // 勾选已有应用
@@ -449,9 +451,16 @@ var vm = new Vue({
                     vm.tenant.appIds = appIdList.join(",");
                     vm.tenant.appIdList = appIdList;
                     layer.close(index);
+                },
+                success: function () {
+                    console.log("succeess");
+
+
                 }
             });
-
+            // window.parent.document.getElementById("displayDiv").innerText = "HelloHello~";
+            // console.log($('#appLayer').html());
+            // $('#displayDiv', window.parent.document).append(jQuery('#appLayer'));
             $('#laySearch').on("click", function () {
                 var searchName = $('#laySearchName').val();
                 vm.getAppList(searchName);
@@ -459,7 +468,8 @@ var vm = new Vue({
         },
         getAppList: function (searchName) {
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&searchName=" + searchName, function (response) {
+            var searchName = '';
+            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&searchName=", function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
             });
@@ -512,6 +522,7 @@ var vm = new Vue({
 
             var table = delRelatedTenantUser + '<div style="position: relative;padding-top: 10px;">' + vm.createLayerTable() + '</div>';
 
+            // top.layer.open({
             layer.open({
                 type: 1,
                 title: "已绑定的账号",
@@ -526,15 +537,18 @@ var vm = new Vue({
                 btn: ['返回'],
                 btn1: function (index) {
                     // top.location.reload();
+                    // top.layer.close(index);
                     layer.close(index);
                 }
             });
 
+            // $('#layDelRelated', window.parent.document).on("click", function () {
             $('#layDelRelated').on("click", function () {
                 vm.delRelatedTenantUser();
             });
 
         },
+        /*生成绑定用户表格*/
         createLayerTable: function () {
             var userNameList;
             var content;
@@ -567,30 +581,33 @@ var vm = new Vue({
 
             return table;
         },
+        /*解绑用户*/
         delRelatedTenantUser: function () {
+            // var userName = $('#layDelRelatedUserNames', window.parent.document).val();
             var userName = $('#layDelRelatedUserNames').val();
 
             $.ajax({
                 type: "DELETE",
-                url: baseURL + "/tenants/delrealted?userNames=" + userName + "&token=" + accessToken,
+                url: baseURL + "/tenants/delrealted/" + vm.tenant.id +"?userNames=" + userName + "&token=" + accessToken,
                 contentType: "application/json",
                 dataType: "",
                 success: function () {
 
+                    // $('#layTable', window.parent.document).html(
                     $('#layTable').html(
                         vm.createLayerTable()
                     );
 
-                    $('#layDelRelated').on("click", function () {
-                        vm.delRelatedTenantUser();
-                    });
-
+                    // $('#layDelRelated').on("click", function () {
+                    //     vm.delRelatedTenantUser();
+                    // });
                 },
                 error: function (response) {
-                    window.parent.swal("删除失败!", getExceptionMessage(response), "error");
+                    window.parent.swal("解绑失败!", getExceptionMessage(response), "error");
                 }
 
             });
+
         },
         reload: function (backFirst) {
             vm.showList = true;

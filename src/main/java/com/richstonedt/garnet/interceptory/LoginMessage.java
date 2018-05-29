@@ -36,23 +36,34 @@ public class LoginMessage {
     @ApiModelProperty(value = "刷新token")
     private String refreshToken;
 
-    @ApiModelProperty(value = "资源列表")
-    private List<Resource> resourceList;
+//    @ApiModelProperty(value = "资源列表")
+//    private List<Resource> resourceList;
 
     @ApiModelProperty(value = "刷新token时获取的资源列表")
     private List<RefreshTokenResourceView> refreshTokenResourceList;
 
-    @ApiModelProperty(value = "资源列表readonly组")
-    private List<Resource> resourceListWithReadlyOnly;
-
-    @ApiModelProperty(value = "资源列表edit组")
-    private List<Resource> getResourceListWithEdit;
+//    @ApiModelProperty(value = "资源列表readonly组")
+//    private List<Resource> resourceListWithReadlyOnly;
+//
+//    @ApiModelProperty(value = "资源列表edit组")
+//    private List<Resource> getResourceListWithEdit;
 
     @ApiModelProperty(value = "资源类型配置列表")
     private List<List<ResourceDynamicProperty>> resourceDynamicPropertyList;
 
     @ApiModelProperty(value = "登录用户关联的租户")
     private Map<String,Long> userTenantNameAndIdMap;
+
+    @ApiModelProperty(value = "刷新token时返回的资源列表，以资源类型分类")
+    private Map<String, List> typeResourceListMap;
+
+    public Map<String, List> getTypeResourceListMap() {
+        return typeResourceListMap;
+    }
+
+    public void setTypeResourceListMap(Map<String, List> typeResourceListMap) {
+        this.typeResourceListMap = typeResourceListMap;
+    }
 
     public List<Long> getTenantIdList() {
         return tenantIdList;
@@ -70,36 +81,12 @@ public class LoginMessage {
         this.refreshTokenResourceList = refreshTokenResourceList;
     }
 
-    public List<Resource> getResourceListWithReadlyOnly() {
-        return resourceListWithReadlyOnly;
-    }
-
-    public void setResourceListWithReadlyOnly(List<Resource> resourceListWithReadlyOnly) {
-        this.resourceListWithReadlyOnly = resourceListWithReadlyOnly;
-    }
-
-    public List<Resource> getGetResourceListWithEdit() {
-        return getResourceListWithEdit;
-    }
-
-    public void setGetResourceListWithEdit(List<Resource> getResourceListWithEdit) {
-        this.getResourceListWithEdit = getResourceListWithEdit;
-    }
-
     public List<List<ResourceDynamicProperty>> getResourceDynamicPropertyList() {
         return resourceDynamicPropertyList;
     }
 
     public void setResourceDynamicPropertyList(List<List<ResourceDynamicProperty>> resourceDynamicPropertyList) {
         this.resourceDynamicPropertyList = resourceDynamicPropertyList;
-    }
-
-    public List<Resource> getResourceList() {
-        return resourceList;
-    }
-
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
     }
 
     public int getCode() {

@@ -255,13 +255,14 @@ public class TenantController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/tenants/delrealted", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/tenants/delrealted/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> delRelatedTenantUser(
+            @ApiParam(value = "租户id", required = true) @PathVariable(value = "id") long id,
             @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
             @ApiParam(value = "用户名", required = true) @RequestParam(value = "userNames", defaultValue = "", required = true) String userNames) {
         try {
 
-            tenantService.deleteTenantUserRelated(userNames);
+            tenantService.deleteTenantUserRelated(id, userNames);
 
             // 封装返回信息
             GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, null);

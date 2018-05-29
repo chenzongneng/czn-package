@@ -239,6 +239,57 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         return resourceDynamicPropertyView;
     }
 
+    @Override
+    public boolean isTypeUsed(Long id, String type) {
+
+        if (ObjectUtils.isEmpty(id) || StringUtils.isEmpty(type)) {
+            throw new RuntimeException("资源配置id和资源配置类型代号不能为空");
+        }
+
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(type);
+        List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        boolean b = false;
+        if (CollectionUtils.isEmpty(resourceDynamicPropertyList) || resourceDynamicPropertyList.size() <= 0) {
+            b = true;
+        } else {
+            if (!ObjectUtils.isEmpty(id) && id.longValue() != 0L) {
+                for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList) {
+                    if (resourceDynamicProperty.getId().longValue() == id.longValue()) {
+                        b = true;
+                    }
+                }
+            }
+        }
+
+        return b;
+    }
+
+    @Override
+    public boolean isRemarkUsed(Long id, String remark) {
+        if (ObjectUtils.isEmpty(id) || StringUtils.isEmpty(remark)) {
+            throw new RuntimeException("资源配置id和资源配置类型名称不能为空");
+        }
+
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.createCriteria().andRemarkEqualTo(remark);
+        List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        boolean b = false;
+        if (CollectionUtils.isEmpty(resourceDynamicPropertyList) || resourceDynamicPropertyList.size() <= 0) {
+            b = true;
+        } else {
+            if (!ObjectUtils.isEmpty(id) && id.longValue() != 0L) {
+                for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList) {
+                    if (resourceDynamicProperty.getId().longValue() == id.longValue()) {
+                        b = true;
+                    }
+                }
+            }
+        }
+
+        return b;
+    }
+
     private List<ResourceDynamicProperty> dealResourceDynamicPropertyIfGarnet(Long userId, List<ResourceDynamicProperty> resourceDynamicProperties) {
 
         boolean isSuperAdmin = commonService.superAdminBelongGarnet(userId);

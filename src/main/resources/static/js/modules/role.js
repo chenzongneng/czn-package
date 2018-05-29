@@ -386,31 +386,32 @@ var vm = new Vue({
                 if (selectedTenant == null || selectedTenant == 0) {
                     //应用级
                     vm.appList.selectedApp = selectedApp;
+                    vm.tenantList.selectedTenant = "";
                     vm.showTenant = false;
                     vm.showApplication = true;
-                    permissionUrl = baseURL + "permissions/applicationId/" + selectedApp;
-                    groupUrl = baseURL + "groups/applicationId/" + selectedApp;
+                    // permissionUrl = baseURL + "permissions/applicationId/" + selectedApp;
+                    // groupUrl = baseURL + "groups/applicationId/" + selectedApp;
                 } else if (selectedApp == null || selectedApp == 0) {
                     //租户级
                     vm.tenantList.selectedTenant = selectedTenant;
+                    vm.appList.selectedApp = "";
                     vm.showApplication = false;
                     vm.showTenant = true;
-                    permissionUrl = baseURL + "permissions/tenantId/" + selectedTenant;
-                    groupUrl = baseURL + "groups/tenantId/" + selectedTenant;
+                    // permissionUrl = baseURL + "permissions/tenantId/" + selectedTenant;
+                    // groupUrl = baseURL + "groups/tenantId/" + selectedTenant;
                 } else {
                     //租户+应用
                     vm.appList.selectedApp = selectedApp;
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showApplication = true;
                     vm.showTenant = true;
-                    permissionUrl = baseURL + "permissions/tenantId/" + selectedTenant;
-                    groupUrl = baseURL + "groups/tenantId/" + selectedTenant;
+                    // permissionUrl = baseURL + "permissions/tenantId/" + selectedTenant;
+                    // groupUrl = baseURL + "groups/tenantId/" + selectedTenant;
                 }
 
-                //加载部门树
-                // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
-                $.get(groupUrl, function (response) {
-
+                //加载组树
+                $.get(baseURL + "groups/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
+                // $.get(groupUrl, function (response) {
                     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
                     groupTree.expandAll(true);
 
@@ -420,9 +421,8 @@ var vm = new Vue({
                     });
                 });
                 //加载权限树
-                // $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
-                $.get(permissionUrl, function (response) {
-
+                $.get(baseURL + "permissions/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
+                // $.get(permissionUrl, function (response) {
                     permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, response);
                     permissionTree.expandAll(true);
                     $.each(vm.role.permissionIds, function (index, item) {
@@ -466,6 +466,11 @@ var vm = new Vue({
         },
         /** 类型列表onchange 事件*/
         selectType: function () {
+            vm.tenantList.selectedTenant = "";
+            vm.appList.selectedApp = "";
+            groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, []);
+            permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, []);
+
             var selectedType = vm.typeList.selectedType;
             if (selectedType == 1) {
                 //租户级

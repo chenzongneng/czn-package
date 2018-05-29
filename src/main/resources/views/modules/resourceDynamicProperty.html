@@ -29,7 +29,7 @@
 </head>
 
 <body>
-<div id="garnetApp" v-cloak>
+<div id="garnetApp" v-cloak style="margin: 15px;">
     <div v-show="showList">
         <div class="grid-btn">
             <div class="form-group col-sm-2">
@@ -61,14 +61,26 @@
         <form class="form-horizontal" id="resourceDynamicPropForm">
             <div class="form-group">
                 <div id="tips">
-                    <span style="color: #d73925;padding-left: 30px">请谨慎使用编辑功能，随意编辑可能会造成不可预料的结果</span>
+                    <span style="color: #d73925;padding-left: 50px;font-size: 18px">请谨慎使用编辑功能，随意编辑可能会造成不可预料的结果</span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-2 control-label">资源类型名称<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-2 control-label">名称<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <input class="form-control" v-model="resourceDynamicProperty.type" placeholder="长度不大于30" maxlength="30"/>
+                    <input class="form-control" v-model="resourceDynamicProperty.remark" placeholder="长度不大于30" maxlength="30" v-on:blur="checkResourceDyPropRemark()" id="resourceDyPropRemark"/>
+                    <div id="checkResourceDyPropRemark">
+                        <span style="color: #d73925">此资源配置类型名称已被使用</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">代号<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resourceDynamicProperty.type" placeholder="长度不大于30" maxlength="30" v-on:blur="checkResourceDyPropType()" id="resourceDyPropType"/>
+                    <div id="checkResourceDyPropType">
+                        <span style="color: #d73925">此资源配置类型代号已被使用</span>
+                    </div>
                 </div>
             </div>
 
@@ -107,12 +119,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-sm-2 control-label">备注<span style="color: #d7220a">*</span></div>
-                <div class="col-sm-10">
-                    <input class="form-control" v-model="resourceDynamicProperty.remark" placeholder="备注"/>
-                </div>
-            </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">行为组<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">

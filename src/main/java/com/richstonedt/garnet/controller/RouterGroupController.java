@@ -188,7 +188,7 @@ public class RouterGroupController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取router白名单列表", notes = "通过查询条件获取router白名单列表")
+    @ApiOperation(value = "[Torino Source]检查应用组名是否已被使用", notes = "检查应用组名是否已被使用")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
