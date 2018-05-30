@@ -48,7 +48,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
         //如果是映射到方法，验证登录
         if (handler instanceof HandlerMethod) {
-
             //判断接口是否需要登录
             LoginRequired loginRequired = findAnnotation((HandlerMethod) handler, LoginRequired.class);
             //没有声明需要权限,或者声明不验证权限
@@ -73,6 +72,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
+    /**
+     * 检查Token的有效性
+     * @param tokenWithAppCode
+     * @param request
+     * @param response
+     * @return
+     */
     private boolean checkToken(String tokenWithAppCode, HttpServletRequest request, HttpServletResponse response) {
         //如果token存在
         if(!StringUtils.isEmpty(tokenWithAppCode) && !"null".equals(tokenWithAppCode)){
@@ -193,7 +199,5 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         responseOutWithJson(response, loginMessage);
         return false;
     }
-
-
 
 }

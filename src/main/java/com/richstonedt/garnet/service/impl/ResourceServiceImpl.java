@@ -662,6 +662,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         for (Long id : idList) {
             ResourceDynamicProperty resourceDynamicProperty = resourceDynamicPropertyService.selectByPrimaryKey(id);
+            if (ObjectUtils.isEmpty(resourceDynamicProperty)) {
+                return false;
+            }
             String type = resourceDynamicProperty.getType();
 
             ResourceCriteria resourceCriteria = new ResourceCriteria();

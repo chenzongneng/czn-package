@@ -31,9 +31,9 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author maxuepeng
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
-@Api(value = "[Torino Source]资源接口")
+@Api(value = "[Garnet]资源接口")
 @RestController
 @LoginRequired
 @RequestMapping(value = "/api/v1.0")
@@ -47,7 +47,7 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @ApiOperation(value = "[Torino Source]创建资源", notes = "创建一个资源")
+    @ApiOperation(value = "[Garnet]创建资源", notes = "创建一个资源")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
@@ -76,7 +76,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除资源", notes = "通过id删除资源")
+    @ApiOperation(value = "[Garnet]删除资源", notes = "通过id删除资源")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -96,7 +96,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除资源", notes = "批量删除资源")
+    @ApiOperation(value = "[Garnet]删除资源", notes = "批量删除资源")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -123,7 +123,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]更新资源", notes = "更新资源信息")
+    @ApiOperation(value = "[Garnet]更新资源", notes = "更新资源信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
@@ -145,7 +145,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个资源", notes = "通过id获取资源")
+    @ApiOperation(value = "[Garnet]获取单个资源", notes = "通过id获取资源")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -165,7 +165,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取资源列表", notes = "通过查询条件获取资源列表")
+    @ApiOperation(value = "[Garnet]获取资源列表", notes = "通过查询条件获取资源列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -199,7 +199,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取菜单控制appCode资源列表", notes = "获取菜单控制appCode资源列表")
+    @ApiOperation(value = "[Garnet]获取菜单控制appCode资源列表", notes = "获取菜单控制appCode资源列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -222,7 +222,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]根据应用和类型获取资源列表", notes = "根据应用和类型获取资源列表")
+    @ApiOperation(value = "[Garnet]根据应用和类型获取资源列表", notes = "根据应用和类型获取资源列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -251,7 +251,7 @@ public class ResourceController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取菜单资源列表", notes = "获取菜单资源列表")
+    @ApiOperation(value = "[Garnet]获取菜单资源列表", notes = "获取菜单资源列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })

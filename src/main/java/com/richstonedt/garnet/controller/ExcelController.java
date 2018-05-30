@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Api(value = "[Torino Source]上传模块",tags = "[Torino Source]上传模块")
+@Api(value = "[Garnet]上传模块")
 @RestController
 @RequestMapping(value = "/api/v1.0")
 public class ExcelController {

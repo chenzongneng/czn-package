@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author ming
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
 @Api(value = "[Garnet]用户组接口")
 @RestController

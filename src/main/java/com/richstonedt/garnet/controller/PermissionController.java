@@ -35,9 +35,9 @@ import java.util.List;
  *
  * @author maxuepeng
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
-@Api(value = "[Torino Source]权限接口")
+@Api(value = "[Garnet]权限接口")
 @RestController
 @LoginRequired
 @RequestMapping(value = "/api/v1.0")
@@ -51,7 +51,7 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @ApiOperation(value = "[Torino Source]创建权限", notes = "创建一个权限")
+    @ApiOperation(value = "[Garnet]创建权限", notes = "创建一个权限")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
@@ -82,7 +82,7 @@ public class PermissionController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除权限", notes = "通过id删除权限")
+    @ApiOperation(value = "[Garnet]删除权限", notes = "通过id删除权限")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -102,7 +102,7 @@ public class PermissionController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除权限", notes = "批量删除权限")
+    @ApiOperation(value = "[Garnet]删除权限", notes = "批量删除权限")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -126,7 +126,7 @@ public class PermissionController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]更新权限", notes = "更新权限信息")
+    @ApiOperation(value = "[Garnet]更新权限", notes = "更新权限信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
@@ -147,7 +147,7 @@ public class PermissionController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个权限", notes = "通过id获取权限")
+    @ApiOperation(value = "[Garnet]获取单个权限", notes = "通过id获取权限")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -169,7 +169,7 @@ public class PermissionController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取权限列表", notes = "通过查询条件获取权限列表")
+    @ApiOperation(value = "[Garnet]获取权限列表", notes = "通过查询条件获取权限列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })

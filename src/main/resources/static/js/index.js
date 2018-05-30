@@ -99,7 +99,6 @@ var vm = new Vue({
                     if (response.loginStatus == "false") {
                         return;
                     }
-
                     vm.user = response.data.user;
                 }
             });

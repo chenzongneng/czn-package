@@ -28,9 +28,9 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author maxuepeng
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
-@Api(value = "[Torino Source]系统配置接口",tags = "[Torino Source]系统配置接口",description = "")
+@Api(value = "[Garnet]系统配置接口")
 @RestController
 @RequestMapping(value = "/api/v1.0")
 public class SystemConfigController {
@@ -42,7 +42,7 @@ public class SystemConfigController {
     @Autowired
     private SystemConfigService systemConfigService;
 
-    @ApiOperation(value = "[Torino Source]创建系统配置", notes = "创建一个系统配置")
+    @ApiOperation(value = "[Garnet]创建系统配置", notes = "创建一个系统配置")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
@@ -71,7 +71,7 @@ public class SystemConfigController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除系统配置", notes = "通过id删除系统配置")
+    @ApiOperation(value = "[Garnet]删除系统配置", notes = "通过id删除系统配置")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -91,7 +91,7 @@ public class SystemConfigController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除系统配置", notes = "批量删除系统配置")
+    @ApiOperation(value = "[Garnet]删除系统配置", notes = "批量删除系统配置")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -114,7 +114,7 @@ public class SystemConfigController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]更新系统配置", notes = "更新系统配置信息")
+    @ApiOperation(value = "[Garnet]更新系统配置", notes = "更新系统配置信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
@@ -135,7 +135,7 @@ public class SystemConfigController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个系统配置", notes = "通过id获取系统配置")
+    @ApiOperation(value = "[Garnet]获取单个系统配置", notes = "通过id获取系统配置")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -155,7 +155,7 @@ public class SystemConfigController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取系统配置列表", notes = "通过查询条件获取系统配置列表")
+    @ApiOperation(value = "[Garnet]获取系统配置列表", notes = "通过查询条件获取系统配置列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -182,7 +182,7 @@ public class SystemConfigController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个系统配置", notes = "通过parameter获取系统配置")
+    @ApiOperation(value = "[Garnet]获取单个系统配置", notes = "通过parameter获取系统配置")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })

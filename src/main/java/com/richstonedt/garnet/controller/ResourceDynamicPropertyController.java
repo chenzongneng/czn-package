@@ -32,9 +32,9 @@ import java.util.List;
  *
  * @author maxuepeng
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
-@Api(value = "[Torino Source]资源动态属性接口")
+@Api(value = "[Garnet]资源动态属性接口")
 @RestController
 @LoginRequired
 @RequestMapping(value = "/api/v1.0")
@@ -48,7 +48,7 @@ public class ResourceDynamicPropertyController {
     @Autowired
     private ResourceDynamicPropertyService resourceDynamicPropertyService;
 
-    @ApiOperation(value = "[Torino Source]创建资源动态属性", notes = "创建一个资源动态属性")
+    @ApiOperation(value = "[Garnet]创建资源动态属性", notes = "创建一个资源动态属性")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
@@ -72,7 +72,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除资源动态属性", notes = "通过id删除资源动态属性")
+    @ApiOperation(value = "[Garnet]删除资源动态属性", notes = "通过id删除资源动态属性")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -92,7 +92,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除资源动态属性", notes = "批量删除资源动态属性")
+    @ApiOperation(value = "[Garnet]删除资源动态属性", notes = "批量删除资源动态属性")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -118,7 +118,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]更新资源动态属性", notes = "更新资源动态属性信息")
+    @ApiOperation(value = "[Garnet]更新资源动态属性", notes = "更新资源动态属性信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
@@ -139,7 +139,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个资源动态属性", notes = "通过id获取资源动态属性")
+    @ApiOperation(value = "[Garnet]获取单个资源动态属性", notes = "通过id获取资源动态属性")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -159,7 +159,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取资源动态属性列表", notes = "通过查询条件获取资源动态属性列表")
+    @ApiOperation(value = "[Garnet]获取资源动态属性列表", notes = "通过查询条件获取资源动态属性列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -194,7 +194,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个资源动态属性", notes = "通过type获取资源动态属性")
+    @ApiOperation(value = "[Garnet]获取单个资源动态属性", notes = "通过type获取资源动态属性")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -214,7 +214,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]检查资源配置类型代号是否已被使用", notes = "检查资源配置类型代号是否已被使用")
+    @ApiOperation(value = "[Garnet]检查资源配置类型代号是否已被使用", notes = "检查资源配置类型代号是否已被使用")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -235,7 +235,7 @@ public class ResourceDynamicPropertyController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]检查资源配置类型名称是否已被使用", notes = "检查资源配置类型名称是否已被使用")
+    @ApiOperation(value = "[Garnet]检查资源配置类型名称是否已被使用", notes = "检查资源配置类型名称是否已被使用")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })

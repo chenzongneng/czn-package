@@ -1,8 +1,3 @@
-/*
- * 广州都灵源链信息科技公司有限公司拥有本软件版权2017并保留所有权利。
- * Copyright 2017, Guangzhou Torino Source Information Technologies Company Limited,
- * All rights reserved.
- */
 package com.richstonedt.garnet.common.handler;
 
 import com.google.gson.Gson;

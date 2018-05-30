@@ -31,9 +31,9 @@ import java.util.List;
  *
  * @author ming
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
-@Api(value = "[Torino Source]租户接口")
+@Api(value = "[Garnet]租户接口")
 @RestController
 @LoginRequired
 @RequestMapping(value = "/api/v1.0")
@@ -47,7 +47,7 @@ public class TenantController {
     @Autowired
     private TenantService tenantService;
 
-    @ApiOperation(value = "[Torino Source]创建租户", notes = "创建一个租户")
+    @ApiOperation(value = "[Garnet]创建租户", notes = "创建一个租户")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class) ),
             @ApiResponse(code = 409, message = "conflict"),
@@ -82,7 +82,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除租户", notes = "通过id删除租户")
+    @ApiOperation(value = "[Garnet]删除租户", notes = "通过id删除租户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -103,7 +103,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除租户", notes = "批量删除租户")
+    @ApiOperation(value = "[Garnet]删除租户", notes = "批量删除租户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -130,7 +130,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]更新租户", notes = "更新租户信息")
+    @ApiOperation(value = "[Garnet]更新租户", notes = "更新租户信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
             @ApiResponse(code = 409, message = "conflict"),
@@ -153,7 +153,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取单个租户", notes = "通过id获取租户")
+    @ApiOperation(value = "[Garnet]获取单个租户", notes = "通过id获取租户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -175,7 +175,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取租户列表", notes = "通过查询条件获取租户列表")
+    @ApiOperation(value = "[Garnet]获取租户列表", notes = "通过查询条件获取租户列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -208,7 +208,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取已绑定租户的应用Id列表", notes = "获取已绑定租户的应用Id列表")
+    @ApiOperation(value = "[Garnet]获取已绑定租户的应用Id列表", notes = "获取已绑定租户的应用Id列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -229,7 +229,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]获取租户关联的用户的账号", notes = "通过id获取租户关联的用户的账号")
+    @ApiOperation(value = "[Garnet]获取租户关联的用户的账号", notes = "通过id获取租户关联的用户的账号")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
@@ -251,7 +251,7 @@ public class TenantController {
         }
     }
 
-    @ApiOperation(value = "[Torino Source]删除租户和用户的关联", notes = "通过用户名删除其和租户的关联")
+    @ApiOperation(value = "[Garnet]删除租户和用户的关联", notes = "通过用户名删除其和租户的关联")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })

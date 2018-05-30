@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author ming
  * @version 1.0.0
- * @since torinosrc-rs 1.0.0
+ *
  */
 @Api(value = "[Garnet]用户接口")
 @RestController
@@ -537,6 +537,7 @@ public class UserController {
      * @param garLoginView the gar login view
      * @return the response entity
      */
+//    @LogRequired(module = "登录模块", method = "garnet登录")
     @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class)),
