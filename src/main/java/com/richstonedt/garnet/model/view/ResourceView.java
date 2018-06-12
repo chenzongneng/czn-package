@@ -3,6 +3,7 @@ package com.richstonedt.garnet.model.view;
 import com.richstonedt.garnet.common.utils.ExcelVOAttribute;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public class ResourceView {
 
     private Long typeId;
 
+    @ApiModelProperty(value = "资源类型配置列表")
+    private List<ResourceDynamicProperty> resourceDynamicProperties;
+
     public Long getTypeId() {
         return typeId;
     }
@@ -22,9 +26,6 @@ public class ResourceView {
     public void setTypeId(Long typeId) {
         this.typeId = typeId;
     }
-
-    private List<ResourceDynamicProperty> resourceDynamicProperties;
-
 
     /**
      * Gets resource.

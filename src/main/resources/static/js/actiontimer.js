@@ -1,18 +1,25 @@
 /*监测页面动作*/
-var maxTime = 30; // seconds
-var time = maxTime;
 
 $(document).on('keydown mousedown', function(e) {
-    time = maxTime; // reset
+    // localStorage.setItem("time", time);
 });
 
 var intervalId = setInterval(function() {
-    time--;
 
-    // console.log("action timer: " + time);
+    // console.log("检查是否长时间没有操作：" + new Date().getTime());
+    // console.log("最后一次操作时间：" + localStorage.getItem("requestTime"));
 
     localStorage.setItem("actionTimerId", intervalId);
-    if (time <= 0) {
+    var nowTime = new Date().getTime();
+    var requestTime = localStorage.getItem("requestTime");
+    // var maxTime = 30 * 60000; //最大时间，毫秒
+    var maxTime = 30 * 60000; //最大时间，毫秒
+
+    // console.log(nowTime + " - " + requestTime);
+
+    if (nowTime - requestTime >= maxTime) {
+        // console.log("登录超时了...");
+
         //检查登录定时器
         window.clearInterval(localStorage.getItem("checkLoginedTimerId"));
         localStorage.removeItem("checkLoginedTimerId");
@@ -22,12 +29,12 @@ var intervalId = setInterval(function() {
         //记录操作定时器
         clearInterval(intervalId);
         localStorage.removeItem("actionTimerId");
+
         ShowInvalidLoginMessage();
-        //首页记录操作定时器
-        // clearInterval(localStorage.getItem("indexTimerId"));
-        // localStorage.removeItem("indexTimerId");
     }
+
 // }, 1000);
+// }, 30000);
 }, 60000);
 
 function ShowInvalidLoginMessage() {

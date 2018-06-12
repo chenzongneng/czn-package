@@ -22,9 +22,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -321,21 +319,49 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         Long applicationId = roleParm.getApplicationId();
         Long tenantId = roleParm.getTenantId();
 
+        List<Role> roles = new ArrayList<>();
         RoleCriteria roleCriteria = new RoleCriteria();
-        RoleCriteria.Criteria criteria = roleCriteria.createCriteria();
-        criteria.andStatusEqualTo(1);
 
-        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
-            criteria.andApplicationIdEqualTo(applicationId);
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0 && (ObjectUtils.isEmpty(tenantId) || tenantId.longValue() == 0)) {
+            //应用级
+            roleCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L).andStatusEqualTo(1);
+            roles = this.selectByCriteria(roleCriteria);
         }
 
-        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
-            criteria.andTenantIdEqualTo(tenantId);
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && (ObjectUtils.isEmpty(applicationId) || applicationId.longValue() == 0)) {
+            //租户级
+            roleCriteria.createCriteria().andApplicationIdEqualTo(0L).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+            roles = this.selectByCriteria(roleCriteria);
         }
 
-        List<Role> roles = this.selectByCriteria(roleCriteria);
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && !ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            //应用+租户
+            RoleCriteria roleCriteria1 = new RoleCriteria();
+            roleCriteria1.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L).andStatusEqualTo(1);
+            List<Role> roleList1 = this.selectByCriteria(roleCriteria1);
+            RoleCriteria roleCriteria2 = new RoleCriteria();
+            roleCriteria2.createCriteria().andApplicationIdEqualTo(0L).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+            List<Role> roleList2 = this.selectByCriteria(roleCriteria2);
+            RoleCriteria roleCriteria3 = new RoleCriteria();
+            roleCriteria3.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+            List<Role> roleList3 = this.selectByCriteria(roleCriteria3);
 
-        return roles;
+            roles.addAll(roleList1);
+            roles.addAll(roleList2);
+            roles.addAll(roleList3);
+        }
+
+        //去重
+        Set<Long> roleIdSet = new HashSet<>();
+        List<Role> roleList = new ArrayList<>();
+        for (Role role : roles) {
+            if (!roleIdSet.contains(role.getId())) {
+                roleIdSet.add(role.getId());
+                roleList.add(role);
+            }
+        }
+
+        return roleList;
     }
 
     private RoleView convertToRoleView(Role role) {

@@ -2,6 +2,7 @@ package com.richstonedt.garnet.model.view;
 
 import com.richstonedt.garnet.model.Permission;
 import com.richstonedt.garnet.model.RolePermission;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -14,10 +15,13 @@ public class PermissionView {
 
     private List<RolePermission> rolePermissions;
 
+    @ApiModelProperty(value = "关联的应用名称")
     private String applicationName;
 
+    @ApiModelProperty(value = "关联的租户名称")
     private String tenantName;
 
+    @ApiModelProperty(value = "类型（应用、租户、租户+应用）")
     private String type;
 
     public String getType() {

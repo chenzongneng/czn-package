@@ -35,6 +35,9 @@ var vm = new Vue({
 
             var userId = localStorage.getItem("userId");
 
+            if (vm.userName != null && vm.userName != "") {
+                document.cookie = "userName=" + vm.userName + ";";
+            }
 
             var data = {
                 userName: vm.userName,
@@ -56,6 +59,8 @@ var vm = new Vue({
                         localStorage.setItem("userId", result.user.id);
                         localStorage.setItem("userName", result.user.userName);
                         localStorage.setItem("belongToGarnet", result.user.belongToGarnet)
+                        localStorage.setItem("requestTime", new Date().getTime());
+
                         parent.location.href = 'index.html';
                     } else {
                         vm.error = true;

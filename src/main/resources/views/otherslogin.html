@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--
+  ~ 广州丰石科技有限公司拥有本软件版权2017并保留所有权利。
+  ~ Copyright 2017, Guangzhou Rich Stone Data Technologies Company Limited,
+  ~ All rights reserved.
+  -->
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Garnet</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" type="text/css" href="http://ianlunn.github.io/Hover/css/hover.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="css/all-skins.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body class="hold-transition login-page">
+<div class="login-box" id="garnetApp" v-cloak>
+    <div class="login-logo">
+        <b>统一登录页面</b>
+    </div>
+    <form @submit.prevent="login">
+    <div class="login-box-body">
+        <p class="login-box-msg">用户登录</p>
+        <div v-if="error" class="alert alert-danger alert-dismissible">
+            <h4 style="margin-bottom:0;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
+        </div>
+        <div class="form-group has-feedback">
+            <input class="form-control" v-model="userName" placeholder="账号" autofocus>
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="password" class="form-control" v-model="password" placeholder="密码">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input class="form-control" v-model="captcha" @keyup.enter="login" placeholder="验证码">
+            <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <img alt="如果看不清楚，请单击图片刷新！" id="refreshCode" class="pointer" :src="src" @click="refreshCode">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="javascript:void(0);" @click="refreshCode">点击刷新</a>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="checkbox icheck">
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
+            </div>
+        </div>
+    </div>
+
+
+    </form>
+</div>
+
+<div class="warp">
+    <div id="appGroup" class="parent"></div>
+</div>
+
+<style type="text/css">
+
+    .warp{
+        padding: 25px;
+    }
+    .parent {
+        display: flex;
+        align-items:center;
+        justify-content:space-around;
+        flex-wrap: wrap;
+        /*align-content: flex-start;*/
+    }
+
+    .child {
+        display: inline-flex;
+        width: 300px;
+        height: 150px;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .font {
+        display: inline-block;
+        position: center;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+</style>
+
+<script src="libs/jquery.min.js"></script>
+<script src="plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="libs/vue.min.js"></script>
+<script src="plugins/layer/layer.js"></script>
+<script src="libs/bootstrap.min.js"></script>
+<script src="libs/app.js"></script>
+<!--<script src="js/common.js"></script>-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="js/otherslogin.js"></script>
+</body>
+</html>

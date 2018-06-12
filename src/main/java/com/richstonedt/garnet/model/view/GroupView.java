@@ -3,6 +3,7 @@ package com.richstonedt.garnet.model.view;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.GroupRole;
 import com.richstonedt.garnet.model.GroupUser;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -17,10 +18,13 @@ public class GroupView {
 
     private List<GroupRole> groupRoles;
 
+    @ApiModelProperty(value = "选择关联的用户ID")
     private List<Long> userIds;
 
+    @ApiModelProperty(value = "选择关联的角色ID")
     private List<Long> roleIds;
 
+    @ApiModelProperty(value = "类型（应用、租户、租户+应用）")
     private String type;
 
     public String getType() {

@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.model.view;
 
 import com.richstonedt.garnet.model.RouterGroup;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -8,12 +9,16 @@ public class RouterGroupView {
 
     private RouterGroup routerGroup;
 
+    @ApiModelProperty(value = "关联的应用ID")
     private String applicationIds;
 
+    @ApiModelProperty(value = "关联的应用的名称")
     private List<String> applicationNames;
 
+    @ApiModelProperty(value = "关联的应用的应用标识")
     private List<String> appCodeList;
 
+    @ApiModelProperty(value = "关联的应用列表")
     private List<Long> applicationIdList;
 
     public List<Long> getApplicationIdList() {

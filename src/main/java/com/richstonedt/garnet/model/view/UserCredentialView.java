@@ -1,13 +1,17 @@
 package com.richstonedt.garnet.model.view;
 
 import com.richstonedt.garnet.model.UserCredential;
+import io.swagger.annotations.ApiModelProperty;
 
 public class UserCredentialView {
 
+    @ApiModelProperty(value = "所属用户ID")
     private Long userId;
 
+    @ApiModelProperty(value = "密码")
     private String password;
 
+    @ApiModelProperty(value = "旧密码")
     private String newPassword;
 
 

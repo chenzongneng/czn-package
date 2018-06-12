@@ -124,8 +124,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         checkDuplicateName(user);
 
         this.insertSelective(user);
-
         userCredentialService.insertSelective(userCredential);
+        //自动关联选择了 默认关联所有用户 的租户
+        this.relatedAllUserTenant(userView);
 
         //User - tenant中间表
         if (!ObjectUtils.isEmpty(userView.getUserTenants())) {
@@ -213,6 +214,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             }
         }
 
+        //自动关联选择了 默认关联所有用户 的租户
+        this.relatedAllUserTenant(userView);
+
     }
 
     @Override
@@ -271,6 +275,19 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         List<User> users = this.selectByCriteria(userCriteria);
+
+        //当登录用户不是超级管理员的时候，去除belongToGarnet为Y的用户
+        User loginUser = this.selectByPrimaryKey(userParm.getUserId());
+        if ("N".equals(loginUser.getBelongToGarnet())) {
+            List<User> userList = new ArrayList<>();
+            for (User user : users) {
+                if ("N".equals(user.getBelongToGarnet())) {
+                    userList.add(user);
+                }
+            }
+            users = userList;
+        }
+
         List<User> usersWithTenant = new ArrayList<>();
         for (User user : users) {
             Long userId = user.getId();
@@ -1243,6 +1260,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         List<Long> tenantIds = new ArrayList<>();
         if (!CollectionUtils.isEmpty(userTenants) && userTenants.size() > 0) {
             for (UserTenant userTenant : userTenants) {
+                //用户绑定的所有tenantIds
                 tenantIds.add(userTenant.getTenantId());
             }
         }
@@ -1253,7 +1271,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         //获取权限列表
         List<Permission> permissions = getPermissions(userId);
-
 
         List<Resource> resourceList = new ArrayList<>();
         for (Permission permission : permissions) {
@@ -1275,19 +1292,26 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
 
         if (flag) {
             TenantCriteria tenantCriteria = new TenantCriteria();
-            tenantCriteria.createCriteria();
+            tenantCriteria.createCriteria().andStatusEqualTo(1);
             List<Tenant> tenants = tenantService.selectByCriteria(tenantCriteria);
             List<Long> teantIdList = new ArrayList<>();
             for (Tenant tenant : tenants) {
                 teantIdList.add(tenant.getId());
             }
 
+            //判断是否是garnet用户
             teantIdList = commonService.dealTenantIdsIfGarnet(userId, teantIdList);
             returnTenantIdView.setTenantIds(teantIdList);
             return returnTenantIdView;
         } else {
-            tenantIds = commonService.dealTenantIdsIfGarnet(userId, tenantIds);
-            returnTenantIdView.setTenantIds(tenantIds);
+            //没有superAll权限，去掉garnet租户id
+            List<Long> tempIds = new ArrayList<>();
+            for (Long tenantId : tenantIds) {
+                if(tenantId.longValue() != GarnetContants.GARNET_TENANT_ID.longValue()){
+                    tempIds.add(tenantId);
+                }
+            }
+            returnTenantIdView.setTenantIds(tempIds);
             return returnTenantIdView;
         }
 
@@ -1371,7 +1395,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
     @Override
     public List<User> queryUsers() {
         UserCriteria userCriteria = new UserCriteria();
-        userCriteria.createCriteria();
+        userCriteria.createCriteria().andStatusEqualTo(1);
         List<User> userList = this.selectByCriteria(userCriteria);
         return userList;
     }
@@ -1427,11 +1451,19 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         Long applicationId = userParm.getApplicationId();
         Long tenantId = userParm.getTenantId();
 
-        List<User> userList;
+        List<User> userList = new ArrayList<>();
         if ((!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) && (ObjectUtils.isEmpty(applicationId) || applicationId.longValue() == 0)) {
+            //租户级
             userList = this.queryUserByTenantId(userParm);
-        } else {
+        } else if ((!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) && (ObjectUtils.isEmpty(tenantId) || tenantId.longValue() == 0)) {
+            //应用级
             userList = this.queryUserByApplicationId(userParm);
+        } else {
+           //应用+租户
+           List<User> userList1 = this.queryUserByTenantId(userParm);
+           List<User> userList2 = this.queryUserByApplicationId(userParm);
+           userList.addAll(userList1);
+           userList.addAll(userList2);
         }
 
         //去重
@@ -1445,5 +1477,49 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
         }
 
         return users;
+    }
+
+    @Override
+    public Boolean validateUserInfo(String userName, String password) {
+
+        UserCredential userCredential = userCredentialService.getCredentialByUserName(userName);
+        if (ObjectUtils.isEmpty(userCredential)) {
+           return false;
+        }
+
+        if (!password.equals(userCredential.getCredential())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 关联选择了 默认关联所有用户 的租户
+     */
+    private void relatedAllUserTenant(UserView userView) {
+
+        Long userId = userView.getUser().getId();
+
+        TenantCriteria tenantCriteria = new TenantCriteria();
+        tenantCriteria.createCriteria().andStatusEqualTo(1).andRelatedAllUsersEqualTo("Y");
+        List<Tenant> tenants = tenantService.selectByCriteria(tenantCriteria);
+
+        Long userTenantId = IdGeneratorUtil.generateId();
+        UserTenantCriteria userTenantCriteria;
+        for (Tenant tenant : tenants) {
+            //删除关联
+            userTenantCriteria = new UserTenantCriteria();
+            userTenantCriteria.createCriteria().andTenantIdEqualTo(tenant.getId()).andUserIdEqualTo(userId);
+            userTenantService.deleteByCriteria(userTenantCriteria);
+
+            UserTenant userTenant = new UserTenant();
+            userTenant.setUserId(userId);
+            userTenant.setTenantId(tenant.getId());
+            userTenant.setId(userTenantId);
+            userTenantService.insertSelective(userTenant);
+            userTenantId = userTenantId + 1L;
+        }
+
     }
 }

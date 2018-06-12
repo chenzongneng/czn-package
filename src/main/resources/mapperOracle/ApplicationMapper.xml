@@ -93,7 +93,7 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-05-18 11:17
     -->
-    ID, NAME, COMPANY, APP_CODE, REFRESH_RESOURCES_API, HOSTS, CREATED_TIME, MODIFIED_TIME, 
+    ID, NAME, COMPANY, APP_CODE, REFRESH_RESOURCES_API, HOSTS, CREATED_TIME, MODIFIED_TIME,
     STATUS, SERVICE_MODE, UPDATED_BY_USER_NAME
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ApplicationCriteria" resultMap="BaseResultMap">
@@ -124,7 +124,7 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-05-18 11:17
     -->
-    select 
+    select
     <include refid="Base_Column_List" />
     from GAR_APPLICATIONS
     where ID = #{id,jdbcType=DECIMAL}
@@ -155,13 +155,13 @@
       此SQL语句为自动生成，请不要修改.
       DATE: 2018-05-18 11:17
     -->
-    insert into GAR_APPLICATIONS (ID, NAME, COMPANY, 
-      APP_CODE, REFRESH_RESOURCES_API, HOSTS, 
-      CREATED_TIME, MODIFIED_TIME, STATUS, 
+    insert into GAR_APPLICATIONS (ID, NAME, COMPANY,
+      APP_CODE, REFRESH_RESOURCES_API, HOSTS,
+      CREATED_TIME, MODIFIED_TIME, STATUS,
       SERVICE_MODE, UPDATED_BY_USER_NAME)
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, 
-      #{appCode,jdbcType=VARCHAR}, #{refreshResourcesApi,jdbcType=VARCHAR}, #{hosts,jdbcType=VARCHAR}, 
-      #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, 
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},
+      #{appCode,jdbcType=VARCHAR}, #{refreshResourcesApi,jdbcType=VARCHAR}, #{hosts,jdbcType=VARCHAR},
+      #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL},
       #{serviceMode,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Application">
@@ -442,7 +442,7 @@
         UPDATED_BY_USER_NAME,
       </if>
     </trim>
-     values 
+     values
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -521,7 +521,7 @@
           UPDATED_BY_USER_NAME=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </set>
-      where 
+      where
       ID = #{item.id,jdbcType=DECIMAL}
     </foreach>
   </update>

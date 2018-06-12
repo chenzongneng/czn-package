@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -15,12 +15,13 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="service_mode" jdbcType="VARCHAR" property="serviceMode" />
     <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
+    <result column="related_all_users" jdbcType="VARCHAR" property="relatedAllUsers" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -54,7 +55,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -88,15 +89,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
-    id, name, created_time, modified_time, description, status, service_mode, updated_by_user_name
+    id, name, created_time, modified_time, description, status, service_mode, updated_by_user_name,
+    related_all_users
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     select
     <if test="distinct">
@@ -118,9 +120,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
-    select 
+    select
     <include refid="Base_Column_List" />
     from gar_tenants
     where id = #{id,jdbcType=BIGINT}
@@ -129,7 +131,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     delete from gar_tenants
     where id = #{id,jdbcType=BIGINT}
@@ -138,7 +140,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     delete from gar_tenants
     <if test="_parameter != null">
@@ -149,20 +151,22 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
-    insert into gar_tenants (id, name, created_time, 
-      modified_time, description, status, 
-      service_mode, updated_by_user_name)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, 
-      #{modifiedTime,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{serviceMode,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR})
+    insert into gar_tenants (id, name, created_time,
+    modified_time, description, status,
+    service_mode, updated_by_user_name, related_all_users
+    )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT},
+    #{modifiedTime,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+    #{serviceMode,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR}, #{relatedAllUsers,jdbcType=VARCHAR}
+    )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Tenant">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     insert into gar_tenants
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -189,6 +193,9 @@
       </if>
       <if test="updatedByUserName != null">
         updated_by_user_name,
+      </if>
+      <if test="relatedAllUsers != null">
+        related_all_users,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -216,13 +223,16 @@
       <if test="updatedByUserName != null">
         #{updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="relatedAllUsers != null">
+        #{relatedAllUsers,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     select count(*) from gar_tenants
     <if test="_parameter != null">
@@ -233,7 +243,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     update gar_tenants
     <set>
@@ -261,6 +271,9 @@
       <if test="record.updatedByUserName != null">
         updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="record.relatedAllUsers != null">
+        related_all_users = #{record.relatedAllUsers,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -270,17 +283,18 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     update gar_tenants
     set id = #{record.id,jdbcType=BIGINT},
-      name = #{record.name,jdbcType=VARCHAR},
-      created_time = #{record.createdTime,jdbcType=BIGINT},
-      modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-      description = #{record.description,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=INTEGER},
-      service_mode = #{record.serviceMode,jdbcType=VARCHAR},
-      updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
+    name = #{record.name,jdbcType=VARCHAR},
+    created_time = #{record.createdTime,jdbcType=BIGINT},
+    modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+    description = #{record.description,jdbcType=VARCHAR},
+    status = #{record.status,jdbcType=INTEGER},
+    service_mode = #{record.serviceMode,jdbcType=VARCHAR},
+    updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
+    related_all_users = #{record.relatedAllUsers,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -289,7 +303,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     update gar_tenants
     <set>
@@ -314,6 +328,9 @@
       <if test="updatedByUserName != null">
         updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="relatedAllUsers != null">
+        related_all_users = #{relatedAllUsers,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -321,23 +338,24 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     update gar_tenants
     set name = #{name,jdbcType=VARCHAR},
-      created_time = #{createdTime,jdbcType=BIGINT},
-      modified_time = #{modifiedTime,jdbcType=BIGINT},
-      description = #{description,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      service_mode = #{serviceMode,jdbcType=VARCHAR},
-      updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
+    created_time = #{createdTime,jdbcType=BIGINT},
+    modified_time = #{modifiedTime,jdbcType=BIGINT},
+    description = #{description,jdbcType=VARCHAR},
+    status = #{status,jdbcType=INTEGER},
+    service_mode = #{serviceMode,jdbcType=VARCHAR},
+    updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
+    related_all_users = #{relatedAllUsers,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     select
     <if test="distinct">
@@ -356,7 +374,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     insert into gar_tenants
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -384,8 +402,11 @@
       <if test="list[0].updatedByUserName!=null">
         updated_by_user_name,
       </if>
+      <if test="list[0].relatedAllUsers!=null">
+        related_all_users,
+      </if>
     </trim>
-     values 
+    values
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -412,6 +433,9 @@
         <if test="item.updatedByUserName!=null">
           #{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
+        <if test="item.relatedAllUsers!=null">
+          #{item.relatedAllUsers,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -419,7 +443,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-08 17:07
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_tenants
@@ -445,8 +469,11 @@
         <if test="item.updatedByUserName!=null">
           updated_by_user_name=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
+        <if test="item.relatedAllUsers!=null">
+          related_all_users=#{item.relatedAllUsers,jdbcType=VARCHAR},
+        </if>
       </set>
-      where 
+      where
       id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>

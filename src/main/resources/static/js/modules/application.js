@@ -95,10 +95,17 @@ var tenantTreeSetting = {
     }
 };
 
-
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+        // isAppNameEditable: null,
+        // isAppCodeEditable: null,
+        // isAppSelectTenantEditable: null,
+        // isAppCompanyEditable: null,
+        // isAppRefreshApiEditable: null,
+        // isAppHostsEditable: null,
+        appUpdateButton: false,
+
         searchName: null,
         showList: true,
         title: null,
@@ -114,6 +121,7 @@ var vm = new Vue({
             code: null,
             appCode: null,
             company: null,
+            defaultIndexUrl: null,
             refreshResourcesApi: null,
             createdTime: null,
             hosts: null,
@@ -186,6 +194,14 @@ var vm = new Vue({
                 vm.modeList2.selectedMode = mode;
             }
 
+            vm.isAppNameEditable = true;
+            vm.isAppCodeEditable = true;
+            vm.isAppSelectTenantEditable = true;
+            vm.isAppCompanyEditable = true;
+            vm.isAppRefreshApiEditable = true;
+            vm.isAppHostsEditable = true;
+            vm.appUpdateButton = true;
+
             vm.showList = false;
             vm.hidden = false;
             vm.title = "新增";
@@ -195,6 +211,7 @@ var vm = new Vue({
                 code: null,
                 appCode: null,
                 company: null,
+                defaultIndexUrl: null,
                 refreshResourcesApi: null,
                 createdTime: null,
                 hosts: null,
@@ -237,6 +254,18 @@ var vm = new Vue({
 
             vm.application.tenantIds = null;
             vm.application.tenantNames = [];
+
+            // if (resources.isAppNameEditable == null || typeof resources.isAppNameEditable == "undefined") {
+            //
+            // } else {
+            //     vm.isAppNameEditable = resources.isAppNameEditable;
+            //     vm.isAppCodeEditable = resources.isAppCodeEditable;
+            //     vm.isAppSelectTenantEditable = resources.isAppSelectTenantEditable;
+            //     vm.isAppCompanyEditable = resources.isAppCompanyEditable;
+            //     vm.isAppRefreshApiEditable = resources.isAppRefreshApiEditable;
+            //     vm.isAppHostsEditable = resources.isAppHostsEditable;
+                vm.appUpdateButton = resources.appUpdateButton;
+            // }
 
             //初始化应用信息，及应用模式
             vm.getApplication(applicationId);
@@ -304,6 +333,12 @@ var vm = new Vue({
                 window.parent.swal("", "应用标识不能为空", "warning");
                 return;
             }
+
+            if (vm.application.defaultIndexUrl == null || $.trim(vm.application.defaultIndexUrl) == "") {
+                window.parent.swal("", "应用首页URL不能为空", "warning");
+                return;
+            }
+
 
             // vm.checkAppCodeForm(vm.application.appCode);
 
@@ -384,6 +419,7 @@ var vm = new Vue({
                     vm.application.modifiedTime = response.application.modifiedTime;
                     vm.modeList2.selectedMode = response.application.serviceMode;
                     vm.application.tenantIdList = response.tenantIdList;
+                    vm.application.defaultIndexUrl = response.application.defaultIndexUrl;
 
                     var mode = vm.modeList2.selectedMode;
                     // console.log("app response == " + JSON.stringify(response));

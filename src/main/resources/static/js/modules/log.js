@@ -10,19 +10,19 @@ $(function () {
         url: baseURL + 'logs',
         datatype: "json",
         colModel: [
-            {label: 'ID', name: 'id', align: 'center', hidden: true, width: 20, key: true},
-            {label: '用户名', name: 'userName', align: 'center', width: 40},
-            {label: '用户操作', name: 'operation', align: 'center', width: 80},
-            {label: '请求方法', name: 'method', align: 'center', width: 35},
-            {label: '请求URL', name: 'url', align: 'center', width: 90},
-            {label: 'IP地址', name: 'ip', align: 'center', width: 50},
-            {label: '执行SQL', name: 'sql', align: 'center', width: 90},
-            {label: '请求时间', name: 'createTime', align: 'center', width: 70}
+            {label: 'ID', name: 'id', align: 'center', hidden: true, width: 20, key: true, sortable: false},
+            {label: '用户名', name: 'userName', align: 'center', width: 40, sortable: false},
+            {label: '用户操作', name: 'operation', align: 'center', width: 80, sortable: false},
+            // {label: '请求方法', name: 'method', align: 'center', width: 35},
+            // {label: '请求URL', name: 'url', align: 'center', width: 90},
+            {label: 'IP地址', name: 'ip', align: 'center', width: 50, sortable: false},
+            // {label: '执行SQL', name: 'sql', align: 'center', width: 90},
+            {label: '请求时间', name: 'createdTime', align: 'center', width: 70, formatter:timeFormat, sortable: false}
         ],
         viewrecords: true,
         height: 385,
-        rowNum: 20,
-        rowList: [20, 40, 60],
+        rowNum: 10,
+        rowList: [10, 30, 50],
         rownumbers: true,
         rownumWidth: 25,
         autowidth: true,
@@ -49,12 +49,25 @@ $(function () {
     });
 });
 
+//时间戳 转 Y-M-D
+function timeFormat(cellvalue, options, row) {
+    var date = new Date(cellvalue);
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'; // 0-11月，0代表1月
+    var D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    var h = (date.getHours() < 10 ? '0' + (date.getHours()) + ':' : date.getHours() + ':');
+    var m = (date.getMinutes() < 10 ? '0' + (date.getMinutes()) + ':' : date.getMinutes() + ':');
+    var s = (date.getSeconds() < 10 ? '0' + (date.getSeconds()) : date.getSeconds());
+    return Y + M + D + "  " + h + m + s;
+}
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
         showList: true,
         searchName: null,
         title: null,
+        formatTime: null,
         sql: [],
         log: {
             id: null,
@@ -86,15 +99,21 @@ var vm = new Vue({
         /**  根据 id 查询 log 详细数据*/
         getLogDetail: function (id) {
             vm.sql = [];
-            $.get(baseURL + "log/" + id, function (response) {
+            $.get(baseURL + "logs/" + id, function (response) {
+
+                response = response.data;
+
                 vm.log.id = response.id;
                 vm.log.userName = response.userName;
                 vm.log.operation = response.operation;
-                vm.log.method = response.method;
-                vm.log.url = response.url;
+                // vm.log.method = response.method;
+                // vm.log.url = response.url;
                 vm.log.ip = response.ip;
-                vm.formatSql(response.sql);
-                vm.log.createTime = response.createTime;
+                // vm.formatSql(response.sql);
+                vm.log.createTime = response.createdTime;
+                vm.formatTime = timeFormat(response.createdTime);
+
+                console.log("time: " + vm.formatTime);
             });
         },
         /**  格式化 sql */

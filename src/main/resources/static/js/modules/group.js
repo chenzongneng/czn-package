@@ -156,6 +156,13 @@ var currentUser;
 var vm = new Vue({
     el: '#rrapp',
     data: {
+        // isGroupNameEditable: null,
+        // isGroupSelectAppEditable: null,
+        // isGroupSelectTenantEditable: null,
+        // isGroupSelectUserEditable: null,
+        // isGroupSelectRoleEditable: null,
+        groupUpdateButton: false,
+
         showType: true, // 显示类型
         showByType: true, //根据选择类型选择显示租户级、应用级
         hiddenByType: true,
@@ -213,6 +220,14 @@ var vm = new Vue({
         },
         /**  新增按钮点击事件 */
         add: function () {
+
+            // vm.isGroupNameEditable = true;
+            // vm.isGroupSelectAppEditable = true;
+            // vm.isGroupSelectTenantEditable = true;
+            // vm.isGroupSelectUserEditable = true;
+            // vm.isGroupSelectRoleEditable = true;
+            vm.groupUpdateButton = true;
+
             vm.showList = false;
             vm.showTenant = false;
             vm.showApplication = false;
@@ -244,6 +259,13 @@ var vm = new Vue({
             if (!groupId) {
                 return;
             }
+
+            // vm.isGroupNameEditable = resources.isGroupNameEditable;
+            // vm.isGroupSelectAppEditable = resources.isGroupSelectAppEditable;
+            // vm.isGroupSelectTenantEditable = resources.isGroupSelectTenantEditable;
+            // vm.isGroupSelectUserEditable = resources.isGroupSelectUserEditable;
+            // vm.isGroupSelectRoleEditable = resources.isGroupSelectRoleEditable;
+            vm.groupUpdateButton = resources.groupUpdateButton;
 
             vm.showList = false;
             vm.showType = false;

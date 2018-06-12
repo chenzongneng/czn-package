@@ -20,8 +20,10 @@ public class TenantView {
 
     private Integer modeId;
 
+    @ApiModelProperty(value = "关联的用户名，用“,”隔开")
     private String userNames;
 
+    @ApiModelProperty(value = "要解除关联的用户名，用“,”隔开")
     private String delRelatedUserNames;
 
     public String getDelRelatedUserNames() {

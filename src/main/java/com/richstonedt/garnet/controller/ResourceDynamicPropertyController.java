@@ -256,4 +256,30 @@ public class ResourceDynamicPropertyController {
         }
     }
 
+    @ApiOperation(value = "[Garnet]根据tenantId和applicationId获取资源动态属性列表", notes = "根据tenantId和applicationId获取资源动态属性列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resourcedynamicpropertys/byparams", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getResourceDynamicPropertysByTIdAndAId(
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId,
+            @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "0", required = false) @RequestParam(value = "applicationId", defaultValue = "0", required = false) Long applicationId) {
+        try {
+            ResourceDynamicPropertyParm resourceDynamicPropertyParm = new ResourceDynamicPropertyParm();
+            resourceDynamicPropertyParm.setUserId(userId);
+            resourceDynamicPropertyParm.setTenantId(tenantId);
+            resourceDynamicPropertyParm.setApplicationId(applicationId);
+            List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyService.getResourceDynamicPropertyByTIdAndAId(resourceDynamicPropertyParm);
+            // 封装返回信息
+//            GarnetMessage<Page<ResourceDynamicPropertyView>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, resourceDynamicPropertyViews);
+            return new ResponseEntity<>(resourceDynamicPropertyList, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

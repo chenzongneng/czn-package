@@ -132,4 +132,12 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      */
     List<User> queryUserByParams(UserParm userParm);
 
+    /**
+     * 验证用户的账号密码是否正确
+     * @param userName
+     * @param password
+     * @return
+     */
+    Boolean validateUserInfo(String userName, String password);
+
 }

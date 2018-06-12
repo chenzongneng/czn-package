@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-30 13:23
+ * DATE: 2018-06-08 17:07
  */
 public class Tenant implements Serializable {
     private Long id;
@@ -35,12 +35,14 @@ public class Tenant implements Serializable {
      */
     private String updatedByUserName;
 
+    private String relatedAllUsers;
+
     /**
      * TABLE： gar_tenants
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     private static final long serialVersionUID = 1L;
 
@@ -100,7 +102,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public String getServiceMode() {
         return serviceMode;
@@ -114,7 +116,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void setServiceMode(String serviceMode) {
         this.serviceMode = serviceMode == null ? null : serviceMode.trim();
@@ -128,7 +130,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public String getUpdatedByUserName() {
         return updatedByUserName;
@@ -142,10 +144,18 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
+    public String getRelatedAllUsers() {
+        return relatedAllUsers;
+    }
+
+    public void setRelatedAllUsers(String relatedAllUsers) {
+        this.relatedAllUsers = relatedAllUsers == null ? null : relatedAllUsers.trim();
     }
 
     /**
@@ -155,7 +165,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     @Override
     public boolean equals(Object that) {
@@ -170,13 +180,14 @@ public class Tenant implements Serializable {
         }
         Tenant other = (Tenant) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-            && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getServiceMode() == null ? other.getServiceMode() == null : this.getServiceMode().equals(other.getServiceMode()))
-            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
+                && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
+                && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getServiceMode() == null ? other.getServiceMode() == null : this.getServiceMode().equals(other.getServiceMode()))
+                && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()))
+                && (this.getRelatedAllUsers() == null ? other.getRelatedAllUsers() == null : this.getRelatedAllUsers().equals(other.getRelatedAllUsers()));
     }
 
     /**
@@ -186,7 +197,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     @Override
     public int hashCode() {
@@ -200,6 +211,7 @@ public class Tenant implements Serializable {
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getServiceMode() == null) ? 0 : getServiceMode().hashCode());
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
+        result = prime * result + ((getRelatedAllUsers() == null) ? 0 : getRelatedAllUsers().hashCode());
         return result;
     }
 
@@ -210,7 +222,7 @@ public class Tenant implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     @Override
     public String toString() {
@@ -226,6 +238,7 @@ public class Tenant implements Serializable {
         sb.append(", status=").append(status);
         sb.append(", serviceMode=").append(serviceMode);
         sb.append(", updatedByUserName=").append(updatedByUserName);
+        sb.append(", relatedAllUsers=").append(relatedAllUsers);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -218,6 +218,10 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(applicationParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
 
+            if (tenantIds.size() <= 0) {
+                tenantIds.add(GarnetContants.NON_VALUE);
+            }
+
             //如果不是garnet的超级管理员,返回绑定tenantId下的应用
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(applicationParm.getUserId()))) {
 
@@ -453,6 +457,57 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             applications.addAll(applications2);
         }
         return applications;
+    }
+
+    @Override
+    public List<Application> getApplicationsByUserName(String userName) {
+
+        if (StringUtils.isEmpty(userName)) {
+            throw new RuntimeException("请输入用户名");
+        }
+
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
+        User user = userService.selectSingleByCriteria(userCriteria);
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andUserIdEqualTo(user.getId());
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> tenantIds = new ArrayList<>();
+        for (UserTenant userTenant : userTenants) {
+            tenantIds.add(userTenant.getTenantId());
+        }
+
+        if (tenantIds.size() <= 0) {
+            tenantIds.add(GarnetContants.NON_VALUE);
+        }
+
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+        List<Long> applicationIds = new ArrayList<>();
+        for (ApplicationTenant applicationTenant : applicationTenants) {
+            applicationIds.add(applicationTenant.getApplicationId());
+        }
+
+        if (applicationIds.size() <= 0) {
+            applicationIds.add(GarnetContants.NON_VALUE);
+        }
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andIdIn(applicationIds).andStatusEqualTo(1);
+        List<Application> applications = this.selectByCriteria(applicationCriteria);
+
+        return applications;
+    }
+
+    @Override
+    public Application getApplicationByAppCode(String appCode) {
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
+        Application application = this.selectSingleByCriteria(applicationCriteria);
+        if (ObjectUtils.isEmpty(application)) {
+            throw new RuntimeException("此应用不存在");
+        }
+        return application;
     }
 
 }

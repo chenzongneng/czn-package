@@ -101,6 +101,14 @@ function forMatTime(time) {
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+        // isTenantNameEditable: null,
+        // isTenantRemarkEditable: null,
+        // isTenantRelatedUsersEditable: null,
+        // isTenantReviewUsersEditable: null,
+        // isTenantSelectAppEditable: null,
+        tenantUpdateButton: false,
+
+        relatedAllUserEditAble: false, //编辑时不可更改 是否默认关联所有用户
         searchName: null,
         showList: true,
         title: null,
@@ -117,6 +125,7 @@ var vm = new Vue({
         modeName: null,
         tenant: {
             name: null,
+            relatedAllUsers: null,
             description: null,
             serviceMode: null,
             appIds: null,
@@ -184,6 +193,14 @@ var vm = new Vue({
                 mode = localStorage.getItem("mode");
             }
 
+            // vm.isTenantNameEditable = true;
+            // vm.isTenantRemarkEditable = true;
+            // vm.isTenantRelatedUsersEditable = true;
+            // vm.isTenantReviewUsersEditable = true;
+            // vm.isTenantSelectAppEditable = true;
+            vm.tenantUpdateButton = true;
+
+            vm.relatedAllUserEditAble = true; //是否默认关联所有用户 是否可编辑
             vm.showList = false;
             vm.hidden = false;
             vm.title = "新增";
@@ -192,6 +209,7 @@ var vm = new Vue({
             vm.reviewHidden = true;
             vm.tenant = {
                 id: null,
+                relatedAllUsers: 'N',
                 name: null,
                 description: null,
                 updatedByUserName: null,
@@ -211,6 +229,22 @@ var vm = new Vue({
         update: function () {
             vm.hidden = true;
             var mode;
+            vm.relatedAllUserEditAble = false; //是否默认关联所有用户  是否可编辑
+
+            // if (resources.isTenantNameEditable == null || typeof resources.isTenantNameEditable == "undefined") {
+            //
+            // } else {
+            //     vm.isTenantNameEditable = resources.isTenantNameEditable;
+            //     vm.isTenantRemarkEditable = resources.isTenantRemarkEditable;
+            //     vm.isTenantRelatedUsersEditable = resources.isTenantRelatedUsersEditable;
+            //     vm.isTenantReviewUsersEditable = resources.isTenantReviewUsersEditable;
+            //     vm.isTenantSelectAppEditable = resources.isTenantSelectAppEditable;
+                vm.tenantUpdateButton = resources.tenantUpdateButton;
+
+            // console.log("tenant btn: " + vm.tenantUpdateButton);
+
+            // }
+
 
             if ("all" == localStorage.getItem("mode")) {
                 mode = "paas";
@@ -227,6 +261,7 @@ var vm = new Vue({
 
             var tenantId = getSelectedRow();
             if (!tenantId) {return;}
+
             vm.showList = false;
             vm.reviewHidden = false;
             vm.title = "修改";
@@ -376,8 +411,11 @@ var vm = new Vue({
                     vm.tenant.description = response.tenant.description;
                     vm.tenant.createdTime = response.tenant.createdTime;
                     vm.tenant.modifiedTime = response.tenant.modifiedTime;
+                    vm.tenant.relatedAllUsers = response.tenant.relatedAllUsers;
                     vm.tenant.appIdList = response.appIdList;
                     vm.modeList2.selectedMode = response.tenant.serviceMode;
+
+                    // console.log("relatedallusers: " + vm.tenant.relatedAllUsers);
 
                     $.each(response.appNameList, function (index, item) {
                         vm.tenant.appNames.push(item);
@@ -520,7 +558,13 @@ var vm = new Vue({
                 '            </div>\n' +
                 '        </div>';
 
-            var table = delRelatedTenantUser + '<div style="position: relative;padding-top: 10px;">' + vm.createLayerTable() + '</div>';
+            var table;
+
+            if (!vm.tenantUpdateButton) {
+                table = '<div style="position: relative;padding-top: 10px;">' + vm.createLayerTable() + '</div>';
+            } else {
+                table = delRelatedTenantUser + '<div style="position: relative;padding-top: 10px;">' + vm.createLayerTable() + '</div>';
+            }
 
             // top.layer.open({
             layer.open({

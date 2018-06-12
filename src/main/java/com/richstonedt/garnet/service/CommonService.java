@@ -2,6 +2,7 @@ package com.richstonedt.garnet.service;
 
 import com.richstonedt.garnet.model.RouterGroup;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
 public interface CommonService{
@@ -28,5 +29,9 @@ public interface CommonService{
      * @return
      */
     List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds);
+
+    boolean insertLog(String meaasge, String operation);
+
+//    String getCookieValue(String cookie, String name);
 
 }

@@ -1,7 +1,9 @@
 /*监测页面动作*/
 var maxTime = 30; // seconds
 var time = maxTime;
+// var time;
 var patrn = /^#.*html$/;
+var test = maxTime;
 
 
 $(document).on('keydown mousedown', function(e) {
@@ -10,17 +12,30 @@ $(document).on('keydown mousedown', function(e) {
 
 var intervalId = setInterval(function() {
 
-    if (localStorage.getItem("accessToken") == null || accessToken == null) {
-        clearInterval(intervalId);
-        return;
+    var test_time = localStorage.getItem("time");
+    test_time --;
+    localStorage.setItem("time", test_time);
+
+    console.log("test_time: " + test_time);
+    console.log("time: " + time);
+
+    if (time<0) {
+        alert("我小于0啦~~");
     }
+
+    // if (localStorage.getItem("accessToken") == null || accessToken == null) {
+    //     clearInterval(intervalId);
+    //     return;
+    // }
 
     var hashName = window.location.hash;
 
     if (patrn.exec(hashName)) {
         time = maxTime;
     } else {
+        // time = localStorage.getItem("time");
         time--;
+        // localStorage.setItem("time", time);
     }
 
     // console.log(hashName);
@@ -41,8 +56,8 @@ var intervalId = setInterval(function() {
         clearInterval(localStorage.getItem("actionTimerId"));
         ShowInvalidLoginMessage();
     }
-// }, 1000);
-}, 60000);
+}, 1000);
+// }, 60000);
 
 function ShowInvalidLoginMessage() {
     localStorage.removeItem("userId");

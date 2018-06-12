@@ -8,7 +8,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public TenantCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -818,6 +818,76 @@ public class TenantCriteria {
             addCriterion("updated_by_user_name not between", value1, value2, "updatedByUserName");
             return (Criteria) this;
         }
+
+        public Criteria andRelatedAllUsersIsNull() {
+            addCriterion("related_all_users is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersIsNotNull() {
+            addCriterion("related_all_users is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersEqualTo(String value) {
+            addCriterion("related_all_users =", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersNotEqualTo(String value) {
+            addCriterion("related_all_users <>", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersGreaterThan(String value) {
+            addCriterion("related_all_users >", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersGreaterThanOrEqualTo(String value) {
+            addCriterion("related_all_users >=", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersLessThan(String value) {
+            addCriterion("related_all_users <", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersLessThanOrEqualTo(String value) {
+            addCriterion("related_all_users <=", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersLike(String value) {
+            addCriterion("related_all_users like", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersNotLike(String value) {
+            addCriterion("related_all_users not like", value, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersIn(List<String> values) {
+            addCriterion("related_all_users in", values, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersNotIn(List<String> values) {
+            addCriterion("related_all_users not in", values, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersBetween(String value1, String value2) {
+            addCriterion("related_all_users between", value1, value2, "relatedAllUsers");
+            return (Criteria) this;
+        }
+
+        public Criteria andRelatedAllUsersNotBetween(String value1, String value2) {
+            addCriterion("related_all_users not between", value1, value2, "relatedAllUsers");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -826,7 +896,7 @@ public class TenantCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -841,7 +911,7 @@ public class TenantCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-08 17:07
      */
     public static class Criterion {
         private String condition;

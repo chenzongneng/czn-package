@@ -6,6 +6,9 @@ import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.parm.ResourceDynamicPropertyParm;
 import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
 
+import javax.validation.constraints.Max;
+import java.util.List;
+
 public interface ResourceDynamicPropertyService extends BaseService<ResourceDynamicProperty, ResourceDynamicPropertyCriteria, Long> {
 
     /**
@@ -62,5 +65,12 @@ public interface ResourceDynamicPropertyService extends BaseService<ResourceDyna
      * @return
      */
     boolean isRemarkUsed(Long id, String remark);
+
+    /**
+     * 根据租户id和应用id返回资源配置列表
+     * @param resourceDynamicPropertyParm
+     * @return
+     */
+    List<ResourceDynamicProperty> getResourceDynamicPropertyByTIdAndAId(ResourceDynamicPropertyParm resourceDynamicPropertyParm);
 
 }

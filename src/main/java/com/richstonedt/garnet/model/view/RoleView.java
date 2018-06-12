@@ -3,6 +3,7 @@ package com.richstonedt.garnet.model.view;
 import com.richstonedt.garnet.model.GroupRole;
 import com.richstonedt.garnet.model.Role;
 import com.richstonedt.garnet.model.RolePermission;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -17,18 +18,25 @@ public class RoleView {
 
     private List<RolePermission> rolePermissions;
 
+    @ApiModelProperty(value = "选择关联的组ID")
     private List<Long> groupIds;
 
+    @ApiModelProperty(value = "选择关联的权限ID")
     private List<Long> permissionIds;
 
+    @ApiModelProperty(value = "关联的组的名称")
     private List<String> groupNames;
 
+    @ApiModelProperty(value = "关联的权限的名称")
     private List<String> permissionNames;
 
+    @ApiModelProperty(value = "关联的租户名称")
     private String tenantName;
 
+    @ApiModelProperty(value = "关联的应用名称")
     private String applicationName;
 
+    @ApiModelProperty(value = "类型（租户、应用、租户+应用）")
     private String type;
 
     public String getType() {

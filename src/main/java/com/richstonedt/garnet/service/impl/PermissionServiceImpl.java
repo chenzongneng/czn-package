@@ -26,9 +26,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import springfox.documentation.spring.web.json.Json;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -247,21 +245,50 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission, Permissio
     public List<Permission> queryPermissionByParams(PermissionParm permissionParm) {
         Long applicationId = permissionParm.getApplicationId();
         Long tenantId = permissionParm.getTenantId();
+        List<Permission> permissions = new ArrayList<>();
 
         PermissionCriteria permissionCriteria = new PermissionCriteria();
-        PermissionCriteria.Criteria criteria = permissionCriteria.createCriteria();
-        criteria.andStatusEqualTo(1);
 
-        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
-            criteria.andApplicationIdEqualTo(applicationId);
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0 && (ObjectUtils.isEmpty(tenantId) || tenantId.longValue() == 0)) {
+            //应用级
+            permissionCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L).andStatusEqualTo(1);
+            permissions = this.selectByCriteria(permissionCriteria);
         }
 
-        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
-            criteria.andTenantIdEqualTo(tenantId);
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && (ObjectUtils.isEmpty(applicationId) || applicationId.longValue() == 0)) {
+            //租户级
+            permissionCriteria.createCriteria().andTenantIdEqualTo(tenantId).andApplicationIdEqualTo(0L).andStatusEqualTo(1);
+            permissions = this.selectByCriteria(permissionCriteria);
         }
 
-        List<Permission> permissions = this.selectByCriteria(permissionCriteria);
-        return permissions;
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && !ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            PermissionCriteria permissionCriteria1 = new PermissionCriteria();
+            permissionCriteria1.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L).andStatusEqualTo(1);
+            PermissionCriteria permissionCriteria2 = new PermissionCriteria();
+            permissionCriteria2.createCriteria().andTenantIdEqualTo(tenantId).andApplicationIdEqualTo(0L).andStatusEqualTo(1);
+            PermissionCriteria permissionCriteria3 = new PermissionCriteria();
+            permissionCriteria3.createCriteria().andTenantIdEqualTo(tenantId).andApplicationIdEqualTo(applicationId).andStatusEqualTo(1);
+
+            List<Permission> permissionList1 = this.selectByCriteria(permissionCriteria1);
+            List<Permission> permissionList2 = this.selectByCriteria(permissionCriteria2);
+            List<Permission> permissionList3 = this.selectByCriteria(permissionCriteria3);
+
+            permissions.addAll(permissionList1);
+            permissions.addAll(permissionList2);
+            permissions.addAll(permissionList3);
+        }
+
+        //去重
+        Set<Long> permissionIdSet = new HashSet<>();
+        List<Permission> permissionList = new ArrayList<>();
+        for (Permission permission : permissions) {
+            if (!permissionIdSet.contains(permission.getId())) {
+                permissionIdSet.add(permission.getId());
+                permissionList.add(permission);
+            }
+        }
+
+        return permissionList;
     }
 
     private void checkDuplicateName(Permission permission) {

@@ -308,12 +308,6 @@ var vm = new Vue({
                 return;
             }
 
-
-            if (!(vm.permission.action == "edit" || vm.permission.action == "read")) {
-                window.parent.swal("", "行为只能填写 edit 或 read ", "warning");
-                return;
-            }
-
             // 获取菜单树选择的菜单
             // var nodes = resourceTree.getCheckedNodes(true);
             // var permissionIdList = [];

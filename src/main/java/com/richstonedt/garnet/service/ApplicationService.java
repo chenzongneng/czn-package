@@ -67,4 +67,15 @@ public interface ApplicationService extends BaseService<Application, Application
      */
     List<Application> getApplicatinsWithoutRouterGroup(ApplicationParm applicationParm);
 
+    /**
+     * 通过用户名获取默认应用首页URL列表
+     * @param userName
+     * @return
+     */
+    List<Application> getApplicationsByUserName(String userName);
+
+    /**
+     * 根据appCode获取单个应用
+     */
+    Application getApplicationByAppCode(String appCode);
 }

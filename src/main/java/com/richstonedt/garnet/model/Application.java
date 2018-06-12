@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-30 13:23
+ * DATE: 2018-06-05 12:21
  */
 public class Application implements Serializable {
     private Long id;
@@ -28,7 +28,7 @@ public class Application implements Serializable {
     /**
      * 此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
 
-加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。
+     加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。
      * gar_applications.hosts
      */
     private String hosts;
@@ -51,12 +51,14 @@ public class Application implements Serializable {
      */
     private String updatedByUserName;
 
+    private String defaultIndexUrl;
+
     /**
      * TABLE： gar_applications
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     private static final long serialVersionUID = 1L;
 
@@ -92,7 +94,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public String getAppCode() {
         return appCode;
@@ -106,7 +108,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setAppCode(String appCode) {
         this.appCode = appCode == null ? null : appCode.trim();
@@ -123,14 +125,14 @@ public class Application implements Serializable {
     /**
      * 此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
 
-加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。<br>
+     加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。<br>
      *
      * column：gar_applications.hosts<br>
      * @return hosts
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public String getHosts() {
         return hosts;
@@ -139,14 +141,14 @@ public class Application implements Serializable {
     /**
      * 此application所在的所有ip:ports，用分号分隔。如: 192.168.6.97:8080;192.168.6.98:8080
 
-加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。<br>
+     加入已经作为微服务加入服务注册中心，无需填写此字段。系统会自动把app_code当做服务id，通过负载均衡器在服务中心找到对应服务。<br>
      *
      * column：gar_applications.hosts<br>
      * @param hosts
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setHosts(String hosts) {
         this.hosts = hosts == null ? null : hosts.trim();
@@ -184,7 +186,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public String getServiceMode() {
         return serviceMode;
@@ -198,7 +200,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setServiceMode(String serviceMode) {
         this.serviceMode = serviceMode == null ? null : serviceMode.trim();
@@ -212,7 +214,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public String getUpdatedByUserName() {
         return updatedByUserName;
@@ -226,10 +228,18 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
+    public String getDefaultIndexUrl() {
+        return defaultIndexUrl;
+    }
+
+    public void setDefaultIndexUrl(String defaultIndexUrl) {
+        this.defaultIndexUrl = defaultIndexUrl == null ? null : defaultIndexUrl.trim();
     }
 
     /**
@@ -239,7 +249,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     @Override
     public boolean equals(Object that) {
@@ -254,16 +264,17 @@ public class Application implements Serializable {
         }
         Application other = (Application) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getCompany() == null ? other.getCompany() == null : this.getCompany().equals(other.getCompany()))
-            && (this.getAppCode() == null ? other.getAppCode() == null : this.getAppCode().equals(other.getAppCode()))
-            && (this.getRefreshResourcesApi() == null ? other.getRefreshResourcesApi() == null : this.getRefreshResourcesApi().equals(other.getRefreshResourcesApi()))
-            && (this.getHosts() == null ? other.getHosts() == null : this.getHosts().equals(other.getHosts()))
-            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-            && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getServiceMode() == null ? other.getServiceMode() == null : this.getServiceMode().equals(other.getServiceMode()))
-            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getCompany() == null ? other.getCompany() == null : this.getCompany().equals(other.getCompany()))
+                && (this.getAppCode() == null ? other.getAppCode() == null : this.getAppCode().equals(other.getAppCode()))
+                && (this.getRefreshResourcesApi() == null ? other.getRefreshResourcesApi() == null : this.getRefreshResourcesApi().equals(other.getRefreshResourcesApi()))
+                && (this.getHosts() == null ? other.getHosts() == null : this.getHosts().equals(other.getHosts()))
+                && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
+                && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getServiceMode() == null ? other.getServiceMode() == null : this.getServiceMode().equals(other.getServiceMode()))
+                && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()))
+                && (this.getDefaultIndexUrl() == null ? other.getDefaultIndexUrl() == null : this.getDefaultIndexUrl().equals(other.getDefaultIndexUrl()));
     }
 
     /**
@@ -273,7 +284,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     @Override
     public int hashCode() {
@@ -290,6 +301,7 @@ public class Application implements Serializable {
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getServiceMode() == null) ? 0 : getServiceMode().hashCode());
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
+        result = prime * result + ((getDefaultIndexUrl() == null) ? 0 : getDefaultIndexUrl().hashCode());
         return result;
     }
 
@@ -300,7 +312,7 @@ public class Application implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     @Override
     public String toString() {
@@ -319,6 +331,7 @@ public class Application implements Serializable {
         sb.append(", status=").append(status);
         sb.append(", serviceMode=").append(serviceMode);
         sb.append(", updatedByUserName=").append(updatedByUserName);
+        sb.append(", defaultIndexUrl=").append(defaultIndexUrl);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

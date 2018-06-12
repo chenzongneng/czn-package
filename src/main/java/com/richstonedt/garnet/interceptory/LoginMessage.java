@@ -23,7 +23,7 @@ public class LoginMessage {
     @ApiModelProperty(value = "登录状态")
     private String loginStatus;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "返回状态码")
     private int code;
 
     @JsonIgnore

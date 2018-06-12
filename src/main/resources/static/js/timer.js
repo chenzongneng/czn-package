@@ -64,6 +64,8 @@ function refreshToken () {
             // console.log(JSON.stringify(result.accessToken) + "\n" + JSON.stringify(result.refreshToken));
             localStorage.setItem("accessToken", result.accessToken);
             localStorage.setItem("refreshToken", result.refreshToken);
+
+            // console.log("refresh accessToken: " + localStorage.getItem("accessToken"));
         }
     });
 }

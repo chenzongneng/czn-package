@@ -48,10 +48,10 @@ var vm = new Vue({
     },
     mounted: function () {
         var userId = localStorage.getItem("userId")
-
         // console.log("idnex userId: " + userId);
-
         if (userId == null || userId == "") {
+
+            // console.log("index userid is null...");
 
             var pathName = window.document.location.pathname;
             var patrn = /.*index.html$/;
@@ -60,9 +60,7 @@ var vm = new Vue({
             } else {
                 parent.location.href = '../login.html';
             }
-
         }
-
         // console.log("cookies == " + localStorage.getItem("cookie"));
     },
     methods: {
@@ -91,9 +89,14 @@ var vm = new Vue({
         },
         /** 查询用户信息 */
         getUser: function () {
+
+            // console.log("index accessToken: " + localStorage.getItem("accessToken"));
+            // console.log("index userId: " + userId);
+
             // $.getJSON(baseURL + "token/userInfo?token=" + garnetToken, function (r) {
             $.getJSON(baseURL + "/users/"+ userId + "?token=" + accessToken, function (response) {
                 if (!response) {
+                    // swal("", getExceptionMessage(response), "error");
                     parent.location.href = 'index.html';
                 } else {
                     if (response.loginStatus == "false") {
@@ -378,3 +381,31 @@ $(window).on('resize', function () {
         $(this).height($content.height());
     });
 }).resize();
+
+hookAjax({
+    open:function(arg,xhr){
+        var patrn = /.*checklogined.*/;
+        var patrn2 = /.*garnetrefreshtoken.*/;
+        var url = arg[1];
+        // console.log("url: " + url);
+        var timestamp = new Date().getTime();
+        // console.log("aaa=" + patrn.exec(url));
+        if (patrn.exec(url) == null && patrn2.exec(url) == null) {
+            localStorage.setItem("requestTime", timestamp);
+
+            var userId = localStorage.getItem("userId");
+            if (userId == null || userId == "") {
+                var pathName = window.document.location.pathname;
+                var patrn = /.*index.html$/;
+                if (patrn.exec(pathName)) {
+                    parent.location.href = 'login.html';
+                } else {
+                    parent.location.href = '../login.html';
+                }
+            }
+            // console.log("我发起了一次请求：" + url + " - 请求时间：" + timestamp);
+            // console.log("open called: method:%s,url:%s,async:%s",arg[0],arg[1],arg[2]);
+        }
+
+    }
+});

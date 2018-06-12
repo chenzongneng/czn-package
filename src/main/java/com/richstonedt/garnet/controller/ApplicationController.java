@@ -3,12 +3,16 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LoginMessage;
 import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Application;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.ApplicationParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
+import com.richstonedt.garnet.model.view.LoginView;
+import com.richstonedt.garnet.model.view.RedirectView;
 import com.richstonedt.garnet.service.ApplicationService;
+import com.richstonedt.garnet.service.UserService;
 import io.swagger.annotations.*;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
@@ -21,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +42,6 @@ import java.util.List;
  *
  */
 @Api(value = "[Garnet]应用接口")
-@LoginRequired
 @RestController
 @RequestMapping(value = "/api/v1.0")
 public class ApplicationController {
@@ -49,6 +54,10 @@ public class ApplicationController {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private UserService userService;
+
+    @LoginRequired
     @ApiOperation(value = "[Garnet]创建应用", notes = "创建一个应用")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = GarnetMessage.class) ),
@@ -81,6 +90,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]删除应用", notes = "通过id删除应用")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -102,6 +112,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]删除应用", notes = "批量删除应用")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -130,6 +141,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]更新应用", notes = "更新应用信息")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "successful"),
             @ApiResponse(code = 404, message = "not found"),
@@ -153,6 +165,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]获取单个应用", notes = "通过id获取应用")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -175,6 +188,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]获取应用列表", notes = "通过查询条件获取应用列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -209,6 +223,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]验证应用是否有关联", notes = "验证应用是否有关联")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -229,6 +244,7 @@ public class ApplicationController {
         }
     }
 
+    @LoginRequired
     @ApiOperation(value = "[Garnet]获取未被应用组选中的应用列表", notes = "获取未被应用组选中的应用列表")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -254,4 +270,75 @@ public class ApplicationController {
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }
     }
+
+    @ApiOperation(value = "[Garnet]获取默认应用首页URL列表", notes = "通过用户名获取默认应用首页URL列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/applications/getdefaulturl", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getApplicationsByUserName(
+            @ApiParam(value = "用户名", defaultValue = "", required = false) @RequestParam(value = "userName", defaultValue = "", required = true) String userName,
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
+        try {
+            List<Application> defaultIndexUrlBys = applicationService.getApplicationsByUserName(userName);
+            // 封装返回信息
+            return new ResponseEntity<>(defaultIndexUrlBys, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]根据选择的appCode跳转应用", notes = "根据选择的appCode跳转应用")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/applications/redirect/{appCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> redirectByAppCode(
+            @ApiParam(value = "appCode", required = true) @PathVariable(value = "appCode") String appCode,
+            @ApiParam(value = "用户名", required = false) @RequestParam(value = "userName", defaultValue = "", required = false) String userName,
+            @ApiParam(value = "密码", required = false) @RequestParam(value = "password", defaultValue = "", required = false) String password,
+            HttpServletRequest request, HttpServletResponse response) {
+        try {
+
+            LoginView loginView = new LoginView();
+            loginView.setUserName(userName);
+            loginView.setPassword(password);
+            loginView.setAppCode(appCode);
+
+            LoginMessage loginMessage = userService.userLogin(loginView);
+            Application application = applicationService.getApplicationByAppCode(appCode);
+
+            RedirectView redirectView = new RedirectView();
+            redirectView.setLoginStatus(loginMessage.getLoginStatus());
+            redirectView.setMessage(loginMessage.getMessage());
+
+            if ("success".equals(loginMessage.getLoginStatus())) {
+                //如果登录成功，跳转
+                String accessToken = loginMessage.getAccessToken();
+                String refreshToken = loginMessage.getRefreshToken();
+                String url = application.getDefaultIndexUrl() + "?accessToken=" + accessToken + "&refreshToken=" + refreshToken;
+                redirectView.setAccessToken(accessToken);
+                redirectView.setRefreshToken(refreshToken);
+                redirectView.setRedirectUrl(url);
+                redirectView.setUser(loginMessage.getUser());
+
+                response.setHeader("accessToken", loginMessage.getAccessToken());
+                response.setHeader("refreshToken", loginMessage.getRefreshToken());
+
+            }
+
+            // 封装返回信息
+            return new ResponseEntity<>(redirectView, HttpStatus.OK);
+
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
 }

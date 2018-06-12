@@ -12,11 +12,9 @@ import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.RouterGroupCriteria;
 import com.richstonedt.garnet.model.parm.RouterGroupParm;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.model.view.RouterGroupView;
-import com.richstonedt.garnet.service.ApplicationService;
-import com.richstonedt.garnet.service.CommonService;
-import com.richstonedt.garnet.service.ResourceService;
-import com.richstonedt.garnet.service.RouterGroupService;
+import com.richstonedt.garnet.service.*;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +41,9 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
     @Autowired
     private CommonService commonService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -244,13 +245,18 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         for (RouterGroup routerGroup1 : routerGroups) {
             String appCode = routerGroup1.getAppCode();
             ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-            applicationCriteria.createCriteria().andAppCodeEqualTo(appCode);
-            List<Application> applications = applicationService.selectByCriteria(applicationCriteria);
-            for (Application application : applications) {
-                appCodeList.add(application.getAppCode());
-                applicationIdList.add(application.getId());
-                applicationNames.add(application.getName());
-            }
+            applicationCriteria.createCriteria().andAppCodeEqualTo(appCode).andStatusEqualTo(1);
+//            List<Application> applications = applicationService.selectByCriteria(applicationCriteria);
+//            for (Application application : applications) {
+//                appCodeList.add(application.getAppCode());
+//                applicationIdList.add(application.getId());
+//                applicationNames.add(application.getName());
+//            }
+
+            Application application = applicationService.selectSingleByCriteria(applicationCriteria);
+            appCodeList.add(application.getAppCode());
+            applicationIdList.add(application.getId());
+            applicationNames.add(application.getName());
         }
         routerGroupView.setApplicationIdList(applicationIdList);
         routerGroupView.setApplicationNames(applicationNames);
@@ -296,14 +302,16 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
 
     public List<RouterGroup> dealRouterGroupListIfGarnet(Long userId, List<RouterGroup> routerGroups) {
 
-        boolean isSuperAdmin = commonService.superAdminBelongGarnet(userId);
+        ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(userId);
+        boolean isSuperAdmin = returnTenantIdView.isSuperAdmin();
+        boolean isSuperAdminBelongGarnet = commonService.superAdminBelongGarnet(userId);
 
         List<RouterGroup> routerGroupList = new ArrayList<>();
         //如果不是超级管理员
-        if (!isSuperAdmin) {
+        if (!(isSuperAdmin && isSuperAdminBelongGarnet)) {
             //去除超级应用组
             for (RouterGroup routerGroup : routerGroups) {
-                if (routerGroup.getId().longValue() != GarnetContants.GARNET_SUPER_ROUTER_GROUP_ID.longValue()) {
+                if (!"超级应用组".equals(routerGroup.getGroupName())) {
                     routerGroupList.add(routerGroup);
                 }
             }
@@ -311,8 +319,6 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         } else {
             return routerGroups;
         }
-
-
     }
 
 }

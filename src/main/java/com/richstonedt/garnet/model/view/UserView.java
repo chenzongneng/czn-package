@@ -3,6 +3,7 @@ package com.richstonedt.garnet.model.view;
 import com.richstonedt.garnet.model.GroupUser;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.UserTenant;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class UserView {
 
     private List<GroupUser> groupUsers;
 
+    @ApiModelProperty(value = "密码")
     private String password;
 
     private Long expiredDateTime;

@@ -8,7 +8,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public ApplicationCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1028,6 +1028,76 @@ public class ApplicationCriteria {
             addCriterion("updated_by_user_name not between", value1, value2, "updatedByUserName");
             return (Criteria) this;
         }
+
+        public Criteria andDefaultIndexUrlIsNull() {
+            addCriterion("default_index_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlIsNotNull() {
+            addCriterion("default_index_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlEqualTo(String value) {
+            addCriterion("default_index_url =", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlNotEqualTo(String value) {
+            addCriterion("default_index_url <>", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlGreaterThan(String value) {
+            addCriterion("default_index_url >", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("default_index_url >=", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlLessThan(String value) {
+            addCriterion("default_index_url <", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlLessThanOrEqualTo(String value) {
+            addCriterion("default_index_url <=", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlLike(String value) {
+            addCriterion("default_index_url like", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlNotLike(String value) {
+            addCriterion("default_index_url not like", value, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlIn(List<String> values) {
+            addCriterion("default_index_url in", values, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlNotIn(List<String> values) {
+            addCriterion("default_index_url not in", values, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlBetween(String value1, String value2) {
+            addCriterion("default_index_url between", value1, value2, "defaultIndexUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultIndexUrlNotBetween(String value1, String value2) {
+            addCriterion("default_index_url not between", value1, value2, "defaultIndexUrl");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1036,7 +1106,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -1051,7 +1121,7 @@ public class ApplicationCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-05 12:21
      */
     public static class Criterion {
         private String condition;

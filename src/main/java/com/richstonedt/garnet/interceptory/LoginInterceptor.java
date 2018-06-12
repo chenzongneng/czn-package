@@ -64,6 +64,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     tokenWithAppCode = request.getParameter("token");
                 }
 
+                StringBuffer url = request.getRequestURL();
+
                 return checkToken(tokenWithAppCode, request, response);
 
             }

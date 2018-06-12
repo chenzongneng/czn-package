@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.TenantMapper;
 import com.richstonedt.garnet.model.*;
@@ -63,6 +64,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         return this.tenantMapper;
     }
 
+    @LogRequired(module = "租户模块", method = "新增租户")
     @Override
     public Long insertTenant(TenantView tenantView) {
 
@@ -142,6 +144,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
                 applicationTenant.setApplicationId(Long.parseLong(appId));
                 applicationTenantService.insertSelective(applicationTenant);
             }
+
+        commonService.insertLog("租户模块", "租户绑定应用");
         }
 
     }
@@ -354,6 +358,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     }
 
     @Override
+    @LogRequired(module = "租户模块", method = "租户解绑用户")
     public void deleteTenantUserRelated(Long id, String userNames) {
 
         if (ObjectUtils.isEmpty(id)) {
@@ -426,10 +431,35 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
         String userNames = tenantView.getUserNames();
         Long tenantId = tenantView.getTenant().getId();
 
-        if (!StringUtils.isEmpty(userNames) && !ObjectUtils.isEmpty(tenantId)) {
-            for (String userName : userNames.split(",")) {
-                //完成外键的绑定
-                executeForeignUsers(tenantId, userName);
+        String relatedAllUsers = tenantView.getTenant().getRelatedAllUsers();
+
+        if ("Y".equals(relatedAllUsers)) {
+            //如果选择了默认关联所有用户
+            //删除租户与用户的所有关联
+            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+            userTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
+            userTenantService.deleteByCriteria(userTenantCriteria);
+
+            //添加与所有用户的关联
+            UserCriteria userCriteria = new UserCriteria();
+            userCriteria.createCriteria().andStatusEqualTo(1);
+            List<User> users = userService.selectByCriteria(userCriteria);
+
+            Long userTenantId = IdGeneratorUtil.generateId();
+            for (User user : users) {
+                UserTenant userTenant = new UserTenant();
+                userTenant.setUserId(user.getId());
+                userTenant.setTenantId(tenantId);
+                userTenant.setId(userTenantId);
+                userTenantService.insertSelective(userTenant);
+                userTenantId = userTenantId + 1L;
+            }
+        } else {
+            if (!StringUtils.isEmpty(userNames) && !ObjectUtils.isEmpty(tenantId)) {
+                for (String userName : userNames.split(",")) {
+                    //完成外键的绑定
+                    executeForeignUsers(tenantId, userName);
+                }
             }
         }
     }
@@ -439,6 +469,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
      * @param tenantId
      * @param userName
      */
+    @LogRequired(module = "租户模块", method = "租户绑定用户")
     private void executeForeignUsers(Long tenantId, String userName) {
         UserCriteria userCriteria = new UserCriteria();
         userCriteria.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1);
@@ -463,6 +494,7 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             userTenantService.insertSelective(userTenant);
         }
 
+        commonService.insertLog("租户模块", "租户绑定用户");
     }
 
     /**

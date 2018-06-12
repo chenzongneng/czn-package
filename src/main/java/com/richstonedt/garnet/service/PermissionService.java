@@ -80,4 +80,6 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      */
     List<Permission> queryPermissionByParams(PermissionParm permissionParm);
 
+
+
 }

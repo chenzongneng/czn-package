@@ -5,6 +5,7 @@ import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceDynamicPropertyMapper;
+import com.richstonedt.garnet.model.Log;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
@@ -12,9 +13,11 @@ import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.parm.ResourceDynamicPropertyParm;
 import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
 import com.richstonedt.garnet.model.view.ResourceView;
+import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.service.CommonService;
 import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
 import com.richstonedt.garnet.service.ResourceService;
+import com.richstonedt.garnet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,9 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
     @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public BaseMapper getBaseMapper() {
@@ -158,6 +164,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
             criteria.andApplicationIdEqualTo(applicationId);
         }
+
         if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
             criteria.andTenantIdEqualTo(tenantId);
         }
@@ -181,6 +188,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             }
         }
 
+        //根据登录用户是否是超级管理员进行处理
         List<ResourceDynamicProperty> resourceDynamicPropertyList1 = this.dealResourceDynamicPropertyIfGarnet(resourceDynamicPropertyParm.getUserId(), resourceDynamicPropertyList);
 
         PageUtil result = new PageUtil(resourceDynamicPropertyList1, resourceDynamicPropertyList1.size() ,resourceDynamicPropertyParm.getPageSize(),resourceDynamicPropertyParm.getPageNumber());
@@ -290,13 +298,68 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         return b;
     }
 
+    @Override
+    public List<ResourceDynamicProperty> getResourceDynamicPropertyByTIdAndAId(ResourceDynamicPropertyParm resourceDynamicPropertyParm) {
+
+        Long applicationId = resourceDynamicPropertyParm.getApplicationId();
+        Long tenantId = resourceDynamicPropertyParm.getTenantId();
+
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        List<ResourceDynamicProperty> resourceDynamicProperties = new ArrayList<>();
+
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0 && (ObjectUtils.isEmpty(tenantId) || tenantId.longValue() == 0)) {
+            //应用级
+            resourceDynamicPropertyCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L);
+            resourceDynamicProperties = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        }
+
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && (ObjectUtils.isEmpty(applicationId) || applicationId.longValue() == 0)) {
+            //租户级
+            resourceDynamicPropertyCriteria.createCriteria().andApplicationIdEqualTo(0L).andTenantIdEqualTo(tenantId);
+            resourceDynamicProperties = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        }
+
+        //应用+租户级
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && !ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            //应用级
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria1 = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria1.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L);
+            //租户级
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria2 = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria2.createCriteria().andApplicationIdEqualTo(0L).andTenantIdEqualTo(tenantId);
+            //应用+租户
+            resourceDynamicPropertyCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(tenantId);
+
+            List<ResourceDynamicProperty> resourceDynamicPropertyList1 = this.selectByCriteria(resourceDynamicPropertyCriteria1);
+            List<ResourceDynamicProperty> resourceDynamicPropertyList2 = this.selectByCriteria(resourceDynamicPropertyCriteria2);
+            List<ResourceDynamicProperty> resourceDynamicPropertyList3 = this.selectByCriteria(resourceDynamicPropertyCriteria);
+
+            resourceDynamicProperties.addAll(resourceDynamicPropertyList1);
+            resourceDynamicProperties.addAll(resourceDynamicPropertyList2);
+            resourceDynamicProperties.addAll(resourceDynamicPropertyList3);
+        }
+
+        List<ResourceDynamicProperty> resourceDynamicPropertyList = new ArrayList<>();
+        Set<String> resourceDynamicPropertyIdSet = new HashSet<>();
+        for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
+            if (!resourceDynamicPropertyIdSet.contains(resourceDynamicProperty.getType())) {
+                resourceDynamicPropertyList.add(resourceDynamicProperty);
+                resourceDynamicPropertyIdSet.add(resourceDynamicProperty.getType());
+            }
+        }
+
+        return resourceDynamicPropertyList;
+    }
+
     private List<ResourceDynamicProperty> dealResourceDynamicPropertyIfGarnet(Long userId, List<ResourceDynamicProperty> resourceDynamicProperties) {
 
-        boolean isSuperAdmin = commonService.superAdminBelongGarnet(userId);
+        ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(userId);
+        boolean isSuperAdmin = returnTenantIdView.isSuperAdmin();
+        boolean isSuperAdminBelongGarnet = commonService.superAdminBelongGarnet(userId);
 
         List<ResourceDynamicProperty> resourceDynamicPropertyList = new ArrayList<>();
         //如果不是超级管理员
-        if (!isSuperAdmin) {
+        if (!(isSuperAdmin && isSuperAdminBelongGarnet)) {
             //去除type为 superAdmin、garnet_appCode、garnet_sysMenu 三个资源配置
             for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
 
@@ -310,10 +373,9 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
 
             return resourceDynamicPropertyList;
         } else {
+            //如果是超级管理员，原封返回
             return resourceDynamicProperties;
         }
-
-
     }
 
 }

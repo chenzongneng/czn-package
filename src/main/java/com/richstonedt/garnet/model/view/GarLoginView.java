@@ -8,7 +8,14 @@ public class GarLoginView {
 
     private String password;
 
+    @ApiModelProperty(value = "登录应用的应用标识")
     private String appCode;
+
+    @ApiModelProperty(value = "获取验证码的时间")
+    private String nowTime;
+
+    @ApiModelProperty(value = "验证码")
+    private String kaptcha;
 
     public String getAppCode() {
         return appCode;
@@ -17,12 +24,6 @@ public class GarLoginView {
     public void setAppCode(String appCode) {
         this.appCode = appCode;
     }
-
-    @ApiModelProperty(value = "获取验证码的时间")
-    private String nowTime;
-
-    @ApiModelProperty(value = "验证码")
-    private String kaptcha;
 
     public String getKaptcha() {
         return kaptcha;

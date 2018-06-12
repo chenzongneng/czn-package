@@ -4,6 +4,7 @@ import com.google.code.kaptcha.Producer;
 import com.richstonedt.garnet.common.utils.GarnetRsUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.interceptory.LoginMessage;
 import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.User;
@@ -266,6 +267,7 @@ public class UserController {
      * @param pageSize   the page size
      * @return the users
      */
+    @LogRequired(module = "用户模块", method = "获取用户列表")
     @LoginRequired
     @ApiOperation(value = "[Garnet]获取用户列表", notes = "通过查询条件获取用户列表")
     @ApiResponses(value = {
@@ -279,6 +281,7 @@ public class UserController {
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
         try {
+
             UserParm userParm = new UserParm();
             userParm.setUserId(userId);
             userParm.setTenantId(tenantId);
@@ -301,7 +304,7 @@ public class UserController {
      *
      * @return the roles
      */
-    @ApiOperation(value = "[Garnet]获取用户列表", notes = "通过获取用户列表")
+    @ApiOperation(value = "[Garnet]获取所有用户", notes = "获取所有用户")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error")})
@@ -537,7 +540,7 @@ public class UserController {
      * @param garLoginView the gar login view
      * @return the response entity
      */
-//    @LogRequired(module = "登录模块", method = "garnet登录")
+    @LogRequired(module = "登录模块", method = "garnet登录")
     @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class)),
@@ -635,6 +638,62 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "[Garnet]验证验证码是否正确", notes = "验证验证码是否正确")
+    @RequestMapping(value = "/validatecaptcha", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> validateCaptcha(
+            @ApiParam(value = "userName", defaultValue = "", required = true) @RequestParam(value = "userName", defaultValue = "", required = true) String userName,
+            @ApiParam(value = "captcha", required = true) @RequestParam(value = "captcha", defaultValue = "", required = true) String captcha,
+            @ApiParam(value = "nowTime,当前时间毫秒值", defaultValue = "", required = true) @RequestParam(value = "nowTime", defaultValue = "", required = true) String nowTime,
+            HttpServletRequest request, HttpServletResponse response){
+        try {
+            LoginMessage loginMessage = new LoginMessage();
+            String kaptcha = kaptchaMap.get(nowTime);
+            if (StringUtils.isEmpty(captcha) || !kaptcha.equalsIgnoreCase(captcha)) {
+                loginMessage.setMessage("验证码不正确");
+                loginMessage.setLoginStatus("false");
+                loginMessage.setCode(401);
+            } else {
+                loginMessage.setMessage("验证码正确");
+                loginMessage.setLoginStatus("success");
+                loginMessage.setCode(200);
+
+                HttpSession sessionNew = request.getSession(true);
+                String sessionId = sessionNew.getId();
+                //判断是否第一次登录
+                String sessionIdOld = (String) loginSessionMap.get(userName);
+                if (!StringUtils.isEmpty(sessionIdOld)) {
+                    loginSessionMap.remove(userName);
+                }
+                //将新的sessionId存入
+                loginSessionMap.put(userName, sessionId);
+            }
+            return new ResponseEntity<>(loginMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get Kaptcha ", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]验证用户名和密码是否正确", notes = "验证用户名和密码是否正确")
+    @RequestMapping(value = "/validateuserinfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful query"),
+            @ApiResponse(code = 500, message = "internal server error")})
+    public ResponseEntity<?> validateUserNameAndPassword(
+            @ApiParam(value = "userName", defaultValue = "", required = true) @RequestParam(value = "userName", defaultValue = "", required = true) String userName,
+            @ApiParam(value = "password", defaultValue = "", required = true) @RequestParam(value = "password", defaultValue = "", required = true) String password){
+        try {
+            boolean b = userService.validateUserInfo(userName, password);
+            return new ResponseEntity<>(b, HttpStatus.OK);
+        } catch (Throwable t) {
+            LOG.error("Failed to get Kaptcha ", t);
+            return GarnetRsUtil.newResponseEntity(t);
+        }
+    }
+
     /**
      * Gets login session.
      *
@@ -655,14 +714,6 @@ public class UserController {
             String sessionIdOld = (String) loginSessionMap.get(userName);
             HttpSession session = request.getSession(true);
             String sessionId = session.getId();
-//            String sessionFromSession = (String) session.getAttribute(userName);
-//            boolean b;
-//            if (!ObjectUtils.isEmpty(sessionIdOld) && !ObjectUtils.isEmpty(sessionFromSession) && sessionFromSession.equals(sessionIdOld)) {
-////                System.out.println(sessionIdOld + " - " + sessionFromSession);
-//                b = true;
-//            } else {
-//                b = false;
-//            }
 
             boolean b;
             if (!StringUtils.isEmpty(sessionIdOld) && sessionIdOld.equals(sessionId)) {

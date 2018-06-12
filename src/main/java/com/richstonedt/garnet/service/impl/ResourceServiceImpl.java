@@ -69,8 +69,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         Resource resource = resourceView.getResource();
 
-
-
         resource.setId(IdGeneratorUtil.generateId());
 
         Long currentTime = System.currentTimeMillis();
@@ -137,12 +135,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
                 resourceDynamicProperty.setId(IdGeneratorUtil.generateId());
                 resourceDynamicPropertyService.insertSelective(resourceDynamicProperty);
-
             }
 
         }
-
-
     }
 
     @Override
@@ -198,6 +193,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
             //如果不是garnet的超级管理员，返回绑定tenantId下的resource
             if (!returnTenantIdView.isSuperAdmin() || (returnTenantIdView.isSuperAdmin() && !commonService.superAdminBelongGarnet(resourceParm.getUserId()))) {
+
+                if (tenantIds.size() == 0) {
+                    tenantIds.add(GarnetContants.NON_VALUE);
+                }
+
                 criteria.andTenantIdIn(tenantIds);
             } else {
                 // 是超级管理员，返回所有resource
@@ -554,15 +554,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         Resource resource;
         for (ResourceExcelView resourceExcel : resourceExcelViews) {
             resourceView = new ResourceView();
-
             resource = new Resource();
 
-
+            //检查数据填写是否正确
             checkData(resourceExcel);
 
-            //设置appId'
+            //设置appId
             ApplicationCriteria applicationCriteria = new ApplicationCriteria();
-            applicationCriteria.createCriteria().andNameEqualTo(resourceExcel.getApplicationName());
+            applicationCriteria.createCriteria().andNameEqualTo(resourceExcel.getApplicationName()).andStatusEqualTo(1);
             Application application = applicationService.selectSingleByCriteria(applicationCriteria);
             if (!ObjectUtils.isEmpty(application)) {
                 resource.setApplicationId(application.getId());
@@ -572,7 +571,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
             //设置tenantId
             TenantCriteria tenantCriteria = new TenantCriteria();
-            tenantCriteria.createCriteria().andNameEqualTo(resourceExcel.getTenantName());
+            tenantCriteria.createCriteria().andNameEqualTo(resourceExcel.getTenantName()).andStatusEqualTo(1);
             Tenant tenant = tenantService.selectSingleByCriteria(tenantCriteria);
             if (!ObjectUtils.isEmpty(tenant)) {
                 resource.setTenantId(tenant.getId());

@@ -869,9 +869,9 @@ var vm = new Vue({
             vm.typeList.options = [];
             var selectTenant = vm.tenantList.selectedTenant;
             var selectApplication = applicationList.appList.selectedApp;
-            $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000&userId=" + userId + "&tenantId=" + selectTenant + "&applicationId=" + selectApplication, function (response) {
-
-                $.each(response.list, function (index, item) {
+            // $.get(baseURL + "resourcedynamicpropertys?page=1&limit=1000&userId=" + userId + "&tenantId=" + selectTenant + "&applicationId=" + selectApplication, function (response) {
+            $.get(baseURL + "resourcedynamicpropertys/byparams?tenantId=" + selectTenant + "&applicationId=" + selectApplication, function (response) {
+                $.each(response, function (index, item) {
                     vm.typeList.options.push(item);
                 })
             });

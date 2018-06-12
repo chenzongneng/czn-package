@@ -123,6 +123,9 @@ var currentUser;
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+
+        roleUpdateButton: false,
+
         showType: true, // 显示类型
         showByType: true, //根据选择类型选择显示租户级、应用级
         showTenant: false, //显示租户
@@ -177,6 +180,9 @@ var vm = new Vue({
         },
         /**  新增按钮点击事件 */
         add: function () {
+
+            vm.roleUpdateButton = true;
+
             vm.showList = false;
             vm.showType = true;
             vm.showTenant = false;
@@ -210,6 +216,9 @@ var vm = new Vue({
             if (!roleId) {
                 return;
             }
+
+            vm.roleUpdateButton = resources.roleUpdateButton;
+
             vm.showList = false;
             vm.showList = false;
             vm.showType = false;

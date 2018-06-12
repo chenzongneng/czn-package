@@ -19,8 +19,7 @@ DROP TABLE IF EXISTS gar_tokens;
 DROP TABLE IF EXISTS gar_user_credentials;
 DROP TABLE IF EXISTS gar_users;
 DROP TABLE IF EXISTS gar_user_tenant_applications;
-
-
+DROP TABLE IF EXISTS gar_logs;
 
 
 /* Create Tables */
@@ -46,6 +45,7 @@ CREATE TABLE gar_applications
 	updated_by_user_name varchar(100) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
+ALTER TABLE gar_applications ADD COLUMN default_index_url varchar(256) DEFAULT '' NOT NULL;
 
 
 CREATE TABLE gar_application_tenants
@@ -315,6 +315,22 @@ CREATE TABLE gar_user_tenant_applications
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
+
+CREATE TABLE gar_logs
+(
+	id bigint DEFAULT 0 NOT NULL UNIQUE,
+	created_time bigint DEFAULT 0 NOT NULL,
+	modified_time bigint DEFAULT 0 NOT NULL,
+	user_name VARCHAR(256) DEFAULT '' NOT NULL ,
+	message VARCHAR(256) DEFAULT '' NOT NULL ,
+	tenant_id bigint,
+	application_id bigint,
+	ip VARCHAR(20),
+	operation VARCHAR(256),
+
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
 /* Comments */
 
 COMMENT ON COLUMN gar_applications.app_code IS '调用接口时应用唯一标识';
@@ -382,7 +398,7 @@ INSERT INTO gar_groups(id, name, created_time, modified_time, application_id, te
 INSERT INTO gar_roles(id, name, remark, created_time, modified_time, tenant_id, application_id, status, updated_by_user_name) VALUES('1', '超级角色', '超级角色', '1522252800000', '1522252800000', '1', '1', '1', 'admin');
 
 -- gar_permissions
-INSERT INTO gar_permissions(id, resource_path_wildcard, name, description, created_time, modified_time, application_id, tenant_id, action, status, updated_by_user_name) VALUES ('1', '%', '超级权限', '超级权限', '1522252800000', '1522252800000', '1', '1', 'readonly', '1', 'admin');
+INSERT INTO gar_permissions(id, resource_path_wildcard, name, description, created_time, modified_time, application_id, tenant_id, action, status, updated_by_user_name) VALUES ('1', '%', '超级权限', '超级权限', '1522252800000', '1522252800000', '1', '1', 'read', '1', 'admin');
 
 -- gar_role_permissions
 INSERT INTO gar_role_permissions(role_id, permission_id, id) VALUES ('1', '1', '1');
@@ -484,6 +500,16 @@ INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, fil
 -- INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('85', 'garnet_sysMenu', '1', '1', 'boolean02', '', 'read', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
 -- INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('86', 'garnet_sysMenu', '1', '1', 'boolean03', '', 'read', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
 -- INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('87', 'garnet_sysMenu', '1', '1', 'boolean04', '', 'read', '系统菜单配置', '1522252800000', '1522252800000', 'admin');
+-- 输入框是否可编辑
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('88', 'tenant_editable', '1', '1', 'varchar00', 'tenant_name', 'read', '租户-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('89', 'tenant_editable', '1', '1', 'varchar01', '填true/false', 'read', '租户-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('90', 'application_editable', '1', '1', 'varchar00', 'application_name', 'read', '应用-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('91', 'application_editable', '1', '1', 'varchar01', '填true/false', 'read', '应用-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('92', 'group_editable', '1', '1', 'varchar00', 'group_name', 'read', '组-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('93', 'group_editable', '1', '1', 'varchar01', '填true/false', 'read', '组-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('94', 'role_editable', '1', '1', 'varchar00', 'role_name', 'read', '角色-是否可编辑', '1528041600000', '1528041600000', 'admin');
+INSERT INTO gar_resource_dynamic_props (id, type, application_id, tenant_id, filed_name, description, actions, remark, created_time, modified_time, updated_by_user_name) VALUES ('95', 'role_editable', '1', '1', 'varchar01', '填true/false', 'read', '角色-是否可编辑', '1528041600000', '1528041600000', 'admin');
+
 
 -- gar_resources
 -- appCode
@@ -549,6 +575,36 @@ INSERT INTO gar_resources (id, application_id, path, actions, name, created_time
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10, updated_by_user_name) VALUES ('57', '1', '/garnet/DevelopmentApi',  '', '菜单配置-DevelopmentApi', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '11', '9', '', 'API', 'modules/api.html', '1', 'fa fa-th-list', 'garnetDevelopmentApi', '2', '', '', 'admin');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10, updated_by_user_name) VALUES ('58', '1', '/garnet/DevelopmentresourceDynamicProperty',  '', '菜单配置-DevelopmentresourceDynamicProperty', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '12', '9', '', '资源类型配置', 'modules/resourceDynamicProperty.html', '1', 'fa fa-th-list', 'garnetDevelopmentresourceDynamicProperty', '3', '', '', 'admin');
 INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, varchar_07, varchar_08, varchar_09, varchar_10, updated_by_user_name) VALUES ('59', '1', '/garnet/DevelopmentRouterGroup',  '', '菜单配置-DevelopmentRouterGroup', '1522252800000', '1522252800000', 'garnet_sysMenu', '1', '13', '9', '', '单点登录应用组', 'modules/routerGroup.html', '1', 'fa fa-th-list', 'garnetDevelopmentRouterGroup', '4', '', '', 'admin');
+-- 输入框是否可编辑
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (83, 1, '/garnet/tenantname/editable', '', '租户名称读写权限', 1528100029308, 1528101683244, 'tenant_editable', 1, 'isTenantNameEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (61, 1, '/garnet/tenanremark/editable', '', '租户备注读写权限', 1528100029308, 1528101683244, 'tenant_editable', 1, 'isTenantRemarkEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (62, 1, '/garnet/tenantrelatedusers/editable', '', '租户关联用户读写权限', 1528100029308, 1528101683244, 'tenant_editable', 1, 'isTenantRelatedUsersEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (63, 1, '/garnet/tenantreviewusers/editable', '', '租户查看已关联用户读写权限', 1528100029308, 1528101683244, 'tenant_editable', 1, 'isTenantReviewUsersEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (64, 1, '/garnet/tenantselectapp/editable', '', '租户选择应用读写权限', 1528100029308, 1528101683244, 'tenant_editable', 1, 'isTenantSelectAppEditable', 'true', 'admin');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (84, 1, '/garnet/tenantupdate/editable', '', '租户编辑确认按钮读写权限', 1528041600000, 1528041600000, 'tenant_editable', 1, 'tenantUpdateButton', 'true', 'admin');
+
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (65, 1, '/garnet/appname/editable', '', '应用名称读写权限', 1528100029308, 1528101683244, 'application_editable', 1, 'isAppNameEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (66, 1, '/garnet/appcode/editable', '', '应用标识读写权限', 1528100029308, 1528101683244, 'application_editable', 1, 'isAppCodeEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (67, 1, '/garnet/appselecttenant/editable', '', '应用选择租户读写权限', 1528100029308, 1528101683244, 'application_editable', 1, 'isAppSelectTenantEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (68, 1, '/garnet/appcompany/editable', '', '应用公司读写权限', 1528100029308, 1528101683244, 'application_editable', 1, 'isAppCompanyEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (69, 1, '/garnet/apprefreshapi/editable', '', '应用刷新资源Api读写权限', 1528100029308, 1528101683244, 'application_editable', 1, 'isAppRefreshApiEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (70, 1, '/garnet/apphost/editable', '', '应用主机读写权限', 1528100029308, 1528101683244, 'application_editable', 1, 'isAppHostsEditable', 'true', 'admin');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (85, 1, '/garnet/appupdate/editable', '', '应用编辑确认按钮读写权限', 1528041600000, 1528041600000, 'application_editable', 1, 'appUpdateButton', 'true', 'admin');
+
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (71, 1, '/garnet/groupname/editable', '', '组名称读写权限', 1528100029308, 1528101683244, 'group_editable', 1, 'isGroupNameEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (72, 1, '/garnet/groupselectapp/editable', '', '组选择应用读写权限', 1528100029308, 1528101683244, 'group_editable', 1, 'isGroupSelectAppEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (73, 1, '/garnet/groupselecttenant/editable', '', '组选择租户读写权限', 1528100029308, 1528101683244, 'group_editable', 1, 'isGroupSelectTenantEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (74, 1, '/garnet/groupselectuser/editable', '', '组选择用户读写权限', 1528100029308, 1528101683244, 'group_editable', 1, 'isGroupSelectUserEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (75, 1, '/garnet/groupselectrole/editable', '', '组选择角色读写权限', 1528100029308, 1528101683244, 'group_editable', 1, 'isGroupSelectRoleEditable', 'true', 'admin');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (86, 1, '/garnet/groupupdate/editable', '', '组编辑确认按钮读写权限', 1528041600000, 1528041600000, 'group_editable', 1, 'groupUpdateButton', 'true', 'admin');
+
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (77, 1, '/garnet/rolename/editable', '', '角色名称读写权限', 1528100029308, 1528101683244, 'role_editable', 1, 'isRoleNameEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (78, 1, '/garnet/roleselectapp/editable', '', '角色选择应用读写权限', 1528100029308, 1528101683244, 'role_editable', 1, 'isRoleSelectAppEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (79, 1, '/garnet/roleselecttenant/editable', '', '角色选择租户读写权限', 1528100029308, 1528101683244, 'role_editable', 1, 'isRoleSelectTenantEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (80, 1, '/garnet/roleremark/editable', '', '角色备注读写权限', 1528100029308, 1528101683244, 'role_editable', 1, 'isRoleRemarkEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (81, 1, '/garnet/roleselectgroup/editable', '', '角色选择组读写权限', 1528100029308, 1528101683244, 'role_editable', 1, 'isRoleSelectGroupEditable', 'true', 'admin');
+-- INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (82, 1, '/garnet/roleselectpermission/editable', '', '角色选择权限读写权限', 1528100029308, 1528101683244, 'role_editable', 1, 'isRoleSelectPermissionEditable', 'true', 'admin');
+INSERT INTO gar_resources (id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, varchar_00, varchar_01, updated_by_user_name) VALUES (87, 1, '/garnet/roleselectpermission/editable', '', '角色编辑确认按钮读写权限', 1528041600000, 1528041600000, 'role_editable', 1, 'roleUpdateButton', 'true', 'admin');
 
 -- gar_router_group
 INSERT INTO gar_router_group (id, group_name, app_code, remark, created_time, modified_time, updated_by_user_name) VALUES ('1', '超级应用组', 'garnet', '不能删除garnet应用', '1522252800000', '1522252800000', 'admin');

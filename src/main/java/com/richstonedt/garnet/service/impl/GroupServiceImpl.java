@@ -356,32 +356,51 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     public List<Group> queryGroupsByParams(GroupParm groupParm) {
         Long applicationId = groupParm.getApplicationId();
         Long tenantId = groupParm.getTenantId();
+        List<Group> groups = new ArrayList<>();
 
         GroupCriteria groupCriteria = new GroupCriteria();
-        GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
-        criteria.andStatusEqualTo(1);
 
-        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
-            criteria.andApplicationIdEqualTo(applicationId);
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0 && (ObjectUtils.isEmpty(tenantId) || tenantId.longValue() == 0)) {
+            //应用级
+            groupCriteria.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L).andStatusEqualTo(1);
+            groups = this.selectByCriteria(groupCriteria);
         }
 
-        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
-            criteria.andTenantIdEqualTo(tenantId);
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0 && (ObjectUtils.isEmpty(applicationId) || applicationId.longValue() == 0)) {
+            //租户级
+            groupCriteria.createCriteria().andApplicationIdEqualTo(0L).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+            groups = this.selectByCriteria(groupCriteria);
         }
 
-        List<Group> groups = this.selectByCriteria(groupCriteria);
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0 && !ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            //应用+租户
+            GroupCriteria groupCriteria1 = new GroupCriteria();
+            groupCriteria1.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(0L).andStatusEqualTo(1);
+            GroupCriteria groupCriteria2 = new GroupCriteria();
+            groupCriteria2.createCriteria().andApplicationIdEqualTo(0L).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+            GroupCriteria groupCriteria3 = new GroupCriteria();
+            groupCriteria3.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+
+            List<Group> groupList1 = new ArrayList<>();
+            List<Group> groupList2 = new ArrayList<>();
+            List<Group> groupList3 = new ArrayList<>();
+
+            groups.addAll(groupList1);
+            groups.addAll(groupList2);
+            groups.addAll(groupList3);
+        }
 
         //去重
-//        List<Group> groupList = new ArrayList<>();
-//        Set<Long> groupIdSet = new HashSet<>();
-//        for (Group group : groups) {
-//            if (!groupIdSet.contains(group.getId())) {
-//                groupIdSet.add(group.getId());
-//                groupList.add(group);
-//            }
-//        }
+        List<Group> groupList = new ArrayList<>();
+        Set<Long> groupIdSet = new HashSet<>();
+        for (Group group : groups) {
+            if (!groupIdSet.contains(group.getId())) {
+                groupIdSet.add(group.getId());
+                groupList.add(group);
+            }
+        }
 
-        return groups;
+        return groupList;
     }
 
     /**

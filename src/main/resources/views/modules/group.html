@@ -135,7 +135,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" :disabled="!groupUpdateButton"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload(false)" value="返回"/>
             </div>
         </form>
@@ -147,9 +147,10 @@
     <ul id="groupTree" class="ztree"></ul>
 </div>
 
+<script src="https://unpkg.com/ajax-hook/dist/ajaxhook.min.js"></script>
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
 <script src="../js/modules/group.js"></script>
-<script src="../js/actiontimer.js"></script>
+<!--<script src="../js/actiontimer.js"></script>-->
 </body>
 </html>

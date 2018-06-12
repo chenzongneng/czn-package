@@ -74,21 +74,29 @@ $.ajaxSetup({
 
     complete: function (xhr) {
 
-        // var userId = localStorage.getItem("userId");
-        // if (userId == null || userId == "") {
-        //     var pathName = window.document.location.pathname;
-        //     var patrn = /.*index.html$/;
-        //     if (patrn.exec(pathName)) {
-        //         parent.location.href = 'login.html';
-        //     } else {
-        //         parent.location.href = '../login.html';
-        //     }
-        // }
+        // console.log("complete accessToken: " + localStorage.getItem("accessToken"));
+
+        var userId = localStorage.getItem("userId");
+        if (userId == null || userId == "") {
+
+            // console.log("common userid is null...");
+
+            var pathName = window.document.location.pathname;
+            var patrn = /.*index.html$/;
+            if (patrn.exec(pathName)) {
+                // parent.location.href = 'login.html';
+            } else {
+                // parent.location.href = '../login.html';
+            }
+        }
 
         var response = JSON.parse(xhr.responseText);
 
         // token过期，则跳转到登录页面
         if (response.code == 401) {
+
+            console.log("common 401: " + localStorage.getItem("accessToken"));
+
             localStorage.removeItem("userId");
             localStorage.removeItem("userName");
             localStorage.removeItem("belongToGarnet");
@@ -120,6 +128,7 @@ $.ajaxSetup({
             }
 
         } else if (response.code == 403) {
+            // console.log("common 403: " + localStorage.getItem("accessToken"));
             localStorage.removeItem("userId");
             localStorage.removeItem("userName");
             localStorage.removeItem("belongToGarnet");
