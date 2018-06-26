@@ -10,36 +10,16 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-03-30 13:23
+ * DATE: 2018-06-19 10:11
  */
 public class Resource implements Serializable {
     private Long id;
 
     private Long applicationId;
 
-    /**
-     * ui - UI组件
-/{page_name}/{element_name}
-
-openApi - open api，对外开放的api，并非内部使用的api;
-
-/api/v1/users
-此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
-
-function - function opint,对应的是功能项，例如用户查询；
-例如
-一个具体的页面：
-/{page_name}
-
-某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
-
-/{page_name}/{function_name}
-     * gar_resources.path
-     */
     @ExcelVOAttribute(name = "", column = "B")
     private String path;
 
-    @ExcelVOAttribute(name = "", column = "C")
     private String actions;
 
     @ExcelVOAttribute(name = "", column = "A")
@@ -49,13 +29,6 @@ function - function opint,对应的是功能项，例如用户查询；
 
     private Long modifiedTime;
 
-    /**
-     * 资源类型例如，
-ui-UI组件，如button, input, textarea, table, drop down list等
-openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
-function-功能项，如页面，菜单模块等
-     * gar_resources.type
-     */
     @ExcelVOAttribute(name = "", column = "D")
     private String type;
 
@@ -148,18 +121,17 @@ function-功能项，如页面，菜单模块等
     @ExcelVOAttribute(name = "", column = "AH")
     private Boolean boolean04;
 
-    /**
-     * 更新的人
-     * gar_resources.updated_by_user_name
-     */
     private String updatedByUserName;
+
+    @ExcelVOAttribute(name = "", column = "C")
+    private String remark;
 
     /**
      * TABLE： gar_resources
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     private static final long serialVersionUID = 1L;
 
@@ -179,60 +151,10 @@ function-功能项，如页面，菜单模块等
         this.applicationId = applicationId;
     }
 
-    /**
-     * ui - UI组件
-/{page_name}/{element_name}
-
-openApi - open api，对外开放的api，并非内部使用的api;
-
-/api/v1/users
-此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
-
-function - function opint,对应的是功能项，例如用户查询；
-例如
-一个具体的页面：
-/{page_name}
-
-某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
-
-/{page_name}/{function_name}<br>
-     *
-     * column：gar_resources.path<br>
-     * @return path
-     *
-     * @mbg.generated
-     *
-     * DATE: 2018-03-30 13:23
-     */
     public String getPath() {
         return path;
     }
 
-    /**
-     * ui - UI组件
-/{page_name}/{element_name}
-
-openApi - open api，对外开放的api，并非内部使用的api;
-
-/api/v1/users
-此时需要与dynamic properties配合，假如没有注册中心，直接指定某个property为ip:port;假如使用注册中心，直接指定某个property为service id
-
-function - function opint,对应的是功能项，例如用户查询；
-例如
-一个具体的页面：
-/{page_name}
-
-某一个页面中的某个功能，例如用户组管理页面中的增加用户组的功能
-
-/{page_name}/{function_name}<br>
-     *
-     * column：gar_resources.path<br>
-     * @param path
-     *
-     * @mbg.generated
-     *
-     * DATE: 2018-03-30 13:23
-     */
     public void setPath(String path) {
         this.path = path == null ? null : path.trim();
     }
@@ -269,36 +191,10 @@ function - function opint,对应的是功能项，例如用户查询；
         this.modifiedTime = modifiedTime;
     }
 
-    /**
-     * 资源类型例如，
-ui-UI组件，如button, input, textarea, table, drop down list等
-openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
-function-功能项，如页面，菜单模块等<br>
-     *
-     * column：gar_resources.type<br>
-     * @return type
-     *
-     * @mbg.generated
-     *
-     * DATE: 2018-03-30 13:23
-     */
     public String getType() {
         return type;
     }
 
-    /**
-     * 资源类型例如，
-ui-UI组件，如button, input, textarea, table, drop down list等
-openApi-OpenApi, 如提供给其他应用调用的REST API。不是指应用内部的REST API
-function-功能项，如页面，菜单模块等<br>
-     *
-     * column：gar_resources.type<br>
-     * @param type
-     *
-     * @mbg.generated
-     *
-     * DATE: 2018-03-30 13:23
-     */
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
     }
@@ -543,32 +439,20 @@ function-功能项，如页面，菜单模块等<br>
         this.boolean04 = boolean04;
     }
 
-    /**
-     * 更新的人<br>
-     *
-     * column：gar_resources.updated_by_user_name<br>
-     * @return updated_by_user_name
-     *
-     * @mbg.generated
-     *
-     * DATE: 2018-03-30 13:23
-     */
     public String getUpdatedByUserName() {
         return updatedByUserName;
     }
 
-    /**
-     * 更新的人<br>
-     *
-     * column：gar_resources.updated_by_user_name<br>
-     * @param updatedByUserName
-     *
-     * @mbg.generated
-     *
-     * DATE: 2018-03-30 13:23
-     */
     public void setUpdatedByUserName(String updatedByUserName) {
         this.updatedByUserName = updatedByUserName == null ? null : updatedByUserName.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     /**
@@ -578,7 +462,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     @Override
     public boolean equals(Object that) {
@@ -593,44 +477,45 @@ function-功能项，如页面，菜单模块等<br>
         }
         Resource other = (Resource) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
-            && (this.getPath() == null ? other.getPath() == null : this.getPath().equals(other.getPath()))
-            && (this.getActions() == null ? other.getActions() == null : this.getActions().equals(other.getActions()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-            && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
-            && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
-            && (this.getVarchar00() == null ? other.getVarchar00() == null : this.getVarchar00().equals(other.getVarchar00()))
-            && (this.getVarchar01() == null ? other.getVarchar01() == null : this.getVarchar01().equals(other.getVarchar01()))
-            && (this.getVarchar02() == null ? other.getVarchar02() == null : this.getVarchar02().equals(other.getVarchar02()))
-            && (this.getVarchar03() == null ? other.getVarchar03() == null : this.getVarchar03().equals(other.getVarchar03()))
-            && (this.getVarchar04() == null ? other.getVarchar04() == null : this.getVarchar04().equals(other.getVarchar04()))
-            && (this.getVarchar05() == null ? other.getVarchar05() == null : this.getVarchar05().equals(other.getVarchar05()))
-            && (this.getVarchar06() == null ? other.getVarchar06() == null : this.getVarchar06().equals(other.getVarchar06()))
-            && (this.getVarchar07() == null ? other.getVarchar07() == null : this.getVarchar07().equals(other.getVarchar07()))
-            && (this.getVarchar08() == null ? other.getVarchar08() == null : this.getVarchar08().equals(other.getVarchar08()))
-            && (this.getVarchar09() == null ? other.getVarchar09() == null : this.getVarchar09().equals(other.getVarchar09()))
-            && (this.getVarchar10() == null ? other.getVarchar10() == null : this.getVarchar10().equals(other.getVarchar10()))
-            && (this.getVarchar11() == null ? other.getVarchar11() == null : this.getVarchar11().equals(other.getVarchar11()))
-            && (this.getVarchar12() == null ? other.getVarchar12() == null : this.getVarchar12().equals(other.getVarchar12()))
-            && (this.getVarchar13() == null ? other.getVarchar13() == null : this.getVarchar13().equals(other.getVarchar13()))
-            && (this.getVarchar14() == null ? other.getVarchar14() == null : this.getVarchar14().equals(other.getVarchar14()))
-            && (this.getVarchar15() == null ? other.getVarchar15() == null : this.getVarchar15().equals(other.getVarchar15()))
-            && (this.getVarchar16() == null ? other.getVarchar16() == null : this.getVarchar16().equals(other.getVarchar16()))
-            && (this.getVarchar17() == null ? other.getVarchar17() == null : this.getVarchar17().equals(other.getVarchar17()))
-            && (this.getVarchar18() == null ? other.getVarchar18() == null : this.getVarchar18().equals(other.getVarchar18()))
-            && (this.getVarchar19() == null ? other.getVarchar19() == null : this.getVarchar19().equals(other.getVarchar19()))
-            && (this.getInt01() == null ? other.getInt01() == null : this.getInt01().equals(other.getInt01()))
-            && (this.getInt02() == null ? other.getInt02() == null : this.getInt02().equals(other.getInt02()))
-            && (this.getInt03() == null ? other.getInt03() == null : this.getInt03().equals(other.getInt03()))
-            && (this.getInt04() == null ? other.getInt04() == null : this.getInt04().equals(other.getInt04()))
-            && (this.getInt05() == null ? other.getInt05() == null : this.getInt05().equals(other.getInt05()))
-            && (this.getBoolean01() == null ? other.getBoolean01() == null : this.getBoolean01().equals(other.getBoolean01()))
-            && (this.getBoolean02() == null ? other.getBoolean02() == null : this.getBoolean02().equals(other.getBoolean02()))
-            && (this.getBoolean03() == null ? other.getBoolean03() == null : this.getBoolean03().equals(other.getBoolean03()))
-            && (this.getBoolean04() == null ? other.getBoolean04() == null : this.getBoolean04().equals(other.getBoolean04()))
-            && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()));
+                && (this.getApplicationId() == null ? other.getApplicationId() == null : this.getApplicationId().equals(other.getApplicationId()))
+                && (this.getPath() == null ? other.getPath() == null : this.getPath().equals(other.getPath()))
+                && (this.getActions() == null ? other.getActions() == null : this.getActions().equals(other.getActions()))
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
+                && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
+                && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+                && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
+                && (this.getVarchar00() == null ? other.getVarchar00() == null : this.getVarchar00().equals(other.getVarchar00()))
+                && (this.getVarchar01() == null ? other.getVarchar01() == null : this.getVarchar01().equals(other.getVarchar01()))
+                && (this.getVarchar02() == null ? other.getVarchar02() == null : this.getVarchar02().equals(other.getVarchar02()))
+                && (this.getVarchar03() == null ? other.getVarchar03() == null : this.getVarchar03().equals(other.getVarchar03()))
+                && (this.getVarchar04() == null ? other.getVarchar04() == null : this.getVarchar04().equals(other.getVarchar04()))
+                && (this.getVarchar05() == null ? other.getVarchar05() == null : this.getVarchar05().equals(other.getVarchar05()))
+                && (this.getVarchar06() == null ? other.getVarchar06() == null : this.getVarchar06().equals(other.getVarchar06()))
+                && (this.getVarchar07() == null ? other.getVarchar07() == null : this.getVarchar07().equals(other.getVarchar07()))
+                && (this.getVarchar08() == null ? other.getVarchar08() == null : this.getVarchar08().equals(other.getVarchar08()))
+                && (this.getVarchar09() == null ? other.getVarchar09() == null : this.getVarchar09().equals(other.getVarchar09()))
+                && (this.getVarchar10() == null ? other.getVarchar10() == null : this.getVarchar10().equals(other.getVarchar10()))
+                && (this.getVarchar11() == null ? other.getVarchar11() == null : this.getVarchar11().equals(other.getVarchar11()))
+                && (this.getVarchar12() == null ? other.getVarchar12() == null : this.getVarchar12().equals(other.getVarchar12()))
+                && (this.getVarchar13() == null ? other.getVarchar13() == null : this.getVarchar13().equals(other.getVarchar13()))
+                && (this.getVarchar14() == null ? other.getVarchar14() == null : this.getVarchar14().equals(other.getVarchar14()))
+                && (this.getVarchar15() == null ? other.getVarchar15() == null : this.getVarchar15().equals(other.getVarchar15()))
+                && (this.getVarchar16() == null ? other.getVarchar16() == null : this.getVarchar16().equals(other.getVarchar16()))
+                && (this.getVarchar17() == null ? other.getVarchar17() == null : this.getVarchar17().equals(other.getVarchar17()))
+                && (this.getVarchar18() == null ? other.getVarchar18() == null : this.getVarchar18().equals(other.getVarchar18()))
+                && (this.getVarchar19() == null ? other.getVarchar19() == null : this.getVarchar19().equals(other.getVarchar19()))
+                && (this.getInt01() == null ? other.getInt01() == null : this.getInt01().equals(other.getInt01()))
+                && (this.getInt02() == null ? other.getInt02() == null : this.getInt02().equals(other.getInt02()))
+                && (this.getInt03() == null ? other.getInt03() == null : this.getInt03().equals(other.getInt03()))
+                && (this.getInt04() == null ? other.getInt04() == null : this.getInt04().equals(other.getInt04()))
+                && (this.getInt05() == null ? other.getInt05() == null : this.getInt05().equals(other.getInt05()))
+                && (this.getBoolean01() == null ? other.getBoolean01() == null : this.getBoolean01().equals(other.getBoolean01()))
+                && (this.getBoolean02() == null ? other.getBoolean02() == null : this.getBoolean02().equals(other.getBoolean02()))
+                && (this.getBoolean03() == null ? other.getBoolean03() == null : this.getBoolean03().equals(other.getBoolean03()))
+                && (this.getBoolean04() == null ? other.getBoolean04() == null : this.getBoolean04().equals(other.getBoolean04()))
+                && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()))
+                && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()));
     }
 
     /**
@@ -640,7 +525,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     @Override
     public int hashCode() {
@@ -685,6 +570,7 @@ function-功能项，如页面，菜单模块等<br>
         result = prime * result + ((getBoolean03() == null) ? 0 : getBoolean03().hashCode());
         result = prime * result + ((getBoolean04() == null) ? 0 : getBoolean04().hashCode());
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
+        result = prime * result + ((getRemark() == null) ? 0 : getRemark().hashCode());
         return result;
     }
 
@@ -695,7 +581,7 @@ function-功能项，如页面，菜单模块等<br>
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     @Override
     public String toString() {
@@ -742,6 +628,7 @@ function-功能项，如页面，菜单模块等<br>
         sb.append(", boolean03=").append(boolean03);
         sb.append(", boolean04=").append(boolean04);
         sb.append(", updatedByUserName=").append(updatedByUserName);
+        sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -169,7 +169,7 @@ public class ResourceDynamicPropertyController {
             @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "0", required = false) Long tenantId,
             @ApiParam(value = "应用id", defaultValue = "0", required = false) @RequestParam(value = "applicationId", defaultValue = "0", required = false) Long applicationId,
             @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
-            @ApiParam(value = "类型", defaultValue = "", required = false) @RequestParam(value = "type", defaultValue = "", required = false) String type,
+            @ApiParam(value = "资源类型", defaultValue = "", required = false) @RequestParam(value = "type", defaultValue = "", required = false) String type,
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) Integer pageSize) {
@@ -182,7 +182,7 @@ public class ResourceDynamicPropertyController {
             resourceDynamicPropertyParm.setPageNumber(pageNumber);
             resourceDynamicPropertyParm.setSearchName(searchName);
             resourceDynamicPropertyParm.setType(type);
-            PageUtil pageInfo = resourceDynamicPropertyService.queryResourceDynamicPropertySByParms(resourceDynamicPropertyParm);
+            PageUtil pageInfo = resourceDynamicPropertyService.getResourceDynamicPropertiesByParams(resourceDynamicPropertyParm);
             // 封装返回信息
 //            GarnetMessage<Page<ResourceDynamicPropertyView>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, resourceDynamicPropertyViews);
             return new ResponseEntity<>(pageInfo, HttpStatus.OK);
@@ -239,12 +239,12 @@ public class ResourceDynamicPropertyController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
             @ApiResponse(code = 500, message = "internal server error") })
-    @RequestMapping(value = "/resourcedynamicpropertys/checkremark", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/resourcedynamicpropertys/checkname", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> checkRemark(
             @ApiParam(value = "资源动态属性ID", required = true) @RequestParam(value = "id", defaultValue = "0", required = true) Long id,
-            @ApiParam(value = "资源动态属性名称", required = true) @RequestParam(value = "remark", defaultValue = "", required = true) String remark) {
+            @ApiParam(value = "资源动态属性名称", required = true) @RequestParam(value = "name", defaultValue = "", required = true) String name) {
         try {
-            boolean result = resourceDynamicPropertyService.isRemarkUsed(id, remark);
+            boolean result = resourceDynamicPropertyService.isResourceDyPropNameUsed(id, name);
             // 封装返回信息
             GarnetMessage<Boolean> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, result);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
@@ -272,7 +272,6 @@ public class ResourceDynamicPropertyController {
             resourceDynamicPropertyParm.setApplicationId(applicationId);
             List<ResourceDynamicProperty> resourceDynamicPropertyList = resourceDynamicPropertyService.getResourceDynamicPropertyByTIdAndAId(resourceDynamicPropertyParm);
             // 封装返回信息
-//            GarnetMessage<Page<ResourceDynamicPropertyView>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, resourceDynamicPropertyViews);
             return new ResponseEntity<>(resourceDynamicPropertyList, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.service;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Permission;
@@ -80,6 +81,11 @@ public interface PermissionService extends BaseService<Permission, PermissionCri
      */
     List<Permission> queryPermissionByParams(PermissionParm permissionParm);
 
-
+    /**
+     * 查询权限列表
+     * @param permissionParm
+     * @return
+     */
+    PageUtil getPermissionsByParams(PermissionParm permissionParm);
 
 }

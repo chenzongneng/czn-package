@@ -4,6 +4,7 @@ import com.richstonedt.garnet.model.GroupUser;
 import com.richstonedt.garnet.model.User;
 import com.richstonedt.garnet.model.UserTenant;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class UserView {
 
     private User user;
 
+    @ApiModelProperty(value = "登录用户Id")
+    private Long loginUserId;
+
     private List<UserTenant> userTenants;
 
     private List<GroupUser> groupUsers;
@@ -22,6 +26,37 @@ public class UserView {
     private String password;
 
     private Long expiredDateTime;
+
+    @ApiModelProperty(value = "选择关联的租户ID")
+    private List<Long> tenantIds;
+
+    @ApiModelProperty(value = "选择关联的组ID")
+    private List<Long> groupIds;
+
+
+    public Long getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(Long loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
+    public List<Long> getTenantIds() {
+        return tenantIds;
+    }
+
+    public void setTenantIds(List<Long> tenantIds) {
+        this.tenantIds = tenantIds;
+    }
+
+    public List<Long> getGroupIds() {
+        return groupIds;
+    }
+
+    public void setGroupIds(List<Long> groupIds) {
+        this.groupIds = groupIds;
+    }
 
     /**
      * Gets user.

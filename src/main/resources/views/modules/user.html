@@ -71,18 +71,18 @@
                 </div>
             </div>
 
-            <div class="form-group" v-show="belongToGarnet">
-                <div class="col-sm-2 control-label"></div>
-                <div class="col-sm-10">
-                    <label>是否属于Garnet的用户</label>
-                    <select v-model="user.belongToGarnet">
-                        <!--<option disabled value="">请选择</option>-->
-                        <option>Y</option>
-                        <option selected="selected">N</option>
-                    </select>
+            <!--<div class="form-group" v-show="belongToGarnet">-->
+                <!--<div class="col-sm-2 control-label"></div>-->
+                <!--<div class="col-sm-10">-->
+                    <!--<label>是否属于Garnet的用户</label>-->
+                    <!--<select v-model="user.belongToGarnet">-->
+                        <!--&lt;!&ndash;<option disabled value="">请选择</option>&ndash;&gt;-->
+                        <!--<option>Y</option>-->
+                        <!--<option selected="selected">N</option>-->
+                    <!--</select>-->
 
-                </div>
-            </div>
+                <!--</div>-->
+            <!--</div>-->
 
             <!--<div class="form-group">-->
                 <!--<div class="col-sm-2 control-label">所属租户</div>-->
@@ -153,6 +153,22 @@
                     <!--</div>-->
                 <!--</div>-->
             <!--</div>-->
+
+            <div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">
+                <div class="form-group col-md-6">
+                    <strong class="col-sm-5 control-label">选择租户</strong>
+                    <div class="col-sm-10">
+                        <ul id="tenantTree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <strong class="col-sm-5 control-label">Garnet组</strong>
+                    <div class="col-sm-10">
+                        <ul id="groupTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
@@ -163,6 +179,7 @@
 </div>
 
 <script src="https://unpkg.com/ajax-hook/dist/ajaxhook.min.js"></script>
+<!--<link rel="stylesheet" href="../plugins/ajaxhook/ajaxhook.min.js">-->
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
 <script src="../js/modules/user.js"></script>

@@ -3,12 +3,12 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.RouterGroupMapper;
-import com.richstonedt.garnet.model.Application;
-import com.richstonedt.garnet.model.Resource;
-import com.richstonedt.garnet.model.RouterGroup;
+import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.ApplicationCriteria;
+import com.richstonedt.garnet.model.criteria.ApplicationTenantCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.RouterGroupCriteria;
 import com.richstonedt.garnet.model.parm.RouterGroupParm;
@@ -33,8 +33,12 @@ import java.util.Set;
 @Service
 @Transactional
 public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterGroupCriteria, Long> implements RouterGroupService {
+
     @Autowired
     private RouterGroupMapper routerGroupMapper;
+
+    @Autowired
+    private TenantService tenantService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -45,11 +49,18 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private ApplicationTenantService applicationTenantService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.routerGroupMapper;
     }
 
+    @LogRequired(module = "单点登录管理模块", method = "新增单点登录应用组")
     @Override
     public String insertRouterGroup(RouterGroupView routerGroupView) {
         RouterGroup routerGroup = routerGroupView.getRouterGroup();
@@ -89,6 +100,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
     }
 
 
+    @LogRequired(module = "单点登录管理模块", method = "配置单点登录应用组")
     @Override
     public void updateRouterGroup(RouterGroupView routerGroupView) {
 
@@ -120,6 +132,7 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         this.insertRouterGroup(routerGroupView);
     }
 
+    @LogRequired(module = "单点登录管理模块", method = "删除单点登录应用组")
     @Override
     public void deleteRouterGroup(RouterGroupView routerGroupView) {
         RouterGroup routerGroup = routerGroupView.getRouterGroup();
@@ -298,6 +311,99 @@ public class RouterGroupServiceImpl extends BaseServiceImpl<RouterGroup, RouterG
         }
 
         return b;
+    }
+
+    @LogRequired(module = "单点登录管理模块", method = "查询单点登录应用组列表")
+    @Override
+    public PageUtil getRouterGroupsByParams(RouterGroupParm routerGroupParm) {
+        Long userId = routerGroupParm.getUserId();
+        RouterGroup routerGroup = routerGroupParm.getRouterGroup();
+        RouterGroupCriteria routerGroupCriteria = new RouterGroupCriteria();
+        routerGroupCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
+        RouterGroupCriteria.Criteria criteria = routerGroupCriteria.createCriteria();
+
+        if (!StringUtils.isEmpty(routerGroupParm.getSearchName())) {
+            criteria.andGroupNameLike("%" + routerGroupParm.getSearchName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(routerGroup) && !ObjectUtils.isEmpty(routerGroup.getGroupName())) {
+            criteria.andGroupNameEqualTo(routerGroup.getGroupName());
+        }
+
+        String level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_SSOMANAGE_QUERY_PATH);
+        List<RouterGroup> routerGroupList = new ArrayList<>();
+        if (Integer.valueOf(level) == 1) {
+            //全部数据
+            routerGroupList = this.selectByCriteria(routerGroupCriteria);
+        } else if (Integer.valueOf(level) == 2) {
+            //非Garnet数据
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdEqualTo(GarnetContants.GARNET_TENANT_ID);
+            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+            // Garnet租户关联的应用Id
+            List<Long> applicationIdList = new ArrayList<>();
+            for (ApplicationTenant applicationTenant : applicationTenantList) {
+                applicationIdList.add(applicationTenant.getApplicationId());
+            }
+
+            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+            applicationCriteria.createCriteria().andIdIn(applicationIdList).andStatusEqualTo(1);
+            List<Application> applicationList = applicationService.selectByCriteria(applicationCriteria);
+            List<String> appCodeList = new ArrayList<>();
+            for (Application application : applicationList) {
+                appCodeList.add(application.getAppCode());
+            }
+
+            criteria.andAppCodeNotIn(appCodeList);
+            routerGroupList = this.selectByCriteria(routerGroupCriteria);
+        } else if (Integer.valueOf(level) == 3) {
+            List<Tenant> tenantList = tenantService.getTenantManageListByUserId(userId);
+            List<Long> tenantIdList = new ArrayList<>();
+            for (Tenant tenant : tenantList) {
+                tenantIdList.add(tenant.getId());
+            }
+            if (tenantIdList.size() == 0) {
+                tenantIdList.add(GarnetContants.NON_VALUE);
+            }
+
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdIn(tenantIdList);
+            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+            List<Long> applicationIdList = new ArrayList<>();
+            for (ApplicationTenant applicationTenant : applicationTenantList) {
+                applicationIdList.add(applicationTenant.getApplicationId());
+            }
+
+            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+            applicationCriteria.createCriteria().andIdIn(applicationIdList).andStatusEqualTo(1);
+            List<Application> applicationList = applicationService.selectByCriteria(applicationCriteria);
+            List<String> appCodeList = new ArrayList<>();
+            for (Application application : applicationList) {
+                appCodeList.add(application.getAppCode());
+            }
+
+            criteria.andAppCodeIn(appCodeList);
+            routerGroupList = this.selectByCriteria(routerGroupCriteria);
+        }
+
+        List<RouterGroup> routerGroups = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(routerGroupList)) {
+            //根据groupName进行去重
+            Set<String> groupNameSet = new HashSet<>();
+            for (RouterGroup routerGroup1 : routerGroupList) {
+                String groupName = routerGroup1.getGroupName();
+                if (!groupNameSet.contains(groupName)) {
+                    groupNameSet.add(groupName);
+                    routerGroups.add(routerGroup1);
+                }
+            }
+        }
+
+        //添加应用名
+        List<RouterGroupView> routerGroupViewList = this.returnWithAppNames(routerGroups);
+
+        PageUtil result = new PageUtil(routerGroupViewList, routerGroupViewList.size() ,routerGroupParm.getPageSize(),routerGroupParm.getPageNumber());
+        return result;
     }
 
     public List<RouterGroup> dealRouterGroupListIfGarnet(Long userId, List<RouterGroup> routerGroups) {

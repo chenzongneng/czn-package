@@ -198,6 +198,7 @@ public class ApplicationController {
             @ApiParam(value = "用户名Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户Id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
             @ApiParam(value = "searchName", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
+            @ApiParam(value = "queryOrTree", defaultValue = "", required = false) @RequestParam(value = "queryOrTree", defaultValue = "", required = false) String queryOrTree,
             @ApiParam(value = "modeId", defaultValue = "", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) Integer modeId,
             @ApiParam(value = "mode", defaultValue = "", required = false) @RequestParam(value = "mode", defaultValue = "", required = false) String  mode,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
@@ -211,7 +212,8 @@ public class ApplicationController {
             applicationParm.setPageSize(pageSize);
             applicationParm.setSearchName(searchName);
             applicationParm.setMode(mode);
-            PageUtil applications = applicationService.queryApplicationsByParms(applicationParm);
+            applicationParm.setQueryOrTree(queryOrTree);
+            PageUtil applications = applicationService.getApplicationsByParams(applicationParm);
 
             // 封装返回信息
             return new ResponseEntity<>(applications, HttpStatus.OK);
@@ -333,6 +335,32 @@ public class ApplicationController {
             // 封装返回信息
             return new ResponseEntity<>(redirectView, HttpStatus.OK);
 
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]根据userId和tenantId获取应用列表", notes = "通过用户名获取默认应用首页URL列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/applications/byuseridandtenantid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getApplicationsByUserIdAndTenantId(
+            @ApiParam(value = "用户ID", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = true) Long userId,
+            @ApiParam(value = "租户ID", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
+            @ApiParam(value = "资源路径", defaultValue = "", required = false) @RequestParam(value = "path", defaultValue = "", required = false) String path,
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token) {
+        try {
+            ApplicationParm applicationParm = new ApplicationParm();
+            applicationParm.setUserId(userId);
+            applicationParm.setTenantId(tenantId);
+            applicationParm.setPath(path);
+            List<Application> applicationList = applicationService.getApplicationsByUserIdAndTenantId(applicationParm);
+            // 封装返回信息
+            return new ResponseEntity<>(applicationList, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);

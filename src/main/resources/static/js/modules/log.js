@@ -83,7 +83,7 @@ var vm = new Vue({
     methods: {
         /**  查询按钮点击事件 */
         query: function () {
-            vm.reload();
+            vm.reload(true);
         },
         /**  详情按钮点击事件 */
         detail: function () {
@@ -125,10 +125,17 @@ var vm = new Vue({
                 }
             }
         },
-        reload: function (event) {
-            var page = $("#jqGrid").jqGrid('getGridParam', 'page');
+        reload: function (backFirst) {
+            var page;
+            if(backFirst) {
+                page = 1;
+            }else {
+                page = $("#jqGrid").jqGrid('getGridParam', 'page');
+            }
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {searchName: vm.searchName},
+                postData: {
+                    searchName: vm.searchName
+                },
                 page: page
             }).trigger("reloadGrid");
         },

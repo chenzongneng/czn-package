@@ -1,5 +1,7 @@
 package com.richstonedt.garnet.service;
 
+import com.richstonedt.garnet.model.Log;
+import com.richstonedt.garnet.model.ResourceDynamicProperty;
 import com.richstonedt.garnet.model.RouterGroup;
 
 import java.net.UnknownHostException;
@@ -30,7 +32,19 @@ public interface CommonService{
      */
     List<Long> dealGroupIdsIfGarnet(Long userId, List<Long> groupIds);
 
-    boolean insertLog(String meaasge, String operation);
+    /**
+     * 插入日志信息
+     * @param log
+     * @return
+     */
+    boolean insertLog(Log log);
+
+    /**
+     * 根据用户Id，返回去除Garnet后的租户列表
+     * @param userId
+     * @return
+     */
+    List<Long> getTenantIdsNotGarnet(Long userId);
 
 //    String getCookieValue(String cookie, String name);
 

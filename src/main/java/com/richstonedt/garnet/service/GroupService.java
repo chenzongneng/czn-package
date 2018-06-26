@@ -1,5 +1,6 @@
 package com.richstonedt.garnet.service;
 
+import com.github.pagehelper.Page;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.model.Group;
 import com.richstonedt.garnet.model.criteria.GroupCriteria;
@@ -79,5 +80,18 @@ public interface GroupService extends BaseService<Group, GroupCriteria, Long> {
      */
     public List<Group> queryGroupsByParams(GroupParm groupParm);
 
+    /**
+     * Garnet组
+     * @param userId
+     * @return
+     */
+    List<Group> getGarnetGroupList(Long userId);
+
+    /**
+     * 查询组列表
+     * @param groupParm
+     * @return
+     */
+    PageUtil getGroupsByParams(GroupParm groupParm);
 
 }

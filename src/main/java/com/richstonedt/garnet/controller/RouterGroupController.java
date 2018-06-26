@@ -177,7 +177,7 @@ public class RouterGroupController {
             routerGroupParm.setSearchName(searchName);
             routerGroupParm.setPageNumber(pageNumber);
             routerGroupParm.setPageSize(pageSize);
-            PageUtil rolePageInfo = routerGroupService.queryRouterGroupByParms(routerGroupParm);
+            PageUtil rolePageInfo = routerGroupService.getRouterGroupsByParams(routerGroupParm);
             // 封装返回信息
             return new ResponseEntity<>(rolePageInfo, HttpStatus.OK);
         } catch (Throwable t) {

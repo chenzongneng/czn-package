@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="application_id" jdbcType="BIGINT" property="applicationId" />
@@ -46,12 +46,13 @@
     <result column="boolean_03" jdbcType="BIT" property="boolean03" />
     <result column="boolean_04" jdbcType="BIT" property="boolean04" />
     <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -85,7 +86,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -119,19 +120,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
-    id, application_id, path, actions, name, created_time, modified_time, type, tenant_id, 
-    varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06, 
-    varchar_07, varchar_08, varchar_09, varchar_10, varchar_11, varchar_12, varchar_13, 
-    varchar_14, varchar_15, varchar_16, varchar_17, varchar_18, varchar_19, int_01, int_02, 
-    int_03, int_04, int_05, boolean_01, boolean_02, boolean_03, boolean_04, updated_by_user_name
+    id, application_id, path, actions, name, created_time, modified_time, type, tenant_id,
+    varchar_00, varchar_01, varchar_02, varchar_03, varchar_04, varchar_05, varchar_06,
+    varchar_07, varchar_08, varchar_09, varchar_10, varchar_11, varchar_12, varchar_13,
+    varchar_14, varchar_15, varchar_16, varchar_17, varchar_18, varchar_19, int_01, int_02,
+    int_03, int_04, int_05, boolean_01, boolean_02, boolean_03, boolean_04, updated_by_user_name,
+    remark
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     select
     <if test="distinct">
@@ -153,9 +155,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
-    select 
+    select
     <include refid="Base_Column_List" />
     from gar_resources
     where id = #{id,jdbcType=BIGINT}
@@ -164,7 +166,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     delete from gar_resources
     where id = #{id,jdbcType=BIGINT}
@@ -173,7 +175,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     delete from gar_resources
     <if test="_parameter != null">
@@ -184,42 +186,42 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
-    insert into gar_resources (id, application_id, path, 
-      actions, name, created_time, 
-      modified_time, type, tenant_id, 
-      varchar_00, varchar_01, varchar_02, 
-      varchar_03, varchar_04, varchar_05, 
-      varchar_06, varchar_07, varchar_08, 
-      varchar_09, varchar_10, varchar_11, 
-      varchar_12, varchar_13, varchar_14, 
-      varchar_15, varchar_16, varchar_17, 
-      varchar_18, varchar_19, int_01, 
-      int_02, int_03, int_04, 
-      int_05, boolean_01, boolean_02, 
-      boolean_03, boolean_04, updated_by_user_name
-      )
-    values (#{id,jdbcType=BIGINT}, #{applicationId,jdbcType=BIGINT}, #{path,jdbcType=VARCHAR}, 
-      #{actions,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT}, 
-      #{modifiedTime,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{varchar00,jdbcType=VARCHAR}, #{varchar01,jdbcType=VARCHAR}, #{varchar02,jdbcType=VARCHAR}, 
-      #{varchar03,jdbcType=VARCHAR}, #{varchar04,jdbcType=VARCHAR}, #{varchar05,jdbcType=VARCHAR}, 
-      #{varchar06,jdbcType=VARCHAR}, #{varchar07,jdbcType=VARCHAR}, #{varchar08,jdbcType=VARCHAR}, 
-      #{varchar09,jdbcType=VARCHAR}, #{varchar10,jdbcType=VARCHAR}, #{varchar11,jdbcType=VARCHAR}, 
-      #{varchar12,jdbcType=VARCHAR}, #{varchar13,jdbcType=VARCHAR}, #{varchar14,jdbcType=VARCHAR}, 
-      #{varchar15,jdbcType=VARCHAR}, #{varchar16,jdbcType=VARCHAR}, #{varchar17,jdbcType=VARCHAR}, 
-      #{varchar18,jdbcType=VARCHAR}, #{varchar19,jdbcType=VARCHAR}, #{int01,jdbcType=INTEGER}, 
-      #{int02,jdbcType=INTEGER}, #{int03,jdbcType=INTEGER}, #{int04,jdbcType=INTEGER}, 
-      #{int05,jdbcType=INTEGER}, #{boolean01,jdbcType=BIT}, #{boolean02,jdbcType=BIT}, 
-      #{boolean03,jdbcType=BIT}, #{boolean04,jdbcType=BIT}, #{updatedByUserName,jdbcType=VARCHAR}
-      )
+    insert into gar_resources (id, application_id, path,
+    actions, name, created_time,
+    modified_time, type, tenant_id,
+    varchar_00, varchar_01, varchar_02,
+    varchar_03, varchar_04, varchar_05,
+    varchar_06, varchar_07, varchar_08,
+    varchar_09, varchar_10, varchar_11,
+    varchar_12, varchar_13, varchar_14,
+    varchar_15, varchar_16, varchar_17,
+    varchar_18, varchar_19, int_01,
+    int_02, int_03, int_04,
+    int_05, boolean_01, boolean_02,
+    boolean_03, boolean_04, updated_by_user_name,
+    remark)
+    values (#{id,jdbcType=BIGINT}, #{applicationId,jdbcType=BIGINT}, #{path,jdbcType=VARCHAR},
+    #{actions,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=BIGINT},
+    #{modifiedTime,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT},
+    #{varchar00,jdbcType=VARCHAR}, #{varchar01,jdbcType=VARCHAR}, #{varchar02,jdbcType=VARCHAR},
+    #{varchar03,jdbcType=VARCHAR}, #{varchar04,jdbcType=VARCHAR}, #{varchar05,jdbcType=VARCHAR},
+    #{varchar06,jdbcType=VARCHAR}, #{varchar07,jdbcType=VARCHAR}, #{varchar08,jdbcType=VARCHAR},
+    #{varchar09,jdbcType=VARCHAR}, #{varchar10,jdbcType=VARCHAR}, #{varchar11,jdbcType=VARCHAR},
+    #{varchar12,jdbcType=VARCHAR}, #{varchar13,jdbcType=VARCHAR}, #{varchar14,jdbcType=VARCHAR},
+    #{varchar15,jdbcType=VARCHAR}, #{varchar16,jdbcType=VARCHAR}, #{varchar17,jdbcType=VARCHAR},
+    #{varchar18,jdbcType=VARCHAR}, #{varchar19,jdbcType=VARCHAR}, #{int01,jdbcType=INTEGER},
+    #{int02,jdbcType=INTEGER}, #{int03,jdbcType=INTEGER}, #{int04,jdbcType=INTEGER},
+    #{int05,jdbcType=INTEGER}, #{boolean01,jdbcType=BIT}, #{boolean02,jdbcType=BIT},
+    #{boolean03,jdbcType=BIT}, #{boolean04,jdbcType=BIT}, #{updatedByUserName,jdbcType=VARCHAR},
+    #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Resource">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     insert into gar_resources
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -339,6 +341,9 @@
       </if>
       <if test="updatedByUserName != null">
         updated_by_user_name,
+      </if>
+      <if test="remark != null">
+        remark,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -459,13 +464,16 @@
       <if test="updatedByUserName != null">
         #{updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     select count(*) from gar_resources
     <if test="_parameter != null">
@@ -476,7 +484,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     update gar_resources
     <set>
@@ -597,6 +605,9 @@
       <if test="record.updatedByUserName != null">
         updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -606,48 +617,49 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     update gar_resources
     set id = #{record.id,jdbcType=BIGINT},
-      application_id = #{record.applicationId,jdbcType=BIGINT},
-      path = #{record.path,jdbcType=VARCHAR},
-      actions = #{record.actions,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
-      created_time = #{record.createdTime,jdbcType=BIGINT},
-      modified_time = #{record.modifiedTime,jdbcType=BIGINT},
-      type = #{record.type,jdbcType=VARCHAR},
-      tenant_id = #{record.tenantId,jdbcType=BIGINT},
-      varchar_00 = #{record.varchar00,jdbcType=VARCHAR},
-      varchar_01 = #{record.varchar01,jdbcType=VARCHAR},
-      varchar_02 = #{record.varchar02,jdbcType=VARCHAR},
-      varchar_03 = #{record.varchar03,jdbcType=VARCHAR},
-      varchar_04 = #{record.varchar04,jdbcType=VARCHAR},
-      varchar_05 = #{record.varchar05,jdbcType=VARCHAR},
-      varchar_06 = #{record.varchar06,jdbcType=VARCHAR},
-      varchar_07 = #{record.varchar07,jdbcType=VARCHAR},
-      varchar_08 = #{record.varchar08,jdbcType=VARCHAR},
-      varchar_09 = #{record.varchar09,jdbcType=VARCHAR},
-      varchar_10 = #{record.varchar10,jdbcType=VARCHAR},
-      varchar_11 = #{record.varchar11,jdbcType=VARCHAR},
-      varchar_12 = #{record.varchar12,jdbcType=VARCHAR},
-      varchar_13 = #{record.varchar13,jdbcType=VARCHAR},
-      varchar_14 = #{record.varchar14,jdbcType=VARCHAR},
-      varchar_15 = #{record.varchar15,jdbcType=VARCHAR},
-      varchar_16 = #{record.varchar16,jdbcType=VARCHAR},
-      varchar_17 = #{record.varchar17,jdbcType=VARCHAR},
-      varchar_18 = #{record.varchar18,jdbcType=VARCHAR},
-      varchar_19 = #{record.varchar19,jdbcType=VARCHAR},
-      int_01 = #{record.int01,jdbcType=INTEGER},
-      int_02 = #{record.int02,jdbcType=INTEGER},
-      int_03 = #{record.int03,jdbcType=INTEGER},
-      int_04 = #{record.int04,jdbcType=INTEGER},
-      int_05 = #{record.int05,jdbcType=INTEGER},
-      boolean_01 = #{record.boolean01,jdbcType=BIT},
-      boolean_02 = #{record.boolean02,jdbcType=BIT},
-      boolean_03 = #{record.boolean03,jdbcType=BIT},
-      boolean_04 = #{record.boolean04,jdbcType=BIT},
-      updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR}
+    application_id = #{record.applicationId,jdbcType=BIGINT},
+    path = #{record.path,jdbcType=VARCHAR},
+    actions = #{record.actions,jdbcType=VARCHAR},
+    name = #{record.name,jdbcType=VARCHAR},
+    created_time = #{record.createdTime,jdbcType=BIGINT},
+    modified_time = #{record.modifiedTime,jdbcType=BIGINT},
+    type = #{record.type,jdbcType=VARCHAR},
+    tenant_id = #{record.tenantId,jdbcType=BIGINT},
+    varchar_00 = #{record.varchar00,jdbcType=VARCHAR},
+    varchar_01 = #{record.varchar01,jdbcType=VARCHAR},
+    varchar_02 = #{record.varchar02,jdbcType=VARCHAR},
+    varchar_03 = #{record.varchar03,jdbcType=VARCHAR},
+    varchar_04 = #{record.varchar04,jdbcType=VARCHAR},
+    varchar_05 = #{record.varchar05,jdbcType=VARCHAR},
+    varchar_06 = #{record.varchar06,jdbcType=VARCHAR},
+    varchar_07 = #{record.varchar07,jdbcType=VARCHAR},
+    varchar_08 = #{record.varchar08,jdbcType=VARCHAR},
+    varchar_09 = #{record.varchar09,jdbcType=VARCHAR},
+    varchar_10 = #{record.varchar10,jdbcType=VARCHAR},
+    varchar_11 = #{record.varchar11,jdbcType=VARCHAR},
+    varchar_12 = #{record.varchar12,jdbcType=VARCHAR},
+    varchar_13 = #{record.varchar13,jdbcType=VARCHAR},
+    varchar_14 = #{record.varchar14,jdbcType=VARCHAR},
+    varchar_15 = #{record.varchar15,jdbcType=VARCHAR},
+    varchar_16 = #{record.varchar16,jdbcType=VARCHAR},
+    varchar_17 = #{record.varchar17,jdbcType=VARCHAR},
+    varchar_18 = #{record.varchar18,jdbcType=VARCHAR},
+    varchar_19 = #{record.varchar19,jdbcType=VARCHAR},
+    int_01 = #{record.int01,jdbcType=INTEGER},
+    int_02 = #{record.int02,jdbcType=INTEGER},
+    int_03 = #{record.int03,jdbcType=INTEGER},
+    int_04 = #{record.int04,jdbcType=INTEGER},
+    int_05 = #{record.int05,jdbcType=INTEGER},
+    boolean_01 = #{record.boolean01,jdbcType=BIT},
+    boolean_02 = #{record.boolean02,jdbcType=BIT},
+    boolean_03 = #{record.boolean03,jdbcType=BIT},
+    boolean_04 = #{record.boolean04,jdbcType=BIT},
+    updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -656,7 +668,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     update gar_resources
     <set>
@@ -774,6 +786,9 @@
       <if test="updatedByUserName != null">
         updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -781,54 +796,55 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     update gar_resources
     set application_id = #{applicationId,jdbcType=BIGINT},
-      path = #{path,jdbcType=VARCHAR},
-      actions = #{actions,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      created_time = #{createdTime,jdbcType=BIGINT},
-      modified_time = #{modifiedTime,jdbcType=BIGINT},
-      type = #{type,jdbcType=VARCHAR},
-      tenant_id = #{tenantId,jdbcType=BIGINT},
-      varchar_00 = #{varchar00,jdbcType=VARCHAR},
-      varchar_01 = #{varchar01,jdbcType=VARCHAR},
-      varchar_02 = #{varchar02,jdbcType=VARCHAR},
-      varchar_03 = #{varchar03,jdbcType=VARCHAR},
-      varchar_04 = #{varchar04,jdbcType=VARCHAR},
-      varchar_05 = #{varchar05,jdbcType=VARCHAR},
-      varchar_06 = #{varchar06,jdbcType=VARCHAR},
-      varchar_07 = #{varchar07,jdbcType=VARCHAR},
-      varchar_08 = #{varchar08,jdbcType=VARCHAR},
-      varchar_09 = #{varchar09,jdbcType=VARCHAR},
-      varchar_10 = #{varchar10,jdbcType=VARCHAR},
-      varchar_11 = #{varchar11,jdbcType=VARCHAR},
-      varchar_12 = #{varchar12,jdbcType=VARCHAR},
-      varchar_13 = #{varchar13,jdbcType=VARCHAR},
-      varchar_14 = #{varchar14,jdbcType=VARCHAR},
-      varchar_15 = #{varchar15,jdbcType=VARCHAR},
-      varchar_16 = #{varchar16,jdbcType=VARCHAR},
-      varchar_17 = #{varchar17,jdbcType=VARCHAR},
-      varchar_18 = #{varchar18,jdbcType=VARCHAR},
-      varchar_19 = #{varchar19,jdbcType=VARCHAR},
-      int_01 = #{int01,jdbcType=INTEGER},
-      int_02 = #{int02,jdbcType=INTEGER},
-      int_03 = #{int03,jdbcType=INTEGER},
-      int_04 = #{int04,jdbcType=INTEGER},
-      int_05 = #{int05,jdbcType=INTEGER},
-      boolean_01 = #{boolean01,jdbcType=BIT},
-      boolean_02 = #{boolean02,jdbcType=BIT},
-      boolean_03 = #{boolean03,jdbcType=BIT},
-      boolean_04 = #{boolean04,jdbcType=BIT},
-      updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR}
+    path = #{path,jdbcType=VARCHAR},
+    actions = #{actions,jdbcType=VARCHAR},
+    name = #{name,jdbcType=VARCHAR},
+    created_time = #{createdTime,jdbcType=BIGINT},
+    modified_time = #{modifiedTime,jdbcType=BIGINT},
+    type = #{type,jdbcType=VARCHAR},
+    tenant_id = #{tenantId,jdbcType=BIGINT},
+    varchar_00 = #{varchar00,jdbcType=VARCHAR},
+    varchar_01 = #{varchar01,jdbcType=VARCHAR},
+    varchar_02 = #{varchar02,jdbcType=VARCHAR},
+    varchar_03 = #{varchar03,jdbcType=VARCHAR},
+    varchar_04 = #{varchar04,jdbcType=VARCHAR},
+    varchar_05 = #{varchar05,jdbcType=VARCHAR},
+    varchar_06 = #{varchar06,jdbcType=VARCHAR},
+    varchar_07 = #{varchar07,jdbcType=VARCHAR},
+    varchar_08 = #{varchar08,jdbcType=VARCHAR},
+    varchar_09 = #{varchar09,jdbcType=VARCHAR},
+    varchar_10 = #{varchar10,jdbcType=VARCHAR},
+    varchar_11 = #{varchar11,jdbcType=VARCHAR},
+    varchar_12 = #{varchar12,jdbcType=VARCHAR},
+    varchar_13 = #{varchar13,jdbcType=VARCHAR},
+    varchar_14 = #{varchar14,jdbcType=VARCHAR},
+    varchar_15 = #{varchar15,jdbcType=VARCHAR},
+    varchar_16 = #{varchar16,jdbcType=VARCHAR},
+    varchar_17 = #{varchar17,jdbcType=VARCHAR},
+    varchar_18 = #{varchar18,jdbcType=VARCHAR},
+    varchar_19 = #{varchar19,jdbcType=VARCHAR},
+    int_01 = #{int01,jdbcType=INTEGER},
+    int_02 = #{int02,jdbcType=INTEGER},
+    int_03 = #{int03,jdbcType=INTEGER},
+    int_04 = #{int04,jdbcType=INTEGER},
+    int_05 = #{int05,jdbcType=INTEGER},
+    boolean_01 = #{boolean01,jdbcType=BIT},
+    boolean_02 = #{boolean02,jdbcType=BIT},
+    boolean_03 = #{boolean03,jdbcType=BIT},
+    boolean_04 = #{boolean04,jdbcType=BIT},
+    updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
+    remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     select
     <if test="distinct">
@@ -847,7 +863,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     insert into gar_resources
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -968,8 +984,11 @@
       <if test="list[0].updatedByUserName!=null">
         updated_by_user_name,
       </if>
+      <if test="list[0].remark!=null">
+        remark,
+      </if>
     </trim>
-     values 
+    values
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -1089,6 +1108,9 @@
         <if test="item.updatedByUserName!=null">
           #{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
+        <if test="item.remark!=null">
+          #{item.remark,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -1096,7 +1118,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-03-30 13:23
+      DATE: 2018-06-19 10:11
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_resources
@@ -1215,8 +1237,11 @@
         <if test="item.updatedByUserName!=null">
           updated_by_user_name=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
+        <if test="item.remark!=null">
+          remark=#{item.remark,jdbcType=VARCHAR},
+        </if>
       </set>
-      where 
+      where
       id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>

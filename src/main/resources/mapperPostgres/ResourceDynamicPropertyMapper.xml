@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="type" jdbcType="VARCHAR" property="type" />
@@ -18,12 +18,13 @@
     <result column="updated_by_user_name" jdbcType="VARCHAR" property="updatedByUserName" />
     <result column="actions" jdbcType="VARCHAR" property="actions" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -57,7 +58,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -91,16 +92,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     id, type, remark, application_id, filed_name, description, created_time, modified_time,
-    updated_by_user_name, actions, tenant_id
+    updated_by_user_name, actions, tenant_id, name
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     select
     <if test="distinct">
@@ -122,7 +123,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     select
     <include refid="Base_Column_List" />
@@ -133,7 +134,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     delete from gar_resource_dynamic_props
     where id = #{id,jdbcType=BIGINT}
@@ -142,7 +143,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     delete from gar_resource_dynamic_props
     <if test="_parameter != null">
@@ -153,22 +154,24 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     insert into gar_resource_dynamic_props (id, type, remark,
     application_id, filed_name, description,
     created_time, modified_time, updated_by_user_name,
-    actions, tenant_id)
+    actions, tenant_id, name
+    )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
     #{applicationId,jdbcType=BIGINT}, #{filedName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
     #{createdTime,jdbcType=BIGINT}, #{modifiedTime,jdbcType=BIGINT}, #{updatedByUserName,jdbcType=VARCHAR},
-    #{actions,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT})
+    #{actions,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}
+    )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.ResourceDynamicProperty">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     insert into gar_resource_dynamic_props
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -204,6 +207,9 @@
       </if>
       <if test="tenantId != null">
         tenant_id,
+      </if>
+      <if test="name != null">
+        name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -240,13 +246,16 @@
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     select count(*) from gar_resource_dynamic_props
     <if test="_parameter != null">
@@ -257,7 +266,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     update gar_resource_dynamic_props
     <set>
@@ -294,6 +303,9 @@
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -303,7 +315,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     update gar_resource_dynamic_props
     set id = #{record.id,jdbcType=BIGINT},
@@ -316,7 +328,8 @@
     modified_time = #{record.modifiedTime,jdbcType=BIGINT},
     updated_by_user_name = #{record.updatedByUserName,jdbcType=VARCHAR},
     actions = #{record.actions,jdbcType=VARCHAR},
-    tenant_id = #{record.tenantId,jdbcType=BIGINT}
+    tenant_id = #{record.tenantId,jdbcType=BIGINT},
+    name = #{record.name,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -325,7 +338,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     update gar_resource_dynamic_props
     <set>
@@ -359,6 +372,9 @@
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -366,7 +382,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     update gar_resource_dynamic_props
     set type = #{type,jdbcType=VARCHAR},
@@ -378,14 +394,15 @@
     modified_time = #{modifiedTime,jdbcType=BIGINT},
     updated_by_user_name = #{updatedByUserName,jdbcType=VARCHAR},
     actions = #{actions,jdbcType=VARCHAR},
-    tenant_id = #{tenantId,jdbcType=BIGINT}
+    tenant_id = #{tenantId,jdbcType=BIGINT},
+    name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     select
     <if test="distinct">
@@ -404,7 +421,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     insert into gar_resource_dynamic_props
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -440,6 +457,9 @@
       </if>
       <if test="list[0].tenantId!=null">
         tenant_id,
+      </if>
+      <if test="list[0].name!=null">
+        name,
       </if>
     </trim>
     values
@@ -478,6 +498,9 @@
         <if test="item.tenantId!=null">
           #{item.tenantId,jdbcType=BIGINT},
         </if>
+        <if test="item.name!=null">
+          #{item.name,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -485,7 +508,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-09 15:20
+      DATE: 2018-06-19 10:11
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update gar_resource_dynamic_props
@@ -519,6 +542,9 @@
         </if>
         <if test="item.tenantId!=null">
           tenant_id=#{item.tenantId,jdbcType=BIGINT},
+        </if>
+        <if test="item.name!=null">
+          name=#{item.name,jdbcType=VARCHAR},
         </if>
       </set>
       where

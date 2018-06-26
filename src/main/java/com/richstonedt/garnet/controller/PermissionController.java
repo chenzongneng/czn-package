@@ -177,6 +177,8 @@ public class PermissionController {
     public ResponseEntity<?> getPermissions(
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
             @ApiParam(value = "用户id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
+            @ApiParam(value = "租户id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "", required = false) @RequestParam(value = "applicationId", defaultValue = "", required = false) Long applicationId,
             @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) Integer pageSize) {
@@ -187,7 +189,9 @@ public class PermissionController {
             permissionParm.setPageNumber(page);
             permissionParm.setPageSize(pageSize);
             permissionParm.setSearchName(searchName);
-            PageUtil permissionPageInfo = permissionService.queryPermissionsByParms(permissionParm);
+            permissionParm.setTenantId(tenantId);
+            permissionParm.setApplicationId(applicationId);
+            PageUtil permissionPageInfo = permissionService.getPermissionsByParams(permissionParm);
 
             return new ResponseEntity<>(permissionPageInfo, HttpStatus.OK);
         } catch (Throwable t) {

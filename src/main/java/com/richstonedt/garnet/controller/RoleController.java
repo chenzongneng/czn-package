@@ -178,6 +178,7 @@ public class RoleController {
     public ResponseEntity<?> getRolesView(
             @ApiParam(value = "用户id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户id", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "", required = false) @RequestParam(value = "applicationId", defaultValue = "", required = false) Long applicationId,
             @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
@@ -188,7 +189,9 @@ public class RoleController {
             roleParm.setSearchName(searchName );
             roleParm.setPageNumber(pageNumber);
             roleParm.setPageSize(pageSize);
-            PageUtil rolePageInfo = roleService.queryRolesByParms(roleParm);
+            roleParm.setTenantId(tenantId);
+            roleParm.setApplicationId(applicationId);
+            PageUtil rolePageInfo = roleService.getRolesByParams(roleParm);
 
             // 封装返回信息
             return new ResponseEntity<>(rolePageInfo, HttpStatus.OK);

@@ -175,6 +175,7 @@ public class GroupController {
     public ResponseEntity<?> getGroups(
             @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "租户id", defaultValue = "0", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
+            @ApiParam(value = "应用id", defaultValue = "0", required = false) @RequestParam(value = "applicationId", defaultValue = "", required = false) Long applicationId,
             @ApiParam(value = "查询条件", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int pageSize) {
@@ -185,7 +186,8 @@ public class GroupController {
             groupParm.setPageSize(pageSize);
             groupParm.setPageNumber(pageNumber);
             groupParm.setSearchName(searchName);
-            PageUtil pageInfo = groupService.queryGroupsByParms(groupParm);
+            groupParm.setApplicationId(applicationId);
+            PageUtil pageInfo = groupService.getGroupsByParams(groupParm);
             // 封装返回信息
             return new ResponseEntity<>(pageInfo, HttpStatus.OK);
         } catch (Throwable t) {
@@ -257,6 +259,25 @@ public class GroupController {
             groupParm.setTenantId(tenantId);
             groupParm.setApplicationId(applicationId);
             List<Group> groups = groupService.queryGroupsByParams(groupParm);
+            // 封装返回信息
+            return new ResponseEntity<>(groups, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]根据用户的权限（level）获取Garnet组列表", notes = "根据用户的权限（level）获取Garnet组列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/groups/bylevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getGarnetGroupByUserId(
+            @ApiParam(value = "用户id", defaultValue = "0", required = false) @RequestParam(value = "userId", defaultValue = "0", required = false) Long userId) {
+        try {
+            List<Group> groups = groupService.getGarnetGroupList(userId);
             // 封装返回信息
             return new ResponseEntity<>(groups, HttpStatus.OK);
         } catch (Throwable t) {

@@ -11,8 +11,8 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '动态资源配置ID', name: 'id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
-            {label: '名称', name: 'remark', align: 'center', width: 160 ,sortable: false},
-            {label: '代号', name: 'type', align: 'center', width: 80, sortable: false},
+            {label: '名称', name: 'name', align: 'center', width: 80 ,sortable: false},
+            {label: '代号', name: 'type', align: 'center', width: 120, sortable: false},
             {label: '创建时间', name: 'createdTime', formatter:timeFormat, align: 'center', width: 120 ,sortable: false},
             {label: '修改时间', name: 'modifiedTime', formatter:timeFormat, align: 'center', width: 120 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
@@ -77,6 +77,11 @@ var applicationList = {
     }
 };
 
+var tenantSearchList = {
+    searchTenant: "",
+    options: []
+};
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -88,11 +93,14 @@ var vm = new Vue({
         showParentCode: false,
         count: 0, // 添加新的一行时，计数已经添加了多少行
         title: null,
+        searchTenant: null,
+        searchApp: null,
         searchName: null,
         resourceDynamicPropertyList : [],
         resourceDynamicProperty: {
             id: null,
             type: null,
+            name: null,
             remark: null,
             actions: null,
             fieldName: null,
@@ -182,7 +190,7 @@ var vm = new Vue({
 
             $('#tips').hide();
             $('#checkResourceDyPropType').hide();
-            $('#checkResourceDyPropRemark').hide();
+            $('#checkResourceDyPropName').hide();
 
             vm.showList = false;
             vm.showType = true;
@@ -203,6 +211,7 @@ var vm = new Vue({
             vm.resourceDynamicProperty = {
                 id: null,
                 type: null,
+                name: null,
                 remark: null,
                 actions: null,
                 tenantId: "",
@@ -228,7 +237,7 @@ var vm = new Vue({
         /**  更新按钮点击事件 */
         update: function () {
             $('#checkResourceDyPropType').hide();
-            $('#checkResourceDyPropRemark').hide();
+            $('#checkResourceDyPropName').hide();
 
             var resourceDynamicPropertyId = getSelectedRow();
             if (!resourceDynamicPropertyId) {
@@ -347,8 +356,13 @@ var vm = new Vue({
             obj.resourceDynamicProperty = vm.resourceDynamicProperty;
             obj.resourceDynamicPropertyList = vm.resourceDynamicPropertyList;
 
-            if(vm.resourceDynamicProperty.type == null || $.trim(vm.resourceDynamicProperty.type) == "") {
+            if(vm.resourceDynamicProperty.name == null || $.trim(vm.resourceDynamicProperty.name) == "") {
                 window.parent.swal("", "资源类型配置名称不能为空", "warning");
+                return;
+            }
+
+            if(vm.resourceDynamicProperty.type == null || $.trim(vm.resourceDynamicProperty.type) == "") {
+                window.parent.swal("", "资源类型配置代号不能为空", "warning");
                 return;
             }
 
@@ -401,10 +415,10 @@ var vm = new Vue({
                 return;
             }
 
-            if (vm.typeArray.sArray.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                window.parent.swal("", "请至少添加一行输入框", "warning");
-                return;
-            }
+            // if (vm.typeArray.sArray.length == 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
+            //     window.parent.swal("", "请至少添加一行输入框", "warning");
+            //     return;
+            // }
 
             /*检查名称和代号的唯一性开始*/
             var type = vm.resourceDynamicProperty.type;
@@ -423,7 +437,7 @@ var vm = new Vue({
                 }
             });
 
-            var remark = vm.resourceDynamicProperty.remark;
+            var name = vm.resourceDynamicProperty.name;
             var id = vm.resourceDynamicProperty.id;
             var b2 = false;
 
@@ -431,7 +445,7 @@ var vm = new Vue({
                 id = 0;
             }
 
-            $.get(baseURL + "/resourcedynamicpropertys/checkremark?remark=" + remark + "&id=" + id , function (response) {
+            $.get(baseURL + "/resourcedynamicpropertys/checkname?name=" + name + "&id=" + id , function (response) {
                 if (response.data == Boolean(false)) {
                     b2 = false;
                 } else {
@@ -518,6 +532,7 @@ var vm = new Vue({
                 vm.resourceDynamicProperty.applicationId = response.resourceDynamicProperty.applicationId;
                 vm.resourceDynamicProperty.tenantId = response.resourceDynamicProperty.tenantId;
                 vm.resourceDynamicProperty.type = response.resourceDynamicProperty.type;
+                vm.resourceDynamicProperty.name = response.resourceDynamicProperty.name;
                 vm.resourceDynamicProperty.remark = response.resourceDynamicProperty.remark;
                 vm.resourceDynamicProperty.actions = response.resourceDynamicProperty.actions;
                 vm.resourceDynamicPropertyList = response.resourceDynamicPropertyList;
@@ -548,7 +563,12 @@ var vm = new Vue({
                     vm.showTenant = true;
                 }
 
+                console.log("resourceDynamicPropertyList: " + JSON.stringify(vm.resourceDynamicPropertyList));
+
                 $.each(vm.resourceDynamicPropertyList,function (index, v) {
+                    if ((v.description == null || $.trim(v.description) == "") && (v.fieldName == null || $.trim(v.fieldName) == "")) {
+                        return true;
+                    }
 
                     var inputName;
                     var filedName = v.filedName;
@@ -589,8 +609,8 @@ var vm = new Vue({
                             var arr = [];
 
                             if (vm.typeArray.sArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                                window.parent.swal("", "请至少添加一行输入框", "warning");
-                                return;
+                                // window.parent.swal("", "请至少添加一行输入框", "warning");
+                                // return;
                             } else {
                                 for (var i=0; i<vm.typeArray.sArray.length-1; i++) {
                                     arr.push(vm.typeArray.sArray[i]);
@@ -602,8 +622,8 @@ var vm = new Vue({
                             var arr = [];
 
                             if (vm.typeArray.iArray.length-1 <= 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                                window.parent.swal("", "请至少添加一行输入框", "warning");
-                                return;
+                                // window.parent.swal("", "请至少添加一行输入框", "warning");
+                                // return;
                             } else {
                                 for (var i=0; i<vm.typeArray.iArray.length-1; i++) {
                                     arr.push(vm.typeArray.iArray[i]);
@@ -615,8 +635,8 @@ var vm = new Vue({
                             var arr = [];
 
                             if (vm.typeArray.bArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
-                                window.parent.swal("", "请至少添加一行输入框", "warning");
-                                return;
+                                // window.parent.swal("", "请至少添加一行输入框", "warning");
+                                // return;
                             } else {
                                 for (var i=0; i<vm.typeArray.bArray.length-1; i++) {
                                     arr.push(vm.typeArray.bArray[i]);
@@ -781,8 +801,8 @@ var vm = new Vue({
                 if (inputName == "字符型") {
                     var arr = [];
                     if (vm.typeArray.sArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                        window.parent.swal("", "请至少添加一行输入框", "warning");
-                        return;
+                        // window.parent.swal("", "请至少添加一行输入框", "warning");
+                        // return;
                     } else {
                         for (var i=0; i<vm.typeArray.sArray.length-1; i++) {
                             arr.push(vm.typeArray.sArray[i]);
@@ -795,8 +815,8 @@ var vm = new Vue({
                 } else if (inputName == "整型") {
                     var arr = [];
                     if (vm.typeArray.iArray.length-1 <= 0 && vm.typeArray.sArray.length == 0 && vm.typeArray.bArray.length == 0) {
-                        window.parent.swal("", "请至少添加一行输入框", "warning");
-                        return;
+                        // window.parent.swal("", "请至少添加一行输入框", "warning");
+                        // return;
                     } else {
                         for (var i=0; i<vm.typeArray.iArray.length-1; i++) {
                             arr.push(vm.typeArray.iArray[i]);
@@ -808,8 +828,8 @@ var vm = new Vue({
                     var arr = [];
 
                     if (vm.typeArray.bArray.length-1 <= 0 && vm.typeArray.iArray.length == 0 && vm.typeArray.sArray.length == 0) {
-                        window.parent.swal("", "请至少添加一行输入框", "warning");
-                        return;
+                        // window.parent.swal("", "请至少添加一行输入框", "warning");
+                        // return;
                     } else {
                         for (var i=0; i<vm.typeArray.bArray.length-1; i++) {
                             arr.push(vm.typeArray.bArray[i]);
@@ -845,19 +865,19 @@ var vm = new Vue({
             });
         },
         /*检查资源配置名称是否已被使用*/
-        checkResourceDyPropRemark: function () {
-            var remark = $('#resourceDyPropRemark').val();
+        checkResourceDyPropName: function () {
+            var name = $('#resourceDyPropName').val();
             var id = vm.resourceDynamicProperty.id;
 
             if (id == null) {
                 id = 0;
             }
 
-            $.get(baseURL + "/resourcedynamicpropertys/checkremark?remark=" + remark + "&id=" + id , function (response) {
+            $.get(baseURL + "/resourcedynamicpropertys/checkname?name=" + name + "&id=" + id , function (response) {
                 if (response.data == Boolean(false)) {
-                    $('#checkResourceDyPropRemark').show();
+                    $('#checkResourceDyPropName').show();
                 } else {
-                    $('#checkResourceDyPropRemark').hide();
+                    $('#checkResourceDyPropName').hide();
                 }
 
             });
@@ -875,10 +895,46 @@ var vm = new Vue({
                 postData: {
                     searchName: vm.searchName,
                     type: vm.type,
-                    applicationId: vm.option.appSearchId
+                    applicationId: applicationList.appSearchList.selectedApp,
+                    tenantId: tenantSearchList.searchTenant
                 },
                 page: page
             }).trigger("reloadGrid");
+        },
+        dealTypeList: function () {
+            var path = "/garnet/option/resourceTypeManage/types";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                var type = response.data;
+                if (type == "001") {
+                    //应用级
+                    $("#typeList option[value='1']").remove();
+                    $("#typeList option[value='3']").remove();
+                } else if (type == "010"){
+                    //租户级
+                    $("#typeList option[value='2']").remove();
+                    $("#typeList option[value='3']").remove();
+                } else if (type == "100") {
+                    //租户+应用
+                    $("#typeList option[value='1']").remove();
+                    $("#typeList option[value='2']").remove();
+                } else if (type == "011") {
+                    //应用级、租户级
+                    $("#typeList option[value='3']").remove();
+                } else if (type == "101") {
+                    //应用级、租户+应用
+                    $("#typeList option[value='1']").remove();
+                } else if (type == "110") {
+                    //租户级、租户+应用
+                    $("#typeList option[value='2']").remove();
+                } else if (type == "111") {
+                    //应用级、租户级、租户+应用
+                } else {
+                    $("#typeList option[value='1']").remove();
+                    $("#typeList option[value='2']").remove();
+                    $("#typeList option[value='3']").remove();
+                }
+            });
+
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
@@ -887,9 +943,12 @@ var vm = new Vue({
         },
         /*租户列表onchange事件*/
         selectTenant: function () {
+            applicationList.appList.options = [];
+            applicationList.appList.selectedApp = "";
+            vm.getAppList();
           // vm.getTenantList();
         },
-        /*类型列表onchangegkwr*/
+        /*类型列表onchange事件*/
         selectType: function () {
             var selectedType = vm.typeList.selectedType;
             if (selectedType == 1) {
@@ -900,6 +959,10 @@ var vm = new Vue({
                 vm.resourceDynamicProperty.tenantId = null;
                 vm.showTenant = true;
                 vm.showApplication = false;
+
+                applicationList.appList.options = [];
+                vm.tenantList.options = [];
+                vm.getTenantList();
             } else if (selectedType == 2) {
                 //应用级
                 vm.tenantList.selectedTenant = "";
@@ -908,6 +971,10 @@ var vm = new Vue({
                 vm.resourceDynamicProperty.applicationId = null;
                 vm.showTenant = false;
                 vm.showApplication = true;
+
+                applicationList.appList.options = [];
+                vm.tenantList.options = [];
+                vm.getAppList();
             } else {
                 //租户+应用
                 vm.tenantList.selectedTenant = "";
@@ -916,26 +983,67 @@ var vm = new Vue({
                 vm.resourceDynamicProperty.applicationId = null;
                 vm.showApplication = true;
                 vm.showTenant = true;
+
+                applicationList.appList.options = [];
+                vm.tenantList.options = [];
+                vm.getTenantList();
             }
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
-                $.each(response.list, function (index, item) {
-                    // vm.appList.options.push(item);
+            // $.get(baseURL + "applications?userId=" + userId + "&page=1&limit=1000", function (response) {
+            //     $.each(response.list, function (index, item) {
+            //         // vm.appList.options.push(item);
+            //         applicationList.appList.options.push(item);
+            //         applicationList.appSearchList.options.push(item);
+            //     })
+            // });
+
+            var tenantId = vm.tenantList.selectedTenant;
+            var path = "/garnet/data/resourceTypeManage/tenantList";
+            $.get(baseURL + "applications/byuseridandtenantid?userId=" + userId + "&tenantId=" + tenantId + "&path=" + path, function (response) {
+                $.each(response, function (index, item) {
                     applicationList.appList.options.push(item);
-                    applicationList.appSearchList.options.push(item);
+                    // applicationList.appSearchList.options.push(item);
                 })
             });
         },
         /**  获取租户列表 */
         getTenantList: function () {
-            $.get(baseURL + "tenants?userId=" + userId + "&page=1&limit=1000", function (response) {
-                $.each(response.list, function (index, item) {
+            // $.get(baseURL + "tenants?userId=" + userId + "&page=1&limit=1000", function (response) {
+            //     $.each(response.list, function (index, item) {
+            //         vm.tenantList.options.push(item);
+            //     })
+            // });
+            var path = "/garnet/data/resourceTypeManage/tenantList";
+            $.get(baseURL + "tenants/byuseridandpath?userId=" + userId + "&path=" + path, function (response) {
+                $.each(response.data, function (index, item) {
                     vm.tenantList.options.push(item);
                 })
             });
         },
+        getSearchTenantList: function () {
+            var path = "/garnet/data/resourceTypeManage/tenantList";
+            $.get(baseURL + "tenants/byuseridandpath?userId=" + userId + "&path=" + path, function (response) {
+                $.each(response.data, function (index, item) {
+                    tenantSearchList.options.push(item);
+                })
+            });
+        },
+        getSearchAppList: function () {
+            var path = "/garnet/data/resourceTypeManage/tenantList";
+            $.get(baseURL + "applications/byuseridandtenantid?userId=" + userId + "&path=" + path, function (response) {
+                $.each(response, function (index, item) {
+                    applicationList.appList.options.push(item);
+                    // applicationList.appSearchList.options.push(item);
+                })
+            });
+        },
+        getResourceByTeantIdAndAppId: function () {
+            vm.searchApp = applicationList.appSearchList.selectedApp;
+            vm.searchTenant = tenantSearchList.searchTenant;
+            vm.reload(true);
+        }
         /**  获取应用列表 */
         // getAppList: function () {
         //     $.get(baseURL + "applications?page=1&limit=1000", function (response) {
@@ -950,6 +1058,8 @@ var vm = new Vue({
     /**  初始化页面时执行该方法 */
     created: function () {
         // this.getCurrentUser();
-        this.getAppList();
+        // this.getAppList();
+        this.getSearchAppList();
+        this.getSearchTenantList();
     }
 });

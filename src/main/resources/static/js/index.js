@@ -384,7 +384,7 @@ $(window).on('resize', function () {
 
 hookAjax({
     open:function(arg,xhr){
-        var patrn = /.*checklogined.*/;
+        var patrn = /.*checklogined.*!/;
         var patrn2 = /.*garnetrefreshtoken.*/;
         var url = arg[1];
         // console.log("url: " + url);

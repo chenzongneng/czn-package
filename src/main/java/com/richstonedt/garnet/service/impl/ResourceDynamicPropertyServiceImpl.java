@@ -3,21 +3,21 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.ResourceDynamicPropertyMapper;
 import com.richstonedt.garnet.model.Log;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.ResourceDynamicProperty;
+import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria;
 import com.richstonedt.garnet.model.parm.ResourceDynamicPropertyParm;
 import com.richstonedt.garnet.model.view.ResourceDynamicPropertyView;
 import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
-import com.richstonedt.garnet.service.CommonService;
-import com.richstonedt.garnet.service.ResourceDynamicPropertyService;
-import com.richstonedt.garnet.service.ResourceService;
-import com.richstonedt.garnet.service.UserService;
+import com.richstonedt.garnet.service.*;
+import org.hibernate.validator.constraints.ModCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +31,8 @@ import java.util.*;
 @Transactional
 public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<ResourceDynamicProperty, ResourceDynamicPropertyCriteria, Long> implements ResourceDynamicPropertyService {
 
+    private static final Long TENANTID_NULL = 0L;
+
     @Autowired
     private ResourceDynamicPropertyMapper resourceDynamicPropertyMapper;
 
@@ -43,55 +45,59 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TenantService tenantService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.resourceDynamicPropertyMapper;
     }
 
+    @LogRequired(module = "资源类型管理模块", method = "新增资源类型")
     @Override
     public void insertResourceDynamicProperty(ResourceDynamicPropertyView resourceDynamicPropertyView) {
 
         List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
-        if (!CollectionUtils.isEmpty(resourceDynamicProperties)) {
+//        if (!CollectionUtils.isEmpty(resourceDynamicProperties)) {
 
             if (ObjectUtils.isEmpty(resourceDynamicPropertyView.getResourceDynamicProperty())) {
                 throw new RuntimeException("ResourceDynamicProperty Can Not Be Null");
             }
 
             insertResourceDynamicProp(resourceDynamicPropertyView);
-        }
+//        }
     }
 
+    @LogRequired(module = "资源类型管理模块", method = "配置资源类型")
     @Override
     public void updateResourceDynamicProperty(ResourceDynamicPropertyView resourceDynamicPropertyView) {
         ResourceDynamicProperty resourceDynamicProperty = resourceDynamicPropertyView.getResourceDynamicProperty();
         List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
-        if (!CollectionUtils.isEmpty(resourceDynamicProperties)) {
-            if (ObjectUtils.isEmpty(resourceDynamicPropertyView.getResourceDynamicProperty())) {
-                throw new RuntimeException("ResourceDynamicProperty Can Not Be Null");
-            }
-            //删除type关联的所有数据
-//            String type = resourceDynamicProperties.get(0).getType();
-            //数据库中的type
-            Long id = resourceDynamicProperty.getId();
-            ResourceDynamicProperty resourceDynamicPropertyOld = this.selectByPrimaryKey(id);
-            String typeOld = resourceDynamicPropertyOld.getType();
-
-            String type = resourceDynamicProperty.getType();
-            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-            resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(typeOld);
-
-            List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
-            resourceDynamicProperty.setCreatedTime(resourceDynamicPropertyList.get(0).getCreatedTime());
-            resourceDynamicPropertyView.setResourceDynamicProperty(resourceDynamicProperty);
-
-            this.deleteByCriteria(resourceDynamicPropertyCriteria);
-            //插入修改的数据
-            insertResourceDynamicProp(resourceDynamicPropertyView);
-            //级联更新资源
-            updateResourcesWhenTypeChange(resourceDynamicPropertyView, typeOld);
-
+//        if (!CollectionUtils.isEmpty(resourceDynamicProperties)) {
+        if (ObjectUtils.isEmpty(resourceDynamicPropertyView.getResourceDynamicProperty())) {
+            throw new RuntimeException("ResourceDynamicProperty Can Not Be Null");
         }
+
+        //数据库中的type
+        Long id = resourceDynamicProperty.getId();
+         ResourceDynamicProperty resourceDynamicPropertyOld = this.selectByPrimaryKey(id);
+        String typeOld = resourceDynamicPropertyOld.getType();
+
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.createCriteria().andTypeEqualTo(typeOld);
+
+        List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        resourceDynamicProperty.setCreatedTime(resourceDynamicPropertyList.get(0).getCreatedTime());
+        resourceDynamicPropertyView.setResourceDynamicProperty(resourceDynamicProperty);
+
+        //删除旧的type
+        this.deleteByCriteria(resourceDynamicPropertyCriteria);
+        //插入修改的数据
+        insertResourceDynamicProp(resourceDynamicPropertyView);
+        //级联更新资源
+        updateResourcesWhenTypeChange(resourceDynamicPropertyView, typeOld);
+
+//        }
     }
 
     /**
@@ -102,28 +108,37 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         List<ResourceDynamicProperty> resourceDynamicProperties = resourceDynamicPropertyView.getResourceDynamicPropertyList();
         ResourceDynamicProperty resourceDynamicProperty1 = resourceDynamicPropertyView.getResourceDynamicProperty();
 
-        Long l = IdGeneratorUtil.generateId();
-        Long currentTime = System.currentTimeMillis();
-        for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
-            resourceDynamicProperty.setId(l);
-            resourceDynamicProperty.setActions(resourceDynamicProperty1.getActions());
-            resourceDynamicProperty.setType(resourceDynamicProperty1.getType());
-            resourceDynamicProperty.setRemark(resourceDynamicProperty1.getRemark());
-            resourceDynamicProperty.setApplicationId(resourceDynamicProperty1.getApplicationId());
-            resourceDynamicProperty.setTenantId(resourceDynamicProperty1.getTenantId());
-            resourceDynamicProperty.setUpdatedByUserName(resourceDynamicProperty1.getUpdatedByUserName());
-
+        //如果resourceDynamicProperties为0，即没有添加输入框
+        if (resourceDynamicProperties.size() == 0) {
+            Long currentTime = System.currentTimeMillis();
             if (ObjectUtils.isEmpty(resourceDynamicProperty1.getId())) {
-                resourceDynamicProperty.setCreatedTime(currentTime);
-            } else {
-                resourceDynamicProperty.setCreatedTime(resourceDynamicProperty1.getCreatedTime());
+                resourceDynamicProperty1.setId(IdGeneratorUtil.generateId());
+                resourceDynamicProperty1.setCreatedTime(currentTime);
             }
+            resourceDynamicProperty1.setModifiedTime(currentTime);
+            this.insertSelective(resourceDynamicProperty1);
+        } else {
+            Long l = IdGeneratorUtil.generateId();
+            Long currentTime = System.currentTimeMillis();
+            for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
+                resourceDynamicProperty.setId(l);
+                resourceDynamicProperty.setActions(resourceDynamicProperty1.getActions());
+                resourceDynamicProperty.setType(resourceDynamicProperty1.getType());
+                resourceDynamicProperty.setRemark(resourceDynamicProperty1.getRemark());
+                resourceDynamicProperty.setApplicationId(resourceDynamicProperty1.getApplicationId());
+                resourceDynamicProperty.setTenantId(resourceDynamicProperty1.getTenantId());
+                resourceDynamicProperty.setUpdatedByUserName(resourceDynamicProperty1.getUpdatedByUserName());
 
+                if (ObjectUtils.isEmpty(resourceDynamicProperty1.getId())) {
+                    resourceDynamicProperty.setCreatedTime(currentTime);
+                } else {
+                    resourceDynamicProperty.setCreatedTime(resourceDynamicProperty1.getCreatedTime());
+                }
 
-
-            resourceDynamicProperty.setModifiedTime(currentTime);
-            this.insertSelective(resourceDynamicProperty);
-            l += 1;
+                resourceDynamicProperty.setModifiedTime(currentTime);
+                this.insertSelective(resourceDynamicProperty);
+                l += 1;
+            }
         }
 
     }
@@ -195,6 +210,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         return result;
     }
 
+    @LogRequired(module = "资源类型管理模块", method = "删除资源类型")
     @Override
     public void deleteResourceDynamicPropertyWithType(ResourceDynamicPropertyView resourceDynamicPropertyView) {
 
@@ -274,13 +290,13 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
     }
 
     @Override
-    public boolean isRemarkUsed(Long id, String remark) {
-        if (ObjectUtils.isEmpty(id) || StringUtils.isEmpty(remark)) {
+    public boolean isResourceDyPropNameUsed(Long id, String name) {
+        if (ObjectUtils.isEmpty(id) || StringUtils.isEmpty(name)) {
             throw new RuntimeException("资源配置id和资源配置类型名称不能为空");
         }
 
         ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
-        resourceDynamicPropertyCriteria.createCriteria().andRemarkEqualTo(remark);
+        resourceDynamicPropertyCriteria.createCriteria().andNameEqualTo(name);
         List<ResourceDynamicProperty> resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
         boolean b = false;
         if (CollectionUtils.isEmpty(resourceDynamicPropertyList) || resourceDynamicPropertyList.size() <= 0) {
@@ -351,6 +367,89 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
         return resourceDynamicPropertyList;
     }
 
+    @LogRequired(module = "资源类型管理模块", method = "查询资源类型列表")
+    @Override
+    public PageUtil getResourceDynamicPropertiesByParams(ResourceDynamicPropertyParm resourceDynamicPropertyParm) {
+        Long userId = resourceDynamicPropertyParm.getUserId();
+        String type = resourceDynamicPropertyParm.getType();
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+        resourceDynamicPropertyCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
+        ResourceDynamicPropertyCriteria.Criteria criteria = resourceDynamicPropertyCriteria.createCriteria();
+
+        if (!StringUtils.isEmpty(type)) {
+            criteria.andTypeEqualTo(type);
+        }
+
+        Long applicationId = resourceDynamicPropertyParm.getApplicationId();
+        Long tenantId = resourceDynamicPropertyParm.getTenantId();
+        if (!ObjectUtils.isEmpty(applicationId) && applicationId.longValue() != 0) {
+            criteria.andApplicationIdEqualTo(applicationId);
+        }
+
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            criteria.andTenantIdEqualTo(tenantId);
+        }
+
+        if (!StringUtils.isEmpty(resourceDynamicPropertyParm.getSearchName())) {
+            criteria.andTypeLike("%" + resourceDynamicPropertyParm.getSearchName() + "%");
+        }
+
+        String level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_RESOURCETYPEMANAGE_QUERY_PATH);
+        List<ResourceDynamicProperty> resourceDynamicPropertyList = new ArrayList<>();
+        if (Integer.valueOf(level) == 1) {
+            //全部数据
+            resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        } else if (Integer.valueOf(level) == 2) {
+            //非Garnet数据
+            List<Long> tenantIdList = commonService.getTenantIdsNotGarnet(userId);
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria1 = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria1.createCriteria().andTenantIdIn(tenantIdList);
+            List<ResourceDynamicProperty> resourceDynamicPropertyList1 = this.selectByCriteria(resourceDynamicPropertyCriteria1);
+
+            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria2 = new ResourceDynamicPropertyCriteria();
+            resourceDynamicPropertyCriteria2.createCriteria().andTenantIdEqualTo(TENANTID_NULL);
+            List<ResourceDynamicProperty> resourceDynamicPropertyList2 = this.selectByCriteria(resourceDynamicPropertyCriteria2);
+
+            List<ResourceDynamicProperty> resourceDynamicPropertyList3 = new ArrayList<>();
+            resourceDynamicPropertyList3.addAll(resourceDynamicPropertyList1);
+            resourceDynamicPropertyList3.addAll(resourceDynamicPropertyList2);
+
+            List<Long> resourceDynamicPropIds = new ArrayList<>();
+            for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList3) {
+                resourceDynamicPropIds.add(resourceDynamicProperty.getId());
+            }
+
+            criteria.andIdIn(resourceDynamicPropIds);
+            resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        } else if (Integer.valueOf(level) == 3) {
+            //本用户为租户管理员的租户关联的资源类型(不包括租户字段为空[即应用级]的类型)
+            List<Tenant> tenantList = tenantService.getTenantManageListByUserId(userId);
+            List<Long> tenantIdList = new ArrayList<>();
+            for (Tenant tenant : tenantList) {
+                tenantIdList.add(tenant.getId());
+            }
+            if (tenantIdList.size() == 0) {
+                tenantIdList.add(GarnetContants.NON_VALUE);
+            }
+            criteria.andTenantIdIn(tenantIdList);
+            resourceDynamicPropertyList = this.selectByCriteria(resourceDynamicPropertyCriteria);
+        }
+
+        List<ResourceDynamicProperty> resourceDynamicProperties = new ArrayList<>();
+        //根据type进行去重
+        Set<String> typeSet = new HashSet<>();
+        for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicPropertyList) {
+            String type1 = resourceDynamicProperty.getType();
+            if (!typeSet.contains(type1)) {
+                typeSet.add(type1);
+                resourceDynamicProperties.add(resourceDynamicProperty);
+            }
+        }
+
+        PageUtil result = new PageUtil(resourceDynamicProperties, resourceDynamicProperties.size() ,resourceDynamicPropertyParm.getPageSize(),resourceDynamicPropertyParm.getPageNumber());
+        return result;
+    }
+
     private List<ResourceDynamicProperty> dealResourceDynamicPropertyIfGarnet(Long userId, List<ResourceDynamicProperty> resourceDynamicProperties) {
 
         ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(userId);
@@ -364,9 +463,11 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
 
                 String type = resourceDynamicProperty.getType();
-                if (!GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_APPCODE.equals(type)
+                if (!GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_BUTTON.equals(type)
+                        && !GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_MODULE.equals(type)
                         && !GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_SUPERADMIN.equals(type)
-                        && !GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_SYSMENU.equals(type)) {
+                        && !GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_SYSMENU.equals(type)
+                        && !GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_BELONGTOGARNET.equals(type)) {
                     resourceDynamicPropertyList.add(resourceDynamicProperty);
                 }
             }

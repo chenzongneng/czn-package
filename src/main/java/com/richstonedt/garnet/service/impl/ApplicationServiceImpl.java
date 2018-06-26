@@ -4,6 +4,7 @@ import com.github.pagehelper.StringUtil;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.mapper.ApplicationMapper;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.model.*;
@@ -13,6 +14,7 @@ import com.richstonedt.garnet.model.parm.TenantParm;
 import com.richstonedt.garnet.model.view.ApplicationView;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.service.*;
+import org.omg.CORBA.portable.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,8 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
     @Autowired
     private RouterGroupService routerGroupService;
 
+    @Autowired
+    private ResourceService resourceService;
 
     private static final String SERVICE_MODE_SAAS = "saas";
 
@@ -62,6 +66,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         return this.applicationMapper;
     }
 
+    @LogRequired(module = "应用管理模块", method = "新增应用")
     @Override
     public Long insertApplication(ApplicationView applicationView) {
 
@@ -96,6 +101,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
     }
 
+    @LogRequired(module = "应用管理模块", method = "配置应用")
     @Override
     public void updateApplication(ApplicationView applicationView) {
 
@@ -132,14 +138,30 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
 
         //其余为正常选择
 
+        Long loginUserId = applicationView.getLoginUserId();
+        //查询该登录用户有权限更改的租户列表
+        TenantParm tenantParm = new TenantParm();
+        tenantParm.setUserId(loginUserId);
+        tenantParm.setPageSize(1000);
+        tenantParm.setPageNumber(1);
+        tenantParm.setMode("all");
+        tenantParm.setQueryOrTree("tree");
+        PageUtil tenantPageUtil = tenantService.getTenantsByParams(tenantParm);
+        List<Tenant> tenantList = tenantPageUtil.getList();
+        List<Long> tenantIdList = new ArrayList<>();
+        for (Tenant tenant : tenantList) {
+            tenantIdList.add(tenant.getId());
+        }
+
         Application application = applicationView.getApplication();
         if ("".equals(applicationView.getTenantIds())) {
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
+            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId()).andTenantIdIn(tenantIdList);
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
         } else if (!StringUtil.isEmpty(applicationView.getTenantIds())) {
+            //先删除该应用绑定的租户(只删除登录用户有权限看到的租户id)
             ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
-            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId());
+            applicationTenantCriteria.createCriteria().andApplicationIdEqualTo(application.getId()).andTenantIdIn(tenantIdList);
             applicationTenantService.deleteByCriteria(applicationTenantCriteria);
 
             //如果saas模式，判断租户是否已被绑定
@@ -156,6 +178,11 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
                 applicationTenant.setTenantId(Long.parseLong(tenantId));
                 applicationTenantService.insertSelective(applicationTenant);
             }
+
+            Log log = new Log();
+            log.setMessage("应用管理模块");
+            log.setOperation("应用绑定租户");
+            commonService.insertLog(log);
         }
 
     }
@@ -179,6 +206,7 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
         }
     }
 
+    @LogRequired(module = "应用管理模块", method = "删除应用")
     @Override
     public void deleteApplication(Long applicationId) {
 
@@ -508,6 +536,148 @@ public class ApplicationServiceImpl extends BaseServiceImpl<Application, Applica
             throw new RuntimeException("此应用不存在");
         }
         return application;
+    }
+
+    @Override
+    public List<Application> getApplicationsByUserIdAndTenantId(ApplicationParm applicationParm) {
+        Long userId = applicationParm.getUserId();
+        Long tenantId = applicationParm.getTenantId();
+        String path = applicationParm.getPath();
+        if (!ObjectUtils.isEmpty(tenantId) && tenantId.longValue() != 0) {
+            //根据tenantId绑定的应用返回
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdEqualTo(tenantId);
+            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+            List<Long> applicationIdList = new ArrayList<>();
+            for (ApplicationTenant applicationTenant : applicationTenantList) {
+                applicationIdList.add(applicationTenant.getApplicationId());
+            }
+            if (applicationIdList.size() == 0) {
+                applicationIdList.add(GarnetContants.NON_VALUE);
+            }
+
+            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+            applicationCriteria.createCriteria().andIdIn(applicationIdList).andStatusEqualTo(1);
+            List<Application> applicationList = this.selectByCriteria(applicationCriteria);
+            return applicationList;
+        } else {
+            List<Tenant> tenantList = tenantService.getTenantListByUserIdAndPath(userId, path);
+            List<Long> tenantIdList = new ArrayList<>();
+            for (Tenant tenant : tenantList) {
+                tenantIdList.add(tenant.getId());
+            }
+            if (tenantIdList.size() == 0) {
+                tenantIdList.add(GarnetContants.NON_VALUE);
+            }
+
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdIn(tenantIdList);
+            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+            List<Long> applicationIdList = new ArrayList<>();
+            for (ApplicationTenant applicationTenant : applicationTenantList) {
+                applicationIdList.add(applicationTenant.getApplicationId());
+            }
+            if (applicationIdList.size() == 0) {
+                applicationIdList.add(GarnetContants.NON_VALUE);
+            }
+
+            ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+            applicationCriteria.createCriteria().andIdIn(applicationIdList).andStatusEqualTo(1);
+            List<Application> applicationList = this.selectByCriteria(applicationCriteria);
+            return applicationList;
+        }
+    }
+
+    @LogRequired(module = "应用管理模块", method = "查询应用列表")
+    @Override
+    public PageUtil getApplicationsByParams(ApplicationParm applicationParm) {
+        Long userId = applicationParm.getUserId();
+
+        ApplicationCriteria applicationCriteria = new ApplicationCriteria();
+        applicationCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
+        ApplicationCriteria.Criteria criteria = applicationCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+
+        if (!ObjectUtils.isEmpty(applicationParm.getSearchName())) {
+            criteria.andNameLike("%" + applicationParm.getSearchName() + "%");
+        }
+
+        if (StringUtils.isEmpty(applicationParm.getMode())) {
+            return new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
+        }
+
+        switch (applicationParm.getMode()) {
+            case SERVICE_MODE_SAAS:
+                criteria.andServiceModeEqualTo(SERVICE_MODE_SAAS).andStatusEqualTo(1);
+                break;
+            case SERVICE_MODE_PAAS:
+                criteria.andServiceModeEqualTo(SERVICE_MODE_PAAS).andStatusEqualTo(1);
+                break;
+            case SERVICE_MODE_ALL:
+                break;
+            default:
+                return new PageUtil(null, (int) this.countByCriteria(applicationCriteria), applicationParm.getPageSize(), applicationParm.getPageNumber());
+        }
+
+        //是加载列表还是加载应用树
+        String queryOrTree = applicationParm.getQueryOrTree();
+        String level;
+        if (GarnetContants.QUERYORTREE_TREE.equals(queryOrTree)) {
+            level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_TENANTMANAGE_APPLICATIONLIST_PATH);
+        } else {
+            level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_APPLICATIONMANAGE_QUERY_PATH);
+        }
+
+        List<Application> applicationList = new ArrayList<>();
+        if (Integer.valueOf(level) == 1) {
+            //全部数据
+            applicationList = this.selectByCriteria(applicationCriteria);
+        } else if (Integer.valueOf(level) == 2) {
+            //非Garnet数据
+            List<Long> tenantIds = commonService.getTenantIdsNotGarnet(userId);
+
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
+            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+            List<Long> applicationIdList = new ArrayList<>();
+            for (ApplicationTenant applicationTenant : applicationTenantList) {
+                applicationIdList.add(applicationTenant.getApplicationId());
+            }
+
+            if (applicationIdList.size() == 0) {
+                applicationIdList.add(GarnetContants.NON_VALUE);
+            }
+            criteria.andIdIn(applicationIdList);
+            applicationList = this.selectByCriteria(applicationCriteria);
+        } else if (Integer.valueOf(level) == 3) {
+            //本用户为租户管理员的租户所关联的应用
+            List<Tenant> tenantList = tenantService.getTenantManageListByUserId(userId);
+            List<Long> tenantIdList = new ArrayList<>();
+            for (Tenant tenant : tenantList) {
+                tenantIdList.add(tenant.getId());
+            }
+
+            if (tenantIdList.size() == 0) {
+                tenantIdList.add(GarnetContants.NON_VALUE);
+            }
+
+            ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+            applicationTenantCriteria.createCriteria().andTenantIdIn(tenantIdList);
+            List<ApplicationTenant> applicationTenantList = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+            List<Long> applicationIdList = new ArrayList<>();
+            for (ApplicationTenant applicationTenant : applicationTenantList) {
+                applicationIdList.add(applicationTenant.getApplicationId());
+            }
+
+            if (applicationIdList.size() == 0) {
+                applicationIdList.add(GarnetContants.NON_VALUE);
+            }
+            criteria.andIdIn(applicationIdList);
+            applicationList = this.selectByCriteria(applicationCriteria);
+        }
+
+        PageUtil pageUtil = new PageUtil(applicationList, applicationList.size(), applicationParm.getPageSize(), applicationParm.getPageNumber());
+        return pageUtil;
     }
 
 }

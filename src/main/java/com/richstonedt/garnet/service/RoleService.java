@@ -71,4 +71,11 @@ public interface RoleService extends BaseService<Role, RoleCriteria, Long> {
      */
     List<Role> queryRolesByParams(RoleParm roleParm);
 
+    /**
+     * 查询角色列表
+     * @param roleParm
+     * @return
+     */
+    PageUtil getRolesByParams(RoleParm roleParm);
+
 }

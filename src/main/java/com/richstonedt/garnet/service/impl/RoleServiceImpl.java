@@ -3,6 +3,7 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.RoleMapper;
 import com.richstonedt.garnet.model.*;
@@ -27,6 +28,8 @@ import java.util.*;
 @Service
 @Transactional
 public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> implements RoleService {
+
+    private static final Long TENANTID_NULL = 0L;
 
     @Autowired
     private RoleMapper roleMapper;
@@ -58,11 +61,15 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private ResourceService resourceService;
+
     @Override
     public BaseMapper getBaseMapper() {
         return this.roleMapper;
     }
 
+    @LogRequired(module = "角色管理模块", method = "新增角色")
     @Override
     public Long insertRole(RoleView roleView) {
 
@@ -85,6 +92,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
                 groupRole.setRoleId(role.getId());
                 groupRoleService.insertSelective(groupRole);
             }
+
+            Log log = new Log();
+            log.setMessage("角色管理模块");
+            log.setOperation("角色绑定组");
+            commonService.insertLog(log);
         }
 
         if(!ObjectUtils.isEmpty(roleView.getPermissionIds())){
@@ -95,10 +107,16 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
                 rolePermission.setRoleId(role.getId());
                 rolePermissionService.insertSelective(rolePermission);
             }
+
+            Log log = new Log();
+            log.setMessage("角色管理模块");
+            log.setOperation("角色绑定权限");
+            commonService.insertLog(log);
         }
         return role.getId();
     }
 
+    @LogRequired(module = "角色管理模块", method = "配置角色")
     @Override
     public void updateRole(RoleView roleView) {
 
@@ -122,7 +140,6 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         //重新添加关联组
         if(!ObjectUtils.isEmpty(roleView.getGroupIds())){
-
             for (Long groupId : roleView.getGroupIds()) {
                 GroupRole groupRole = new GroupRole();
                 groupRole.setGroupId(groupId);
@@ -130,6 +147,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
                 groupRole.setId(IdGeneratorUtil.generateId());
                 groupRoleService.insertSelective(groupRole);
             }
+
+            Log log = new Log();
+            log.setMessage("角色管理模块");
+            log.setOperation("角色绑定组");
+            commonService.insertLog(log);
         }
 
         //删除关联的权限
@@ -139,7 +161,6 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         //重新添加关联权限
         if(!ObjectUtils.isEmpty(roleView.getPermissionIds())){
-
             for (Long permissionId : roleView.getPermissionIds()) {
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setRoleId(role.getId());
@@ -147,6 +168,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
                 rolePermission.setId(IdGeneratorUtil.generateId());
                 rolePermissionService.insertSelective(rolePermission);
             }
+
+            Log log = new Log();
+            log.setMessage("角色管理模块");
+            log.setOperation("角色绑定权限");
+            commonService.insertLog(log);
         }
 
     }
@@ -198,6 +224,14 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
             criteria.andNameLike("%" + roleParm.getSearchName() + "%");
         }
 
+        if (!ObjectUtils.isEmpty(roleParm.getApplicationId())) {
+            criteria.andApplicationIdEqualTo(roleParm.getApplicationId());
+        }
+
+        if (!ObjectUtils.isEmpty(roleParm.getTenantId())) {
+            criteria.andTenantIdEqualTo(roleParm.getTenantId());
+        }
+
         if (!StringUtils.isEmpty(roleParm.getUserId())) {
             ReturnTenantIdView returnTenantIdView = userService.getTenantIdsByUserId(roleParm.getUserId());
             List<Long> tenantIds = returnTenantIdView.getTenantIds();
@@ -223,6 +257,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         return result;
     }
 
+    @LogRequired(module = "角色管理模块", method = "删除角色")
     @Override
     public void updateStatusById(Role role) {
 
@@ -364,6 +399,88 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         return roleList;
     }
 
+    @LogRequired(module = "角色管理模块", method = "查询角色列表")
+    @Override
+    public PageUtil getRolesByParams(RoleParm roleParm) {
+        Long userId = roleParm.getUserId();
+
+        RoleCriteria roleCriteria = new RoleCriteria();
+        roleCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
+        RoleCriteria.Criteria criteria = roleCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+
+        if (!StringUtils.isEmpty(roleParm.getSearchName())) {
+            criteria.andNameLike("%" + roleParm.getSearchName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(roleParm.getApplicationId())) {
+            criteria.andApplicationIdEqualTo(roleParm.getApplicationId());
+        }
+
+        if (!ObjectUtils.isEmpty(roleParm.getTenantId())) {
+            criteria.andTenantIdEqualTo(roleParm.getTenantId());
+        }
+
+        String level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_ROLEMANAGE_QUERY_PATH);
+        List<Role> roleList = new ArrayList<>();
+        if (Integer.valueOf(level) == 1) {
+            roleList = this.selectByCriteria(roleCriteria);
+        } else if (Integer.valueOf(level) == 2) {
+            //非Garnet数据
+            List<Long> tenantIdList = commonService.getTenantIdsNotGarnet(userId);
+            RoleCriteria roleCriteria1 = new RoleCriteria();
+            roleCriteria1.createCriteria().andTenantIdIn(tenantIdList).andStatusEqualTo(1);
+            List<Role> roleList1 = this.selectByCriteria(roleCriteria1);
+
+            RoleCriteria roleCriteria2 = new RoleCriteria();
+            roleCriteria2.createCriteria().andTenantIdEqualTo(TENANTID_NULL).andApplicationIdNotEqualTo(GarnetContants.GARNET_APPLICATION_ID).andStatusEqualTo(1);
+            List<Role> roleList2 = this.selectByCriteria(roleCriteria2);
+
+            List<Role> roleList3 = new ArrayList<>();
+            roleList3.addAll(roleList1);
+            roleList3.addAll(roleList2);
+
+            Set<Long> roleIdSet = new HashSet<>();
+            for (Role role : roleList3) {
+                if (!roleIdSet.contains(role.getId())) {
+                    roleList.add(role);
+                    roleIdSet.add(role.getId());
+                }
+            }
+
+//            List<Long> roleIdList = new ArrayList<>();
+//            for (Role role : roleList3) {
+//                roleIdList.add(role.getId());
+//            }
+//            if (roleIdList.size() == 0) {
+//                roleIdList.add(GarnetContants.NON_VALUE);
+//            }
+//
+//            criteria.andIdIn(roleIdList);
+//            roleList = this.selectByCriteria(roleCriteria);
+        } else if (Integer.valueOf(level) == 3) {
+            //本用户为租户管理员的租户关联的角色(不包括租户字段为空[即应用级]的角色)
+            List<Tenant> tenantList = tenantService.getTenantManageListByUserId(userId);
+            List<Long> tenantIdList = new ArrayList<>();
+            for (Tenant tenant : tenantList) {
+                tenantIdList.add(tenant.getId());
+            }
+            if (tenantIdList.size() == 0) {
+                tenantIdList.add(GarnetContants.NON_VALUE);
+            }
+
+            criteria.andTenantIdIn(tenantIdList);
+            roleList = this.selectByCriteria(roleCriteria);
+        }
+
+        List<RoleView> roleViews = new ArrayList<>();
+        for (Role role1 : roleList) {
+            roleViews.add(convertToRoleView(role1));
+        }
+        PageUtil result = new PageUtil(roleViews, roleViews.size(), roleParm.getPageSize(),roleParm.getPageNumber());
+        return result;
+    }
+
     private RoleView convertToRoleView(Role role) {
         RoleView roleView = new RoleView();
         roleView.setRole(role);
@@ -460,6 +577,4 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
         }
 
     }
-
-
 }

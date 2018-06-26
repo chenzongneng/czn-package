@@ -53,7 +53,7 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
     /**
      * 通过id获取User
      */
-    UserView getUserById(Long userId);
+    UserView getUserById(UserParm userParm);
 
     /**
      * 通过账号拿user
@@ -139,5 +139,12 @@ public interface UserService extends BaseService<User, UserCriteria, Long> {
      * @return
      */
     Boolean validateUserInfo(String userName, String password);
+
+    /**
+     * 查询用户列表
+     * @param userParm
+     * @return
+     */
+    PageUtil getUsersByParams(UserParm userParm);
 
 }

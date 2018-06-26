@@ -59,12 +59,12 @@ public interface ResourceDynamicPropertyService extends BaseService<ResourceDyna
     boolean isTypeUsed(Long id, String type);
 
     /**
-     * 检查remark是否已被使用
+     * 检查名称是否已被使用
      * @param id
-     * @param remark
+     * @param name
      * @return
      */
-    boolean isRemarkUsed(Long id, String remark);
+    boolean isResourceDyPropNameUsed(Long id, String name);
 
     /**
      * 根据租户id和应用id返回资源配置列表
@@ -73,4 +73,5 @@ public interface ResourceDynamicPropertyService extends BaseService<ResourceDyna
      */
     List<ResourceDynamicProperty> getResourceDynamicPropertyByTIdAndAId(ResourceDynamicPropertyParm resourceDynamicPropertyParm);
 
+    PageUtil getResourceDynamicPropertiesByParams(ResourceDynamicPropertyParm resourceDynamicPropertyParm);
 }

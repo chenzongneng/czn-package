@@ -14,7 +14,7 @@ $(function () {
             {label: '账号', name: 'userName', align: 'center', width: 70 ,sortable: false},
             {label: '手机号码', name: 'mobileNumber', align: 'center', width: 100 ,sortable: false},
             {label: '邮箱', name: 'email', align: 'center', width: 100 ,sortable: false},
-            {label: '是否属于garnet', name: 'belongToGarnet', align: 'center', width: 120 ,sortable: false},
+            // {label: '是否属于garnet', name: 'belongToGarnet', align: 'center', width: 120 ,sortable: false},
             {label: '创建时间', name: 'createdTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
             {label: '更新时间', name: 'modifiedTime', align: 'center', formatter:timeFormat, width: 150 ,sortable: false},
             {label: '更改人', name: 'updatedByUserName', align: 'center', width: 80 ,sortable: false}
@@ -115,6 +115,49 @@ var deptTreeSetting = {
     }
 };
 
+
+/** 租户树 */
+var tenantTree;
+/** ztree 配置*/
+var tenantTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id"
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
+/** 组树 */
+var groupTree;
+/** ztree 配置*/
+var groupTreeSetting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id"
+        },
+        key: {
+            url: "nourl",
+            name: "name"
+        }
+    },
+    check: {
+        enable: true,
+        nocheckInherit: true,
+        chkboxType: {"Y": "", "N": ""}
+    }
+};
+
 var currentUser;
 var vm = new Vue({
     el: '#garnetApp',
@@ -145,7 +188,8 @@ var vm = new Vue({
         user: {
 
         },
-
+        tenantIds: [], //租户树选择的id
+        groupIds: [], //组树选择的id
         // 租户列表数据
         tenantList: {
             selectedTenant: "",
@@ -215,11 +259,13 @@ var vm = new Vue({
                 belongToGarnet : 'N'
             };
             this.queryData("add");
-            if ("Y" == localStorage.getItem("belongToGarnet")) {
-                vm.belongToGarnet = true;
-            } else {
-                vm.belongToGarnet = false;
-            }
+            vm.initTreeToAdd();
+            // if ("Y" == localStorage.getItem("belongToGarnet")) {
+            //     vm.belongToGarnet = true;
+            // } else {
+            //     vm.belongToGarnet = false;
+            // }
+
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -236,6 +282,8 @@ var vm = new Vue({
             vm.user.applicationIdList = [];
             vm.user.deptIdList = [];
             vm.belongToGarnet = false;
+            vm.tenantIds = [];
+            vm.groupIds = [];
 
             vm.getUser(userId);
             this.queryData("update");
@@ -283,14 +331,9 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-
-            //不选用户是否属于garnet，默认不是
-            if (vm.user.belongToGarnet == null || vm.user.belongToGarnet == "") {
-                vm.user.belongToGarnet = "N";
-            }
-
             var obj = new Object();
             vm.user.updatedByUserName = localStorage.getItem("userName");
+            obj.loginUserId = userId;
             obj.user = vm.user;
             obj.userTenants = [];
             obj.password = vm.user.password;
@@ -298,40 +341,108 @@ var vm = new Vue({
                 return;
             }
 
-            //获取选择的租户
-            for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {
-                var userTenant = new Object();
-                userTenant.tenantId = vm.multiple.selectedListTenant[i].id;
-                obj.userTenants.push(userTenant);
+            // 获取租户树选择的租户
+            var tenantNodes = tenantTree.getCheckedNodes(true);
+            var tenantIdList = [];
+            for (var i = 0; i < tenantNodes.length; i++) {
+                tenantIdList.push(tenantNodes[i].id);
             }
-            // console.log("obj.user.belongToGarnet: "+obj.user.belongToGarnet);
-            $.ajax({
-                type: obj.user.id === null ? "POST" : "PUT",
-                url: baseURL + "users",
-                contentType: "application/json",
-                data: JSON.stringify(obj),
-                dataType: "",
-                success: function () {
-                    vm.reload(false);
-                    window.parent.swal("操作成功!", "", "success");
-                },
-                error: function (response) {
-                    window.parent.swal("", getExceptionMessage(response), "error");
-                }
-            });
+            vm.tenantIds = tenantIdList.join(",");
+            obj.tenantIds = tenantIdList;
+
+            // 获取组树选择的租户
+            var groupNodes = groupTree.getCheckedNodes(true);
+            var groupIdList = [];
+            for (var i = 0; i < groupNodes.length; i++) {
+                groupIdList.push(groupNodes[i].id);
+            }
+            vm.groupIds = groupIdList.join(",");
+            obj.groupIds = groupIdList;
+
+            //获取选择的租户
+            // for (var i = 0; i < vm.multiple.selectedListTenant.length; i++) {
+            //     var userTenant = new Object();
+            //     userTenant.tenantId = vm.multiple.selectedListTenant[i].id;
+            //     obj.userTenants.push(userTenant);
+            // }
+
+            console.log("tenantIdList: " + tenantIdList);
+            console.log("tenantIdList.length: " + tenantIdList.length);
+            console.log("tenantIdList.length type: " + typeof tenantIdList.length);
+            if (tenantIdList == null || tenantIdList.length == 0) {
+                console.log("我应该进来的呀");
+                // window.parent.swal("", "您没有为用户关联租户，后续可能无权管理该用户", "warning");
+                window.parent.swal({
+                        title: "",
+                        text: "您没有为用户关联租户，后续可能无权管理该用户",
+                        type: "warning",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        confirmButtonText: "确认",
+                        cancelButtonText: "取消",
+                        confirmButtonColor: "#DD6B55"
+                    },
+                    function () {
+                        $.ajax({
+                            type: obj.user.id === null ? "POST" : "PUT",
+                            url: baseURL + "users",
+                            contentType: "application/json",
+                            data: JSON.stringify(obj),
+                            dataType: "",
+                            success: function () {
+                                vm.reload(false);
+                                window.parent.swal("操作成功!", "", "success");
+                            },
+                            error: function (response) {
+                                window.parent.swal("", getExceptionMessage(response), "error");
+                            }
+                        });
+                    });
+            } else {
+                $.ajax({
+                    type: obj.user.id === null ? "POST" : "PUT",
+                    url: baseURL + "users",
+                    contentType: "application/json",
+                    data: JSON.stringify(obj),
+                    dataType: "",
+                    success: function () {
+                        vm.reload(false);
+                        window.parent.swal("操作成功!", "", "success");
+                    },
+                    error: function (response) {
+                        window.parent.swal("", getExceptionMessage(response), "error");
+                    }
+                });
+            }
+
+
         },
         /** 添加按钮初始化数据 */
         initTreeToAdd: function () {
-            //加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000", function (response) {
-                applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
-                applicationTree.expandAll(true);
+            //加载租户树
+            $.get(baseURL + "tenants/bylevel?userId=" + userId, function (response) {
+                // console.log(JSON.stringify(response.data));
+                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.data);
+                tenantTree.expandAll(true);
             });
-            //加载部门树
-            $.get(baseURL + "departments?page=1&limit=1000", function (response) {
-                deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
-                deptTree.expandAll(true);
+
+            // 加载组树
+            $.get(baseURL + "groups/bylevel?userId=" + userId, function (response) {
+                // console.log(JSON.stringify(response));
+                groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
+                groupTree.expandAll(true);
             });
+
+            // //加载应用树
+            // $.get(baseURL + "applications?page=1&limit=1000", function (response) {
+            //     applicationTree = $.fn.zTree.init($("#applicationTree"), applicationTreeSetting, response.list);
+            //     applicationTree.expandAll(true);
+            // });
+            // //加载部门树
+            // $.get(baseURL + "departments?page=1&limit=1000", function (response) {
+            //     deptTree = $.fn.zTree.init($("#deptTree"), deptTreeSetting, response.list);
+            //     deptTree.expandAll(true);
+            // });
         },
         /** 更新按钮初始化数据 */
         initTreeToUpdate: function (userId) {
@@ -350,11 +461,29 @@ var vm = new Vue({
         },
         /** 根据用户ID获取用户信息 */
         getUser: function (userId) {
-            $.get(baseURL + "users/" + userId, function (response) {
+            $.get(baseURL + "users/" + userId + "?loginUserId=" + localStorage.getItem("userId"), function (response) {
                 response = response.data;
 
                 vm.user = response.user;
                 vm.user.password = response.password;
+
+                //初始化租户树和组树
+                vm.initTreeToAdd();
+
+                // 勾选已有租户
+                $.each(response.tenantIds, function (index, item) {
+                    var node = tenantTree.getNodeByParam("id", item);
+                    tenantTree.checkNode(node, true, false);
+                });
+                // 勾选已有组
+                $.each(response.groupIds, function (index, item) {
+
+                    console.log(index + ": " + JSON.stringify(item));
+
+                    var node = groupTree.getNodeByParam("id", item);
+                    groupTree.checkNode(node, true, false);
+                });
+
                 // vm.user.userId = response.userId;
                 // vm.user.userName = response.userName;
                 // vm.user.password = null;

@@ -11,14 +11,14 @@ $(function () {
         datatype: "json",
         colModel: [
             {label: '角色ID', name: 'role.id', align: 'center', hidden: true, index: "id", width: 20, key: true ,sortable: false},
-            {label: '角色名称', name: 'role.name', align: 'center', width: 70 ,sortable: false},
+            {label: '角色名称', name: 'role.name', align: 'center', width: 100 ,sortable: false},
             // {label: '所属租户', name: 'tenantName', align: 'center', width: 70 ,sortable: false},
             // {label: '所属应用', name: 'applicationName', align: 'center', width: 70 ,sortable: false},
             {label: '类型', name: 'type', align: 'center', width: 70 ,sortable: false ,sortable: false},
             {label: '组列表', name: 'groupNames', align: 'center', width: 140 ,sortable: false},
             {label: '权限列表', name: 'permissionNames', align: 'center', width: 140 ,sortable: false},
-            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 120 ,sortable: false},
-            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 120 ,sortable: false},
+            {label: '创建时间', name: 'role.createdTime', align: 'center', formatter:timeFormat, width: 100 ,sortable: false},
+            {label: '更新时间', name: 'role.modifiedTime', align: 'center', formatter:timeFormat, width: 100 ,sortable: false},
             {label: '更改人', name: 'role.updatedByUserName', align: 'center', width: 100 ,sortable: false}
             // {label: '创建时间', name: 'createTime', align: 'center', width: 90}
         ],
@@ -120,6 +120,16 @@ var permissionTreeSetting = {
 
 var currentUser;
 
+var tenantSearchList = {
+    searchTenant: "",
+    options: []
+};
+
+var appSearchList = {
+    searchApp: "",
+    options: []
+};
+
 var vm = new Vue({
     el: '#garnetApp',
     data: {
@@ -131,6 +141,8 @@ var vm = new Vue({
         showTenant: false, //显示租户
         showApplication: false, //显示应用
         searchName: null,
+        searchApp: null,
+        searchTenant: null,
         showList: true,
         title: null,
         role: {
@@ -209,6 +221,8 @@ var vm = new Vue({
             vm.initTreesToAdd();
             vm.getTenantList();
             vm.getAppList();
+
+            vm.dealTypeList();
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -351,15 +365,14 @@ var vm = new Vue({
         initTreesToAdd: function () {
             //加载部门树
             // $.get(baseURL + "groups/" + currentUser.userId, function (response) {
-            $.get(baseURL + "groups?page=1&limit=1000", function (response) {
+            $.get(baseURL + "groups?page=1&limit=1000&userId=" + userId, function (response) {
                 groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, []);
                 groupTree.expandAll(true);
             });
             //加载权限树
             // $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
-            $.get(baseURL + "permissions?page=1&limit=1000", function (response) {
-                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, []
-                );
+            $.get(baseURL + "permissions?page=1&limit=1000&userId=" + userId, function (response) {
+                permissionTree = $.fn.zTree.init($("#permissionTree"), permissionTreeSetting, []);
                 permissionTree.expandAll(true);
             })
             // $.get(baseURL + "permissions/applicationId/" + vm.appList.selectedApp, function (response) {
@@ -420,6 +433,7 @@ var vm = new Vue({
 
                 //加载组树
                 $.get(baseURL + "groups/byparams?tenantId=" + vm.tenantList.selectedTenant + "&applicationId=" + vm.appList.selectedApp, function (response) {
+
                 // $.get(groupUrl, function (response) {
                     groupTree = $.fn.zTree.init($("#groupTree"), groupTreeSetting, response);
                     groupTree.expandAll(true);
@@ -441,6 +455,41 @@ var vm = new Vue({
                 });
             });
         },
+        dealTypeList: function () {
+            var path = "/garnet/option/roleManage/types";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                var type = response.data;
+                if (type == "001") {
+                    //应用级
+                    $("#typeList option[value='1']").remove();
+                    $("#typeList option[value='3']").remove();
+                } else if (type == "010"){
+                    //租户级
+                    $("#typeList option[value='2']").remove();
+                    $("#typeList option[value='3']").remove();
+                } else if (type == "100") {
+                    //租户+应用
+                    $("#typeList option[value='1']").remove();
+                    $("#typeList option[value='2']").remove();
+                } else if (type == "011") {
+                    //应用级、租户级
+                    $("#typeList option[value='3']").remove();
+                } else if (type == "101") {
+                    //应用级、租户+应用
+                    $("#typeList option[value='1']").remove();
+                } else if (type == "110") {
+                    //租户级、租户+应用
+                    $("#typeList option[value='2']").remove();
+                } else if (type == "111") {
+                    //应用级、租户级、租户+应用
+                } else {
+                    $("#typeList option[value='1']").remove();
+                    $("#typeList option[value='2']").remove();
+                    $("#typeList option[value='3']").remove();
+                }
+            });
+
+        },
         initTree:function () {
         },
         /** 重新加载 */
@@ -453,7 +502,11 @@ var vm = new Vue({
                 page = $("#jqGrid").jqGrid('getGridParam', 'page');
             }
             $("#jqGrid").jqGrid('setGridParam', {
-                postData: {searchName: vm.searchName},
+                postData: {
+                    searchName: vm.searchName,
+                    tenantId: tenantSearchList.searchTenant,
+                    applicationId: appSearchList.searchApp
+                },
                 page: page
             }).trigger("reloadGrid");
         },
@@ -463,6 +516,10 @@ var vm = new Vue({
             vm.role.applicationId = vm.appList.selectedApp;
             //重新加载权限
             vm.roadPermissionTree();
+
+            vm.appList.options = [];
+            vm.appList.selectedApp = "";
+            vm.getAppList();
         },
         /** 应用列表onchange 事件*/
         selectApp: function () {
@@ -487,32 +544,57 @@ var vm = new Vue({
                 vm.role.tenantId = null;
                 vm.showTenant = true;
                 vm.showApplication = false;
+
+                vm.tenantList.options = [];
+                vm.appList.options = [];
+                vm.getTenantList();
             } else if (selectedType == 2){
                 //应用级
                 vm.role.tenantId = null;
                 vm.role.applicationId = null;
                 vm.showTenant = false;
                 vm.showApplication = true;
+
+                vm.tenantList.options = [];
+                vm.appList.options = [];
+                vm.getAppList();
             } else {
                 //租户+应用
                 vm.role.tenantId = null;
                 vm.role.applicationId = null;
                 vm.showTenant = true;
                 vm.showApplication = true;
+
+                vm.tenantList.options = [];
+                vm.appList.options = [];
+                vm.getTenantList();
             }
         },
         /**  获取租户列表 */
         getTenantList: function () {
-            $.get(baseURL + "tenants?page=1&limit=1000&userId=" + userId, function (response) {
-                $.each(response.list, function (index, item) {
+            // $.get(baseURL + "tenants?page=1&limit=1000&userId=" + userId, function (response) {
+            //     $.each(response.list, function (index, item) {
+            //         vm.tenantList.options.push(item);
+            //     })
+            // });
+            var path = "/garnet/data/roleManage/tenantList";
+            $.get(baseURL + "tenants/byuseridandpath?userId=" + userId + "&path=" + path, function (response) {
+                $.each(response.data, function (index, item) {
                     vm.tenantList.options.push(item);
                 })
             });
         },
         /**  获取应用列表 */
         getAppList: function () {
-            $.get(baseURL + "applications?page=1&limit=1000&userId=" + userId, function (response) {
-                $.each(response.list, function (index, item) {
+            // $.get(baseURL + "applications?page=1&limit=1000&userId=" + userId, function (response) {
+            //     $.each(response.list, function (index, item) {
+            //         vm.appList.options.push(item);
+            //     })
+            // });
+            var tenantId = vm.tenantList.selectedTenant;
+            var path = "/garnet/data/roleManage/tenantList";
+            $.get(baseURL + "applications/byuseridandtenantid?userId=" + userId + "&tenantId=" + tenantId + "&path=" + path, function (response) {
+                $.each(response, function (index, item) {
                     vm.appList.options.push(item);
                 })
             });
@@ -556,10 +638,34 @@ var vm = new Vue({
                 //根据应用加载组
                 vm.roadGroupTreeByApp();
             })
+        },
+        getSearchTenantList: function () {
+            var path = "/garnet/data/roleManage/tenantList";
+            $.get(baseURL + "tenants/byuseridandpath?userId=" + userId + "&path=" + path, function (response) {
+                $.each(response.data, function (index, item) {
+                    // vm.tenantList.options.push(item);
+                    tenantSearchList.options.push(item);
+                })
+            });
+        },
+        getSearchAppList: function () {
+            var path = "/garnet/data/roleManage/tenantList";
+            $.get(baseURL + "applications/byuseridandtenantid?userId=" + userId + "&path=" + path, function (response) {
+                $.each(response, function (index, item) {
+                    appSearchList.options.push(item);
+                })
+            });
+        },
+        getRolesByTeantIdAndAppId: function () {
+            vm.searchApp = appSearchList.searchApp;
+            vm.searchTenant = tenantSearchList.searchTenant;
+            vm.reload(true);
         }
     },
     /**  初始化页面时执行该方法 */
     created: function () {
+        this.getSearchTenantList();
+        this.getSearchAppList();
         // this.getCurrentUser();
     }
 });

@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.model.parm;
 
 import com.richstonedt.garnet.model.Tenant;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * The type Tenant parm.
@@ -12,6 +13,17 @@ public class TenantParm extends BaseParm {
     private Long applicationId;
 
     private String mode;
+
+    @ApiModelProperty(value = "标志请求是加载列表数据还是应用树")
+    private String queryOrTree;
+
+    public String getQueryOrTree() {
+        return queryOrTree;
+    }
+
+    public void setQueryOrTree(String queryOrTree) {
+        this.queryOrTree = queryOrTree;
+    }
 
     public String getMode() {
         return mode;

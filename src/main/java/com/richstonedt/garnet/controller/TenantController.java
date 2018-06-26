@@ -3,6 +3,7 @@ package com.richstonedt.garnet.controller;
 
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Tenant;
 import com.richstonedt.garnet.model.message.*;
@@ -188,6 +189,7 @@ public class TenantController {
             @ApiParam(value = "页数", defaultValue = "0", required = false) @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @ApiParam(value = "modeId", defaultValue = "0", required = false) @RequestParam(value = "modeId", defaultValue = "-1", required = false) int modeId,
             @ApiParam(value = "mode", defaultValue = "0", required = false) @RequestParam(value = "mode", defaultValue = "", required = false) String mode,
+            @ApiParam(value = "queryOrTree", defaultValue = "0", required = false) @RequestParam(value = "queryOrTree", defaultValue = "", required = false) String queryOrTree,
             @ApiParam(value = "每页加载量", defaultValue = "10", required = false) @RequestParam(value = "limit", defaultValue = "10", required = false) int limit) {
         try {
             TenantParm tenantParm = new TenantParm();
@@ -197,7 +199,8 @@ public class TenantController {
             tenantParm.setPageSize(limit);
             tenantParm.setPageNumber(page);
             tenantParm.setMode(mode);
-            PageUtil result = tenantService.queryTenantssByParms(tenantParm);
+            tenantParm.setQueryOrTree(queryOrTree);
+            PageUtil result = tenantService.getTenantsByParams(tenantParm);
             // 封装返回信息
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
@@ -251,6 +254,50 @@ public class TenantController {
         }
     }
 
+    @ApiOperation(value = "[Garnet]根据用户的权限（level）获取租户列表", notes = "根据用户的权限（level）获取租户列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/tenants/bylevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getTenantListByUserId(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
+            @ApiParam(value = "userId", required = true) @RequestParam(value = "userId", defaultValue = "", required = true) Long userId) {
+        try {
+            List<Tenant> tenantList = tenantService.getTenantListByUserId(userId);
+
+            // 封装返回信息
+            GarnetMessage<List<Tenant>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, tenantList);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]根据登录用户和权限匹配路径查询该用户新增、配置页的租户列表", notes = "根据登录用户和权限匹配路径查询该用户新增、配置页的租户列表")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/tenants/byuseridandpath", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getTenantListByUserIdAndPath(
+            @ApiParam(value = "access token", required = false) @RequestParam(value = "token", defaultValue = "", required = false) String token,
+            @ApiParam(value = "userId", required = true) @RequestParam(value = "userId", defaultValue = "", required = true) Long userId,
+            @ApiParam(value = "path", required = true) @RequestParam(value = "path", defaultValue = "", required = true) String path) {
+        try {
+            List<Tenant> tenantList = tenantService.getTenantListByUserIdAndPath(userId, path);
+            // 封装返回信息
+            GarnetMessage<List<Tenant>> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, tenantList);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entity!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
     @ApiOperation(value = "[Garnet]删除租户和用户的关联", notes = "通过用户名删除其和租户的关联")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful request"),
@@ -274,5 +321,7 @@ public class TenantController {
             return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
         }
     }
+
+
 
 }

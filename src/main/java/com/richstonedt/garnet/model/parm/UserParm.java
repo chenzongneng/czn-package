@@ -9,6 +9,16 @@ public class UserParm extends BaseParm{
 
     private User user;
 
+    private Long loginUserId;
+
+    public Long getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(Long loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
     /**
      * Gets user.
      *

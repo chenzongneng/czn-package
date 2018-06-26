@@ -243,9 +243,15 @@ public class UserController {
             @ApiResponse(code = 500, message = "internal server error")})
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUser(
-            @ApiParam(value = "用户id", required = true) @PathVariable(value = "id") long id) {
+            @ApiParam(value = "用户id", required = true) @PathVariable(value = "id") long id,
+            @ApiParam(value = "登录用户Id", required = false) @RequestParam(value = "loginUserId", defaultValue = "0", required = false) Long loginUserId) {
         try {
-            UserView userView = userService.getUserById(id);
+            UserParm userParm = new UserParm();
+            User user = new User();
+            user.setId(id);
+            userParm.setUser(user);
+            userParm.setLoginUserId(loginUserId);
+            UserView userView = userService.getUserById(userParm);
             // 封装返回信息
             GarnetMessage<UserView> garnetMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, userView);
             return new ResponseEntity<>(garnetMessage, HttpStatus.OK);
@@ -288,7 +294,7 @@ public class UserController {
             userParm.setPageSize(pageSize);
             userParm.setSearchName(searchName);
             userParm.setPageNumber(pageNumber);
-            PageUtil result = userService.queryUsersByParms(userParm);
+            PageUtil result = userService.getUsersByParams(userParm);
             // 封装返回信息
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Throwable t) {
@@ -540,7 +546,6 @@ public class UserController {
      * @param garLoginView the gar login view
      * @return the response entity
      */
-    @LogRequired(module = "登录模块", method = "garnet登录")
     @ApiOperation(value = "[Garnet]garnet登录", notes = "garnet登录")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "successful operation", responseHeaders = @ResponseHeader(name = "location", description = "URL of new created resource", response = String.class)),

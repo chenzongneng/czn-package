@@ -150,7 +150,8 @@ var vm = new Vue({
         },
         // 新增和更新 选择模式列表
         modeList2: {
-            selectedMode: localStorage.getItem("mode"),
+            // selectedMode: localStorage.getItem("mode"),
+            selectedMode: "",
             options: [
                 {
                     id : "saas",
@@ -170,7 +171,6 @@ var vm = new Vue({
             $("#selectModeId option[value='all']").remove();
             $("#selectModeId option[value='saas']").remove();
         }
-
     },
     methods: {
         /**  查询按钮点击事件 */
@@ -183,11 +183,11 @@ var vm = new Vue({
             if ("all" == localStorage.getItem("mode")) {
                 mode = "paas";
                 vm.tips = "可选多个应用";
-                vm.modeList2.selectedMode = mode;
+                // vm.modeList2.selectedMode = mode;
             } else if ("paas" == localStorage.getItem("mode")) {
                 mode = "paas";
                 vm.tips = "可选多个应用";
-                vm.modeList2.selectedMode = mode;
+                // vm.modeList2.selectedMode = mode;
             } else {
                 vm.tips = "只能选择一个应用";
                 mode = localStorage.getItem("mode");
@@ -202,7 +202,8 @@ var vm = new Vue({
 
             vm.relatedAllUserEditAble = true; //是否默认关联所有用户 是否可编辑
             vm.showList = false;
-            vm.hidden = false;
+            vm.modeList2.selectedMode = "";
+            vm.hidden = false;  //平台模式选择
             vm.title = "新增";
             vm.userNames = null;
             vm.delRelatedUserNames = null;
@@ -218,12 +219,14 @@ var vm = new Vue({
                 appIdList: []
             };
 
-            // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
-                appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
-                appTree.expandAll(true);
-            });
+            vm.dealModeList();
 
+            // 加载应用树
+            // var queryOrTree = "tree";
+            // $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId + "&queryOrTree=" + queryOrTree, function (response) {
+            //     appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
+            //     appTree.expandAll(true);
+            // });
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -318,7 +321,12 @@ var vm = new Vue({
                 vm.userName = localStorage.getItem("userName");
             }
 
+            if (vm.tenant.relatedAllUsers == null || $.trim(vm.tenant.relatedAllUsers) == "") {
+                vm.tenant.relatedAllUsers = "N";
+            }
+
             var userName = vm.userName;
+            obj.loginUserId = userId;
             obj.tenant = vm.tenant;
             obj.appIds =vm.tenant.appIds;
             obj.userTenants = [];
@@ -432,7 +440,8 @@ var vm = new Vue({
                 }
 
                 // 加载应用树
-                $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
+                var queryOrTree = "tree";
+                $.get(baseURL + "applications?page=1&limit=1000&mode=" + mode + "&userId=" + userId + "&queryOrTree=" + queryOrTree, function (response) {
                     appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                     appTree.expandAll(true);
                 });
@@ -489,11 +498,6 @@ var vm = new Vue({
                     vm.tenant.appIds = appIdList.join(",");
                     vm.tenant.appIdList = appIdList;
                     layer.close(index);
-                },
-                success: function () {
-                    console.log("succeess");
-
-
                 }
             });
             // window.parent.document.getElementById("displayDiv").innerText = "HelloHello~";
@@ -507,7 +511,8 @@ var vm = new Vue({
         getAppList: function (searchName) {
             // 加载应用树
             var searchName = '';
-            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&searchName=", function (response) {
+            var queryOrTree = "tree";
+            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&queryOrTree=" + queryOrTree + "&searchName=", function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
             });
@@ -539,7 +544,8 @@ var vm = new Vue({
                 vm.tips = "只能选择一个应用";
             }
             // 加载应用树
-            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId, function (response) {
+            var queryOrTree = "tree"
+            $.get(baseURL + "applications?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId + "&queryOrTree=" + queryOrTree, function (response) {
                 appTree = $.fn.zTree.init($("#appTree"), appTreeSetting, response.list);
                 appTree.expandAll(true);
 
@@ -652,6 +658,21 @@ var vm = new Vue({
 
             });
 
+        },
+        dealModeList: function () {
+            // $("#modeListId option[value='paas']").remove();
+            var path = "/garnet/option/tenantManage/platformTypes";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                var type = response.data;
+
+                if (type == "01") {
+                    //只有SaaS
+                    $("#modeListId option[value='paas']").remove();
+                } else if (type == "10"){
+                    //只有PaaS
+                    $("#modeListId option[value='saas']").remove();
+                }
+            });
         },
         reload: function (backFirst) {
             vm.showList = true;

@@ -78,4 +78,19 @@ public interface ApplicationService extends BaseService<Application, Application
      * 根据appCode获取单个应用
      */
     Application getApplicationByAppCode(String appCode);
+
+    /**
+     * 根据用户Id和租户Id查询应用列表
+     * @param applicationParm
+     * @return
+     */
+    List<Application> getApplicationsByUserIdAndTenantId(ApplicationParm applicationParm);
+
+    /**
+     * 查询应用列表
+     * @param applicationParm
+     * @return
+     */
+    PageUtil getApplicationsByParams(ApplicationParm applicationParm);
+
 }

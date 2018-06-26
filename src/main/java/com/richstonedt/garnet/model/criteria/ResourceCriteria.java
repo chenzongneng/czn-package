@@ -8,7 +8,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected String orderByClause;
 
@@ -16,7 +16,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected boolean distinct;
 
@@ -24,7 +24,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +33,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected Integer start;
 
@@ -42,7 +42,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected Integer end;
 
@@ -53,7 +53,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public ResourceCriteria() {
         oredCriteria = new ArrayList<Criteria>();
@@ -66,7 +66,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -79,7 +79,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public String getOrderByClause() {
         return orderByClause;
@@ -92,7 +92,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -105,7 +105,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public boolean isDistinct() {
         return distinct;
@@ -118,7 +118,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
@@ -131,7 +131,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
@@ -144,7 +144,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
@@ -159,7 +159,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
@@ -176,7 +176,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
@@ -190,7 +190,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public void clear() {
         oredCriteria.clear();
@@ -205,7 +205,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public void setStart(Integer start) {
         this.start = start;
@@ -218,7 +218,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public Integer getStart() {
         return start;
@@ -231,7 +231,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public void setEnd(Integer end) {
         this.end = end;
@@ -244,7 +244,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public Integer getEnd() {
         return end;
@@ -256,7 +256,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -2888,6 +2888,76 @@ public class ResourceCriteria {
             addCriterion("updated_by_user_name not between", value1, value2, "updatedByUserName");
             return (Criteria) this;
         }
+
+        public Criteria andRemarkIsNull() {
+            addCriterion("remark is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNotNull() {
+            addCriterion("remark is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkEqualTo(String value) {
+            addCriterion("remark =", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotEqualTo(String value) {
+            addCriterion("remark <>", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThan(String value) {
+            addCriterion("remark >", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThanOrEqualTo(String value) {
+            addCriterion("remark >=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThan(String value) {
+            addCriterion("remark <", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThanOrEqualTo(String value) {
+            addCriterion("remark <=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLike(String value) {
+            addCriterion("remark like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotLike(String value) {
+            addCriterion("remark not like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIn(List<String> values) {
+            addCriterion("remark in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotIn(List<String> values) {
+            addCriterion("remark not in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkBetween(String value1, String value2) {
+            addCriterion("remark between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotBetween(String value1, String value2) {
+            addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -2896,7 +2966,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated 该代码为自动生成，请不要修改
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -2911,7 +2981,7 @@ public class ResourceCriteria {
      *
      * @mbg.generated
      *
-     * DATE: 2018-03-30 13:23
+     * DATE: 2018-06-19 10:11
      */
     public static class Criterion {
         private String condition;

@@ -14,7 +14,6 @@ public class ResourceExcelView {
     @ExcelVOAttribute(name = "", column = "B")
     private String path;
 
-    @ExcelVOAttribute(name = "", column = "C")
     private String actions;
 
     @ExcelVOAttribute(name = "", column = "A")
@@ -109,6 +108,17 @@ public class ResourceExcelView {
 
     @ExcelVOAttribute(name = "", column = "AI")
     private Boolean boolean04;
+
+    @ExcelVOAttribute(name = "", column = "C")
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getTenantName() {
         return tenantName;

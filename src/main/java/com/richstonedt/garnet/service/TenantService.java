@@ -64,4 +64,33 @@ public interface TenantService extends BaseService<Tenant, TenantCriteria, Long>
      */
     void deleteTenantUserRelated(Long id, String userNames);
 
+    /**
+     * 根据登录用户的权限（level）加载租户列表
+     * @param userId
+     * @return
+     */
+    List<Tenant> getTenantListByUserId(Long userId);
+
+    /**
+     * 获取租户管理员
+     * @param userId
+     * @return
+     */
+    List<Tenant> getTenantManageListByUserId(Long userId);
+
+    /**
+     * 根据用户Id和资源path获取租户列表
+     * @param userId
+     * @param path
+     * @return
+     */
+    List<Tenant> getTenantListByUserIdAndPath(Long userId, String path);
+
+    /**
+     * 查询租户列表
+     * @param tenantParm
+     * @return
+     */
+    PageUtil getTenantsByParams(TenantParm tenantParm);
+
 }

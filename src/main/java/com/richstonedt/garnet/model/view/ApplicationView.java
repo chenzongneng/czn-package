@@ -24,6 +24,16 @@ public class ApplicationView {
     @ApiModelProperty(value = "租户ID,用','隔开")
     private String tenantIds;
 
+    @ApiModelProperty(value = "登录用户Id")
+    private Long loginUserId;
+
+    public Long getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(Long loginUserId) {
+        this.loginUserId = loginUserId;
+    }
 
     /**
      * Gets application.

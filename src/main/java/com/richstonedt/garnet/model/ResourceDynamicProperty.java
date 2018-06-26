@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @mbg.generated 该代码为自动生成，请不要修改
  *
- * DATE: 2018-05-09 15:20
+ * DATE: 2018-06-19 10:11
  */
 public class ResourceDynamicProperty implements Serializable {
     private Long id;
@@ -16,8 +16,6 @@ public class ResourceDynamicProperty implements Serializable {
     private String type;
 
     private String remark;
-
-    private Long tenantId;
 
     private Long applicationId;
 
@@ -33,12 +31,16 @@ public class ResourceDynamicProperty implements Serializable {
 
     private String actions;
 
+    private Long tenantId;
+
+    private String name;
+
     /**
      * TABLE： gar_resource_dynamic_props
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-09 15:20
+     * DATE: 2018-06-19 10:11
      */
     private static final long serialVersionUID = 1L;
 
@@ -130,6 +132,14 @@ public class ResourceDynamicProperty implements Serializable {
         this.tenantId = tenantId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
     /**
      * <br>
      *
@@ -137,7 +147,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-09 15:20
+     * DATE: 2018-06-19 10:11
      */
     @Override
     public boolean equals(Object that) {
@@ -161,7 +171,8 @@ public class ResourceDynamicProperty implements Serializable {
                 && (this.getModifiedTime() == null ? other.getModifiedTime() == null : this.getModifiedTime().equals(other.getModifiedTime()))
                 && (this.getUpdatedByUserName() == null ? other.getUpdatedByUserName() == null : this.getUpdatedByUserName().equals(other.getUpdatedByUserName()))
                 && (this.getActions() == null ? other.getActions() == null : this.getActions().equals(other.getActions()))
-                && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()));
+                && (this.getTenantId() == null ? other.getTenantId() == null : this.getTenantId().equals(other.getTenantId()))
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()));
     }
 
     /**
@@ -171,7 +182,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-09 15:20
+     * DATE: 2018-06-19 10:11
      */
     @Override
     public int hashCode() {
@@ -188,6 +199,7 @@ public class ResourceDynamicProperty implements Serializable {
         result = prime * result + ((getUpdatedByUserName() == null) ? 0 : getUpdatedByUserName().hashCode());
         result = prime * result + ((getActions() == null) ? 0 : getActions().hashCode());
         result = prime * result + ((getTenantId() == null) ? 0 : getTenantId().hashCode());
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         return result;
     }
 
@@ -198,7 +210,7 @@ public class ResourceDynamicProperty implements Serializable {
      *
      * @mbg.generated
      *
-     * DATE: 2018-05-09 15:20
+     * DATE: 2018-06-19 10:11
      */
     @Override
     public String toString() {
@@ -217,6 +229,7 @@ public class ResourceDynamicProperty implements Serializable {
         sb.append(", updatedByUserName=").append(updatedByUserName);
         sb.append(", actions=").append(actions);
         sb.append(", tenantId=").append(tenantId);
+        sb.append(", name=").append(name);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.model.view;
 
 import com.richstonedt.garnet.model.*;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
@@ -25,6 +26,17 @@ public class TenantView {
 
     @ApiModelProperty(value = "要解除关联的用户名，用“,”隔开")
     private String delRelatedUserNames;
+
+    @ApiModelProperty(value = "登录用户Id")
+    private Long loginUserId;
+
+    public Long getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(Long loginUserId) {
+        this.loginUserId = loginUserId;
+    }
 
     public String getDelRelatedUserNames() {
         return delRelatedUserNames;

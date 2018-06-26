@@ -54,4 +54,6 @@ public interface RouterGroupService extends BaseService<RouterGroup, RouterGroup
      * @return
      */
     boolean isGroupNameUsed(Long id, String groupName);
+
+    PageUtil getRouterGroupsByParams(RouterGroupParm routerGroupParm);
 }

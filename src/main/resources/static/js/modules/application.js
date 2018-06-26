@@ -149,7 +149,8 @@ var vm = new Vue({
         },
         // 新增和更新 选择模式列表
         modeList2: {
-            selectedMode: localStorage.getItem("mode"),
+            // selectedMode: localStorage.getItem("mode"),
+            selectedMode: "",
             options: [
                 {
                     id : "saas",
@@ -178,20 +179,23 @@ var vm = new Vue({
         },
         /**  新增按钮点击事件 */
         add: function () {
+
+            vm.dealModeList();
+
             var mode;
             if ("all" == localStorage.getItem("mode")) {
                 mode = "paas";
                 vm.tips = "只能选择一个租户";
-                vm.modeList2.selectedMode = mode;
+                // vm.modeList2.selectedMode = mode;
                 // console.log("vm.modeList2 " + vm.modeList2.selectedMode);
             } else if ("paas" == localStorage.getItem("mode")) {
                 mode = "paas";
                 vm.tips = "只能选择一个租户";
-                vm.modeList2.selectedMode = mode;
+                // vm.modeList2.selectedMode = mode;
             } else {
                 vm.tips = "可选多个租户";
                 mode = localStorage.getItem("mode");
-                vm.modeList2.selectedMode = mode;
+                // vm.modeList2.selectedMode = mode;
             }
 
             vm.isAppNameEditable = true;
@@ -222,10 +226,11 @@ var vm = new Vue({
             };
 
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
-                tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
-                tenantTree.expandAll(true);
-            });
+            // $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
+            //     tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
+            //     tenantTree.expandAll(true);
+            // });
+
         },
         /**  更新按钮点击事件 */
         update: function () {
@@ -315,11 +320,11 @@ var vm = new Vue({
         },
         /**  新增或更新确认 */
         saveOrUpdate: function () {
-
             var obj = new Object();
             vm.application.updatedByUserName = localStorage.getItem("userName");
             obj.application = vm.application;
             obj.tenantIds =vm.application.tenantIds;
+            obj.loginUserId = userId;
             // alert(JSON.stringify(obj));
             var tenantIdList = vm.application.tenantIdList;
 
@@ -344,7 +349,7 @@ var vm = new Vue({
 
             var specialReg = /^(?!_)(?!.*?_$)[-a-zA-Z0-9_\u4e00-\u9fa5]+$/;//非特殊符号的正则表达式
             if (!specialReg.test(vm.application.appCode)) {
-                console.log("nonono");
+                // console.log("nonono");
                 window.parent.swal("", "应用标识只能使用英文、数字、下划线或者连字符！", "warning");
                 return;
             }
@@ -425,7 +430,8 @@ var vm = new Vue({
                     // console.log("app response == " + JSON.stringify(response));
 
                     // 加载租户树
-                    $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId, function (response) {
+                    var queryOrTree = "tree";
+                    $.get(baseURL + "tenants?page=1&limit=1000&mode=" + mode + "&userId=" + userId + "&queryOrTree=" + queryOrTree, function (response) {
                         tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                         tenantTree.expandAll(true);
                     });
@@ -507,7 +513,8 @@ var vm = new Vue({
         },
         getTenantList: function (searchName) {
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&searchName=" + searchName, function (response) {
+            var queryOrTree = "tree";
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.modeList2.selectedMode + "&userId=" + userId + "&queryOrTree=" + queryOrTree + "&searchName=" + searchName, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
             });
@@ -534,9 +541,24 @@ var vm = new Vue({
             }
 
             // 加载租户树
-            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId, function (response) {
+            var queryOrTree = "tree";
+            $.get(baseURL + "tenants?page=1&limit=1000&mode=" + vm.mode + "&userId=" + userId + "&queryOrTree=" + queryOrTree, function (response) {
                 tenantTree = $.fn.zTree.init($("#tenantTree"), tenantTreeSetting, response.list);
                 tenantTree.expandAll(true);
+            });
+        },
+        dealModeList: function () {
+            var path = "/garnet/option/tenantManage/platformTypes";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                var type = response.data;
+                // console.log("application type: " + type);
+                if (type == "01") {
+                    //只有SaaS
+                    $("#modeListId option[value='paas']").remove();
+                } else if (type == "10"){
+                    //只有PaaS
+                    $("#modeListId option[value='saas']").remove();
+                }
             });
         },
         layQuery: function () {

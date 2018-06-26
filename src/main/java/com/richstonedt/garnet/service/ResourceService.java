@@ -7,6 +7,7 @@ import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.parm.ResourceParm;
 import com.richstonedt.garnet.model.view.ResourceExcelView;
 import com.richstonedt.garnet.model.view.ResourceView;
+import sun.security.util.Resources_pt_BR;
 
 import java.io.IOException;
 import java.util.List;
@@ -73,6 +74,33 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      */
     boolean hasRelated(String ids);
 
+    /**
+     * 根据userId返回
+     * @param userId
+     * @return
+     */
+    List<Resource> getResourcesByUserId(Long userId);
 
+    /**
+     * 根据登录用户和权限匹配路径查询该用户拥有的查看数据的权限等级
+     * @param userId
+     * @param path
+     * @return
+     */
+    String getLevelByUserIdAndPath(Long userId, String path);
 
+    /**
+     * 根据登录用户和权限匹配路径查询该用户新增页的类型选项（应用级、租户级等）
+     * @param userId
+     * @param path
+     * @return
+     */
+    String getTypeByUserIdAndPath(Long userId, String path);
+
+    /**
+     * 查询资源列表
+     * @param resourceParm
+     * @return
+     */
+    PageUtil getResourcesByParams(ResourceParm resourceParm);
 }

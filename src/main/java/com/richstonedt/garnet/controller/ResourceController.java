@@ -173,6 +173,7 @@ public class ResourceController {
     public ResponseEntity<?> getResources(
             @ApiParam(value = "搜索", defaultValue = "", required = false) @RequestParam(value = "searchName", defaultValue = "", required = false) String searchName,
             @ApiParam(value = "应用ID", defaultValue = "", required = false) @RequestParam(value = "applicationId", defaultValue = "", required = false) Long applicationId,
+            @ApiParam(value = "租户ID", defaultValue = "", required = false) @RequestParam(value = "tenantId", defaultValue = "", required = false) Long tenantId,
             @ApiParam(value = "类型名称", defaultValue = "", required = false) @RequestParam(value = "type", defaultValue = "", required = false) String type,
             @ApiParam(value = "用户Id", defaultValue = "", required = false) @RequestParam(value = "userId", defaultValue = "", required = false) Long userId,
             @ApiParam(value = "状态", defaultValue = "", required = false) @RequestParam(value = "enabled", defaultValue = "", required = false) Integer enabled,
@@ -185,10 +186,11 @@ public class ResourceController {
             resourceParm.setUserId(userId);
             resourceParm.setType(type);
             resourceParm.setApplicationId(applicationId);
+            resourceParm.setTenantId(tenantId);
             resourceParm.setSearchName(searchName);
             resourceParm.setPageNumber(pageNumber);
 
-            PageUtil pageInfo = resourceService.queryResourcesByParms(resourceParm);
+            PageUtil pageInfo = resourceService.getResourcesByParams(resourceParm);
             // 封装返回信息
             return new ResponseEntity<>(pageInfo, HttpStatus.OK);
         } catch (Throwable t) {
@@ -286,6 +288,27 @@ public class ResourceController {
             boolean b = resourceService.hasRelated(ids);
             // 封装返回信息
             return new ResponseEntity<>(b, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]根据登录用户和权限匹配路径查询该用户新增页的类型选项", notes = "根据登录用户和权限匹配路径查询该用户新增页的类型选项")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/gettype", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getTypeByUserIdAdnPath(
+            @ApiParam(value = "用户Id", defaultValue = "", required = true) @RequestParam(value = "userId", defaultValue = "", required = true) Long userId,
+            @ApiParam(value = "path", defaultValue = "", required = true) @RequestParam(value = "path", defaultValue = "", required = true) String path) {
+        try {
+            String type = resourceService.getTypeByUserIdAndPath(userId, path);
+            // 封装返回信息
+            GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, type);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);

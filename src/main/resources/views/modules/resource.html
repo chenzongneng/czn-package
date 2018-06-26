@@ -38,6 +38,14 @@
             <a class="btn btn-default" @click="query">查询</a>
             <a class="btn btn-default" @click="view">查看</a>
             <div class="form-group col-sm-1"  style="width: 200px">
+                <select class="form-control" v-model="applicationList.tenantSearchList.searchTenant" @change="getResourceByTeantIdAndAppId">
+                    <option disabled value=""> 租户查询 </option>
+                    <option v-for="option in applicationList.tenantSearchList.options" v-bind:value="option.id">
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-sm-1"  style="width: 200px">
                 <select class="form-control" v-model="option.appSearchId" @change="getResourceByTypeAndApp">
                     <option disabled value=""> 应用查询 </option>
                     <option v-for="option in applicationList.appSearchList.options" v-bind:value="option.id">
@@ -81,6 +89,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-sm-2 control-label">资源描述<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <input class="form-control" v-model="resource.remark" placeholder="资源描述"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-2 control-label">路径标识<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
                     <input class="form-control" v-model="resource.path" placeholder="可填如/garnet.html" maxlength="60"/>
@@ -90,7 +104,7 @@
             <div class="form-group" v-show="showType">
                 <div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <select class="form-control" v-model="typeList1.selectedType" @change="selectType1">
+                    <select class="form-control" v-model="typeList1.selectedType" @change="selectType1"  id="typeList">
                         <option disabled value="">--请选择--</option>
                         <option v-for="option in typeList1.options" v-bind:value="option.id">
                             {{ option.name }}
@@ -99,17 +113,6 @@
                 </div>
             </div>
 
-            <div class="form-group" v-bind:hidden="!showApplication">
-                <div class="col-sm-2 control-label">所属应用<span style="color: #d7220a">*</span></div>
-                <div class="col-sm-10">
-                    <select class="form-control" v-model="applicationList.appList.selectedApp" @change="selectApp">
-                        <option disabled value="">--请选择--</option>
-                        <option v-for="option in applicationList.appList.options" v-bind:value="option.id">
-                        {{ option.name }}
-                        </option>
-                    </select>
-                </div>
-            </div>
             <div class="form-group" v-bind:hidden="!showTenant">
                 <div class="col-sm-2 control-label">所属租户<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
@@ -121,7 +124,17 @@
                     </select>
                 </div>
             </div>
-
+            <div class="form-group" v-bind:hidden="!showApplication">
+                <div class="col-sm-2 control-label">所属应用<span style="color: #d7220a">*</span></div>
+                <div class="col-sm-10">
+                    <select class="form-control" v-model="applicationList.appList.selectedApp" @change="selectApp">
+                        <option disabled value="">--请选择--</option>
+                        <option v-for="option in applicationList.appList.options" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
             <!--<div class="form-group">-->
                 <!--<div class="col-sm-2 control-label">所属租户</div>-->
                 <!--<div class="col-sm-10">-->
@@ -411,6 +424,7 @@
 </div>
 
 <script src="https://unpkg.com/ajax-hook/dist/ajaxhook.min.js"></script>
+<!--<link rel="stylesheet" href="../plugins/ajaxhook/ajaxhook.min.js">-->
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
 <!--<script src="../js/actiontimer.js"></script>-->

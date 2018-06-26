@@ -35,6 +35,22 @@
             <div class="form-group col-sm-2">
                 <input class="form-control" v-model="searchName" @keyup.enter="query" placeholder="权限名称">
             </div>
+            <div class="form-group col-sm-1"  style="width: 200px">
+                <select class="form-control" v-model="tenantSearchList.searchTenant" @change="getPermissionsByTeantIdAndAppId">
+                    <option disabled value=""> 租户查询 </option>
+                    <option v-for="option in tenantSearchList.options" v-bind:value="option.id">
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-sm-1"  style="width: 200px">
+                <select class="form-control" v-model="appSearchList.searchApp" @change="getPermissionsByTeantIdAndAppId">
+                    <option disabled value=""> 应用查询 </option>
+                    <option v-for="option in appSearchList.options" v-bind:value="option.id">
+                        {{ option.name }}
+                    </option>
+                </select>
+            </div>
             <a class="btn btn-default" @click="query">查询</a>
             <a class="btn btn-primary" @click="add" v-if="resources.garnetSysManagementPermissionAdd">
                 <i class="fa fa-plus"></i>&nbsp;新增</a>
@@ -51,9 +67,16 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
             <div class="form-group" v-show="showType">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">权限名称<span style="color: #d7220a">*</span></div>
+                    <div class="col-sm-10">
+                        <input class="form-control" v-model="permission.name" placeholder="长度不大于30" maxlength="30"/>
+                    </div>
+                </div>
+
                 <div class="col-sm-2 control-label">类型<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <select class="form-control" v-model="typeList.selectedType" @change="selectType">
+                    <select class="form-control" v-model="typeList.selectedType" @change="selectType"  id="typeList">
                         <option disabled value="">--请选择--</option>
                         <option v-for="option in typeList.options" v-bind:value="option.id">
                             {{ option.name }}
@@ -84,12 +107,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-2 control-label">权限名称<span style="color: #d7220a">*</span></div>
-                <div class="col-sm-10">
-                    <input class="form-control" v-model="permission.name" placeholder="长度不大于30" maxlength="30"/>
-                </div>
-            </div>
+
             <div class="form-group">
                 <div class="col-sm-2 control-label">资源通配符<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
@@ -135,6 +153,7 @@
 </div>
 
 <script src="https://unpkg.com/ajax-hook/dist/ajaxhook.min.js"></script>
+<!--<link rel="stylesheet" href="../plugins/ajaxhook/ajaxhook.min.js">-->
 <script src="../libs/router.js"></script>
 <script src="../js/index.js"></script>
 <!--<script src="../js/actiontimer.js"></script>-->

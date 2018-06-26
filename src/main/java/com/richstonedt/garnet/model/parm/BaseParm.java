@@ -20,6 +20,17 @@ public class BaseParm {
     @ApiModelProperty(value = "根据名字搜索")
     private String searchName;
 
+    @ApiModelProperty(value = "登录用户Id")
+    private Long loginUserId;
+
+    public Long getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(Long loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
     public String getSearchName() {
         return searchName;
     }

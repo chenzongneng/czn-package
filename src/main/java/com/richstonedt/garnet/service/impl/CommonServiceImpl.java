@@ -6,8 +6,10 @@ import com.richstonedt.garnet.model.*;
 import com.richstonedt.garnet.model.criteria.GroupCriteria;
 import com.richstonedt.garnet.model.criteria.GroupUserCriteria;
 import com.richstonedt.garnet.model.criteria.UserCriteria;
+import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
 import com.richstonedt.garnet.model.view.UserView;
 import com.richstonedt.garnet.service.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -24,21 +26,26 @@ import java.util.List;
 @Service
 public class CommonServiceImpl implements CommonService {
 
-
     @Autowired
-    private UserService userService;
+    private UserTenantService userTenantService;
 
     @Autowired
     private GroupService groupService;
 
-    @Autowired LogService logService;
+    @Autowired
+    private LogService logService;
+
+    @Autowired
+    private ResourceService resourceService;
+
 
     @Override
     public List<Long> dealTenantIdsIfGarnet(Long userId, List<Long> tenantIds) {
 
-        UserView userView = userService.getUserById(userId);
+        boolean isBelongToGarnet = this.superAdminBelongGarnet(userId);
 
-        if (("N").equals(userView.getUser().getBelongToGarnet())) {
+        //如果不是garnet用户，去掉Garnet租户
+        if (!isBelongToGarnet) {
             List<Long> tempIds = new ArrayList<>();
             for (Long tenantId : tenantIds) {
                 if(tenantId.longValue() != GarnetContants.GARNET_TENANT_ID.longValue()){
@@ -48,6 +55,20 @@ public class CommonServiceImpl implements CommonService {
             return tempIds;
         }
         return tenantIds;
+
+//        UserView userView = userService.getUserById(userId);
+//
+//        if (("N").equals(userView.getUser().getBelongToGarnet())) {
+//            List<Long> tempIds = new ArrayList<>();
+//            for (Long tenantId : tenantIds) {
+//                if(tenantId.longValue() != GarnetContants.GARNET_TENANT_ID.longValue()){
+//                    tempIds.add(tenantId);
+//                }
+//            }
+//            return tempIds;
+//        }
+//        return tenantIds;
+
     }
 
     @Override
@@ -76,7 +97,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public boolean insertLog(String meaasge, String operation){
+    public boolean insertLog(Log log){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String cookie = request.getHeader("Cookie");
         if (StringUtils.isEmpty(cookie)) {
@@ -93,13 +114,10 @@ public class CommonServiceImpl implements CommonService {
 
         Long time = System.currentTimeMillis();
 
-        Log log = new Log();
         log.setId(IdGeneratorUtil.generateId());
-        log.setMessage(meaasge);
         log.setUserName(userName);
         log.setCreatedTime(time);
         log.setModifiedTime(time);
-        log.setOperation(operation);
         log.setIp(ip);
 
         logService.insertSelective(log);
@@ -108,12 +126,44 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public boolean superAdminBelongGarnet(Long userId) {
-        User user = userService.selectByPrimaryKey(userId);
-        if (!ObjectUtils.isEmpty(user) && "Y".equals(user.getBelongToGarnet())) {
-            return true;
+    public List<Long> getTenantIdsNotGarnet(Long userId) {
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<UserTenant> userTenantList = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> tenantIdList = new ArrayList<>();
+        for (UserTenant userTenant : userTenantList) {
+            if (userTenant.getTenantId().longValue() != GarnetContants.GARNET_APPLICATION_ID.longValue()) {
+                tenantIdList.add(userTenant.getTenantId());
+            }
         }
+
+        if (tenantIdList.size() == 0) {
+            tenantIdList.add(GarnetContants.NON_VALUE);
+        }
+
+        return tenantIdList;
+    }
+
+    @Override
+    public boolean superAdminBelongGarnet(Long userId) {
+
+        List<Resource> resources = resourceService.getResourcesByUserId(userId);
+        if (!CollectionUtils.isEmpty(resources) && resources.size() > 0) {
+            for (Resource resource : resources) {
+                String type = resource.getType();
+                if (GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_BELONGTOGARNET.equals(type)) {
+                    return true;
+                }
+            }
+        }
+
         return false;
+
+//        User user = userService.selectByPrimaryKey(userId);
+//        if (!ObjectUtils.isEmpty(user) && "Y".equals(user.getBelongToGarnet())) {
+//            return true;
+//        }
+//        return false;
     }
 
     /**

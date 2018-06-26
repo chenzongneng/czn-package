@@ -3,20 +3,16 @@ package com.richstonedt.garnet.service.impl;
 import com.richstonedt.garnet.common.contants.GarnetContants;
 import com.richstonedt.garnet.common.utils.IdGeneratorUtil;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.interceptory.LogRequired;
 import com.richstonedt.garnet.mapper.BaseMapper;
 import com.richstonedt.garnet.mapper.GroupMapper;
-import com.richstonedt.garnet.model.Group;
-import com.richstonedt.garnet.model.GroupRole;
-import com.richstonedt.garnet.model.GroupUser;
-import com.richstonedt.garnet.model.UserTenant;
-import com.richstonedt.garnet.model.criteria.GroupCriteria;
-import com.richstonedt.garnet.model.criteria.GroupRoleCriteria;
-import com.richstonedt.garnet.model.criteria.GroupUserCriteria;
-import com.richstonedt.garnet.model.criteria.UserTenantCriteria;
+import com.richstonedt.garnet.model.*;
+import com.richstonedt.garnet.model.criteria.*;
 import com.richstonedt.garnet.model.parm.GroupParm;
 import com.richstonedt.garnet.model.view.GroupView;
 import com.richstonedt.garnet.model.view.ReturnTenantIdView;
 import com.richstonedt.garnet.service.*;
+import com.sun.jdi.IntegerValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,29 +29,37 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
     private GroupMapper groupMapper;
 
     @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
     private GroupUserService groupUserService;
 
     @Autowired
     private GroupRoleService groupRoleService;
 
     @Autowired
-    private UserTenantService userTenantService;
-
-    @Autowired
-    private TenantService tenantService;
+    private ResourceService resourceService;
 
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private RolePermissionService rolePermissionService;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private  UserTenantService userTenantService;
+
+    @Autowired
+    private TenantService tenantService;
     @Override
     public BaseMapper getBaseMapper() {
         return this.groupMapper;
     }
 
+    @LogRequired(module = "组管理模块", method = "新增组")
     @Override
     public Long insertGroup(GroupView groupView) {
 
@@ -85,6 +89,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupUser.setGroupId(group.getId());
                 groupUserService.insertSelective(groupUser);
             }
+            Log log = new Log();
+            log.setMessage("组管理模块");
+            log.setOperation("组绑定用户");
+            commonService.insertLog(log);
         }
 
         //插入到组-角色中间表
@@ -97,6 +105,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupRole.setRoleId(roleId);
                 groupRoleService.insertSelective(groupRole);
             }
+            Log log = new Log();
+            log.setMessage("组管理模块");
+            log.setOperation("组绑定角色");
+            commonService.insertLog(log);
         }
 
         return group.getId();
@@ -104,6 +116,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
     }
 
+    @LogRequired(module = "组管理模块", method = "配置组")
     @Override
     public void updateGroup(GroupView groupView) {
 
@@ -136,6 +149,10 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupUser.setGroupId(group.getId());
                 groupUserService.insertSelective(groupUser);
             }
+            Log log = new Log();
+            log.setMessage("组管理模块");
+            log.setOperation("组绑定用户");
+            commonService.insertLog(log);
         }
 
         //先删除 组-角色 关联外键
@@ -153,10 +170,15 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
                 groupRole.setId(IdGeneratorUtil.generateId());
                 groupRoleService.insertSelective(groupRole);
             }
+            Log log = new Log();
+            log.setMessage("组管理模块");
+            log.setOperation("组绑定角色");
+            commonService.insertLog(log);
         }
 
     }
 
+    @LogRequired(module = "组管理模块", method = "删除组")
     @Override
     public void deleteGroup(GroupView groupView) {
 
@@ -181,6 +203,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
     }
 
+    @LogRequired(module = "组管理模块", method = "删除组")
     @Override
     public void deleteGroup(Long id) {
         GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
@@ -240,6 +263,14 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
         if (!ObjectUtils.isEmpty(groupParm.getSearchName())) {
             criteria.andNameLike("%" + groupParm.getSearchName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(groupParm.getApplicationId())) {
+            criteria.andApplicationIdEqualTo(groupParm.getApplicationId());
+        }
+
+        if (!ObjectUtils.isEmpty(groupParm.getTenantId())) {
+            criteria.andTenantIdEqualTo(groupParm.getTenantId());
         }
 
         if(!ObjectUtils.isEmpty(groupParm.getUserId())){
@@ -308,6 +339,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
 
     }
 
+    @LogRequired(module = "组管理模块", method = "删除组")
     @Override
     public void updateStatusById(Group group) {
 
@@ -381,9 +413,9 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             GroupCriteria groupCriteria3 = new GroupCriteria();
             groupCriteria3.createCriteria().andApplicationIdEqualTo(applicationId).andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
 
-            List<Group> groupList1 = new ArrayList<>();
-            List<Group> groupList2 = new ArrayList<>();
-            List<Group> groupList3 = new ArrayList<>();
+            List<Group> groupList1 = this.selectByCriteria(groupCriteria1);
+            List<Group> groupList2 = this.selectByCriteria(groupCriteria2);
+            List<Group> groupList3 = this.selectByCriteria(groupCriteria3);
 
             groups.addAll(groupList1);
             groups.addAll(groupList2);
@@ -403,11 +435,191 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
         return groupList;
     }
 
+    @Override
+    public List<Group> getGarnetGroupList(Long userId) {
+        String level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_USERMANAGE_GARNETGROUPLIST_PATH);
+        List<Group> groupList = new ArrayList<>();
+        if (Integer.valueOf(level) == 1) {
+            //level=1，查询Garnet租户关联的组
+            GroupCriteria groupCriteria = new GroupCriteria();
+            groupCriteria.createCriteria().andTenantIdEqualTo(GarnetContants.GARNET_TENANT_ID).andStatusEqualTo(1);
+            groupList = this.selectByCriteria(groupCriteria);
+        } else if (Integer.valueOf(level) == 2) {
+            GroupCriteria groupCriteria = new GroupCriteria();
+            groupCriteria.createCriteria().andTenantIdEqualTo(GarnetContants.GARNET_TENANT_ID).andStatusEqualTo(1);
+            List<Group> groupList1 = this.selectByCriteria(groupCriteria);
+            for (Group group : groupList1) {
+                String level1 = this.getLevelByGroupId(group.getId());
+                if (Integer.valueOf(level1) >= 2) {
+                    groupList.add(group);
+                }
+            }
+        }
+        return groupList;
+    }
+
+    @LogRequired(module = "组管理模块", method = "查询组列表")
+    @Override
+    public PageUtil getGroupsByParams(GroupParm groupParm) {
+        Long userId = groupParm.getUserId();
+
+        GroupCriteria groupCriteria = new GroupCriteria();
+        groupCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
+        GroupCriteria.Criteria criteria = groupCriteria.createCriteria();
+        criteria.andStatusEqualTo(1);
+
+        if (!ObjectUtils.isEmpty(groupParm.getSearchName())) {
+            criteria.andNameLike("%" + groupParm.getSearchName() + "%");
+        }
+
+        if (!ObjectUtils.isEmpty(groupParm.getApplicationId())) {
+            criteria.andApplicationIdEqualTo(groupParm.getApplicationId());
+        }
+
+        if (!ObjectUtils.isEmpty(groupParm.getTenantId())) {
+            criteria.andTenantIdEqualTo(groupParm.getTenantId());
+        }
+
+        String level = resourceService.getLevelByUserIdAndPath(userId, GarnetContants.GARNET_DATA_GROUPMANAGE_QUERY_PATH);
+        List<Group> groupList = new ArrayList<>();
+        if (Integer.valueOf(level) == 1) {
+            //全部数据
+            groupList = this.selectByCriteria(groupCriteria);
+        } else if (Integer.valueOf(level) == 2) {
+            //非Garnet数据
+            List<Long> tenantIdList = commonService.getTenantIdsNotGarnet(userId);
+            criteria.andTenantIdIn(tenantIdList);
+            List<Group> groupList1 = this.selectByCriteria(groupCriteria);
+
+            //应用级数据，除去Garnet应用
+            GroupCriteria groupCriteria1 = new GroupCriteria();
+            groupCriteria1.createCriteria().andTenantIdEqualTo(0L).andApplicationIdNotEqualTo(GarnetContants.GARNET_APPLICATION_ID);
+            List<Group> groupList2 = this.selectByCriteria(groupCriteria1);
+
+            List<Group> groupList3 = new ArrayList<>();
+            groupList3.addAll(groupList1);
+            groupList3.addAll(groupList2);
+
+
+            List<Long> groupIdList = new ArrayList<>();
+            for (Group group : groupList3) {
+                groupIdList.add(group.getId());
+            }
+            //去重
+            Set<Long> groupIdSet = new HashSet<>();
+            for (Group group : groupList3) {
+                if (!groupIdSet.contains(group.getId())) {
+                    groupIdSet.add(group.getId());
+                    groupList.add(group);
+                }
+            }
+
+//            UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+//            userTenantCriteria.createCriteria().andTenantIdIn(tenantIdList);
+//            List<UserTenant> userTenantList = userTenantService.selectByCriteria(userTenantCriteria);
+//            List<Long> userIdList = new ArrayList<>();
+//            for (UserTenant userTenant : userTenantList) {
+//                userIdList.add(userTenant.getUserId());
+//            }
+//            if (userIdList.size() == 0) {
+//                userIdList.add(GarnetContants.NON_VALUE);
+//            }
+//
+//            GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+//            groupUserCriteria.createCriteria().andUserIdIn(userIdList);
+//            List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+//            List<Long> groupIdList = new ArrayList<>();
+//            for (GroupUser groupUser : groupUserList) {
+//                groupIdList.add(groupUser.getGroupId());
+//            }
+//            if (groupIdList.size() == 0) {
+//                groupIdList.add(GarnetContants.NON_VALUE);
+//            }
+//            criteria.andIdIn(groupIdList);
+//            groupList = this.selectByCriteria(groupCriteria);
+        } else if (Integer.valueOf(level) == 3) {
+            //本用户为租户管理员的租户关联的组(不包括租户字段为空[即应用级]的组)
+            List<Tenant> tenantList = tenantService.getTenantManageListByUserId(userId);
+            List<Long> tenantIdList = new ArrayList<>();
+            for (Tenant tenant : tenantList) {
+                tenantIdList.add(tenant.getId());
+            }
+
+            criteria.andTenantIdIn(tenantIdList);
+            groupList = this.selectByCriteria(groupCriteria);
+        }
+
+        GroupView groupView;
+        List<GroupView> groupViewList = new ArrayList<>();
+        for (Group group : groupList) {
+            groupView = new GroupView();
+            groupView.setGroup(group);
+            if (group.getTenantId().longValue() != 0 && group.getApplicationId().longValue() == 0) {
+                groupView.setType("租户");
+            } else if (group.getTenantId().longValue() == 0 && group.getApplicationId().longValue() != 0) {
+                groupView.setType("应用");
+            } else {
+                groupView.setType("租户+应用");
+            }
+
+            groupViewList.add(groupView);
+        }
+
+        PageUtil result = new PageUtil(groupViewList, groupViewList.size() ,groupParm.getPageSize(), groupParm.getPageNumber());
+        return result;
+    }
+
+    /**
+     * 通过组id获取用户权限（资源配置中的level）
+     * @param groupId
+     * @return
+     */
+    private String getLevelByGroupId(Long groupId) {
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andGroupIdEqualTo(groupId);
+        List<GroupRole> groupRoleList = groupRoleService.selectByCriteria(groupRoleCriteria);
+        List<Long> roleIdList = new ArrayList<>();
+        for (GroupRole groupRole : groupRoleList) {
+            roleIdList.add(groupRole.getRoleId());
+        }
+
+        //根据角色id拿permissions
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andRoleIdIn(roleIdList);
+        List<RolePermission> rolePermissionList = rolePermissionService.selectByCriteria(rolePermissionCriteria);
+        List<Long> permissionIdList = new ArrayList<>();
+        for (RolePermission rolePermission : rolePermissionList) {
+            permissionIdList.add(rolePermission.getPermissionId());
+        }
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andIdIn(permissionIdList).andResourcePathWildcardLike(GarnetContants.GARNET_DATA_USERMANAGE_GARNETGROUPLIST_PATH + "%");
+        List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
+
+        //根据权限id拿resources
+        List<Resource> resourceList= new ArrayList<>();
+        for (Permission permission : permissionList) {
+            ResourceCriteria resourceCriteria = new ResourceCriteria();
+            resourceCriteria.createCriteria().andPathLike(permission.getResourcePathWildcard());
+            List<Resource> resourceList1 = resourceService.selectByCriteria(resourceCriteria);
+            resourceList.addAll(resourceList1);
+        }
+        int level = 0;
+        for (Resource resource : resourceList) {
+            int level1 = Integer.valueOf(resource.getVarchar00());
+            if (level == 0 || level1 < level) {
+                //取值最小，level等级越高，取最高级
+                level = level1;
+            }
+        }
+
+        return String.valueOf(level);
+    }
+
     /**
      * 验证组名称是否已经存在
      */
     private void checkDuplicateGroupName(Group group) {
-
         Long id = group.getId();
         String name = group.getName();
 
