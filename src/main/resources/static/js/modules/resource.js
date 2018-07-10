@@ -122,7 +122,12 @@ var applicationList = {
     // 搜索框应用列表数据
     appSearchList: {
         selectedApp: "",
-        options: []
+        options: [
+            {
+                id : "",
+                name : "全部"
+            }
+        ]
     },
     typeSearchList: {
         searchType: "",
@@ -130,7 +135,12 @@ var applicationList = {
     },
     tenantSearchList: {
         searchTenant: "",
-        options: []
+        options: [
+            {
+                id : "",
+                name : "全部"
+            }
+        ]
     }
 };
 
@@ -138,13 +148,19 @@ var typeList = {
     // 类型选择框应用列表数据
     typeSearchList: {
         searchType: "",
-        searchTypeOptions: []
+        searchTypeOptions: [
+            {
+                id : "",
+                name : "全部"
+            }
+        ]
     }
 };
 
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+        typesEditAble: false, //类型选择框是否可编辑
         showType: false,
         showTenant: false, //显示租户下拉框
         showApplication: false, //显示应用下拉框
@@ -363,6 +379,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.showList1 = false;
             vm.showType = true;
+            vm.typesEditAble = true;
             vm.showTenant = false;
             vm.showApplication = false;
             vm.title = "新增";
@@ -408,7 +425,7 @@ var vm = new Vue({
             }
             vm.showList = false;
             vm.showList1 = false;
-            vm.showType = false;
+            vm.showType = true;
             vm.title = "修改";
             vm.tenantList.selectedTenant = "";
             vm.tenantList.options = [];
@@ -424,6 +441,7 @@ var vm = new Vue({
             // vm.resource.apiIdList = [];
             // vm.showParentCode = true;
             vm.initTreesToUpdate(resourceId);
+            vm.getPermissionAction();
             // vm.loadResourceTree();
         },
         /**  删除按钮点击事件 */
@@ -629,17 +647,20 @@ var vm = new Vue({
                 var selectedApp = response.applicationId;
                 if (selectedTenant == null || selectedTenant == 0) {
                     //应用级
+                    vm.typeList1.selectedType = "2";
                     vm.tenantList.selectedTenant = "";
                     applicationList.appList.selectedApp = selectedApp;
                     vm.showApplication = true;
                     vm.showTenant = false;
                 } else if (selectedApp == null || selectedApp == 0){
                     //租户级
+                    vm.typeList1.selectedType = "1";
                     applicationList.appList.selectedApp = "";
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showTenant = true;
                     vm.showApplication = false;
                 } else {
+                    vm.typeList1.selectedType = "3";
                     applicationList.appList.selectedApp = selectedApp;
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showApplication = true;
@@ -676,7 +697,6 @@ var vm = new Vue({
 
                     if (vm.filedNames[i] == "varchar05") {
                         vm.resource.varchar05 = response.varchar05;
-                        vm.resource.varchar06 = response.varchar06;
                     }
 
                     if (vm.filedNames[i] == "varchar06") {
@@ -1207,6 +1227,7 @@ var vm = new Vue({
                     }
 
                     if ("" + item.filedName == "varchar12") {
+                        // console.log("varchar description: " + JSON.stringify(item.description));
                         vm.resource.varchar12description = item.description;
                         $('#varchar121').html(item.description);
                         if (item.description == null || item.description == "") {
@@ -1492,6 +1513,24 @@ var vm = new Vue({
                     vm.resource.path = node[0].path + "/";
                     vm.showParentCode = true;
                     layer.close(index);
+                }
+            });
+        },
+        getPermissionAction: function () {
+            var type;
+            var path = "/garnet/option/resourceManage/types";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                type = response.data;
+            });
+            var path1 = path + "/" + type;
+            // console.log("path1：" + path1);
+            $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
+                var action = response.data;
+                console.log("action: " + action);
+                if (action == "read") {
+                    vm.typesEditAble = false;
+                } else {
+                    vm.typesEditAble = true;
                 }
             });
         }

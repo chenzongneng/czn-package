@@ -5,8 +5,8 @@
  */
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+// var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
 
 var nowTime = $.now();
 var vm = new Vue({
@@ -30,17 +30,13 @@ var vm = new Vue({
             // alert(JSON.stringify(this.inputtext));
         },
         login: function () {
-
-            var userId = localStorage.getItem("userId");
-
             var loc = location.href;
             var length = loc.length;//地址的总长度
             var indexOfAppCode = loc.indexOf("appCode=");
             var indexOfUrl = loc.indexOf("redirectUrl=");
+            //http://localhost:12306/garnet/otherslogin.html?redirectUrl=https://www.bilibili.com/&appCode=garnet
             var redirectUrl = loc.substr(indexOfUrl+12, indexOfAppCode-indexOfUrl-13);//从=号后面的内容
             var appCode = loc.substr(indexOfAppCode + 8, length - indexOfAppCode-8);
-
-            console.log("appCode: " + appCode);
 
             if (vm.userName != null && vm.userName != "") {
                 document.cookie = "userName=" + vm.userName + ";";
@@ -75,6 +71,9 @@ var vm = new Vue({
                                 if (result.loginStatus == "success") {
                                     var accessToken = result.accessToken;
                                     var refreshToken = result.refreshToken;
+                                    var userId = result.user.id;
+                                    var userName = result.user.userName;
+                                    var tenantNameAndId = JSON.stringify(result.userTenantNameAndIdMap);
 
                                     localStorage.setItem("accessToken", accessToken);
                                     localStorage.setItem("refreshToken", refreshToken);
@@ -85,7 +84,8 @@ var vm = new Vue({
 
                                     if (indexOfUrl > 0 && redirectUrl != null && $.trim(redirectUrl) != "") {
                                         console.log("redirectUrl: " + redirectUrl);
-                                        window.location.href = redirectUrl + '?accessToken=' + accessToken + '&refreshToken=' + refreshToken;
+                                        window.location.href = redirectUrl + '?accessToken=' + accessToken + '&refreshToken=' +
+                                            refreshToken + "&userId=" + userId + "&userName=" + userName + "&appCode=" + appCode + "&tenantNameAndId=" + tenantNameAndId;;
                                     } else {
                                         vm.redirectToAppList(accessToken, refreshToken);
                                     }

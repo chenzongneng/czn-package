@@ -2,14 +2,17 @@ package com.richstonedt.garnet.service;
 
 import com.github.pagehelper.PageInfo;
 import com.richstonedt.garnet.common.utils.PageUtil;
+import com.richstonedt.garnet.model.Permission;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.criteria.ResourceCriteria;
 import com.richstonedt.garnet.model.parm.ResourceParm;
+import com.richstonedt.garnet.model.view.ModuleResourceView;
 import com.richstonedt.garnet.model.view.ResourceExcelView;
 import com.richstonedt.garnet.model.view.ResourceView;
 import sun.security.util.Resources_pt_BR;
 
 import java.io.IOException;
+import java.net.ResponseCache;
 import java.util.List;
 
 public interface ResourceService extends BaseService<Resource, ResourceCriteria, Long> {
@@ -53,6 +56,8 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      * @throws IOException
      */
     String getGarnetSysMenuResources(ResourceParm resourceParm) throws IOException;
+
+    ModuleResourceView getModuleResources(ResourceParm resourceParm);
 
     /**
      * 通过应用id和资源类型获取资源列表,并拼接成字符串返回
@@ -103,4 +108,20 @@ public interface ResourceService extends BaseService<Resource, ResourceCriteria,
      * @return
      */
     PageUtil getResourcesByParams(ResourceParm resourceParm);
+
+    /**
+     * 是否拥有关联所有用户的资源
+     * @param resourceParm
+     * @return
+     */
+    Integer isRelatedAllUsers(ResourceParm resourceParm);
+
+    String getUserPermissionAction(ResourceParm resourceParm);
+
+    /**
+     * 获取用户权限
+     * @param userId
+     * @return
+     */
+    List<Permission> getPermissionsByUserId(Long userId);
 }

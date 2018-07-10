@@ -11,6 +11,16 @@ public class ResourceParm extends BaseParm{
 
     private String type;
 
+    private String resourcePathWildCard;
+
+    public String getResourcePathWildCard() {
+        return resourcePathWildCard;
+    }
+
+    public void setResourcePathWildCard(String resourcePathWildCard) {
+        this.resourcePathWildCard = resourcePathWildCard;
+    }
+
     public String getType() {
         return type;
     }

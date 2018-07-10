@@ -8,6 +8,7 @@ import com.richstonedt.garnet.interceptory.LoginRequired;
 import com.richstonedt.garnet.model.Resource;
 import com.richstonedt.garnet.model.message.*;
 import com.richstonedt.garnet.model.parm.ResourceParm;
+import com.richstonedt.garnet.model.view.ModuleResourceView;
 import com.richstonedt.garnet.model.view.ResourceView;
 import com.richstonedt.garnet.service.ResourceService;
 import io.swagger.annotations.*;
@@ -265,9 +266,11 @@ public class ResourceController {
             ResourceParm resourceParm = new ResourceParm();
             resourceParm.setUserId(userId);
 
-            String jsonString = resourceService.getGarnetSysMenuResources(resourceParm);
+//            String jsonString = resourceService.getGarnetSysMenuResources(resourceParm);
+            ModuleResourceView moduleResourceView = resourceService.getModuleResources(resourceParm);
             // 封装返回信息
-            return new ResponseEntity<>(jsonString, HttpStatus.OK);
+//            return new ResponseEntity<>(jsonString, HttpStatus.OK);
+            return new ResponseEntity<>(moduleResourceView, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
             LOG.error(error, t);
@@ -308,6 +311,54 @@ public class ResourceController {
             String type = resourceService.getTypeByUserIdAndPath(userId, path);
             // 封装返回信息
             GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, type);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]获取默认关联所有用户选项配置级别", notes = "获取默认关联所有用户选项配置级别")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/getrelateduserlevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getRelateAllUserLevelByUserIdAdnPath(
+            @ApiParam(value = "用户Id", defaultValue = "", required = true) @RequestParam(value = "userId", defaultValue = "", required = true) Long userId,
+            @ApiParam(value = "path", defaultValue = "", required = true) @RequestParam(value = "path", defaultValue = "", required = true) String path) {
+        try {
+            ResourceParm resourceParm = new ResourceParm();
+            resourceParm.setUserId(userId);
+            resourceParm.setResourcePathWildCard(path);
+            Integer relatedAllUsersLevel = resourceService.isRelatedAllUsers(resourceParm);
+            // 封装返回信息
+            GarnetMessage<Integer> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, relatedAllUsersLevel);
+            return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
+        } catch (Throwable t) {
+            String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;
+            LOG.error(error, t);
+            GarnetMessage<GarnetErrorResponseMessage> torinoSrcMessage = MessageUtils.setMessage(MessageCode.FAILURE, MessageStatus.ERROR, error, new GarnetErrorResponseMessage(t.toString()));
+            return GarnetServiceExceptionUtils.getHttpStatusWithResponseGarnetMessage(torinoSrcMessage, t);
+        }
+    }
+
+    @ApiOperation(value = "[Garnet]获取用户权限行为", notes = "获取用户权限行为")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful request"),
+            @ApiResponse(code = 500, message = "internal server error") })
+    @RequestMapping(value = "/resources/getuseraction", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getPermissionActionByUserIdAdnPath(
+            @ApiParam(value = "用户Id", defaultValue = "", required = true) @RequestParam(value = "userId", defaultValue = "", required = true) Long userId,
+            @ApiParam(value = "path", defaultValue = "", required = true) @RequestParam(value = "path", defaultValue = "", required = true) String path) {
+        try {
+            ResourceParm resourceParm = new ResourceParm();
+            resourceParm.setUserId(userId);
+            resourceParm.setResourcePathWildCard(path);
+            String action = resourceService.getUserPermissionAction(resourceParm);
+            // 封装返回信息
+            GarnetMessage<String> torinoSrcMessage = MessageUtils.setMessage(MessageCode.SUCCESS, MessageStatus.SUCCESS, MessageDescription.OPERATION_QUERY_SUCCESS, action);
             return new ResponseEntity<>(torinoSrcMessage, HttpStatus.OK);
         } catch (Throwable t) {
             String error = "Failed to get entities!" + MessageDescription.OPERATION_QUERY_FAILURE;

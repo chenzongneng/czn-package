@@ -366,11 +366,11 @@ var vm = new Vue({
             //     obj.userTenants.push(userTenant);
             // }
 
-            console.log("tenantIdList: " + tenantIdList);
-            console.log("tenantIdList.length: " + tenantIdList.length);
-            console.log("tenantIdList.length type: " + typeof tenantIdList.length);
+            // console.log("tenantIdList: " + tenantIdList);
+            // console.log("tenantIdList.length: " + tenantIdList.length);
+            // console.log("tenantIdList.length type: " + typeof tenantIdList.length);
             if (tenantIdList == null || tenantIdList.length == 0) {
-                console.log("我应该进来的呀");
+                // console.log("我应该进来的呀");
                 // window.parent.swal("", "您没有为用户关联租户，后续可能无权管理该用户", "warning");
                 window.parent.swal({
                         title: "",
@@ -470,18 +470,29 @@ var vm = new Vue({
                 //初始化租户树和组树
                 vm.initTreeToAdd();
 
+                console.log("response.tenantIds：" + JSON.stringify(response.tenantIds));
                 // 勾选已有租户
                 $.each(response.tenantIds, function (index, item) {
-                    var node = tenantTree.getNodeByParam("id", item);
-                    tenantTree.checkNode(node, true, false);
+
+                    try {
+                        var node = tenantTree.getNodeByParam("id", item);
+                        tenantTree.checkNode(node, true, false);
+                    } catch (e) {
+                        console.log("update zhongshan没有权限查看该数据:"+JSON.stringify(item));
+                    }
+
                 });
                 // 勾选已有组
                 $.each(response.groupIds, function (index, item) {
 
-                    console.log(index + ": " + JSON.stringify(item));
+                    try {
+                        console.log(index + ": " + JSON.stringify(item));
 
-                    var node = groupTree.getNodeByParam("id", item);
-                    groupTree.checkNode(node, true, false);
+                        var node = groupTree.getNodeByParam("id", item);
+                        groupTree.checkNode(node, true, false);
+                    } catch (e) {
+                        console.log("update zhongshan没有权限查看该数据:"+JSON.stringify(item));
+                    }
                 });
 
                 // vm.user.userId = response.userId;

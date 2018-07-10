@@ -8,8 +8,8 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-// var baseURL = "http://localhost:12306/garnet/api/v1.0/";
-var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+// var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
 
 /** token */
 var accessToken = localStorage.getItem("accessToken");
@@ -84,9 +84,9 @@ $.ajaxSetup({
             var pathName = window.document.location.pathname;
             var patrn = /.*index.html$/;
             if (patrn.exec(pathName)) {
-                // parent.location.href = 'login.html';
+                parent.location.href = 'login.html';
             } else {
-                // parent.location.href = '../login.html';
+                parent.location.href = '../login.html';
             }
         }
 
@@ -104,6 +104,9 @@ $.ajaxSetup({
             localStorage.removeItem("refreshToken");
 
             if ("请先登录" == response.message) {
+
+                console.log("请先登录");
+
                 var pathName = window.document.location.pathname;
                 var patrn = /.*index.html$/;
                 if (patrn.exec(pathName)) {
@@ -117,6 +120,9 @@ $.ajaxSetup({
                         type: "error"
                     },
                     function () {
+
+                        console.log("请先登录else");
+
                         var pathName = window.document.location.pathname;
                         var patrn = /.*index.html$/;
                         if (patrn.exec(pathName)) {

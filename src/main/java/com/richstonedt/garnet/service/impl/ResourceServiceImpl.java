@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.lang.management.MemoryNotificationInfo;
 import java.util.*;
 
 @Service
@@ -224,19 +225,35 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     public String getGarnetAppCodeResources(ResourceParm resourceParm) {
 
         if (!StringUtils.isEmpty(resourceParm.getUserId())) {
-            List<Resource> resourceList = new ArrayList<>();
-            List<Resource> resourceList1 = this.getResourceListByUserId(resourceParm.getUserId(), GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_BUTTON);
-            List<Resource> resourceList2 = this.getResourceListByUserId(resourceParm.getUserId(), GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_MODULE);
-            resourceList.addAll(resourceList1);
-            resourceList.addAll(resourceList2
-            );
+//            List<Resource> resourceList = new ArrayList<>();
+//            List<Resource> resourceList1 = this.getResourceListByUserId(resourceParm.getUserId(), GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_BUTTON);
+//            List<Resource> resourceList2 = this.getResourceListByUserId(resourceParm.getUserId(), GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_MODULE);
+//            resourceList.addAll(resourceList1);
+//            resourceList.addAll(resourceList2
+//            );
+//            if (CollectionUtils.isEmpty(resourceList)) {
+//                return "";
+//            }
+//
+//            JSONObject jsonObject = new JSONObject();
+//            for (Resource resource : resourceList) {
+//                jsonObject.put(resource.getVarchar00(), Boolean.parseBoolean(resource.getVarchar01()));
+//            }
+//            return jsonObject.toString();
+
+            List<Resource> resourceList = this.getResourcesByUserId(resourceParm.getUserId());
             if (CollectionUtils.isEmpty(resourceList)) {
                 return "";
             }
 
             JSONObject jsonObject = new JSONObject();
             for (Resource resource : resourceList) {
-                jsonObject.put(resource.getVarchar00(), Boolean.parseBoolean(resource.getVarchar01()));
+                if (GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_MODULE.equals(resource.getType())) {
+                    jsonObject.put(resource.getVarchar11(), Boolean.parseBoolean(resource.getVarchar12()));
+                } else if (GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_BUTTON.equals(resource.getType())) {
+                    //新增、删除等按钮
+                    jsonObject.put(resource.getVarchar00(), Boolean.parseBoolean(resource.getVarchar01()));
+                }
             }
             return jsonObject.toString();
         } else {
@@ -248,11 +265,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
     @Override
     public String getGarnetSysMenuResources(ResourceParm resourceParm) {
         ResourceCriteria resourceCriteria = new ResourceCriteria();
-        resourceCriteria.createCriteria().andTypeEqualTo("garnet_sysMenu").andVarchar07Like("garnetSysManagement%");
+        resourceCriteria.createCriteria().andTypeEqualTo(GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_MODULE).andVarchar07Like("garnetSysManagement%");
         List<Resource> resourceList1 = this.selectByCriteria(resourceCriteria);
 
         ResourceCriteria resourceCriteria1 = new ResourceCriteria();
-        resourceCriteria.createCriteria().andTypeEqualTo("garnet_sysMenu").andVarchar07Like("garnetDevelopment%");
+        resourceCriteria.createCriteria().andTypeEqualTo(GarnetContants.GARNET_RESOURCE_DYNAMICPROPERTY_MODULE).andVarchar07Like("garnetDevelopment%");
         List<Resource> resourceList2 = this.selectByCriteria(resourceCriteria1);
 
         //菜单管理一级
@@ -266,6 +283,17 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         jsonArray.add(sySMenuJsonObject2);
 
         return jsonArray.toString();
+    }
+
+    @Override
+    public ModuleResourceView getModuleResources(ResourceParm resourceParm) {
+        String sysMenu = this.getGarnetSysMenuResources(resourceParm);
+        String sysAppCode = this.getGarnetAppCodeResources(resourceParm);
+
+        ModuleResourceView resourceView = new ModuleResourceView();
+        resourceView.setSysAppCode(sysAppCode);
+        resourceView.setSysMenu(sysMenu);
+        return resourceView;
     }
 
     /**
@@ -879,9 +907,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         }
         //根据permissionList 查询resourceDynamicProperties
         List<ResourceDynamicProperty> resourceDynamicProperties = new ArrayList<>();
+        String action;
+        ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria;
         for (Permission permission : permissionList) {
-            String action = permission.getAction();
-            ResourceDynamicPropertyCriteria resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
+            action = permission.getAction();
+            resourceDynamicPropertyCriteria = new ResourceDynamicPropertyCriteria();
             resourceDynamicPropertyCriteria.createCriteria().andActionsLike("%" + action + "%").andIdIn(resourceDynamicPropertyIds);
             List<ResourceDynamicProperty> resourceDynamicProperties1 = resourceDynamicPropertyService.selectByCriteria(resourceDynamicPropertyCriteria);
             resourceDynamicProperties.addAll(resourceDynamicProperties1);
@@ -892,8 +922,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         }
 
         List<String> typeList = new ArrayList<>();
+        Set<String> typeSet = new HashSet<>();
         for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
-            typeList.add(resourceDynamicProperty.getType());
+            if (!typeSet.contains(resourceDynamicProperty.getType())) {
+                typeSet.add(resourceDynamicProperty.getType());
+                typeList.add(resourceDynamicProperty.getType());
+            }
         }
 
         //根据tenantIds和applicationIds 获取resources
@@ -928,14 +962,15 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
 
         //通过权限的通配符 查询相对应的resource
         List<Resource> resources = new ArrayList<>();
+        String resourcePathWildcard;
         for (Permission permission : permissionList) {
-            String resourcePathWildcard = permission.getResourcePathWildcard();
-            if (!StringUtils.isEmpty(resourcePathWildcard)) {
+            resourcePathWildcard = permission.getResourcePathWildcard();
+//            if (!StringUtils.isEmpty(resourcePathWildcard)) {
                 ResourceCriteria resourceCriteria = new ResourceCriteria();
                 resourceCriteria.createCriteria().andPathLike(resourcePathWildcard).andIdIn(resourceIds).andTypeIn(typeList);
                 List<Resource> resources1 = this.selectByCriteria(resourceCriteria);
                 resources.addAll(resources1);
-            }
+//            }
         }
 
         //去重
@@ -967,12 +1002,21 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         List<Resource> resourceList1 = this.selectByCriteria(resourceCriteria);
 
         int level = 0;
+        ResourceParm resourceParm = new ResourceParm();
+        resourceParm.setUserId(userId);
+        resourceParm.setResourcePathWildCard(path);
+        String action = this.getUserPermissionAction(resourceParm);
+        if ("".equals(action.trim())) {
+            return String.valueOf(level);
+        }
+
         for (Resource resource : resourceList1) {
             int level1 = Integer.valueOf(resource.getVarchar00());
             if (level == 0 || level1 < level) {
                 level = level1;
             }
         }
+
         return String.valueOf(level);
     }
 
@@ -987,7 +1031,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
             resourceIdList.add(GarnetContants.NON_VALUE);
         }
         ResourceCriteria resourceCriteria = new ResourceCriteria();
-        resourceCriteria.createCriteria().andPathLike(path).andIdIn(resourceIdList);
+        resourceCriteria.createCriteria().andPathLike(path + "%").andIdIn(resourceIdList);
         List<Resource> resourceList1 = this.selectByCriteria(resourceCriteria);
 
         int type = 0;
@@ -1080,6 +1124,208 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource, ResourceCrite
         }
         PageUtil result = new PageUtil(resourceList, resourceList.size(), resourceParm.getPageSize(), resourceParm.getPageNumber());
         return result;
+    }
+
+    @Override
+    public Integer isRelatedAllUsers(ResourceParm resourceParm) {
+        Long userId = resourceParm.getUserId();
+        List<Resource> resourceList = this.getResourcesByUserId(userId);
+        String action = this.getUserPermissionAction(resourceParm);
+
+        int level = 0;//0 不可见  1 可见，但编辑时不可选  2 新增编辑均可选
+        for (Resource resource : resourceList) {
+            if (GarnetContants.GARNET_RESOURCE_USERRELATION_PATH.equals(resource.getPath()) && "read".equals(action)) {
+                if (level < 1) level = 1;
+            } else if (GarnetContants.GARNET_RESOURCE_USERRELATION_PATH.equals(resource.getPath()) && "edit".equals(action)){
+                if (level < 2) level = 2;
+            } else {
+                if (level <= 0)level = 0;
+            }
+        }
+        return level;
+    }
+
+    @Override
+    public String getUserPermissionAction(ResourceParm resourceParm) {
+        Long userId = resourceParm.getUserId();
+        String resourcePathWildCard = resourceParm.getResourcePathWildCard();
+        List<Permission> permissions = getPermissionsByUserId(userId);
+        List<Long> permissionIdList = new ArrayList<>();
+        for (Permission permission : permissions) {
+            permissionIdList.add(permission.getId());
+        }
+        if (permissionIdList.size() == 0) {
+            permissionIdList.add(GarnetContants.NON_VALUE);
+        }
+
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andResourcePathWildcardLike(resourcePathWildCard).andIdIn(permissionIdList).andStatusEqualTo(1);
+        List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
+
+        String action = "read";
+        for (Permission permission : permissionList) {
+            if (!"read".equals(permission.getAction())) {
+                action = permission.getAction();
+            }
+        }
+
+        return action;
+    }
+
+    @Override
+    public List<Permission> getPermissionsByUserId(Long userId) {
+        //根据userId 拿tenantIds
+        UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
+        userTenantCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<UserTenant> userTenants = userTenantService.selectByCriteria(userTenantCriteria);
+        List<Long> tenantIds = new ArrayList<>();
+        for (UserTenant userTenant : userTenants) {
+            tenantIds.add(userTenant.getTenantId());
+        }
+        if (tenantIds.size() == 0) {
+            tenantIds.add(GarnetContants.NON_VALUE);
+        }
+
+        //根据tenantIds 拿applicationIds
+        ApplicationTenantCriteria applicationTenantCriteria = new ApplicationTenantCriteria();
+        applicationTenantCriteria.createCriteria().andTenantIdIn(tenantIds);
+        List<ApplicationTenant> applicationTenants = applicationTenantService.selectByCriteria(applicationTenantCriteria);
+        List<Long> applicationIds = new ArrayList<>();
+        for (ApplicationTenant applicationTenant : applicationTenants) {
+            applicationIds.add(applicationTenant.getApplicationId());
+        }
+        if (applicationIds.size() == 0 ) {
+            applicationIds.add(GarnetContants.NON_VALUE);
+        }
+
+        //根据userId 拿GroupIds
+        GroupUserCriteria groupUserCriteria = new GroupUserCriteria();
+        groupUserCriteria.createCriteria().andUserIdEqualTo(userId);
+        List<GroupUser> groupUserList = groupUserService.selectByCriteria(groupUserCriteria);
+        List<Long> groupIds = new ArrayList<>();
+        for (GroupUser groupUser : groupUserList) {
+            Long groupId = groupUser.getGroupId();
+            groupIds.add(groupId);
+        }
+        if (groupIds.size() == 0) {
+            groupIds.add(GarnetContants.NON_VALUE);
+        }
+        //根据tenantIds和applicationIds 拿Groups
+        List<Group> groups1 = new ArrayList<>();
+        List<Group> groups2 = new ArrayList<>();
+        List<Group> groups3 = new ArrayList<>();
+        //租户级
+        GroupCriteria groupCriteria1 = new GroupCriteria();
+        groupCriteria1.createCriteria().andTenantIdIn(tenantIds).andApplicationIdEqualTo(APPLICATIONID_NULL).andIdIn(groupIds).andStatusEqualTo(1);
+        groups1 = groupService.selectByCriteria(groupCriteria1);
+        //应用级
+        GroupCriteria groupCriteria2 = new GroupCriteria();
+        groupCriteria2.createCriteria().andTenantIdEqualTo(TENANTID_NULL).andApplicationIdIn(applicationIds).andIdIn(groupIds).andStatusEqualTo(1);
+        groups2 = groupService.selectByCriteria(groupCriteria2);
+        //租户+应用
+        GroupCriteria groupCriteria3 = new GroupCriteria();
+        groupCriteria3.createCriteria().andTenantIdIn(tenantIds).andApplicationIdIn(applicationIds).andIdIn(groupIds).andStatusEqualTo(1);
+        groups3 = groupService.selectByCriteria(groupCriteria3);
+
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(groups1);
+        groups.addAll(groups2);
+        groups.addAll(groups3);
+
+        List<Long> groupIds1 = new ArrayList<>();
+        for (Group group : groups) {
+            groupIds1.add(group.getId());
+        }
+        if (groupIds1.size() == 0) {
+            groupIds.add(GarnetContants.NON_VALUE);
+        }
+
+        //根据tenantIds和applicationIds获取roleIds
+        List<Role> roles1 = new ArrayList<>();
+        List<Role> roles2 = new ArrayList<>();
+        List<Role> roles3 = new ArrayList<>();
+        //租户级
+        RoleCriteria roleCriteria1 = new RoleCriteria();
+        roleCriteria1.createCriteria().andTenantIdIn(tenantIds).andApplicationIdEqualTo(APPLICATIONID_NULL).andStatusEqualTo(1);
+        roles1 = roleService.selectByCriteria(roleCriteria1);
+        //应用级
+        RoleCriteria roleCriteria2 = new RoleCriteria();
+        roleCriteria2.createCriteria().andTenantIdEqualTo(TENANTID_NULL).andApplicationIdIn(applicationIds).andStatusEqualTo(1);
+        roles2 = roleService.selectByCriteria(roleCriteria2);
+        //租户+应用
+        RoleCriteria roleCriteria3 = new RoleCriteria();
+        roleCriteria3.createCriteria().andTenantIdIn(tenantIds).andApplicationIdIn(applicationIds).andStatusEqualTo(1);
+        roles3 = roleService.selectByCriteria(roleCriteria3);
+
+        List<Role> roles = new ArrayList<>();
+        roles.addAll(roles1);
+        roles.addAll(roles2);
+        roles.addAll(roles3);
+        //根据groupIds 拿roleIds
+        List<Long> roleIds = new ArrayList<>();
+        for (Role role : roles) {
+            roleIds.add(role.getId());
+        }
+        if (roleIds.size() == 0) {
+            roleIds.add(GarnetContants.NON_VALUE);
+        }
+        GroupRoleCriteria groupRoleCriteria = new GroupRoleCriteria();
+        groupRoleCriteria.createCriteria().andGroupIdIn(groupIds).andRoleIdIn(roleIds);
+        List<GroupRole> groupRoles = groupRoleService.selectByCriteria(groupRoleCriteria);
+
+        List<Long> roleIds1 = new ArrayList<>();
+        for (GroupRole groupRole : groupRoles) {
+            roleIds1.add(groupRole.getRoleId());
+        }
+        if (roleIds1.size() == 0) {
+            roleIds1.add(GarnetContants.NON_VALUE);
+        }
+
+        //根据appId和tenantIds获取permissions
+        List<Permission> permissionList1 = new ArrayList<>();
+        List<Permission> permissionList2 = new ArrayList<>();
+        List<Permission> permissionList3 = new ArrayList<>();
+        //租户级
+        PermissionCriteria permissionCriteria1 = new PermissionCriteria();
+        permissionCriteria1.createCriteria().andTenantIdIn(tenantIds).andApplicationIdEqualTo(APPLICATIONID_NULL).andStatusEqualTo(1);
+        permissionList1 = permissionService.selectByCriteria(permissionCriteria1);
+        //应用级
+        PermissionCriteria permissionCriteria2 = new PermissionCriteria();
+        permissionCriteria2.createCriteria().andTenantIdEqualTo(TENANTID_NULL).andApplicationIdIn(applicationIds).andStatusEqualTo(1);
+        permissionList2 = permissionService.selectByCriteria(permissionCriteria2);
+        //租户+应用
+        PermissionCriteria permissionCriteria3 = new PermissionCriteria();
+        permissionCriteria3.createCriteria().andTenantIdIn(tenantIds).andApplicationIdIn(applicationIds).andStatusEqualTo(1);
+        permissionList3 = permissionService.selectByCriteria(permissionCriteria3);
+
+        List<Permission> permissions = new ArrayList<>();
+        permissions.addAll(permissionList1);
+        permissions.addAll(permissionList2);
+        permissions.addAll(permissionList3);
+
+        List<Long> permissionIdList = new ArrayList<>();
+        for (Permission permission : permissions) {
+            permissionIdList.add(permission.getId());
+        }
+        if (permissionIdList.size() == 0) {
+            permissionIdList.add(GarnetContants.NON_VALUE);
+        }
+
+        //根据role拿permission
+        RolePermissionCriteria rolePermissionCriteria = new RolePermissionCriteria();
+        rolePermissionCriteria.createCriteria().andRoleIdIn(roleIds1).andPermissionIdIn(permissionIdList);
+        List<RolePermission> rolePermissions = rolePermissionService.selectByCriteria(rolePermissionCriteria);
+        List<Long> permissionIds = new ArrayList<>();
+        for (RolePermission rolePermission : rolePermissions) {
+            Long permissionId = rolePermission.getPermissionId();
+            permissionIds.add(permissionId);
+        }
+        if (permissionIds.size() == 0) {
+            permissionIds.add(GarnetContants.NON_VALUE);
+        }
+        PermissionCriteria permissionCriteria = new PermissionCriteria();
+        permissionCriteria.createCriteria().andIdIn(permissionIds).andStatusEqualTo(1);
+        return permissionService.selectByCriteria(permissionCriteria);
     }
 
 }

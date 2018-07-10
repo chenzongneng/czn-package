@@ -1,6 +1,7 @@
 package com.richstonedt.garnet.controller;
 
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.richstonedt.garnet.common.utils.PageUtil;
 import com.richstonedt.garnet.exception.GarnetServiceExceptionUtils;
 import com.richstonedt.garnet.interceptory.LoginMessage;
@@ -321,7 +322,10 @@ public class ApplicationController {
                 //如果登录成功，跳转
                 String accessToken = loginMessage.getAccessToken();
                 String refreshToken = loginMessage.getRefreshToken();
-                String url = application.getDefaultIndexUrl() + "?accessToken=" + accessToken + "&refreshToken=" + refreshToken;
+                Long userId = loginMessage.getUser().getId();
+                String tenantNameAndId = JSONUtils.toJSONString(loginMessage.getUserTenantNameAndIdMap());
+                String url = application.getDefaultIndexUrl() + "?accessToken=" + accessToken + "&refreshToken=" + refreshToken +
+                        "&userId=" + userId + "&userName=" + userName + "&appCode=" + appCode + "&tenantNameAndId=" + tenantNameAndId;
                 redirectView.setAccessToken(accessToken);
                 redirectView.setRefreshToken(refreshToken);
                 redirectView.setRedirectUrl(url);

@@ -73,13 +73,23 @@ var applicationList = {
     // 搜索框应用列表数据
     appSearchList: {
         selectedApp: "",
-        options: []
+        options: [
+            {
+                id : "",
+                name : "全部"
+            }
+        ]
     }
 };
 
 var tenantSearchList = {
     searchTenant: "",
-    options: []
+    options: [
+        {
+            id : "",
+            name : "全部"
+        }
+    ]
 };
 
 var vm = new Vue({
@@ -87,7 +97,8 @@ var vm = new Vue({
     data: {
         name: null,
         showList: true,
-        showType: true, //类型选择下拉框
+        typesEditAble: false, //类型选择框是否可编辑
+        showType: true, //类型选择下拉框是否显示
         showTenant: false, //显示租户下拉框
         showApplication: false, //显示应用下拉框
         showParentCode: false,
@@ -193,7 +204,8 @@ var vm = new Vue({
             $('#checkResourceDyPropName').hide();
 
             vm.showList = false;
-            vm.showType = true;
+            vm.showType = true; //类型选择框是否可见
+            vm.typesEditAble = true; //类型选择框是否编辑，默认可编辑
             vm.showApplication = false;
             vm.showTenant = false;
             vm.title = "新增";
@@ -253,7 +265,7 @@ var vm = new Vue({
 
 
             vm.showList = false;
-            vm.showType = false;
+            vm.showType = true;
             vm.title = "修改";
             applicationList.appList.options = [];
             applicationList.appList.selectedApp = "";
@@ -266,6 +278,7 @@ var vm = new Vue({
             vm.getTenantList();
             vm.getAppList();
             vm.initTreesToUpdate(resourceDynamicPropertyId);
+            vm.getPermissionAction();
             // vm.loadResourceTree();
         },
         /**  删除按钮点击事件 */
@@ -563,7 +576,7 @@ var vm = new Vue({
                     vm.showTenant = true;
                 }
 
-                console.log("resourceDynamicPropertyList: " + JSON.stringify(vm.resourceDynamicPropertyList));
+                // console.log("resourceDynamicPropertyList: " + JSON.stringify(vm.resourceDynamicPropertyList));
 
                 $.each(vm.resourceDynamicPropertyList,function (index, v) {
                     if ((v.description == null || $.trim(v.description) == "") && (v.fieldName == null || $.trim(v.fieldName) == "")) {
@@ -1034,7 +1047,7 @@ var vm = new Vue({
             var path = "/garnet/data/resourceTypeManage/tenantList";
             $.get(baseURL + "applications/byuseridandtenantid?userId=" + userId + "&path=" + path, function (response) {
                 $.each(response, function (index, item) {
-                    applicationList.appList.options.push(item);
+                    applicationList.appSearchList.options.push(item);
                     // applicationList.appSearchList.options.push(item);
                 })
             });
@@ -1043,6 +1056,24 @@ var vm = new Vue({
             vm.searchApp = applicationList.appSearchList.selectedApp;
             vm.searchTenant = tenantSearchList.searchTenant;
             vm.reload(true);
+        },
+        getPermissionAction: function () {
+            var type;
+            var path = "/garnet/option/resourceTypeManage/types";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                type = response.data;
+            });
+            var path1 = path + "/" + type;
+            // console.log("path1：" + path1);
+            $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
+                var action = response.data;
+                console.log("action: " + action);
+                if (action == "read") {
+                    vm.typesEditAble = false;
+                } else {
+                    vm.typesEditAble = true;
+                }
+            });
         }
         /**  获取应用列表 */
         // getAppList: function () {

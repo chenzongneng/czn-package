@@ -48,10 +48,10 @@ var vm = new Vue({
     },
     mounted: function () {
         var userId = localStorage.getItem("userId")
-        // console.log("idnex userId: " + userId);
+        console.log("idnex userId: " + userId);
         if (userId == null || userId == "") {
 
-            // console.log("index userid is null...");
+            console.log("index userid is null...");
 
             var pathName = window.document.location.pathname;
             var patrn = /.*index.html$/;
@@ -69,22 +69,29 @@ var vm = new Vue({
             var that = this;
             // $.getJSON(baseURL + "menu/userId/" + userId + "/appId/1/appName/garnet", function (r) {
             $.ajaxSettings.async = false;
-            // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
             $.getJSON(baseURL + "resources/getsysmenu?userId=" + userId, function (r) {
-                that.menuList = r;
+                // console.log("index sysmenu: " + JSON.stringify(r));
+                // that.menuList = r;
+
+                var sysMenu = r.sysMenu.replace("\\", "");
+                that.menuList = JSON.parse(sysMenu);
+                var sysAppCode = r.sysAppCode.replace("\\", "");
+                resources = JSON.parse(sysAppCode);
+
                 //路由
                 var router = new Router();
                 routerList(router, that.menuList,that);
                 router.start();
             });
+
         },
         /** 查询按钮列表 */
         getButtonList: function () {
             $.ajaxSettings.async = false;
             // $.getJSON("http://localhost:12306/garnet/test.json", function (r) {
-            $.getJSON(baseURL + "resources/getappcode?userId=" + userId, function (r) {
-                resources = r;
-            });
+            // $.getJSON(baseURL + "resources/getappcode?userId=" + userId, function (r) {
+            //     resources = r;
+            // });
             this.getMenuList();
         },
         /** 查询用户信息 */
@@ -384,7 +391,7 @@ $(window).on('resize', function () {
 
 hookAjax({
     open:function(arg,xhr){
-        var patrn = /.*checklogined.*!/;
+        var patrn = /.*checklogined.*/;
         var patrn2 = /.*garnetrefreshtoken.*/;
         var url = arg[1];
         // console.log("url: " + url);
@@ -406,6 +413,5 @@ hookAjax({
             // console.log("我发起了一次请求：" + url + " - 请求时间：" + timestamp);
             // console.log("open called: method:%s,url:%s,async:%s",arg[0],arg[1],arg[2]);
         }
-
     }
 });

@@ -79,7 +79,7 @@
             <div class="form-group"  v-show="!hidden">
                 <div class="col-sm-2 control-label">平台模式<span style="color: #d7220a">*</span></div>
                 <div class="col-sm-10">
-                    <select class="form-control" v-model="modeList2.selectedMode" @change="selectMode2" id="modeListId">
+                    <select class="form-control" v-model="modeList2.selectedMode" @change="selectMode2" id="modeListId" :disabled="!modeEditAble">
                         <option disabled value="">--请选择--</option>
                         <option v-for="option in modeList2.options" v-bind:value="option.id">
                             {{ option.name }}
@@ -94,18 +94,18 @@
                 </div>
             </div>
 
-            <!--<div class="form-group">-->
-                <!--<div class="col-sm-2 control-label"></div>-->
-                <!--<div class="col-sm-10">-->
-                    <!--<label>是否默认关联所有用户</label>-->
-                    <!--<select v-model="tenant.relatedAllUsers" :disabled="!relatedAllUserEditAble">-->
-                        <!--&lt;!&ndash;<option disabled value="">请选择</option>&ndash;&gt;-->
-                        <!--<option>Y</option>-->
-                        <!--<option selected="selected">N</option>-->
-                    <!--</select>-->
+            <div class="form-group" v-bind:hidden="relateUsersHidden">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <label>是否默认关联所有用户</label>
+                    <select v-model="tenant.relatedAllUsers" :disabled="!relatedAllUserEditAble">
+                        <!--<option disabled value="">请选择</option>-->
+                        <option>Y</option>
+                        <option selected="selected">N</option>
+                    </select>
 
-                <!--</div>-->
-            <!--</div>-->
+                </div>
+            </div>
 
             <div class="form-group" style="display: none;">
                 <div class="col-sm-2 control-label">创建时间</div>
@@ -151,7 +151,8 @@
 
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" :disabled="!tenantUpdateButton"/>
+                <!--<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" :disabled="!tenantUpdateButton"/>-->
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload(false)" value="返回"/>
             </div>
         </form>

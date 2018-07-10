@@ -107,8 +107,9 @@ var vm = new Vue({
         // isTenantReviewUsersEditable: null,
         // isTenantSelectAppEditable: null,
         tenantUpdateButton: false,
-
+        relateUsersHidden: true, //默认关联所有用户
         relatedAllUserEditAble: false, //编辑时不可更改 是否默认关联所有用户
+        modeEditAble: false, // 平台模式，是否可修改
         searchName: null,
         showList: true,
         title: null,
@@ -200,10 +201,11 @@ var vm = new Vue({
             // vm.isTenantSelectAppEditable = true;
             vm.tenantUpdateButton = true;
 
-            vm.relatedAllUserEditAble = true; //是否默认关联所有用户 是否可编辑
+            // vm.relatedAllUserEditAble = true; //是否默认关联所有用户 是否可编辑
             vm.showList = false;
             vm.modeList2.selectedMode = "";
             vm.hidden = false;  //平台模式选择
+            vm.modeEditAble = true; //平台模式选择是否可编辑
             vm.title = "新增";
             vm.userNames = null;
             vm.delRelatedUserNames = null;
@@ -220,6 +222,7 @@ var vm = new Vue({
             };
 
             vm.dealModeList();
+            vm.getRelatedAllUsersLevel("add");
 
             // 加载应用树
             // var queryOrTree = "tree";
@@ -232,7 +235,7 @@ var vm = new Vue({
         update: function () {
             vm.hidden = true;
             var mode;
-            vm.relatedAllUserEditAble = false; //是否默认关联所有用户  是否可编辑
+            // vm.relatedAllUserEditAble = false; //是否默认关联所有用户  是否可编辑
 
             // if (resources.isTenantNameEditable == null || typeof resources.isTenantNameEditable == "undefined") {
             //
@@ -277,6 +280,8 @@ var vm = new Vue({
             vm.tenant.id = tenantId;
 
             vm.getTenant(tenantId);
+            vm.getRelatedAllUsersLevel("update");
+            vm.getPermissionAction();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -671,6 +676,53 @@ var vm = new Vue({
                 } else if (type == "10"){
                     //只有PaaS
                     $("#modeListId option[value='saas']").remove();
+                }
+            });
+        },
+        //默认关联所有用户选项，0 不可见 1 编辑时不可修改 2 可修改
+        getRelatedAllUsersLevel: function (value) {
+            var path = "/garnet/option/tenantManage/userRelation";
+            $.get(baseURL + "/resources/getrelateduserlevel?userId=" + userId + "&path=" + path, function (response) {
+                var relatedAllUsersLevel = response.data;
+                // console.log("relatedAllUsersLevel: " + relatedAllUsersLevel);
+                if (value == "add") {
+                    if (relatedAllUsersLevel == 0) {
+                        vm.relateUsersHidden = true;
+                    } else {
+                        vm.relateUsersHidden = false;
+                        vm.relatedAllUserEditAble = true;
+                    }
+                } else {
+                    if (relatedAllUsersLevel == 0) {
+                        vm.relateUsersHidden = true;
+                    } else if (relatedAllUsersLevel == 1) {
+                        vm.relateUsersHidden = false;
+                        vm.relatedAllUserEditAble = false;
+                    } else if (relatedAllUsersLevel == 2) {
+                        vm.relateUsersHidden = false;
+                        vm.relatedAllUserEditAble = true;
+                    }
+                }
+
+            });
+        },
+        getPermissionAction: function () {
+            var type;
+            var path = "/garnet/option/tenantManage/platformTypes";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                type = response.data;
+            });
+            var path1 = path + "/" + type;
+            // console.log("path1：" + path1);
+            $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
+                var action = response.data;
+                console.log("action: " + action);
+                if (action == "read") {
+                    vm.hidden = false;
+                    vm.modeEditAble = false;
+                } else {
+                    vm.hidden = false;
+                    vm.modeEditAble = true;
                 }
             });
         },

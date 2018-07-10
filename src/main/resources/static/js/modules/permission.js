@@ -21,8 +21,8 @@ $(function () {
                 sortable: false
             },
             {label: '权限id', name: 'permission.id', align: 'center', hidden: true, index: "id", width: 20, key: true, sortable: false},
-            {label: '权限名称', name: 'permission.name', align: 'center', width: 100, sortable: false},
-            {label: '类型', name: 'type', align: 'center', width: 70 ,sortable: false ,sortable: false},
+            {label: '权限名称', name: 'permission.name', align: 'center', width: 120, sortable: false},
+            {label: '类型', name: 'type', align: 'center', width: 60 ,sortable: false ,sortable: false},
             {label: '应用名称', name: 'applicationName', align: 'center', width: 80},
             {label: '租户名称', name: 'tenantName', align: 'center', width: 80},
             {label: '资源通配符', name: 'permission.resourcePathWildcard', align: 'center', width: 120, sortable: false},
@@ -123,17 +123,28 @@ var resourceTreeSetting = {
 
 var tenantSearchList = {
     searchTenant: "",
-    options: []
+    options: [
+        {
+            id : "",
+            name : "全部"
+        }
+    ]
 };
 
 var appSearchList = {
     searchApp: "",
-    options: []
+    options: [
+        {
+            id : "",
+            name : "全部"
+        }
+    ]
 };
 
 var vm = new Vue({
     el: '#garnetApp',
     data: {
+        typesEditAble: false, //类型选择框是否可编辑
         showType: true, // 显示类型
         showByType: true, //根据选择类型选择显示租户级、应用级
         showTenant: false, //显示租户
@@ -199,7 +210,8 @@ var vm = new Vue({
         /**  新增按钮点击事件 */
         add: function () {
             vm.showList = false;
-            vm.showType = true;
+            vm.showType = true; //类型选择框是否可见
+            vm.typesEditAble = true; //类型选择框是否可编辑
             vm.showTenant = false;
             vm.showApplication = false;
             vm.title = "新增";
@@ -228,7 +240,7 @@ var vm = new Vue({
                 return;
             }
             vm.showList = false;
-            vm.showType = false;
+            vm.showType = true;
             vm.hiddenByType = false;
             vm.title = "修改";
             vm.tenantList.options = [];
@@ -237,6 +249,7 @@ var vm = new Vue({
             vm.getTenantList();
             vm.getAppList();
             vm.getPermissionById(id);
+            vm.getPermissionAction();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -307,10 +320,10 @@ var vm = new Vue({
             }
 
 
-            if (vm.permission.action == null || $.trim(vm.permission.action) == "") {
-                window.parent.swal("", "行为不能为空", "warning");
-                return;
-            }
+            // if (vm.permission.action == null || $.trim(vm.permission.action) == "") {
+            //     window.parent.swal("", "行为不能为空", "warning");
+            //     return;
+            // }
 
             if (vm.permission.name.length > 30) {
                 window.parent.swal("", "权限名称不能大于30", "warning");
@@ -374,16 +387,19 @@ var vm = new Vue({
 
                 if (tenantId == null || tenantId == 0) {
                     //应用级
+                    vm.typeList.selectedType = "2";
                     vm.permission.applicationId = applicationId;
                     vm.showTenant = false;
                     vm.showApplication = true;
                 } else if (applicationId == null || applicationId == 0) {
                     //租户级
+                    vm.typeList.selectedType = "1";
                     vm.permission.tenantId = tenantId;
                     vm.showApplication = false;
                     vm.showTenant = true;
                 } else {
                     //租户+应用
+                    vm.typeList.selectedType = "3";
                     vm.permission.applicationId = applicationId;
                     vm.appList.selectedApp = applicationId;
                     vm.permission.tenantId = tenantId;
@@ -562,6 +578,24 @@ var vm = new Vue({
             vm.searchApp = appSearchList.searchApp;
             vm.searchTenant = tenantSearchList.searchTenant;
             vm.reload(true);
+        },
+        getPermissionAction: function () {
+            var type;
+            var path = "/garnet/option/permissionManage/types";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                type = response.data;
+            });
+            var path1 = path + "/" + type;
+            // console.log("path1：" + path1);
+            $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
+                var action = response.data;
+                console.log("action: " + action);
+                if (action == "read") {
+                    vm.typesEditAble = false;
+                } else {
+                    vm.typesEditAble = true;
+                }
+            });
         }
     },
     /**  初始化页面时执行该方法 */

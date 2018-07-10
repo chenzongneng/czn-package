@@ -5,21 +5,16 @@ $(document).on('keydown mousedown', function(e) {
 });
 
 var intervalId = setInterval(function() {
-
     // console.log("检查是否长时间没有操作：" + new Date().getTime());
     // console.log("最后一次操作时间：" + localStorage.getItem("requestTime"));
-
     localStorage.setItem("actionTimerId", intervalId);
     var nowTime = new Date().getTime();
     var requestTime = localStorage.getItem("requestTime");
-    // var maxTime = 30 * 60000; //最大时间，毫秒
+    // var maxTime = 15 * 60000; //最大时间，毫秒
     var maxTime = 30 * 60000; //最大时间，毫秒
-
     // console.log(nowTime + " - " + requestTime);
-
     if (nowTime - requestTime >= maxTime) {
         // console.log("登录超时了...");
-
         //检查登录定时器
         window.clearInterval(localStorage.getItem("checkLoginedTimerId"));
         localStorage.removeItem("checkLoginedTimerId");
@@ -32,7 +27,6 @@ var intervalId = setInterval(function() {
 
         ShowInvalidLoginMessage();
     }
-
 // }, 1000);
 // }, 30000);
 }, 60000);

@@ -31,6 +31,7 @@ public class GarnetContants {
      * 选项-租户默认关联所有用户
      */
     public static final Long GARNET_RESOURCE_USERRELATION_ID = 70L;
+    public static final String GARNET_RESOURCE_USERRELATION_PATH = "/garnet/option/tenantManage/userRelation";
 
     /**
      *  Garnet系统按钮，和数据库type对应

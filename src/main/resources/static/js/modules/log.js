@@ -24,7 +24,7 @@ $(function () {
         rowNum: 10,
         rowList: [10, 30, 50],
         rownumbers: true,
-        rownumWidth: 25,
+        rownumWidth: 50,
         autowidth: true,
         multiselect: false,
         pager: "#jqGridPager",
@@ -113,7 +113,7 @@ var vm = new Vue({
                 vm.log.createTime = response.createdTime;
                 vm.formatTime = timeFormat(response.createdTime);
 
-                console.log("time: " + vm.formatTime);
+                // console.log("time: " + vm.formatTime);
             });
         },
         /**  格式化 sql */

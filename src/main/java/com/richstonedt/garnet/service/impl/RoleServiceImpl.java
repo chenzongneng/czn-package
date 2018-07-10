@@ -161,12 +161,16 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, RoleCriteria, Long> i
 
         //重新添加关联权限
         if(!ObjectUtils.isEmpty(roleView.getPermissionIds())){
+            RolePermission rolePermission;
+            Long rolePermissionId = IdGeneratorUtil.generateId();
             for (Long permissionId : roleView.getPermissionIds()) {
-                RolePermission rolePermission = new RolePermission();
+                System.out.println("rolePermissionId ========================" + rolePermissionId);
+                rolePermission = new RolePermission();
                 rolePermission.setRoleId(role.getId());
                 rolePermission.setPermissionId(permissionId);
-                rolePermission.setId(IdGeneratorUtil.generateId());
+                rolePermission.setId(rolePermissionId);
                 rolePermissionService.insertSelective(rolePermission);
+                rolePermissionId = rolePermissionId + 1L;
             }
 
             Log log = new Log();

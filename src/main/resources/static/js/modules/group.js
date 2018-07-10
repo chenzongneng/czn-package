@@ -155,12 +155,22 @@ var currentUser;
 
 var tenantSearchList = {
     searchTenant: "",
-    options: []
+    options: [
+        {
+            id : "",
+            name : "全部"
+        }
+    ]
 };
 
 var appSearchList = {
     searchApp: "",
-    options: []
+    options: [
+        {
+            id : "",
+            name : "全部"
+        }
+    ]
 };
 
 var vm = new Vue({
@@ -173,6 +183,7 @@ var vm = new Vue({
         // isGroupSelectRoleEditable: null,
         groupUpdateButton: false,
 
+        typesEditAble: false, //类型选项，是否可以编辑，默认不可编辑
         showType: true, // 显示类型
         showByType: true, //根据选择类型选择显示租户级、应用级
         hiddenByType: true,
@@ -238,6 +249,7 @@ var vm = new Vue({
             // vm.isGroupSelectRoleEditable = true;
             vm.groupUpdateButton = true;
 
+            vm.typesEditAble = true;
             vm.showList = false;
             vm.showTenant = false;
             vm.showApplication = false;
@@ -279,7 +291,7 @@ var vm = new Vue({
             vm.groupUpdateButton = resources.groupUpdateButton;
 
             vm.showList = false;
-            vm.showType = false;
+            vm.showType = true; //类型选项是否显示
             vm.showTenant = true;
             vm.showApplication = true;
             // vm.hiddenByType = false;
@@ -293,6 +305,7 @@ var vm = new Vue({
             vm.initTreesToUpdate(groupId);
             vm.getTenantList();
             vm.getAppList();
+            vm.getPermissionAction();
 
         },
         /**  删除按钮点击事件 */
@@ -497,6 +510,7 @@ var vm = new Vue({
                 var selectedApp = response.data.group.applicationId;
                 if (selectedTenant == null || selectedTenant == 0) {
                     //应用级
+                    vm.typeList.selectedType = "2";
                     vm.appList.selectedApp = selectedApp;
                     vm.tenantList.selectedTenant = "";
                     vm.showApplication = true;
@@ -505,6 +519,7 @@ var vm = new Vue({
                     // roleUrl = baseURL + "roles/applicationId/" + vm.appList.selectedApp;
                 } else if (selectedApp == null || selectedApp == 0){
                     //租户级
+                    vm.typeList.selectedType = "1";
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.appList.selectedApp = "";
                     vm.showTenant = true;
@@ -512,6 +527,7 @@ var vm = new Vue({
                     // userUrl = baseURL + "users/tenantId/" + vm.tenantList.selectedTenant;
                     // roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
                 } else {
+                    vm.typeList.selectedType = "3";
                     vm.appList.selectedApp = selectedApp;
                     vm.tenantList.selectedTenant = selectedTenant;
                     vm.showApplication = true;
@@ -520,7 +536,7 @@ var vm = new Vue({
                     // roleUrl = baseURL + "roles/tenantId/" + vm.tenantList.selectedTenant;
                 }
 
-                console.log(JSON.stringify(response.data.group));
+                // console.log(JSON.stringify(response.data.group));
 
                 // 加载用户树
                 $.get(baseURL + "users/byparams?tenantId=" + selectedTenant + "&applicationId=" + selectedApp, function (response) {
@@ -752,7 +768,25 @@ var vm = new Vue({
             vm.searchApp = appSearchList.searchApp;
             vm.searchTenant = tenantSearchList.searchTenant;
             vm.reload(true);
-        }
+        },
+        getPermissionAction: function () {
+            var type;
+            var path = "/garnet/option/groupManage/types";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                type = response.data;
+            });
+            var path1 = path + "/" + type;
+            // console.log("path1：" + path1);
+            $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
+                var action = response.data;
+                console.log("action: " + action);
+                if (action == "read") {
+                    vm.typesEditAble = false;
+                } else {
+                    vm.typesEditAble = true;
+                }
+            });
+        },
     },
     /**  初始化页面时执行该方法 */
     created: function () {

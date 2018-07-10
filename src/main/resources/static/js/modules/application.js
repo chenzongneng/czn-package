@@ -105,6 +105,7 @@ var vm = new Vue({
         // isAppRefreshApiEditable: null,
         // isAppHostsEditable: null,
         appUpdateButton: false,
+        modeEditAble: false, //平台模式，是否可编辑，默认为不可编辑
 
         searchName: null,
         showList: true,
@@ -205,6 +206,7 @@ var vm = new Vue({
             vm.isAppRefreshApiEditable = true;
             vm.isAppHostsEditable = true;
             vm.appUpdateButton = true;
+            vm.modeEditAble = true;
 
             vm.showList = false;
             vm.hidden = false;
@@ -254,7 +256,7 @@ var vm = new Vue({
                 return;
             }
             vm.showList = false;
-            vm.hidden = true;
+            vm.hidden = false;
             vm.title = "修改";
 
             vm.application.tenantIds = null;
@@ -274,6 +276,7 @@ var vm = new Vue({
 
             //初始化应用信息，及应用模式
             vm.getApplication(applicationId);
+            vm.getPermissionAction();
         },
         /**  删除按钮点击事件 */
         del: function () {
@@ -548,7 +551,7 @@ var vm = new Vue({
             });
         },
         dealModeList: function () {
-            var path = "/garnet/option/tenantManage/platformTypes";
+            var path = "/garnet/option/applicationManage/platformTypes";
             $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
                 var type = response.data;
                 // console.log("application type: " + type);
@@ -558,6 +561,26 @@ var vm = new Vue({
                 } else if (type == "10"){
                     //只有PaaS
                     $("#modeListId option[value='saas']").remove();
+                }
+            });
+        },
+        getPermissionAction: function () {
+            var type;
+            var path = "/garnet/option/applicationManage/platformTypes";
+            $.get(baseURL + "/resources/gettype?userId=" + userId + "&path=" + path, function (response) {
+                type = response.data;
+            });
+            var path1 = path + "/" + type;
+            // console.log("path1：" + path1);
+            $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
+                var action = response.data;
+                console.log("action: " + action);
+                if (action == "read") {
+                    vm.hidden = false;
+                    vm.modeEditAble = false;
+                } else {
+                    vm.hidden = false;
+                    vm.modeEditAble = true;
                 }
             });
         },

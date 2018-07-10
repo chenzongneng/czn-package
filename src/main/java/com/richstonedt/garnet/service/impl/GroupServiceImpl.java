@@ -450,6 +450,7 @@ public class GroupServiceImpl extends BaseServiceImpl<Group, GroupCriteria, Long
             List<Group> groupList1 = this.selectByCriteria(groupCriteria);
             for (Group group : groupList1) {
                 String level1 = this.getLevelByGroupId(group.getId());
+                System.out.println(group.getName() + " - " + level1);
                 if (Integer.valueOf(level1) >= 2) {
                     groupList.add(group);
                 }

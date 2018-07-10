@@ -44,6 +44,8 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
 
     private static final String SERVICE_MODE_ALL = "all";
 
+    private static final String TENANT_RELATED_ALLUSER_Y = "Y";
+
     @Autowired
     private TenantMapper tenantMapper;
 
@@ -451,12 +453,18 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
             tenantIdList.add(userTenant.getTenantId());
         }
 
+        List<Permission> permissions = resourceService.getPermissionsByUserId(userId);
+        List<Long> permissionIdList = new ArrayList<>();
+        for (Permission permission : permissions) {
+            permissionIdList.add(permission.getId());
+        }
+
         List<Long> tenantIdList1 = new ArrayList<>();
         for (Long tenantId : tenantIdList) {
             PermissionCriteria permissionCriteria = new PermissionCriteria();
-            permissionCriteria.createCriteria().andResourcePathWildcardLike(GarnetContants.GARNET_TENANTMANAGE_PATH + "%").andTenantIdEqualTo(tenantId).andStatusEqualTo(1);
+            permissionCriteria.createCriteria().andResourcePathWildcardLike(GarnetContants.GARNET_TENANTMANAGE_PATH + "%").andTenantIdEqualTo(tenantId).andStatusEqualTo(1).andIdIn(permissionIdList);
             List<Permission> permissionList = permissionService.selectByCriteria(permissionCriteria);
-            if (!CollectionUtils.isEmpty(permissionList) && permissionList.size() > 0) {
+            if (!CollectionUtils.isEmpty(permissionList)) {
                 tenantIdList1.add(tenantId);
             }
         }
@@ -588,20 +596,19 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, TenantCriteria, L
     private void dealForgenKeyUsers(TenantView tenantView) {
         String userNames = tenantView.getUserNames();
         Long tenantId = tenantView.getTenant().getId();
-
         Long loginUserId = tenantView.getLoginUserId();
 
-        List<Resource> resourceList = resourceService.getResourcesByUserId(loginUserId);
-        boolean isRelateAllUsers = false;
-        for (Resource resource : resourceList) {
-            if (resource.getId().longValue() == GarnetContants.GARNET_RESOURCE_USERRELATION_ID.longValue()) {
-                isRelateAllUsers = true;
-            }
-        }
+//        List<Resource> resourceList = resourceService.getResourcesByUserId(loginUserId);
+//        boolean isRelateAllUsers = false;
+//        for (Resource resource : resourceList) {
+//            if (resource.getId().longValue() == GarnetContants.GARNET_RESOURCE_USERRELATION_ID.longValue()) {
+//                isRelateAllUsers = true;
+//            }
+//        }
 
-//        String relatedAllUsers = tenantView.getTenant().getRelatedAllUsers();
-//        if ("Y".equals(relatedAllUsers)) {
-        if (isRelateAllUsers) {
+        String relatedAllUsers = tenantView.getTenant().getRelatedAllUsers();
+        if (TENANT_RELATED_ALLUSER_Y.equals(relatedAllUsers)) {
+//        if (isRelateAllUsers) {
             //如果选择了默认关联所有用户
             //删除租户与用户的所有关联
             UserTenantCriteria userTenantCriteria = new UserTenantCriteria();

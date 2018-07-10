@@ -28,7 +28,7 @@ public class LogServiceImpl extends BaseServiceImpl<Log, LogCriteria, Long> impl
     public PageUtil queryLogsByParms(LogParm logParm) {
 
         LogCriteria logCriteria = new LogCriteria();
-        logCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME);
+        logCriteria.setOrderByClause(GarnetContants.ORDER_BY_CREATED_TIME + " desc");
         LogCriteria.Criteria criteria = logCriteria.createCriteria();
 
         String searchName = logParm.getSearchName();
