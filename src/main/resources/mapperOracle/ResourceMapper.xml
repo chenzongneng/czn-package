@@ -5,13 +5,14 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="APPLICATION_ID" jdbcType="DECIMAL" property="applicationId" />
     <result column="PATH" jdbcType="VARCHAR" property="path" />
     <result column="ACTIONS" jdbcType="VARCHAR" property="actions" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
     <result column="CREATED_TIME" jdbcType="DECIMAL" property="createdTime" />
     <result column="MODIFIED_TIME" jdbcType="DECIMAL" property="modifiedTime" />
     <result column="TYPE" jdbcType="VARCHAR" property="type" />
@@ -51,7 +52,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -85,7 +86,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -119,19 +120,20 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
-    ID, APPLICATION_ID, PATH, ACTIONS, NAME, CREATED_TIME, MODIFIED_TIME, TYPE, TENANT_ID, 
-    VARCHAR_00, VARCHAR_01, VARCHAR_02, VARCHAR_03, VARCHAR_04, VARCHAR_05, VARCHAR_06, 
-    VARCHAR_07, VARCHAR_08, VARCHAR_09, VARCHAR_10, VARCHAR_11, VARCHAR_12, VARCHAR_13, 
-    VARCHAR_14, VARCHAR_15, VARCHAR_16, VARCHAR_17, VARCHAR_18, VARCHAR_19, INT_01, INT_02, 
-    INT_03, INT_04, INT_05, BOOLEAN_01, BOOLEAN_02, BOOLEAN_03, BOOLEAN_04, UPDATED_BY_USER_NAME
+    ID, APPLICATION_ID, PATH, ACTIONS, NAME, REMARK, CREATED_TIME, MODIFIED_TIME, TYPE, 
+    TENANT_ID, VARCHAR_00, VARCHAR_01, VARCHAR_02, VARCHAR_03, VARCHAR_04, VARCHAR_05, 
+    VARCHAR_06, VARCHAR_07, VARCHAR_08, VARCHAR_09, VARCHAR_10, VARCHAR_11, VARCHAR_12, 
+    VARCHAR_13, VARCHAR_14, VARCHAR_15, VARCHAR_16, VARCHAR_17, VARCHAR_18, VARCHAR_19, 
+    INT_01, INT_02, INT_03, INT_04, INT_05, BOOLEAN_01, BOOLEAN_02, BOOLEAN_03, BOOLEAN_04, 
+    UPDATED_BY_USER_NAME
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -153,7 +155,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select 
     <include refid="Base_Column_List" />
@@ -164,7 +166,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_RESOURCES
     where ID = #{id,jdbcType=DECIMAL}
@@ -173,7 +175,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_RESOURCES
     <if test="_parameter != null">
@@ -184,42 +186,42 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_RESOURCES (ID, APPLICATION_ID, PATH, 
-      ACTIONS, NAME, CREATED_TIME, 
-      MODIFIED_TIME, TYPE, TENANT_ID, 
-      VARCHAR_00, VARCHAR_01, VARCHAR_02, 
-      VARCHAR_03, VARCHAR_04, VARCHAR_05, 
-      VARCHAR_06, VARCHAR_07, VARCHAR_08, 
-      VARCHAR_09, VARCHAR_10, VARCHAR_11, 
-      VARCHAR_12, VARCHAR_13, VARCHAR_14, 
-      VARCHAR_15, VARCHAR_16, VARCHAR_17, 
-      VARCHAR_18, VARCHAR_19, INT_01, 
-      INT_02, INT_03, INT_04, 
-      INT_05, BOOLEAN_01, BOOLEAN_02, 
-      BOOLEAN_03, BOOLEAN_04, UPDATED_BY_USER_NAME
-      )
+      ACTIONS, NAME, REMARK, 
+      CREATED_TIME, MODIFIED_TIME, TYPE, 
+      TENANT_ID, VARCHAR_00, VARCHAR_01, 
+      VARCHAR_02, VARCHAR_03, VARCHAR_04, 
+      VARCHAR_05, VARCHAR_06, VARCHAR_07, 
+      VARCHAR_08, VARCHAR_09, VARCHAR_10, 
+      VARCHAR_11, VARCHAR_12, VARCHAR_13, 
+      VARCHAR_14, VARCHAR_15, VARCHAR_16, 
+      VARCHAR_17, VARCHAR_18, VARCHAR_19, 
+      INT_01, INT_02, INT_03, 
+      INT_04, INT_05, BOOLEAN_01, 
+      BOOLEAN_02, BOOLEAN_03, BOOLEAN_04, 
+      UPDATED_BY_USER_NAME)
     values (#{id,jdbcType=DECIMAL}, #{applicationId,jdbcType=DECIMAL}, #{path,jdbcType=VARCHAR}, 
-      #{actions,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=DECIMAL}, 
-      #{modifiedTime,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}, #{tenantId,jdbcType=DECIMAL}, 
-      #{varchar00,jdbcType=VARCHAR}, #{varchar01,jdbcType=VARCHAR}, #{varchar02,jdbcType=VARCHAR}, 
-      #{varchar03,jdbcType=VARCHAR}, #{varchar04,jdbcType=VARCHAR}, #{varchar05,jdbcType=VARCHAR}, 
-      #{varchar06,jdbcType=VARCHAR}, #{varchar07,jdbcType=VARCHAR}, #{varchar08,jdbcType=VARCHAR}, 
-      #{varchar09,jdbcType=VARCHAR}, #{varchar10,jdbcType=VARCHAR}, #{varchar11,jdbcType=VARCHAR}, 
-      #{varchar12,jdbcType=VARCHAR}, #{varchar13,jdbcType=VARCHAR}, #{varchar14,jdbcType=VARCHAR}, 
-      #{varchar15,jdbcType=VARCHAR}, #{varchar16,jdbcType=VARCHAR}, #{varchar17,jdbcType=VARCHAR}, 
-      #{varchar18,jdbcType=VARCHAR}, #{varchar19,jdbcType=VARCHAR}, #{int01,jdbcType=DECIMAL}, 
-      #{int02,jdbcType=DECIMAL}, #{int03,jdbcType=DECIMAL}, #{int04,jdbcType=DECIMAL}, 
-      #{int05,jdbcType=DECIMAL}, #{boolean01,jdbcType=DECIMAL}, #{boolean02,jdbcType=DECIMAL}, 
-      #{boolean03,jdbcType=DECIMAL}, #{boolean04,jdbcType=DECIMAL}, #{updatedByUserName,jdbcType=VARCHAR}
-      )
+      #{actions,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=DECIMAL}, #{varchar00,jdbcType=VARCHAR}, #{varchar01,jdbcType=VARCHAR}, 
+      #{varchar02,jdbcType=VARCHAR}, #{varchar03,jdbcType=VARCHAR}, #{varchar04,jdbcType=VARCHAR}, 
+      #{varchar05,jdbcType=VARCHAR}, #{varchar06,jdbcType=VARCHAR}, #{varchar07,jdbcType=VARCHAR}, 
+      #{varchar08,jdbcType=VARCHAR}, #{varchar09,jdbcType=VARCHAR}, #{varchar10,jdbcType=VARCHAR}, 
+      #{varchar11,jdbcType=VARCHAR}, #{varchar12,jdbcType=VARCHAR}, #{varchar13,jdbcType=VARCHAR}, 
+      #{varchar14,jdbcType=VARCHAR}, #{varchar15,jdbcType=VARCHAR}, #{varchar16,jdbcType=VARCHAR}, 
+      #{varchar17,jdbcType=VARCHAR}, #{varchar18,jdbcType=VARCHAR}, #{varchar19,jdbcType=VARCHAR}, 
+      #{int01,jdbcType=DECIMAL}, #{int02,jdbcType=DECIMAL}, #{int03,jdbcType=DECIMAL}, 
+      #{int04,jdbcType=DECIMAL}, #{int05,jdbcType=DECIMAL}, #{boolean01,jdbcType=DECIMAL}, 
+      #{boolean02,jdbcType=DECIMAL}, #{boolean03,jdbcType=DECIMAL}, #{boolean04,jdbcType=DECIMAL}, 
+      #{updatedByUserName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Resource">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_RESOURCES
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -237,6 +239,9 @@
       </if>
       <if test="name != null">
         NAME,
+      </if>
+      <if test="remark != null">
+        REMARK,
       </if>
       <if test="createdTime != null">
         CREATED_TIME,
@@ -357,6 +362,9 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=DECIMAL},
       </if>
@@ -465,7 +473,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select count(*) from GAR_RESOURCES
     <if test="_parameter != null">
@@ -476,7 +484,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCES
     <set>
@@ -494,6 +502,9 @@
       </if>
       <if test="record.name != null">
         NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        REMARK = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.createdTime != null">
         CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
@@ -606,7 +617,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCES
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -614,6 +625,7 @@
       PATH = #{record.path,jdbcType=VARCHAR},
       ACTIONS = #{record.actions,jdbcType=VARCHAR},
       NAME = #{record.name,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
       CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
       MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
       TYPE = #{record.type,jdbcType=VARCHAR},
@@ -656,7 +668,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCES
     <set>
@@ -671,6 +683,9 @@
       </if>
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null">
         CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
@@ -781,13 +796,14 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCES
     set APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
       PATH = #{path,jdbcType=VARCHAR},
       ACTIONS = #{actions,jdbcType=VARCHAR},
       NAME = #{name,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
       CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
       MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
       TYPE = #{type,jdbcType=VARCHAR},
@@ -828,7 +844,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -847,7 +863,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_RESOURCES
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -865,6 +881,9 @@
       </if>
       <if test="list[0].name!=null">
         NAME,
+      </if>
+      <if test="list[0].remark!=null">
+        REMARK,
       </if>
       <if test="list[0].createdTime!=null">
         CREATED_TIME,
@@ -987,6 +1006,9 @@
         <if test="item.name!=null">
           #{item.name,jdbcType=VARCHAR},
         </if>
+        <if test="item.remark!=null">
+          #{item.remark,jdbcType=VARCHAR},
+        </if>
         <if test="item.createdTime!=null">
           #{item.createdTime,jdbcType=DECIMAL},
         </if>
@@ -1096,7 +1118,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_RESOURCES
@@ -1112,6 +1134,9 @@
         </if>
         <if test="item.name!=null">
           NAME=#{item.name,jdbcType=VARCHAR},
+        </if>
+        <if test="item.remark!=null">
+          REMARK=#{item.remark,jdbcType=VARCHAR},
         </if>
         <if test="item.createdTime!=null">
           CREATED_TIME=#{item.createdTime,jdbcType=DECIMAL},

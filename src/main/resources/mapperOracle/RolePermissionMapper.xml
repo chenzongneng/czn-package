@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="ROLE_ID" jdbcType="DECIMAL" property="roleId" />
@@ -15,7 +15,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -49,7 +49,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -83,7 +83,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     ID, ROLE_ID, PERMISSION_ID
   </sql>
@@ -91,7 +91,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -113,7 +113,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select 
     <include refid="Base_Column_List" />
@@ -124,7 +124,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_ROLE_PERMISSIONS
     where ID = #{id,jdbcType=DECIMAL}
@@ -133,7 +133,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_ROLE_PERMISSIONS
     <if test="_parameter != null">
@@ -144,7 +144,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_ROLE_PERMISSIONS (ID, ROLE_ID, PERMISSION_ID
       )
@@ -155,7 +155,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_ROLE_PERMISSIONS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -185,7 +185,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select count(*) from GAR_ROLE_PERMISSIONS
     <if test="_parameter != null">
@@ -196,7 +196,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_ROLE_PERMISSIONS
     <set>
@@ -218,7 +218,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_ROLE_PERMISSIONS
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -232,7 +232,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_ROLE_PERMISSIONS
     <set>
@@ -249,7 +249,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_ROLE_PERMISSIONS
     set ROLE_ID = #{roleId,jdbcType=DECIMAL},
@@ -260,7 +260,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -279,7 +279,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_ROLE_PERMISSIONS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -312,7 +312,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_ROLE_PERMISSIONS

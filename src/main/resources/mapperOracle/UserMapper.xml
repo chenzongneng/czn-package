@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
@@ -21,7 +21,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -55,7 +55,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -89,7 +89,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     ID, USER_NAME, CREATED_TIME, MODIFIED_TIME, MOBILE_NUMBER, EMAIL, STATUS, BELONG_TO_GARNET, 
     UPDATED_BY_USER_NAME
@@ -98,7 +98,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -120,7 +120,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select 
     <include refid="Base_Column_List" />
@@ -131,7 +131,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_USERS
     where ID = #{id,jdbcType=DECIMAL}
@@ -140,7 +140,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_USERS
     <if test="_parameter != null">
@@ -151,7 +151,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_USERS (ID, USER_NAME, CREATED_TIME, 
       MODIFIED_TIME, MOBILE_NUMBER, EMAIL, 
@@ -166,7 +166,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_USERS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -232,7 +232,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select count(*) from GAR_USERS
     <if test="_parameter != null">
@@ -243,7 +243,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_USERS
     <set>
@@ -283,7 +283,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_USERS
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -303,7 +303,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_USERS
     <set>
@@ -338,7 +338,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_USERS
     set USER_NAME = #{userName,jdbcType=VARCHAR},
@@ -355,7 +355,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -374,7 +374,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_USERS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -443,7 +443,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_USERS

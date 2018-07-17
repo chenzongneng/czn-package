@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.richstonedt.garnet.mapper.TenantMapper">
-  <resultMap id="BaseResultMap" type="com.richstonedt.garnet.model.Tenant">
+<mapper namespace="com.richstonedt.garnet.mapper.LogMapper">
+  <resultMap id="BaseResultMap" type="com.richstonedt.garnet.model.Log">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="CREATED_TIME" jdbcType="DECIMAL" property="createdTime" />
     <result column="MODIFIED_TIME" jdbcType="DECIMAL" property="modifiedTime" />
-    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
-    <result column="STATUS" jdbcType="DECIMAL" property="status" />
-    <result column="SERVICE_MODE" jdbcType="VARCHAR" property="serviceMode" />
-    <result column="UPDATED_BY_USER_NAME" jdbcType="VARCHAR" property="updatedByUserName" />
-    <result column="RELATED_ALL_USERS" jdbcType="VARCHAR" property="relatedAllUsers" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="MESSAGE" jdbcType="VARCHAR" property="message" />
+    <result column="TENANT_ID" jdbcType="DECIMAL" property="tenantId" />
+    <result column="APPLICATION_ID" jdbcType="DECIMAL" property="applicationId" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="OPERATION" jdbcType="VARCHAR" property="operation" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -55,7 +55,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -89,23 +89,23 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    ID, NAME, CREATED_TIME, MODIFIED_TIME, DESCRIPTION, STATUS, SERVICE_MODE, UPDATED_BY_USER_NAME, 
-    RELATED_ALL_USERS
+    ID, CREATED_TIME, MODIFIED_TIME, USER_NAME, MESSAGE, TENANT_ID, APPLICATION_ID, IP, 
+    OPERATION
   </sql>
-  <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria" resultMap="BaseResultMap">
+  <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.LogCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from GAR_TENANTS
+    from GAR_LOGS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -120,61 +120,58 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     select 
     <include refid="Base_Column_List" />
-    from GAR_TENANTS
+    from GAR_LOGS
     where ID = #{id,jdbcType=DECIMAL}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    delete from GAR_TENANTS
+    delete from GAR_LOGS
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
-  <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria">
+  <delete id="deleteByCriteria" parameterType="com.richstonedt.garnet.model.criteria.LogCriteria">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    delete from GAR_TENANTS
+    delete from GAR_LOGS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.richstonedt.garnet.model.Tenant">
+  <insert id="insert" parameterType="com.richstonedt.garnet.model.Log">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    insert into GAR_TENANTS (ID, NAME, CREATED_TIME, 
-      MODIFIED_TIME, DESCRIPTION, STATUS, 
-      SERVICE_MODE, UPDATED_BY_USER_NAME, RELATED_ALL_USERS
+    insert into GAR_LOGS (ID, CREATED_TIME, MODIFIED_TIME, 
+      USER_NAME, MESSAGE, TENANT_ID, 
+      APPLICATION_ID, IP, OPERATION
       )
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{createdTime,jdbcType=DECIMAL}, 
-      #{modifiedTime,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, 
-      #{serviceMode,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR}, #{relatedAllUsers,jdbcType=VARCHAR}
+    values (#{id,jdbcType=DECIMAL}, #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, 
+      #{userName,jdbcType=VARCHAR}, #{message,jdbcType=VARCHAR}, #{tenantId,jdbcType=DECIMAL}, 
+      #{applicationId,jdbcType=DECIMAL}, #{ip,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Tenant">
+  <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Log">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    insert into GAR_TENANTS
+    insert into GAR_LOGS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         ID,
-      </if>
-      <if test="name != null">
-        NAME,
       </if>
       <if test="createdTime != null">
         CREATED_TIME,
@@ -182,28 +179,28 @@
       <if test="modifiedTime != null">
         MODIFIED_TIME,
       </if>
-      <if test="description != null">
-        DESCRIPTION,
+      <if test="userName != null">
+        USER_NAME,
       </if>
-      <if test="status != null">
-        STATUS,
+      <if test="message != null">
+        MESSAGE,
       </if>
-      <if test="serviceMode != null">
-        SERVICE_MODE,
+      <if test="tenantId != null">
+        TENANT_ID,
       </if>
-      <if test="updatedByUserName != null">
-        UPDATED_BY_USER_NAME,
+      <if test="applicationId != null">
+        APPLICATION_ID,
       </if>
-      <if test="relatedAllUsers != null">
-        RELATED_ALL_USERS,
+      <if test="ip != null">
+        IP,
+      </if>
+      <if test="operation != null">
+        OPERATION,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=DECIMAL},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=DECIMAL},
@@ -211,30 +208,33 @@
       <if test="modifiedTime != null">
         #{modifiedTime,jdbcType=DECIMAL},
       </if>
-      <if test="description != null">
-        #{description,jdbcType=VARCHAR},
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=DECIMAL},
+      <if test="message != null">
+        #{message,jdbcType=VARCHAR},
       </if>
-      <if test="serviceMode != null">
-        #{serviceMode,jdbcType=VARCHAR},
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=DECIMAL},
       </if>
-      <if test="updatedByUserName != null">
-        #{updatedByUserName,jdbcType=VARCHAR},
+      <if test="applicationId != null">
+        #{applicationId,jdbcType=DECIMAL},
       </if>
-      <if test="relatedAllUsers != null">
-        #{relatedAllUsers,jdbcType=VARCHAR},
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria" resultType="java.lang.Long">
+  <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.LogCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    select count(*) from GAR_TENANTS
+    select count(*) from GAR_LOGS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -243,15 +243,12 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    update GAR_TENANTS
+    update GAR_LOGS
     <set>
       <if test="record.id != null">
         ID = #{record.id,jdbcType=DECIMAL},
-      </if>
-      <if test="record.name != null">
-        NAME = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.createdTime != null">
         CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
@@ -259,20 +256,23 @@
       <if test="record.modifiedTime != null">
         MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
       </if>
-      <if test="record.description != null">
-        DESCRIPTION = #{record.description,jdbcType=VARCHAR},
+      <if test="record.userName != null">
+        USER_NAME = #{record.userName,jdbcType=VARCHAR},
       </if>
-      <if test="record.status != null">
-        STATUS = #{record.status,jdbcType=DECIMAL},
+      <if test="record.message != null">
+        MESSAGE = #{record.message,jdbcType=VARCHAR},
       </if>
-      <if test="record.serviceMode != null">
-        SERVICE_MODE = #{record.serviceMode,jdbcType=VARCHAR},
+      <if test="record.tenantId != null">
+        TENANT_ID = #{record.tenantId,jdbcType=DECIMAL},
       </if>
-      <if test="record.updatedByUserName != null">
-        UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
+      <if test="record.applicationId != null">
+        APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
       </if>
-      <if test="record.relatedAllUsers != null">
-        RELATED_ALL_USERS = #{record.relatedAllUsers,jdbcType=VARCHAR},
+      <if test="record.ip != null">
+        IP = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operation != null">
+        OPERATION = #{record.operation,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -283,86 +283,86 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    update GAR_TENANTS
+    update GAR_LOGS
     set ID = #{record.id,jdbcType=DECIMAL},
-      NAME = #{record.name,jdbcType=VARCHAR},
       CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
       MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
-      DESCRIPTION = #{record.description,jdbcType=VARCHAR},
-      STATUS = #{record.status,jdbcType=DECIMAL},
-      SERVICE_MODE = #{record.serviceMode,jdbcType=VARCHAR},
-      UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
-      RELATED_ALL_USERS = #{record.relatedAllUsers,jdbcType=VARCHAR}
+      USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      MESSAGE = #{record.message,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=DECIMAL},
+      APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
+      IP = #{record.ip,jdbcType=VARCHAR},
+      OPERATION = #{record.operation,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.richstonedt.garnet.model.Tenant">
+  <update id="updateByPrimaryKeySelective" parameterType="com.richstonedt.garnet.model.Log">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    update GAR_TENANTS
+    update GAR_LOGS
     <set>
-      <if test="name != null">
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
       <if test="createdTime != null">
         CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
       </if>
       <if test="modifiedTime != null">
         MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
       </if>
-      <if test="description != null">
-        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        STATUS = #{status,jdbcType=DECIMAL},
+      <if test="message != null">
+        MESSAGE = #{message,jdbcType=VARCHAR},
       </if>
-      <if test="serviceMode != null">
-        SERVICE_MODE = #{serviceMode,jdbcType=VARCHAR},
+      <if test="tenantId != null">
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
       </if>
-      <if test="updatedByUserName != null">
-        UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
+      <if test="applicationId != null">
+        APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
       </if>
-      <if test="relatedAllUsers != null">
-        RELATED_ALL_USERS = #{relatedAllUsers,jdbcType=VARCHAR},
+      <if test="ip != null">
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        OPERATION = #{operation,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.Tenant">
+  <update id="updateByPrimaryKey" parameterType="com.richstonedt.garnet.model.Log">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    update GAR_TENANTS
-    set NAME = #{name,jdbcType=VARCHAR},
-      CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
+    update GAR_LOGS
+    set CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
       MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
-      DESCRIPTION = #{description,jdbcType=VARCHAR},
-      STATUS = #{status,jdbcType=DECIMAL},
-      SERVICE_MODE = #{serviceMode,jdbcType=VARCHAR},
-      UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
-      RELATED_ALL_USERS = #{relatedAllUsers,jdbcType=VARCHAR}
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      MESSAGE = #{message,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
+      IP = #{ip,jdbcType=VARCHAR},
+      OPERATION = #{operation,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
-  <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.TenantCriteria" resultMap="BaseResultMap">
+  <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.LogCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from GAR_TENANTS
+    from GAR_LOGS
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -374,15 +374,12 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
-    insert into GAR_TENANTS
+    insert into GAR_LOGS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="list[0].id!=null">
         ID,
-      </if>
-      <if test="list[0].name!=null">
-        NAME,
       </if>
       <if test="list[0].createdTime!=null">
         CREATED_TIME,
@@ -390,20 +387,23 @@
       <if test="list[0].modifiedTime!=null">
         MODIFIED_TIME,
       </if>
-      <if test="list[0].description!=null">
-        DESCRIPTION,
+      <if test="list[0].userName!=null">
+        USER_NAME,
       </if>
-      <if test="list[0].status!=null">
-        STATUS,
+      <if test="list[0].message!=null">
+        MESSAGE,
       </if>
-      <if test="list[0].serviceMode!=null">
-        SERVICE_MODE,
+      <if test="list[0].tenantId!=null">
+        TENANT_ID,
       </if>
-      <if test="list[0].updatedByUserName!=null">
-        UPDATED_BY_USER_NAME,
+      <if test="list[0].applicationId!=null">
+        APPLICATION_ID,
       </if>
-      <if test="list[0].relatedAllUsers!=null">
-        RELATED_ALL_USERS,
+      <if test="list[0].ip!=null">
+        IP,
+      </if>
+      <if test="list[0].operation!=null">
+        OPERATION,
       </if>
     </trim>
      values 
@@ -412,29 +412,29 @@
         <if test="item.id!=null">
           #{item.id,jdbcType=DECIMAL},
         </if>
-        <if test="item.name!=null">
-          #{item.name,jdbcType=VARCHAR},
-        </if>
         <if test="item.createdTime!=null">
           #{item.createdTime,jdbcType=DECIMAL},
         </if>
         <if test="item.modifiedTime!=null">
           #{item.modifiedTime,jdbcType=DECIMAL},
         </if>
-        <if test="item.description!=null">
-          #{item.description,jdbcType=VARCHAR},
+        <if test="item.userName!=null">
+          #{item.userName,jdbcType=VARCHAR},
         </if>
-        <if test="item.status!=null">
-          #{item.status,jdbcType=DECIMAL},
+        <if test="item.message!=null">
+          #{item.message,jdbcType=VARCHAR},
         </if>
-        <if test="item.serviceMode!=null">
-          #{item.serviceMode,jdbcType=VARCHAR},
+        <if test="item.tenantId!=null">
+          #{item.tenantId,jdbcType=DECIMAL},
         </if>
-        <if test="item.updatedByUserName!=null">
-          #{item.updatedByUserName,jdbcType=VARCHAR},
+        <if test="item.applicationId!=null">
+          #{item.applicationId,jdbcType=DECIMAL},
         </if>
-        <if test="item.relatedAllUsers!=null">
-          #{item.relatedAllUsers,jdbcType=VARCHAR},
+        <if test="item.ip!=null">
+          #{item.ip,jdbcType=VARCHAR},
+        </if>
+        <if test="item.operation!=null">
+          #{item.operation,jdbcType=VARCHAR},
         </if>
       </trim>
     </foreach>
@@ -443,34 +443,34 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-07-12 16:56
+      DATE: 2018-07-12 14:29
     -->
     <foreach collection="list" index="index" item="item" separator=";">
-      update GAR_TENANTS
+      update GAR_LOGS
       <set>
-        <if test="item.name!=null">
-          NAME=#{item.name,jdbcType=VARCHAR},
-        </if>
         <if test="item.createdTime!=null">
           CREATED_TIME=#{item.createdTime,jdbcType=DECIMAL},
         </if>
         <if test="item.modifiedTime!=null">
           MODIFIED_TIME=#{item.modifiedTime,jdbcType=DECIMAL},
         </if>
-        <if test="item.description!=null">
-          DESCRIPTION=#{item.description,jdbcType=VARCHAR},
+        <if test="item.userName!=null">
+          USER_NAME=#{item.userName,jdbcType=VARCHAR},
         </if>
-        <if test="item.status!=null">
-          STATUS=#{item.status,jdbcType=DECIMAL},
+        <if test="item.message!=null">
+          MESSAGE=#{item.message,jdbcType=VARCHAR},
         </if>
-        <if test="item.serviceMode!=null">
-          SERVICE_MODE=#{item.serviceMode,jdbcType=VARCHAR},
+        <if test="item.tenantId!=null">
+          TENANT_ID=#{item.tenantId,jdbcType=DECIMAL},
         </if>
-        <if test="item.updatedByUserName!=null">
-          UPDATED_BY_USER_NAME=#{item.updatedByUserName,jdbcType=VARCHAR},
+        <if test="item.applicationId!=null">
+          APPLICATION_ID=#{item.applicationId,jdbcType=DECIMAL},
         </if>
-        <if test="item.relatedAllUsers!=null">
-          RELATED_ALL_USERS=#{item.relatedAllUsers,jdbcType=VARCHAR},
+        <if test="item.ip!=null">
+          IP=#{item.ip,jdbcType=VARCHAR},
+        </if>
+        <if test="item.operation!=null">
+          OPERATION=#{item.operation,jdbcType=VARCHAR},
         </if>
       </set>
       where 

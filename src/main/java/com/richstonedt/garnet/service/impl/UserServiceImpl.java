@@ -310,7 +310,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             tenantIdList.add(tenant.getId());
         }
         UserTenantCriteria userTenantCriteria = new UserTenantCriteria();
-        userTenantCriteria.createCriteria().andTenantIdIn(tenantIdList);
+        userTenantCriteria.createCriteria().andTenantIdIn(tenantIdList).andUserIdEqualTo(user.getId());
         userTenantService.deleteByCriteria(userTenantCriteria);
 
         //关联选择的租户
@@ -329,7 +329,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserCriteria, Long> i
             groupIdList.add(GarnetContants.NON_VALUE);
         }
         GroupUserCriteria  groupUserCriteria = new GroupUserCriteria();
-        groupUserCriteria.createCriteria().andGroupIdIn(groupIdList);
+        groupUserCriteria.createCriteria().andGroupIdIn(groupIdList).andUserIdEqualTo(user.getId());
         groupUserService.deleteByCriteria(groupUserCriteria);
         //关联选择的Garnet组
         List<Long> groupIds = userView.getGroupIds();

@@ -8,8 +8,9 @@
 // TODO:暂时修改
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
-var baseURL = "http://localhost:12306/garnet/api/v1.0/";
 // var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
+var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+// var baseURL = "http://192.168.108.100:12306/garnet/api/v1.0/";
 
 /** token */
 var accessToken = localStorage.getItem("accessToken");
@@ -73,14 +74,10 @@ $.ajaxSetup({
     },
 
     complete: function (xhr) {
-
         // console.log("complete accessToken: " + localStorage.getItem("accessToken"));
-
-        var userId = localStorage.getItem("userId");
+        // var userId = localStorage.getItem("userId");
         if (userId == null || userId == "") {
-
             // console.log("common userid is null...");
-
             var pathName = window.document.location.pathname;
             var patrn = /.*index.html$/;
             if (patrn.exec(pathName)) {
@@ -95,7 +92,7 @@ $.ajaxSetup({
         // token过期，则跳转到登录页面
         if (response.code == 401) {
 
-            console.log("common 401: " + localStorage.getItem("accessToken"));
+            // console.log("common 401: " + localStorage.getItem("accessToken"));
 
             localStorage.removeItem("userId");
             localStorage.removeItem("userName");
@@ -103,10 +100,8 @@ $.ajaxSetup({
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
 
+            // console.log("common 401 response: " + JSON.stringify(response));
             if ("请先登录" == response.message) {
-
-                console.log("请先登录");
-
                 var pathName = window.document.location.pathname;
                 var patrn = /.*index.html$/;
                 if (patrn.exec(pathName)) {
@@ -115,14 +110,11 @@ $.ajaxSetup({
                     parent.location.href = '../login.html';
                 }
             } else {
-                window.parent.swal({
+                window.swal({
                         title: response.message,
                         type: "error"
                     },
                     function () {
-
-                        console.log("请先登录else");
-
                         var pathName = window.document.location.pathname;
                         var patrn = /.*index.html$/;
                         if (patrn.exec(pathName)) {

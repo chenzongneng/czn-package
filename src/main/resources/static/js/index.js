@@ -48,10 +48,10 @@ var vm = new Vue({
     },
     mounted: function () {
         var userId = localStorage.getItem("userId")
-        console.log("idnex userId: " + userId);
+        // console.log("idnex userId: " + userId);
         if (userId == null || userId == "") {
 
-            console.log("index userid is null...");
+            // console.log("index userid is null...");
 
             var pathName = window.document.location.pathname;
             var patrn = /.*index.html$/;

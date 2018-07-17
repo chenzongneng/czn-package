@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
@@ -18,12 +18,13 @@
     <result column="STATUS" jdbcType="DECIMAL" property="status" />
     <result column="SERVICE_MODE" jdbcType="VARCHAR" property="serviceMode" />
     <result column="UPDATED_BY_USER_NAME" jdbcType="VARCHAR" property="updatedByUserName" />
+    <result column="DEFAULT_INDEX_URL" jdbcType="VARCHAR" property="defaultIndexUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -57,7 +58,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -91,16 +92,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
-    ID, NAME, COMPANY, APP_CODE, REFRESH_RESOURCES_API, HOSTS, CREATED_TIME, MODIFIED_TIME,
-    STATUS, SERVICE_MODE, UPDATED_BY_USER_NAME
+    ID, NAME, COMPANY, APP_CODE, REFRESH_RESOURCES_API, HOSTS, CREATED_TIME, MODIFIED_TIME, 
+    STATUS, SERVICE_MODE, UPDATED_BY_USER_NAME, DEFAULT_INDEX_URL
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ApplicationCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     select
     <if test="distinct">
@@ -122,9 +123,9 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
-    select
+    select 
     <include refid="Base_Column_List" />
     from GAR_APPLICATIONS
     where ID = #{id,jdbcType=DECIMAL}
@@ -133,7 +134,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     delete from GAR_APPLICATIONS
     where ID = #{id,jdbcType=DECIMAL}
@@ -142,7 +143,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     delete from GAR_APPLICATIONS
     <if test="_parameter != null">
@@ -153,22 +154,24 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
-    insert into GAR_APPLICATIONS (ID, NAME, COMPANY,
-      APP_CODE, REFRESH_RESOURCES_API, HOSTS,
-      CREATED_TIME, MODIFIED_TIME, STATUS,
-      SERVICE_MODE, UPDATED_BY_USER_NAME)
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},
-      #{appCode,jdbcType=VARCHAR}, #{refreshResourcesApi,jdbcType=VARCHAR}, #{hosts,jdbcType=VARCHAR},
-      #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL},
-      #{serviceMode,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR})
+    insert into GAR_APPLICATIONS (ID, NAME, COMPANY, 
+      APP_CODE, REFRESH_RESOURCES_API, HOSTS, 
+      CREATED_TIME, MODIFIED_TIME, STATUS, 
+      SERVICE_MODE, UPDATED_BY_USER_NAME, DEFAULT_INDEX_URL
+      )
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, 
+      #{appCode,jdbcType=VARCHAR}, #{refreshResourcesApi,jdbcType=VARCHAR}, #{hosts,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, 
+      #{serviceMode,jdbcType=VARCHAR}, #{updatedByUserName,jdbcType=VARCHAR}, #{defaultIndexUrl,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.Application">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     insert into GAR_APPLICATIONS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -204,6 +207,9 @@
       </if>
       <if test="updatedByUserName != null">
         UPDATED_BY_USER_NAME,
+      </if>
+      <if test="defaultIndexUrl != null">
+        DEFAULT_INDEX_URL,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -240,13 +246,16 @@
       <if test="updatedByUserName != null">
         #{updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="defaultIndexUrl != null">
+        #{defaultIndexUrl,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ApplicationCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     select count(*) from GAR_APPLICATIONS
     <if test="_parameter != null">
@@ -257,7 +266,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     update GAR_APPLICATIONS
     <set>
@@ -294,6 +303,9 @@
       <if test="record.updatedByUserName != null">
         UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="record.defaultIndexUrl != null">
+        DEFAULT_INDEX_URL = #{record.defaultIndexUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -303,7 +315,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     update GAR_APPLICATIONS
     set ID = #{record.id,jdbcType=DECIMAL},
@@ -316,7 +328,8 @@
       MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
       STATUS = #{record.status,jdbcType=DECIMAL},
       SERVICE_MODE = #{record.serviceMode,jdbcType=VARCHAR},
-      UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR}
+      UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
+      DEFAULT_INDEX_URL = #{record.defaultIndexUrl,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -325,7 +338,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     update GAR_APPLICATIONS
     <set>
@@ -359,6 +372,9 @@
       <if test="updatedByUserName != null">
         UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
       </if>
+      <if test="defaultIndexUrl != null">
+        DEFAULT_INDEX_URL = #{defaultIndexUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -366,7 +382,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     update GAR_APPLICATIONS
     set NAME = #{name,jdbcType=VARCHAR},
@@ -378,14 +394,15 @@
       MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
       STATUS = #{status,jdbcType=DECIMAL},
       SERVICE_MODE = #{serviceMode,jdbcType=VARCHAR},
-      UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR}
+      UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
+      DEFAULT_INDEX_URL = #{defaultIndexUrl,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ApplicationCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     select
     <if test="distinct">
@@ -404,7 +421,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     insert into GAR_APPLICATIONS
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -441,8 +458,11 @@
       <if test="list[0].updatedByUserName!=null">
         UPDATED_BY_USER_NAME,
       </if>
+      <if test="list[0].defaultIndexUrl!=null">
+        DEFAULT_INDEX_URL,
+      </if>
     </trim>
-     values
+     values 
     <foreach collection="list" index="index" item="item" separator=",">
       <trim prefix=" (" suffix=")" suffixOverrides=",">
         <if test="item.id!=null">
@@ -478,6 +498,9 @@
         <if test="item.updatedByUserName!=null">
           #{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
+        <if test="item.defaultIndexUrl!=null">
+          #{item.defaultIndexUrl,jdbcType=VARCHAR},
+        </if>
       </trim>
     </foreach>
   </insert>
@@ -485,7 +508,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 16:56
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_APPLICATIONS
@@ -520,8 +543,11 @@
         <if test="item.updatedByUserName!=null">
           UPDATED_BY_USER_NAME=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
+        <if test="item.defaultIndexUrl!=null">
+          DEFAULT_INDEX_URL=#{item.defaultIndexUrl,jdbcType=VARCHAR},
+        </if>
       </set>
-      where
+      where 
       ID = #{item.id,jdbcType=DECIMAL}
     </foreach>
   </update>

@@ -5,19 +5,26 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="ACTIONS" jdbcType="VARCHAR" property="actions" />
     <result column="TYPE" jdbcType="VARCHAR" property="type" />
-    <result column="APPLICATION_ID" jdbcType="DECIMAL" property="applicationId" />
     <result column="FILED_NAME" jdbcType="VARCHAR" property="filedName" />
     <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="TENANT_ID" jdbcType="DECIMAL" property="tenantId" />
+    <result column="APPLICATION_ID" jdbcType="DECIMAL" property="applicationId" />
+    <result column="CREATED_TIME" jdbcType="DECIMAL" property="createdTime" />
+    <result column="MODIFIED_TIME" jdbcType="DECIMAL" property="modifiedTime" />
+    <result column="UPDATED_BY_USER_NAME" jdbcType="VARCHAR" property="updatedByUserName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -51,7 +58,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <where>
       <foreach collection="criteria.oredCriteria" item="criteria" separator="or">
@@ -85,15 +92,16 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
-    ID, TYPE, APPLICATION_ID, FILED_NAME, DESCRIPTION
+    ID, NAME, REMARK, ACTIONS, TYPE, FILED_NAME, DESCRIPTION, TENANT_ID, APPLICATION_ID, 
+    CREATED_TIME, MODIFIED_TIME, UPDATED_BY_USER_NAME
   </sql>
   <select id="selectByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -115,7 +123,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select 
     <include refid="Base_Column_List" />
@@ -126,7 +134,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_RESOURCE_DYNAMIC_PROPS
     where ID = #{id,jdbcType=DECIMAL}
@@ -135,7 +143,7 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     delete from GAR_RESOURCE_DYNAMIC_PROPS
     <if test="_parameter != null">
@@ -146,29 +154,41 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
-    insert into GAR_RESOURCE_DYNAMIC_PROPS (ID, TYPE, APPLICATION_ID, 
-      FILED_NAME, DESCRIPTION)
-    values (#{id,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}, #{applicationId,jdbcType=DECIMAL}, 
-      #{filedName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+    insert into GAR_RESOURCE_DYNAMIC_PROPS (ID, NAME, REMARK, 
+      ACTIONS, TYPE, FILED_NAME, 
+      DESCRIPTION, TENANT_ID, APPLICATION_ID, 
+      CREATED_TIME, MODIFIED_TIME, UPDATED_BY_USER_NAME
+      )
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{actions,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{filedName,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{tenantId,jdbcType=DECIMAL}, #{applicationId,jdbcType=DECIMAL}, 
+      #{createdTime,jdbcType=DECIMAL}, #{modifiedTime,jdbcType=DECIMAL}, #{updatedByUserName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.richstonedt.garnet.model.ResourceDynamicProperty">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_RESOURCE_DYNAMIC_PROPS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         ID,
       </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="actions != null">
+        ACTIONS,
+      </if>
       <if test="type != null">
         TYPE,
-      </if>
-      <if test="applicationId != null">
-        APPLICATION_ID,
       </if>
       <if test="filedName != null">
         FILED_NAME,
@@ -176,16 +196,37 @@
       <if test="description != null">
         DESCRIPTION,
       </if>
+      <if test="tenantId != null">
+        TENANT_ID,
+      </if>
+      <if test="applicationId != null">
+        APPLICATION_ID,
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="updatedByUserName != null">
+        UPDATED_BY_USER_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=DECIMAL},
       </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="actions != null">
+        #{actions,jdbcType=VARCHAR},
+      </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="applicationId != null">
-        #{applicationId,jdbcType=DECIMAL},
       </if>
       <if test="filedName != null">
         #{filedName,jdbcType=VARCHAR},
@@ -193,13 +234,28 @@
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
       </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="applicationId != null">
+        #{applicationId,jdbcType=DECIMAL},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=DECIMAL},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedByUserName != null">
+        #{updatedByUserName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select count(*) from GAR_RESOURCE_DYNAMIC_PROPS
     <if test="_parameter != null">
@@ -210,24 +266,45 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCE_DYNAMIC_PROPS
     <set>
       <if test="record.id != null">
         ID = #{record.id,jdbcType=DECIMAL},
       </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actions != null">
+        ACTIONS = #{record.actions,jdbcType=VARCHAR},
+      </if>
       <if test="record.type != null">
         TYPE = #{record.type,jdbcType=VARCHAR},
-      </if>
-      <if test="record.applicationId != null">
-        APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
       </if>
       <if test="record.filedName != null">
         FILED_NAME = #{record.filedName,jdbcType=VARCHAR},
       </if>
       <if test="record.description != null">
         DESCRIPTION = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null">
+        TENANT_ID = #{record.tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.applicationId != null">
+        APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createdTime != null">
+        CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
+      </if>
+      <if test="record.modifiedTime != null">
+        MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
+      </if>
+      <if test="record.updatedByUserName != null">
+        UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -238,14 +315,21 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCE_DYNAMIC_PROPS
     set ID = #{record.id,jdbcType=DECIMAL},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      ACTIONS = #{record.actions,jdbcType=VARCHAR},
       TYPE = #{record.type,jdbcType=VARCHAR},
-      APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
       FILED_NAME = #{record.filedName,jdbcType=VARCHAR},
-      DESCRIPTION = #{record.description,jdbcType=VARCHAR}
+      DESCRIPTION = #{record.description,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=DECIMAL},
+      APPLICATION_ID = #{record.applicationId,jdbcType=DECIMAL},
+      CREATED_TIME = #{record.createdTime,jdbcType=DECIMAL},
+      MODIFIED_TIME = #{record.modifiedTime,jdbcType=DECIMAL},
+      UPDATED_BY_USER_NAME = #{record.updatedByUserName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -254,21 +338,42 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCE_DYNAMIC_PROPS
     <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="actions != null">
+        ACTIONS = #{actions,jdbcType=VARCHAR},
+      </if>
       <if test="type != null">
         TYPE = #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="applicationId != null">
-        APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
       </if>
       <if test="filedName != null">
         FILED_NAME = #{filedName,jdbcType=VARCHAR},
       </if>
       <if test="description != null">
         DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="applicationId != null">
+        APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
+      </if>
+      <if test="updatedByUserName != null">
+        UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
@@ -277,20 +382,27 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     update GAR_RESOURCE_DYNAMIC_PROPS
-    set TYPE = #{type,jdbcType=VARCHAR},
-      APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
+    set NAME = #{name,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      ACTIONS = #{actions,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
       FILED_NAME = #{filedName,jdbcType=VARCHAR},
-      DESCRIPTION = #{description,jdbcType=VARCHAR}
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      APPLICATION_ID = #{applicationId,jdbcType=DECIMAL},
+      CREATED_TIME = #{createdTime,jdbcType=DECIMAL},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=DECIMAL},
+      UPDATED_BY_USER_NAME = #{updatedByUserName,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   <select id="selectSingleByCriteria" parameterType="com.richstonedt.garnet.model.criteria.ResourceDynamicPropertyCriteria" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     select
     <if test="distinct">
@@ -309,24 +421,45 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     insert into GAR_RESOURCE_DYNAMIC_PROPS
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="list[0].id!=null">
         ID,
       </if>
+      <if test="list[0].name!=null">
+        NAME,
+      </if>
+      <if test="list[0].remark!=null">
+        REMARK,
+      </if>
+      <if test="list[0].actions!=null">
+        ACTIONS,
+      </if>
       <if test="list[0].type!=null">
         TYPE,
-      </if>
-      <if test="list[0].applicationId!=null">
-        APPLICATION_ID,
       </if>
       <if test="list[0].filedName!=null">
         FILED_NAME,
       </if>
       <if test="list[0].description!=null">
         DESCRIPTION,
+      </if>
+      <if test="list[0].tenantId!=null">
+        TENANT_ID,
+      </if>
+      <if test="list[0].applicationId!=null">
+        APPLICATION_ID,
+      </if>
+      <if test="list[0].createdTime!=null">
+        CREATED_TIME,
+      </if>
+      <if test="list[0].modifiedTime!=null">
+        MODIFIED_TIME,
+      </if>
+      <if test="list[0].updatedByUserName!=null">
+        UPDATED_BY_USER_NAME,
       </if>
     </trim>
      values 
@@ -335,17 +468,38 @@
         <if test="item.id!=null">
           #{item.id,jdbcType=DECIMAL},
         </if>
+        <if test="item.name!=null">
+          #{item.name,jdbcType=VARCHAR},
+        </if>
+        <if test="item.remark!=null">
+          #{item.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="item.actions!=null">
+          #{item.actions,jdbcType=VARCHAR},
+        </if>
         <if test="item.type!=null">
           #{item.type,jdbcType=VARCHAR},
-        </if>
-        <if test="item.applicationId!=null">
-          #{item.applicationId,jdbcType=DECIMAL},
         </if>
         <if test="item.filedName!=null">
           #{item.filedName,jdbcType=VARCHAR},
         </if>
         <if test="item.description!=null">
           #{item.description,jdbcType=VARCHAR},
+        </if>
+        <if test="item.tenantId!=null">
+          #{item.tenantId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.applicationId!=null">
+          #{item.applicationId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.createdTime!=null">
+          #{item.createdTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.modifiedTime!=null">
+          #{item.modifiedTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          #{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </trim>
     </foreach>
@@ -354,22 +508,43 @@
     <!--
       WARNING - @mbg.generated
       此SQL语句为自动生成，请不要修改.
-      DATE: 2018-05-18 11:17
+      DATE: 2018-07-12 14:29
     -->
     <foreach collection="list" index="index" item="item" separator=";">
       update GAR_RESOURCE_DYNAMIC_PROPS
       <set>
+        <if test="item.name!=null">
+          NAME=#{item.name,jdbcType=VARCHAR},
+        </if>
+        <if test="item.remark!=null">
+          REMARK=#{item.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="item.actions!=null">
+          ACTIONS=#{item.actions,jdbcType=VARCHAR},
+        </if>
         <if test="item.type!=null">
           TYPE=#{item.type,jdbcType=VARCHAR},
-        </if>
-        <if test="item.applicationId!=null">
-          APPLICATION_ID=#{item.applicationId,jdbcType=DECIMAL},
         </if>
         <if test="item.filedName!=null">
           FILED_NAME=#{item.filedName,jdbcType=VARCHAR},
         </if>
         <if test="item.description!=null">
           DESCRIPTION=#{item.description,jdbcType=VARCHAR},
+        </if>
+        <if test="item.tenantId!=null">
+          TENANT_ID=#{item.tenantId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.applicationId!=null">
+          APPLICATION_ID=#{item.applicationId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.createdTime!=null">
+          CREATED_TIME=#{item.createdTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.modifiedTime!=null">
+          MODIFIED_TIME=#{item.modifiedTime,jdbcType=DECIMAL},
+        </if>
+        <if test="item.updatedByUserName!=null">
+          UPDATED_BY_USER_NAME=#{item.updatedByUserName,jdbcType=VARCHAR},
         </if>
       </set>
       where 

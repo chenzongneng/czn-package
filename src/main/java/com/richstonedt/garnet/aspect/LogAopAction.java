@@ -42,6 +42,7 @@ public class LogAopAction {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String cookie = request.getHeader("Cookie");
 
+
         if (StringUtils.isEmpty(cookie)) {
             return false;
         }

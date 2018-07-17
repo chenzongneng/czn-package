@@ -386,23 +386,27 @@ var vm = new Vue({
                 var tenantId = response.tenantId;
 
                 if (tenantId == null || tenantId == 0) {
+                    console.log("应用级");
                     //应用级
                     vm.typeList.selectedType = "2";
                     vm.permission.applicationId = applicationId;
                     vm.showTenant = false;
                     vm.showApplication = true;
                 } else if (applicationId == null || applicationId == 0) {
+                    console.log("租户级");
                     //租户级
                     vm.typeList.selectedType = "1";
                     vm.permission.tenantId = tenantId;
                     vm.showApplication = false;
                     vm.showTenant = true;
                 } else {
+                    console.log("租户+应用");
                     //租户+应用
                     vm.typeList.selectedType = "3";
                     vm.permission.applicationId = applicationId;
                     vm.appList.selectedApp = applicationId;
                     vm.permission.tenantId = tenantId;
+                    vm.showApplication = true;
                     vm.showTenant = true;
                 }
 

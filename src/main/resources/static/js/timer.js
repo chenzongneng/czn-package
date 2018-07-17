@@ -16,6 +16,7 @@ function checkLogined() {
         }
 
         if (response.data == Boolean(false)) {
+
             localStorage.removeItem("userId");
             localStorage.removeItem("userName");
             localStorage.removeItem("belongToGarnet");
