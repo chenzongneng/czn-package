@@ -559,12 +559,14 @@ var vm = new Vue({
                     //应用级
                     vm.typeList.selectedType = 2;
                     applicationList.appList.selectedApp = selectedApp;
+                    vm.tenantList.selectedTenant = "";
                     vm.showApplication = true;
                     vm.showTenant = false;
                 } else if (selectedApp == null || selectedApp == 0){
                     //租户级
                     vm.typeList.selectedType = 1;
                     vm.tenantList.selectedTenant = selectedTenant;
+                    applicationList.appList.selectedApp = "";
                     vm.showTenant = true;
                     vm.showApplication = false;
                 } else {
@@ -1013,6 +1015,10 @@ var vm = new Vue({
             // });
 
             var tenantId = vm.tenantList.selectedTenant;
+             if (typeof tenantId == "undefined") {
+                 tenantId = 0;
+             }
+
             var path = "/garnet/data/resourceTypeManage/tenantList";
             $.get(baseURL + "applications/byuseridandtenantid?userId=" + userId + "&tenantId=" + tenantId + "&path=" + path, function (response) {
                 $.each(response, function (index, item) {
@@ -1020,6 +1026,7 @@ var vm = new Vue({
                     // applicationList.appSearchList.options.push(item);
                 })
             });
+
         },
         /**  获取租户列表 */
         getTenantList: function () {
@@ -1067,7 +1074,7 @@ var vm = new Vue({
             // console.log("path1：" + path1);
             $.get(baseURL + "/resources/getuseraction?userId=" + userId + "&path=" + path1, function (response) {
                 var action = response.data;
-                console.log("action: " + action);
+                // console.log("action: " + action);
                 if (action == "read") {
                     vm.typesEditAble = false;
                 } else {

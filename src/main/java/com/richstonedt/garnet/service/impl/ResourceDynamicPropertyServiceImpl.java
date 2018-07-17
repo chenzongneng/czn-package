@@ -122,6 +122,7 @@ public class ResourceDynamicPropertyServiceImpl extends BaseServiceImpl<Resource
             Long currentTime = System.currentTimeMillis();
             for (ResourceDynamicProperty resourceDynamicProperty : resourceDynamicProperties) {
                 resourceDynamicProperty.setId(l);
+                resourceDynamicProperty.setName(resourceDynamicProperty1.getName());
                 resourceDynamicProperty.setActions(resourceDynamicProperty1.getActions());
                 resourceDynamicProperty.setType(resourceDynamicProperty1.getType());
                 resourceDynamicProperty.setRemark(resourceDynamicProperty1.getRemark());

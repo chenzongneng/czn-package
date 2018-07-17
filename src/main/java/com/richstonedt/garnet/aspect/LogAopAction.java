@@ -91,11 +91,6 @@ public class LogAopAction {
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
-//                try {
-//                    ip = InetAddress.getLocalHost().getHostAddress();
-//                } catch (UnknownHostException e) {
-//                    e.printStackTrace();
-//                }
                 log.setMessage(module);
                 log.setOperation(method1);
                 log.setIp(ip);
