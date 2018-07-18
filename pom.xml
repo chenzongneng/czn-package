@@ -216,7 +216,7 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus_releases</id>
+            <id>nexus_production</id>
             <url>http://192.168.6.96:8081/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
