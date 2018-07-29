@@ -8,7 +8,7 @@
 // var baseURL = "http://localhost:8080/garnet/v1.0/";
 // var baseURL = "http://192.168.0.200:12306/garnet/v1.0/";
 // var baseURL = "http://192.168.111.100:12306/garnet/api/v1.0/";
-var baseURL = "http://localhost:12306/garnet/api/v1.0/";
+var baseURL = "http://localhost:12305/garnet/api/v1.0/";
 // var baseURL = "http://192.168.108.100:12306/garnet/api/v1.0/";
 
 var nowTime = $.now();
